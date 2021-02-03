@@ -17,15 +17,15 @@ if(!$jwt->loggedIn){
 include_once '../config/database.php';
 include_once '../objects/member.php';
 
-// instantiate database and user object
+// instantiate database and member object
 $database = new Database();
 $db = $database->getConnection();
 
 // initialize object
-$user = new Member($db);
+$member = new Member($db);
 
 // query shops
-$stmt = $user->readAll();
+$stmt = $member->readAll();
 $num = $stmt->rowCount();
 
 // check if more than 0 record found
@@ -44,7 +44,7 @@ if($num>0){
         // just $name only
         extract($row);
     
-            $user_item=array(
+            $member_item=array(
                 "id" => $id,
                 "title" => $title,
                 "businessname" => html_entity_decode($businessname),
@@ -54,13 +54,16 @@ if($num>0){
                 "addresssecondline" => html_entity_decode($addresssecondline),
                 "city" => html_entity_decode($city),
                 "county" => html_entity_decode($county),
+                "postcode" => html_entity_decode($postcode),
                 "country" => html_entity_decode($country),
-                "email" => html_entity_decode($email1),
-                "phone" => html_entity_decode($phone1),
+                "area" => html_entity_decode($area),
+                "email1" => html_entity_decode($email1),
+                "phone1" => html_entity_decode($phone1),
                 "addressfirstline2" => html_entity_decode($addressfirstline2),
                 "addresssecondline2" => html_entity_decode($addresssecondline2),
                 "city2" => html_entity_decode($city2),
                 "county2" => html_entity_decode($county2),
+                "postcode2" => html_entity_decode($postcode2),
                 "country2" => html_entity_decode($country2),
                 "email2" => html_entity_decode($email2),
                 "phone2" => html_entity_decode($phone2),
@@ -78,10 +81,10 @@ if($num>0){
                 "gdpr_sm" => $gdpr_sm
             );
 
-            // create associative array keyed on username
-            $users_arr["records"][$id] = $user_item;
+            // create associative array keyed on id
+            $members_arr["records"][$id] = $member_item;
         }
 
-        echo json_encode($users_arr);
+        echo json_encode($members_arr);
 }
 ?>
