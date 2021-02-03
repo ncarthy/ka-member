@@ -17,6 +17,9 @@ $user = new User($db);
 $usernm = '';
 $pass = '';
 
+// time limit on JWT session tokens
+$expirationLimit = '+1 month';
+
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
 // set property values
@@ -26,8 +29,8 @@ if (isset($data)) {
 }
 
 // Un-comment these 2 lines for testing via GET
-$usernm = isset($_GET["username"]) ? $_GET["username"] : '';
-$pass = isset($_GET["password"]) ? $_GET["password"] : '';
+//$usernm = isset($_GET["username"]) ? $_GET["username"] : '';
+//$pass = isset($_GET["password"]) ? $_GET["password"] : '';
 
 // query takings
 $stmt = $user->readOneRaw(strtolower($usernm));
@@ -56,21 +59,28 @@ if($num>0){
     }
     else if (password_verify($pass, $password)){
         
-        // Create a new JWT, with claims of username and isAdmin
+        // Create a new JWT, with claims of username and isAdmin        
         $jwt = new JWTWrapper();
-        $token = $jwt->getToken($username, $isAdmin);
+        $now = new DateTimeImmutable();
+        $expiry = $now->modify('+1 hour');
+        $token = $jwt->getToken($username, $isAdmin, $now, $expiry);
 
         $user_with_token=array(
             "username" => $username,
-            "firstname" => $firstname,
-            "surname" => $surname,
-            "shopid" => $shopid,
+            "id" => $id,
             "isAdmin" => $isAdmin,
+            "expiry" => $expiry->format("Y-m-d H:i:s"),
             "token" => (string)$token
         );
 
         // echo json_encode($user_with_token, JSON_PRETTY_PRINT);
         echo json_encode($user_with_token);
+    }
+    else if (empty($pass)) {
+        http_response_code(401);
+        echo json_encode(
+            array("message" => "Please supply a password.")
+        );
     }
     else{
         http_response_code(401);

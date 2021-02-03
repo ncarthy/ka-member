@@ -12,12 +12,10 @@ class User{
     // object properties
     public $id;
     public $username;
-    public $firstname;
-    public $surname;
-    public $shopid;
     public $isadmin;
     public $suspended;
     public $password;
+    public $fullname;
 
 
     // used by select drop-down list
@@ -25,11 +23,10 @@ class User{
 
         //select all data
         $query = "SELECT
-                    u.id, u.`username`, u.`password`, u.`firstname`, u.`surname`,
-                    u.`shopid`, s.`name` as shopname, u.isAdmin, u.suspended
+                    u.iduser as `id`, u.`username`, u.`new_pass` as `password`,
+                    u.isAdmin, u.suspended, u.`name`
                     FROM
-                    " . $this->table_name . " u
-                    LEFT JOIN shop s ON u.shopid = s.id ";
+                    " . $this->table_name . " u";                    
 
         $stmt = $this->conn->prepare( $query );
         try{
@@ -48,30 +45,26 @@ class User{
                     " . $this->table_name . "
                     SET 
                     username=:username,
-                    shopid=:shopid,
-                    firstname=:firstname, 
-                    surname=:surname,
                     isAdmin=:isadmin, 
-                    suspended=:suspended ";
+                    name=:fullname,
+                    suspended=:suspended
+                    " . (isset($this->password)?',new_pass=:password ':'');
         
         // prepare query
         $stmt = $this->conn->prepare($query);
 
         // sanitize
         $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->shopid=htmlspecialchars(strip_tags($this->shopid));
-        $this->firstname=htmlspecialchars(strip_tags($this->firstname));
-        $this->surname=htmlspecialchars(strip_tags($this->surname));
         $this->isadmin=htmlspecialchars(strip_tags($this->isadmin));
         $this->suspended=htmlspecialchars(strip_tags($this->suspended));
+        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
 
         // bind values
         $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":shopid", $this->shopid);
-        $stmt->bindParam(":firstname", $this->firstname);
-        $stmt->bindParam(":surname", $this->surname);
         $stmt->bindParam(":isadmin", $this->isadmin);
         $stmt->bindParam(":suspended", $this->suspended);
+        $stmt->bindParam(":fullname", $this->fullname);
+        $stmt->bindParam(":password", $this->password);
         
 
         // execute query
@@ -87,25 +80,21 @@ class User{
                     " . $this->table_name . "
                     SET 
                     username=:username,
-                    shopid=:shopid,
-                    firstname=:firstname, 
-                    surname=:surname,
                     isAdmin=:isadmin, 
-                    suspended=:suspended
-                    " . (isset($this->password)?',password=:password ':'') ."
+                    suspended=:suspended,
+                    name=:fullname
+                    " . (isset($this->password)?',new_pass=:password ':'') ."
                  WHERE
-                    id=:id";
+                    iduser=:id";
         
         // prepare query
         $stmt = $this->conn->prepare($query);
 
         // sanitize
         $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->shopid=htmlspecialchars(strip_tags($this->shopid));
-        $this->firstname=htmlspecialchars(strip_tags($this->firstname));
-        $this->surname=htmlspecialchars(strip_tags($this->surname));
         $this->isadmin=htmlspecialchars(strip_tags($this->isadmin));
         $this->suspended=htmlspecialchars(strip_tags($this->suspended));
+        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
         if(isset($this->password)) {
             $this->password=htmlspecialchars(strip_tags($this->password));
             $stmt->bindParam(":password", $this->password);
@@ -114,12 +103,9 @@ class User{
         // bind values
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":shopid", $this->shopid);
-        $stmt->bindParam(":firstname", $this->firstname);
-        $stmt->bindParam(":surname", $this->surname);
         $stmt->bindParam(":isadmin", $this->isadmin);
         $stmt->bindParam(":suspended", $this->suspended);
-        
+        $stmt->bindParam(":fullname", $this->fullname);        
 
         // execute query
         if($stmt->execute()){
@@ -129,17 +115,16 @@ class User{
         return false;
     }
 
-    // find the details of one user
+    // find the details of one user using $id
     public function readOne(){
 
         //select all data
         $query = "SELECT
-                    u.id, u.`username`, u.`password`, u.`firstname`, u.`surname`,
-                    u.`shopid`, s.`name` as shopname, u.isAdmin, u.suspended
+                    u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
+                    u.isAdmin, u.suspended, u.`name`
                     FROM
                     " . $this->table_name . " u
-                    LEFT JOIN shop s ON u.shopid = s.id
-                    WHERE u.id = ?
+                    WHERE u.iduser = ?
                     LIMIT 0,1";
                 
         // prepare query statement
@@ -155,26 +140,25 @@ class User{
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set values to object properties
-        $this->id = $row['id'];
-        $this->username = $row['username'];
-        $this->password = $row['password'];
-        $this->shopid = $row['shopid'];
-        $this->firstname = $row['firstname'];
-        $this->surname = $row['surname'];
-        $this->isadmin = $row['isAdmin'];
-        $this->suspended = $row['suspended'];
+        if ( !empty($row) ) {
+            $this->id = $row['id'];
+            $this->username = $row['username'];
+            $this->fullname = $row['name'];
+            $this->password = $row['password'];
+            $this->isadmin = $row['isAdmin'];
+            $this->suspended = $row['suspended'];
+        }
     }
 
-        // find the details of one user
+        // find the details of one user using $username
         public function readOneRaw($username){
 
             //select all data
             $query = "SELECT
-                        u.id, u.`username`, u.`password`, u.`firstname`, u.`surname`,
-                        u.`shopid`, s.`name` as shopname, u.isAdmin, u.suspended
+                        u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
+                        u.isAdmin, u.suspended, u.`name`
                         FROM
                         " . $this->table_name . " u
-                        LEFT JOIN shop s ON u.shopid = s.id
                         WHERE username = ?
                         LIMIT 0,1";
                     
@@ -186,7 +170,7 @@ class User{
         }
 
     function delete(){
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+        $query = "DELETE FROM " . $this->table_name . " WHERE iduser = ?";
 
         $stmt = $this->conn->prepare($query);
         $this->id=htmlspecialchars(strip_tags($this->id));

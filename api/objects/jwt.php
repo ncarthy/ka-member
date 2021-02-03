@@ -2,26 +2,25 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// This code uses Luis Cobucci' implementation of JWT: https://github.com/lcobucci/jwt/
+
+
 // /https://lcobucci-jwt.readthedocs.io/en/latest/upgrading/
 use Lcobucci\JWT\Configuration;
-//use Lcobucci\JWT\Builder;
-//use Lcobucci\JWT\Parser;
-//use Lcobucci\JWT\ValidationData;
-//use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Constraint\ValidAt;
+use Lcobucci\JWT\Validation\Constraint\IssuedBy;
+use Lcobucci\JWT\Validation\Constraint\PermittedFor;
 
 class JWTWrapper{
     
-    private $signer; // JWT signer object
-    private $secret_key;
-    private $website = 'https://member.knightsbridgeassociation.com';
-    private $expirationSeconds = 864000; // 10 days    
-
-    private Configuration $config;
-+    
-+    public function __construct(Configuration $config)
-+    {
-+        $this->config = $config;
-+    }
+    private $config; // Jwt configuration object, contains the signer and constraints
+    private $issuer = 'https://knightsbridgeassociation.com';
+    private $audience = 'https://member.knightsbridgeassociation.com';
+    //private $expirationLimit;
 
     // object properties
     public $user;
@@ -30,10 +29,26 @@ class JWTWrapper{
     public $expiry;
 
     // constructor
-    public function __construct(){
-        $this->secret_key = getenv('KA_MEMBER_KEY'); // Must be set in .htaccess
+    public function __construct(string $expirationLimit = '+1 hour'){
+
+        //$this->expirationLimit = $expirationLimit;
+
+        $this->config = Configuration::forSymmetricSigner(
+            // You may use any HMAC variations (256, 384, and 512)
+            new Sha256(),
+            // replace the value below with a key of your own!
+            InMemory::plainText( getenv('KA_MEMBER_KEY') )
+            // You may also override the JOSE encoder/decoder if needed by providing extra arguments here
+        );
+
+        $this->config->setValidationConstraints(
+            new SignedWith($this->config->signer(), $this->config->verificationKey()),
+            new PermittedFor($this->audience),
+            new IssuedBy($this->issuer)
+        );
+
         $this->initializeToken();
-        $this->signer = new Sha256();
+        
         $this->checkAuth();
     }
 
@@ -82,24 +97,22 @@ class JWTWrapper{
         }
 
         // convert from string into JWT object
-        $token = (new Parser())->parse((string) $token);
+        $parser = $this->config->parser();
+        $token = $parser->parse((string) $token);
+
+        $token->headers(); // Retrieves the token headers
+        $claims = $token->claims(); // Retrieves the token claims
+
+        $constraints = $this->config->validationConstraints();      
         
         // If its a valid token the update the class properties
-        if($token->verify($this->signer, $this->secret_key) && $token->getClaim('user')){
+        // the '...' means to pass an array as function arguments
+        if($this->config->validator()->validate($token, ...$constraints)){
             
-            $data = new ValidationData(); // It will use the current time to validate (iat, nbf and exp)
-            $data->setIssuer($this->website);
-            $data->setAudience($this->website);
-
-            if($token->validate($data)){
-                $this->user = $token->getClaim('user');
-                $this->isAdmin=$token->getClaim('isAdmin')?true:false;
-                $this->loggedIn = true;
-                $this->expiry = date("Y-m-d H:i:s",$token->getClaim('exp'));
-            }
-            else {
-                $this->initializeToken();
-            }
+            $this->user = $claims->get('user');
+            $this->isAdmin=$claims->get('isAdmin')?true:false;
+            $this->loggedIn = true;
+            $this->expiry = $claims->get('exp')->format("Y-m-d H:i:s");
         }
         else {
             $this->initializeToken();
@@ -107,15 +120,20 @@ class JWTWrapper{
     }
 
     // Get a string representation of a new JWT
-    public function getToken($username, $isAdmin){
-        return (string)(new Builder())->setIssuer($this->website) // Configures the issuer (iss claim)
-                        ->setAudience($this->website) // Configures the audience (aud claim)
-                        ->setIssuedAt(time()) // Configures the time that the token was issue (iat claim)
-                        ->set('user', $username) // Configures a new claim, called "user"
-                        ->set('isAdmin', $isAdmin) // Configures a new claim, called "user"
-                        ->setExpiration(time() + $this->expirationSeconds) // Configures the expiration time of the token (exp claim)
-                        ->sign($this->signer, $this->secret_key) // creates a signature using "testing" as key
-                        ->getToken(); // Retrieves the generated token
+    public function getToken($username, $isAdmin, $issuedAt, $expiresAt){
+
+        $builder = $this->config->builder();
+
+        $token = $builder->issuedBy($this->issuer)
+                        ->withHeader('iss', $this->issuer)
+                        ->permittedFor($this->audience)
+                        ->issuedAt($issuedAt)
+                        ->expiresAt($expiresAt)
+                        ->withClaim('user', $username)
+                        ->withClaim('isAdmin', $isAdmin)
+                        ->getToken($this->config->signer(), $this->config->signingKey());
+
+        return $token->toString();
     }
 
     /*
