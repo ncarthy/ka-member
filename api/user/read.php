@@ -39,8 +39,8 @@ $num = $stmt->rowCount();
 if($num>0){
  
     // products array
-    $shops_arr=array();
-    $shops_arr["records"]=array();
+    $users_arr=array();
+    $users_arr["records"]=array();
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
