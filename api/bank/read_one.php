@@ -16,14 +16,14 @@ if(!$jwt->loggedIn){
 
 // include database and object files
 include_once '../config/database.php';
-include_once '../objects/membership_status.php';
+include_once '../objects/bank_account.php';
 
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
 
 // prepare takings object
-$item = new MembershipStatus($db);
+$item = new BankAccount($db);
 
 // set ID property of takings to be edited
 if (isset($_GET['id'])) {

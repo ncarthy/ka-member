@@ -1,10 +1,10 @@
 <?php
-class MembershipStatus{
+class BankAccount{
     // database conn 
     private $conn;
     // table name
-    private $table_name = "membershipstatus";
-    private $table_id = "idmembership";
+    private $table_name = "bankaccount";
+    private $table_id = "bankID";
 
     // object properties
     public $id;
