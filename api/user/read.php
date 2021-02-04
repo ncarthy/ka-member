@@ -63,6 +63,6 @@ if($num>0){
             $users_arr["records"][$username] = $user_item;
         }
 
-        echo json_encode($users_arr);
+        echo json_encode($users_arr, JSON_NUMERIC_CHECK);
 }
 ?>

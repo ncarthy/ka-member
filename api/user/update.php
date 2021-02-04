@@ -32,35 +32,37 @@ include_once '../objects/user.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// prepare user object
-$user = new User($db);
+// prepare object to be updated
+$item = new User($db);
 
-// get id of user to be edited
+// get id of object to be edited
 $data = json_decode(file_get_contents("php://input"));
 
-// set ID property of user to be edited
-$user->id = $data->id;
+// set ID property of row to be edited
+$item->id = $data->id;
 
-// set user property values
-$user->username = $data->username;
-$user->fullname = $data->fullname;
-$user->isadmin = $data->isadmin;
-$user->suspended = $data->suspended;
+// set property values
+$item->username = $data->username;
+$item->fullname = $data->fullname;
+$item->isadmin = $data->isadmin;
+$item->suspended = $data->suspended;
 if (isset($data->password)) {
-    $user->password = password_hash($data->password, PASSWORD_DEFAULT);
+    $item->password = password_hash($data->password, PASSWORD_DEFAULT);
 }
 
-// update the takings
-if($user->update()){
+// UPDATE the row in the database
+if($item->update()){
     echo '{';
-        echo '"message": "The user was updated."';
+        echo '"message": "User with id=' . $item->id . ' was updated.",';
+        echo '"id":' . $item->id;
     echo '}';
 }
 
-// if unable to update the user, tell the user
+// if unable to create the new_item, tell the admin
 else{
     echo '{';
-        echo '"message": "Unable to update user info."';
+        echo '"message": "Unable to UPDATE row.",';
+        echo '"id":' . $item->id;
     echo '}';
 }
 ?>

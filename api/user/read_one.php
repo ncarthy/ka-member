@@ -58,5 +58,5 @@ $user_arr = array(
 );
 
 // make it json format
-print_r(json_encode($user_arr));
+print_r(json_encode($user_arr, JSON_NUMERIC_CHECK));
 ?>

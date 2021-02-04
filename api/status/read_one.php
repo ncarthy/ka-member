@@ -51,5 +51,5 @@ $items_arr = array(
 );
 
 // make it json format
-echo json_encode($items_arr);
+echo json_encode($items_arr, JSON_NUMERIC_CHECK);
 ?>

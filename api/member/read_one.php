@@ -56,7 +56,7 @@ $member_item=array(
     "country" => $member->country,
     "area" => $member->area,
     "email1" => $member->email1,
-    "phone1" => $member->phone1,
+    "phone1" => 'xn#'.$member->phone1,
     "addressfirstline2" => $member->addressfirstline2,
     "addresssecondline2" => $member->addresssecondline2,
     "city2" => $member->city2,
@@ -64,7 +64,7 @@ $member_item=array(
     "postcode2" => $member->postcode2,
     "country2" => $member->country2,
     "email2" => $member->email2,
-    "phone2" => $member->phone2,
+    "phone2" => 'xn#'.$member->phone2,
     "statusID" => $member->statusID,
     "expirydate" => $member->expirydate,
     "joindate" => $member->joindate,
@@ -80,5 +80,7 @@ $member_item=array(
 );
 
 // make it json format
-print_r(json_encode($member_item));
+$encoded_json = json_encode($member_item, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
+
+print_r(str_replace('xn#','',$encoded_json));
 ?>

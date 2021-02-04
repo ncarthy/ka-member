@@ -58,7 +58,7 @@ if($num>0){
                 "country" => html_entity_decode($country),
                 "area" => html_entity_decode($area),
                 "email1" => html_entity_decode($email1),
-                "phone1" => html_entity_decode($phone1),
+                "phone1" => html_entity_decode('xn#'.$phone1),
                 "addressfirstline2" => html_entity_decode($addressfirstline2),
                 "addresssecondline2" => html_entity_decode($addresssecondline2),
                 "city2" => html_entity_decode($city2),
@@ -66,7 +66,7 @@ if($num>0){
                 "postcode2" => html_entity_decode($postcode2),
                 "country2" => html_entity_decode($country2),
                 "email2" => html_entity_decode($email2),
-                "phone2" => html_entity_decode($phone2),
+                "phone2" => html_entity_decode('xn#'.$phone2),
                 "statusID" => $statusID,
                 "expirydate" => $expirydate,
                 "joindate" => $joindate,
@@ -85,6 +85,7 @@ if($num>0){
             $members_arr["records"][$id] = $member_item;
         }
 
-        echo json_encode($members_arr);
+        $encoded_json = json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
+        echo str_replace('xn#','',$encoded_json);
 }
 ?>

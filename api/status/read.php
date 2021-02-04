@@ -53,6 +53,6 @@ if($num>0){
             $item_arr["records"][$id] = $item;
         }
 
-        echo json_encode($item_arr);
+        echo json_encode($item_arr, JSON_NUMERIC_CHECK);
 }
 ?>
