@@ -31,9 +31,10 @@ $num = $stmt->rowCount();
 // check if more than 0 record found
 if($num>0){
  
-    // products array
-    $member_arr=array();
-    $member_arr["records"]=array();
+    $members_arr=array();
+    $members_arr["records"]=array();
+
+    $total =0;
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -44,16 +45,23 @@ if($num>0){
         // just $name only
         extract($row);
     
-            $member_item=array(
-                "id" => $statusID,
-                "name" => $name,
-                "count" => $count
-            );
+        $members_item=array(
+            "id" => $statusID,
+            "name" => $name,
+            "count" => $count,
+            "multiplier" => $multiplier,
+            "actmultiplier" => $actmultiplier,
+            "contribution" => $contribution
+        );
 
-            // create associative array keyed on id
-            $members_arr["records"][$statusID] = $member_item;
-        }
+        $total+=$contribution;
 
-        echo json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
+        // create un-keyed list
+        array_push ($members_arr["records"], $members_item);
+    }
+
+    $members_arr["total"] = $total;
+
+    echo json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
 }
 ?>
