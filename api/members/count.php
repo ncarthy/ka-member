@@ -60,7 +60,7 @@ if($num>0){
         array_push ($members_arr["records"], $members_item);
     }
 
-    $members_arr["total"] = $total;
+    $members_arr["total"] = $total; // add a total field    
 
     echo json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
 }

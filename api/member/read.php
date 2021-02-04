@@ -35,6 +35,8 @@ if($num>0){
     $member_arr=array();
     $member_arr["records"]=array();
 
+    $count =0;
+
     // retrieve our table contents
     // fetch() is faster than fetchAll()
     // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
@@ -44,48 +46,52 @@ if($num>0){
         // just $name only
         extract($row);
     
-            $member_item=array(
-                "id" => $id,
-                "title" => $title,
-                "businessname" => html_entity_decode($businessname),
-                "bankpayerref" => html_entity_decode($bankpayerref),
-                "note" => html_entity_decode($note),
-                "addressfirstline" => html_entity_decode($addressfirstline),
-                "addresssecondline" => html_entity_decode($addresssecondline),
-                "city" => html_entity_decode($city),
-                "county" => html_entity_decode($county),
-                "postcode" => html_entity_decode($postcode),
-                "country" => html_entity_decode($country),
-                "area" => html_entity_decode($area),
-                "email1" => html_entity_decode($email1),
-                "phone1" => html_entity_decode('xn#'.$phone1),
-                "addressfirstline2" => html_entity_decode($addressfirstline2),
-                "addresssecondline2" => html_entity_decode($addresssecondline2),
-                "city2" => html_entity_decode($city2),
-                "county2" => html_entity_decode($county2),
-                "postcode2" => html_entity_decode($postcode2),
-                "country2" => html_entity_decode($country2),
-                "email2" => html_entity_decode($email2),
-                "phone2" => html_entity_decode('xn#'.$phone2),
-                "statusID" => $statusID,
-                "expirydate" => $expirydate,
-                "joindate" => $joindate,
-                "updatedate" => $updatedate,
-                "deletedate" => $deletedate,
-                "repeatpayment" => $repeatpayment,
-                "recurringpayment" => $recurringpayment,
-                "username" => $username,
-                "gdpr_email" => $gdpr_email,
-                "gdpr_tel" => $gdpr_tel,
-                "gdpr_address" => $gdpr_address,
-                "gdpr_sm" => $gdpr_sm
-            );
+        $member_item=array(
+            "id" => $id,
+            "title" => $title,
+            "businessname" => html_entity_decode($businessname),
+            "bankpayerref" => html_entity_decode($bankpayerref),
+            "note" => html_entity_decode($note),
+            "addressfirstline" => html_entity_decode($addressfirstline),
+            "addresssecondline" => html_entity_decode($addresssecondline),
+            "city" => html_entity_decode($city),
+            "county" => html_entity_decode($county),
+            "postcode" => html_entity_decode($postcode),
+            "country" => html_entity_decode($country),
+            "area" => html_entity_decode($area),
+            "email1" => html_entity_decode($email1),
+            "phone1" => html_entity_decode('xn#'.$phone1),
+            "addressfirstline2" => html_entity_decode($addressfirstline2),
+            "addresssecondline2" => html_entity_decode($addresssecondline2),
+            "city2" => html_entity_decode($city2),
+            "county2" => html_entity_decode($county2),
+            "postcode2" => html_entity_decode($postcode2),
+            "country2" => html_entity_decode($country2),
+            "email2" => html_entity_decode($email2),
+            "phone2" => html_entity_decode('xn#'.$phone2),
+            "statusID" => $statusID,
+            "expirydate" => $expirydate,
+            "joindate" => $joindate,
+            "updatedate" => $updatedate,
+            "deletedate" => $deletedate,
+            "repeatpayment" => $repeatpayment,
+            "recurringpayment" => $recurringpayment,
+            "username" => $username,
+            "gdpr_email" => $gdpr_email,
+            "gdpr_tel" => $gdpr_tel,
+            "gdpr_address" => $gdpr_address,
+            "gdpr_sm" => $gdpr_sm
+        );
 
-            // create associative array keyed on id
-            $members_arr["records"][$id] = $member_item;
-        }
+        // create associative array keyed on id
+        $members_arr["records"][$id] = $member_item;
 
-        $encoded_json = json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
-        echo str_replace('xn#','',$encoded_json);
+        $count+=1;
+    }
+
+    $members_arr["count"] = $count;
+
+    $encoded_json = json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
+    echo str_replace('xn#','',$encoded_json);
 }
 ?>
