@@ -65,7 +65,7 @@ class Member{
             $stmt->execute();
         }
         catch(PDOException $exception){
-            echo "Error retrieving users: " . $exception->getMessage();
+            echo "Error retrieving members: " . $exception->getMessage();
         }
         
         return $stmt;
