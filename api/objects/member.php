@@ -108,7 +108,7 @@ class Member{
                     gdpr_tel=:gdpr_tel, 
                     gdpr_address=:gdpr_address, 
                     gdpr_sm=:gdpr_sm
-                ";
+                    ;";
         
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -189,10 +189,14 @@ class Member{
         $stmt->bindParam(":gdpr_sm", $this->gdpr_sm);
         
         
-
         // execute query
         if($stmt->execute()){
-            return true;
+            $this->id = $this->conn->lastInsertId();
+            if($this->id) {
+                return true;
+            } else {
+                return false;
+            }
         }
         
         return false;

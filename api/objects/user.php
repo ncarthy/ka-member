@@ -69,7 +69,12 @@ class User{
 
         // execute query
         if($stmt->execute()){
-            return true;
+            $this->id = $this->conn->lastInsertId();
+            if($this->id) {
+                return true;
+            } else {
+                return false;
+            }
         }
         
         return false;

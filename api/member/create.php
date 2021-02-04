@@ -31,57 +31,58 @@ include_once '../objects/member.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$member = new Member($db);
+$new_item = new Member($db);
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
 
-// set member property values
-$member->title = $data->title;
-$member->businessname = $data->businessname;
-$member->bankpayerref = $data->bankpayerref;
-$member->note = $data->note;
-$member->addressfirstline = $data->addressfirstline;
-$member->addresssecondline = $data->addresssecondline;
-$member->city = $data->city;
-$member->county = $data->county;
-$member->postcode = $data->postcode;
-$member->country = $data->country;
-$member->area = $data->area;
-$member->email1 = $data->email1;
-$member->phone1 = $data->phone1;
-$member->addressfirstline2 = $data->addressfirstline2;
-$member->addresssecondline2 = $data->addresssecondline2;
-$member->city2 = $data->city2;
-$member->county2 = $data->county2;
-$member->postcode2 = $data->postcode2;
-$member->country2 = $data->country2;
-$member->email2 = $data->email2;
-$member->phone2 = $data->phone2;
-$member->statusID = $data->statusID;
-$member->expirydate = $data->expirydate;
-$member->joindate = $data->joindate;
-$member->updatedate = $data->updatedate;
-$member->deletedate = $data->deletedate;
-$member->repeatpayment = $data->repeatpayment;
-$member->recurringpayment = $data->recurringpayment;
-$member->username = $data->username;
-$member->gdpr_email = $data->gdpr_email;
-$member->gdpr_tel = $data->gdpr_tel;
-$member->gdpr_address = $data->gdpr_address;
-$member->gdpr_sm = $data->gdpr_sm;
+// set new_item property values
+$new_item->title = $data->title;
+$new_item->businessname = $data->businessname;
+$new_item->bankpayerref = $data->bankpayerref;
+$new_item->note = $data->note;
+$new_item->addressfirstline = $data->addressfirstline;
+$new_item->addresssecondline = $data->addresssecondline;
+$new_item->city = $data->city;
+$new_item->county = $data->county;
+$new_item->postcode = $data->postcode;
+$new_item->country = $data->country;
+$new_item->area = $data->area;
+$new_item->email1 = $data->email1;
+$new_item->phone1 = $data->phone1;
+$new_item->addressfirstline2 = $data->addressfirstline2;
+$new_item->addresssecondline2 = $data->addresssecondline2;
+$new_item->city2 = $data->city2;
+$new_item->county2 = $data->county2;
+$new_item->postcode2 = $data->postcode2;
+$new_item->country2 = $data->country2;
+$new_item->email2 = $data->email2;
+$new_item->phone2 = $data->phone2;
+$new_item->statusID = $data->statusID;
+$new_item->expirydate = $data->expirydate;
+$new_item->joindate = $data->joindate;
+$new_item->updatedate = $data->updatedate;
+$new_item->deletedate = $data->deletedate;
+$new_item->repeatpayment = $data->repeatpayment;
+$new_item->recurringpayment = $data->recurringpayment;
+$new_item->username = $data->username;
+$new_item->gdpr_email = $data->gdpr_email;
+$new_item->gdpr_tel = $data->gdpr_tel;
+$new_item->gdpr_address = $data->gdpr_address;
+$new_item->gdpr_sm = $data->gdpr_sm;
 
-// create the member
-if($member->create()){
+// INSERT the row into the database
+if($new_item->create()){
     echo '{';
-        echo '"message": "New member was created."';
+        echo '"message": "New member with id=' . $new_item->id . ' was created.",';
+        echo '"id":' . $new_item->id;
     echo '}';
 }
 
-// if unable to create the member, tell the admin
+// if unable to create the new_item, tell the admin
 else{
     echo '{';
-        echo '"message": "Unable to create new member."';
+        echo '"message": "Unable to INSERT row."';
     echo '}';
 }
 ?>

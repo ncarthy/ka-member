@@ -6,7 +6,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// Check logged in status
+// Check logged in
 include_once '../objects/jwt.php';
 $jwt = new JWTWrapper();
 if(!$jwt->loggedIn){      
@@ -24,37 +24,45 @@ else if (!$jwt->isAdmin){
     exit(1);
 }
 
-// get database connection
+// include database and object file
 include_once '../config/database.php';
-include_once '../objects/user.php';
+include_once '../objects/member.php';
 
+// get database connection
 $database = new Database();
 $db = $database->getConnection();
 
-$new_item = new User($db);
+// prepare member object
+$member = new Member($db);
 
-// get posted data
+// get member id
 $data = json_decode(file_get_contents("php://input"));
 
-// set new_item property values
-$new_item->username = $data->username;
-$new_item->isadmin = $data->isadmin;
-$new_item->suspended = $data->suspended;
-$new_item->fullname = $data->fullname;
-$new_item->password = password_hash($data->password, PASSWORD_DEFAULT);
+// set member id to be deleted
+$member->id = !empty($data->id) ? $data->id : die();
 
-// INSERT the row into the database
-if($new_item->create()){
+// read the details of$member to be edited
+$member->readOne();
+
+if (empty($member->username) ) {
+    http_response_code(422);   
+    echo json_encode(
+        array("message" => "No Member found with id = " . $member->id)
+    );
+    exit(1);
+}
+
+// delete the member
+if($member->delete()){
     echo '{';
-        echo '"message": "New user with id=' . $new_item->id . ' was created.",';
-        echo '"id":' . $new_item->id;
+        echo '"message": "The member was removed from the system."';
     echo '}';
 }
 
-// if unable to create the new_item, tell the admin
+// if unable to delete the member
 else{
     echo '{';
-        echo '"message": "Unable to INSERT row."';
+        echo '"message": "Unable to delete member."';
     echo '}';
 }
 ?>
