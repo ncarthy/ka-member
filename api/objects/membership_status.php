@@ -15,19 +15,6 @@ class MembershipStatus{
     }
 
     // used by select drop-down list
-    public function readAll(){
-        $query = "SELECT
-                    " . $this->table_id ." as `id`, `name`
-                FROM
-                    " . $this->table_name . "
-                ORDER BY ". $this->table_id;
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        return $stmt;
-    }
-
-    // used by select drop-down list
     public function read(){
 
         //select all data
