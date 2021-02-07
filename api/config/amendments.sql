@@ -83,5 +83,6 @@ UPDATE membername SET surname = TRIM(surname) WHERE surname LIKE '% ';
 UPDATE membername SET honorific = TRIM(honorific) WHERE honorific LIKE '% ';
 
 ALTER TABLE `knightsb_membership`.`membername` ADD UNIQUE `Unique_Name_IdMember` (`honorific`, `firstname`, `surname`, `member_idmember`);
+ALTER TABLE `member` CHANGE `updatedate` `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 COMMIT;

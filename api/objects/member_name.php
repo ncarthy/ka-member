@@ -57,6 +57,42 @@ class MemberName{
             
         return false;
     }
+
+    function update(){
+        $query = "UPDATE
+                    " . $this->table_name . "
+                    SET 
+                    honorific=:honorific,
+                    firstname=:firstname, 
+                    surname=:surname,
+                    member_idmember=:idmember
+                 WHERE
+                    idmembername=:id";
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+        $this->honorific=htmlspecialchars(strip_tags($this->honorific));
+        $this->firstname=htmlspecialchars(strip_tags($this->firstname));
+        $this->surname=htmlspecialchars(strip_tags($this->surname));
+        $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
+
+        // bind values
+        $stmt->bindParam(":id", $this->id);
+        $stmt->bindParam(":honorific", $this->honorific);
+        $stmt->bindParam(":firstname", $this->firstname);
+        $stmt->bindParam(":surname", $this->surname);
+        $stmt->bindParam(":idmember", $this->idmember);     
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+        
+        return false;
+    }
  
     public function readOne(){
 
