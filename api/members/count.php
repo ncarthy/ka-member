@@ -34,7 +34,7 @@ if($num>0){
     $members_arr=array();
     $members_arr["records"]=array();
 
-    $total =0;
+    $contribution_total =0; // sum of member contribution as we go along
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -54,13 +54,13 @@ if($num>0){
             "contribution" => $contribution
         );
 
-        $total+=$contribution;
+        $contribution_total+=$contribution;
 
         // create un-keyed list
         array_push ($members_arr["records"], $members_item);
     }
 
-    $members_arr["total"] = $total; // add a total field    
+    $members_arr["total"] = $contribution_total; // add a contribution_total field    
 
     echo json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
 }

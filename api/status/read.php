@@ -24,15 +24,16 @@ $db = $database->getConnection();
 // initialize object
 $status = new MembershipStatus($db);
 
-// query shops
+// query
 $stmt = $status->read();
 $num = $stmt->rowCount();
+
+// products array
+$item_arr=array();
 
 // check if more than 0 record found
 if($num>0){
  
-    // products array
-    $item_arr=array();
     $item_arr["records"]=array();
 
     // retrieve our table contents
