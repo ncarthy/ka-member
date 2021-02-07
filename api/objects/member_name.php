@@ -17,6 +17,46 @@ class MemberName{
         $this->conn = $db;
     }
 
+    function create(){
+        $query = "INSERT INTO
+                    " . $this->table_name . "
+                    SET 
+                    honorific=:honorific,
+                    firstname=:firstname, 
+                    surname=:surname,
+                    member_idmember=:idmember";
+
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->honorific=htmlspecialchars(strip_tags($this->honorific));
+        $this->firstname=htmlspecialchars(strip_tags($this->firstname));
+        $this->surname=htmlspecialchars(strip_tags($this->surname));
+        $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
+
+        if ($this->idmember <= 0) { return false; } // must be non-zero, not-negative.
+
+        // bind values
+        $stmt->bindParam(":honorific", $this->honorific);
+        $stmt->bindParam(":firstname", $this->firstname);
+        $stmt->bindParam(":surname", $this->surname);
+        $stmt->bindParam(":idmember", $this->idmember);
+        
+
+        // execute query
+        if($stmt->execute()){
+            $this->id = $this->conn->lastInsertId();
+            if($this->id) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+            
+        return false;
+    }
  
     public function readOne(){
 
@@ -84,6 +124,7 @@ class MemberName{
         return $stmt;
     }
 
+    /* Delete all names for a member from the database by providing the idmember FK */
     function deleteNamesForMember(){
         $query = "DELETE FROM " . $this->table_name . " WHERE member_idmember = ?";
 
@@ -91,6 +132,23 @@ class MemberName{
         $this->idmember=htmlspecialchars(strip_tags($this->idmember));
         $idmember = filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
         $stmt->bindParam(1, $idmember);
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
+
+    /* Delete a single member name fromt he database by providing the idmembername PK */
+    function delete(){
+        $query = "DELETE FROM " . $this->table_name . " WHERE idmembername = ?";
+
+        $stmt = $this->conn->prepare($query);
+        $this->id=htmlspecialchars(strip_tags($this->id));
+        $idmembername = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+        $stmt->bindParam(1, $idmembername);
 
         // execute query
         if($stmt->execute()){

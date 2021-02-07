@@ -55,8 +55,8 @@ class User{
 
         // sanitize
         $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->isadmin=htmlspecialchars(strip_tags($this->isadmin));
-        $this->suspended=htmlspecialchars(strip_tags($this->suspended));
+        $this->isadmin=filter_var($this->isadmin, FILTER_SANITIZE_NUMBER_INT);
+        $this->suspended=filter_var($this->suspended, FILTER_SANITIZE_NUMBER_INT);
         $this->fullname=htmlspecialchars(strip_tags($this->fullname));
 
         // bind values

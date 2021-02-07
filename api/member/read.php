@@ -35,7 +35,7 @@ if($num>0){
     $member_arr=array();
     $member_arr["records"]=array();
 
-    $count =0;
+    $count =$num;
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -86,7 +86,6 @@ if($num>0){
         // create associative array keyed on id
         $members_arr["records"][$id] = $member_item;
 
-        $count+=1;
     }
 
     $members_arr["count"] = $count;

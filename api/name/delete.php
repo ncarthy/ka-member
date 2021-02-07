@@ -38,29 +38,27 @@ $member_name = new MemberName($db);
 // get member_name id
 $data = json_decode(file_get_contents("php://input"));
 
-// set user id to be deleted
-if (empty($data->idmember)) {
+// set member_name id to be deleted
+if (empty($data->idmembername)) {
     http_response_code(422); 
     echo json_encode(
-        array("message" => "Please supply the idmember value in the body of the POST request.")
+        array("message" => "Please supply the idmembername in the body of the POST request.")
     );
     exit(1);
 }
-
-// set member_name id to be deleted
-$member_name->idmember = !empty($data->idmember) ? $data->idmember : die();
+$member_name->id = !empty($data->idmembername) ? $data->idmembername : die();
 
 // delete the member_name
-if($member_name->deleteNamesForMember()){
+if($member_name->delete()){
     echo '{';
-        echo '"message": "All names for that member were removed from the system."';
+        echo '"message": "The member name was removed from the system."';
     echo '}';
 }
 
 // if unable to delete the member_name
 else{
     echo '{';
-        echo '"message": "Unable to delete any names for that member."';
+        echo '"message": "Unable to delete member name."';
     echo '}';
 }
 ?>

@@ -82,4 +82,6 @@ UPDATE membername SET firstname = TRIM(firstname) WHERE firstname LIKE '% ';
 UPDATE membername SET surname = TRIM(surname) WHERE surname LIKE '% ';
 UPDATE membername SET honorific = TRIM(honorific) WHERE honorific LIKE '% ';
 
+ALTER TABLE `knightsb_membership`.`membername` ADD UNIQUE `Unique_Name_IdMember` (`honorific`, `firstname`, `surname`, `member_idmember`);
+
 COMMIT;
