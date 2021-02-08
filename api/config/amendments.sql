@@ -24,18 +24,20 @@ ALTER TABLE `member` CHANGE `addresssecondline` `addresssecondline` VARCHAR(255)
 ALTER TABLE `member` CHANGE `addressfirstline2` `addressfirstline2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 ALTER TABLE `member` CHANGE `addresssecondline2` `addresssecondline2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 ALTER TABLE `member` ADD `multiplier` DECIMAL(11,2) NULL AFTER `gdpr_sm`;
+ALTER TABLE `member` ADD `membership_fee` DECIMAL(11,2) NULL AFTER `multiplier`;
 
 ALTER TABLE `membershipstatus` ADD `multiplier` DECIMAL(11,2) NOT NULL DEFAULT '1' AFTER `name`;
-UPDATE `membershipstatus` SET `name` = 'Individual' WHERE `membershipstatus`.`idmembership` = 2;
-UPDATE `membershipstatus` SET `name` = 'Household',`multiplier`=2 WHERE `membershipstatus`.`idmembership` = 3;
-UPDATE `membershipstatus` SET `name` = 'Corporate',`multiplier`=4 WHERE `membershipstatus`.`idmembership` = 4;
-UPDATE `membershipstatus` SET `name` = 'Lifetime',`multiplier`=1.5 WHERE `membershipstatus`.`idmembership` = 5;
+ALTER TABLE `membershipstatus` ADD `membershipfee` DECIMAL(11,2) NOT NULL DEFAULT '0' AFTER `multiplier`;
+UPDATE `membershipstatus` SET `name` = 'Individual', `membershipfee` = 20 WHERE `membershipstatus`.`idmembership` = 2;
+UPDATE `membershipstatus` SET `name` = 'Household',`multiplier`=2, `membershipfee` = 30 WHERE `membershipstatus`.`idmembership` = 3;
+UPDATE `membershipstatus` SET `name` = 'Corporate',`multiplier`=4, `membershipfee` = 40 WHERE `membershipstatus`.`idmembership` = 4;
+UPDATE `membershipstatus` SET `name` = 'Lifetime',`multiplier`=1.5, `membershipfee` = 500 WHERE `membershipstatus`.`idmembership` = 5;
 UPDATE `membershipstatus` SET `name` = 'Honorary' WHERE `membershipstatus`.`idmembership` = 6;
 UPDATE `membershipstatus` SET `name` = 'Pending' WHERE `membershipstatus`.`idmembership` = 7;
 UPDATE `membershipstatus` SET `name` = 'Contributing Ex-member' WHERE `membershipstatus`.`idmembership` = 8;
 UPDATE `membershipstatus` SET `name` = 'Former Member' WHERE `membershipstatus`.`idmembership` = 9;
 
-INSERT INTO `membershipstatus` (`idmembership`, `name`, `multiplier`) VALUES ('10', 'Residence', '20');
+INSERT INTO `membershipstatus` (`idmembership`, `name`, `multiplier`, `membershipfee`) VALUES ('10', 'Residence', 20,500);
 UPDATE `member` SET `membership_idmembership` = '10', multiplier = 100, `username` = "admin", updatedate=CURRENT_TIMESTAMP
 	WHERE `member`.`idmember` = 418;
 
@@ -84,5 +86,70 @@ UPDATE membername SET honorific = TRIM(honorific) WHERE honorific LIKE '% ';
 
 ALTER TABLE `knightsb_membership`.`membername` ADD UNIQUE `Unique_Name_IdMember` (`honorific`, `firstname`, `surname`, `member_idmember`);
 ALTER TABLE `member` CHANGE `updatedate` `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+DELETE FROM `transaction` WHERE idtransaction = 9005;
+
+CREATE VIEW IF NOT EXISTS  `vwMember` AS
+    SELECT m.idmember,m.membership_idmembership,membership_fee,
+        `mn1`.`honorific` AS `honorific`,
+        `mn1`.`firstname` AS `firstname`,
+        `mn1`.`surname` AS `surname`,
+        `m`.`businessname` AS `businessname`,
+        CASE
+            WHEN
+                `m`.`country` <> 'UK'
+                    AND `m`.`country2` = 'UK'
+            THEN
+                `m`.`addressfirstline2`
+            ELSE `m`.`addressfirstline`
+        END AS `addressfirstline`,
+        CASE
+            WHEN
+                `m`.`country` <> 'UK'
+                    AND `m`.`country2` = 'UK'
+            THEN
+                `m`.`addresssecondline2`
+            ELSE `m`.`addresssecondline`
+        END AS `addresssecondline`,
+        CASE
+            WHEN
+                `m`.`country` <> 'UK'
+                    AND `m`.`country2` = 'UK'
+            THEN
+                `m`.`city2`
+            ELSE `m`.`city`
+        END AS `city`,
+        CASE
+            WHEN
+                `m`.`country` <> 'UK'
+                    AND `m`.`country2` = 'UK'
+            THEN
+                `m`.`postcode2`
+            ELSE `m`.`postcode`
+        END AS `postcode`,
+        CASE
+            WHEN
+                `m`.`country` <> 'UK'
+                    AND `m`.`country2` = 'UK'
+            THEN
+                `m`.`country2`
+            ELSE `m`.`country`
+        END AS `country`
+    FROM
+        (((`member` `m`
+        LEFT JOIN `vwNames` `v` ON (`m`.`idmember` = `v`.`member_idmember`))
+        LEFT JOIN `membername` `mn1` ON (`v`.`FirstName` = `mn1`.`idmembername`))
+        LEFT JOIN `membername` `mn2` ON (`v`.`SecondName` = `mn2`.`idmembername`));
+
+CREATE VIEW IF NOT EXISTS vwTransactions AS
+SELECT m.idmember,m.membership_idmembership,ms.`name` as `type`,
+IFNULL(m.membership_fee,ms.membershipfee) as fee,
+CONCAT(m.honorific,' ',m.firstname,' ',m.surname) as `Name`, businessname,
+t.`time`,t.paymentmethod,t.amount
+FROM vwMember m
+JOIN `membershipstatus` ms ON m.membership_idmembership = ms.idmembership
+JOIN `transaction` t ON m.idmember = t.member_idmember;
+
+ALTER TABLE `user` ADD `failedloginattempts` INT NOT NULL DEFAULT '0' COMMENT 'The number of failed logins. Resets to zero after success.' AFTER `name`;
 
 COMMIT;

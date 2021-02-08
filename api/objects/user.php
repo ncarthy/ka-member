@@ -16,7 +16,7 @@ class User{
     public $suspended;
     public $password;
     public $fullname;
-
+    public $failedloginattempts;
 
     // used by select drop-down list
     public function readAll(){
@@ -24,7 +24,7 @@ class User{
         //select all data
         $query = "SELECT
                     u.iduser as `id`, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`
+                    u.isAdmin, u.suspended, u.`name`, u.failedloginattempts
                     FROM
                     " . $this->table_name . " u";                    
 
@@ -87,7 +87,8 @@ class User{
                     username=:username,
                     isAdmin=:isadmin, 
                     suspended=:suspended,
-                    name=:fullname
+                    name=:fullname,
+                    failedloginattempts=:failedloginattempts
                     " . (isset($this->password)?',new_pass=:password ':'') ."
                  WHERE
                     iduser=:id";
@@ -97,9 +98,10 @@ class User{
 
         // sanitize
         $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->isadmin=htmlspecialchars(strip_tags($this->isadmin));
-        $this->suspended=htmlspecialchars(strip_tags($this->suspended));
+        $this->isadmin=filter_var($this->isadmin, FILTER_SANITIZE_NUMBER_INT);
+        $this->suspended=filter_var($this->suspended, FILTER_SANITIZE_NUMBER_INT);
         $this->fullname=htmlspecialchars(strip_tags($this->fullname));
+        $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
         if(isset($this->password)) {
             $this->password=htmlspecialchars(strip_tags($this->password));
             $stmt->bindParam(":password", $this->password);
@@ -111,6 +113,7 @@ class User{
         $stmt->bindParam(":isadmin", $this->isadmin);
         $stmt->bindParam(":suspended", $this->suspended);
         $stmt->bindParam(":fullname", $this->fullname);        
+        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts);     
 
         // execute query
         if($stmt->execute()){
@@ -126,7 +129,7 @@ class User{
         //select all data
         $query = "SELECT
                     u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`
+                    u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`
                     FROM
                     " . $this->table_name . " u
                     WHERE u.iduser = ?
@@ -152,6 +155,7 @@ class User{
             $this->password = $row['password'];
             $this->isadmin = $row['isAdmin'];
             $this->suspended = $row['suspended'];
+            $this->failedloginattempts = $row['failedloginattempts'];
         }
     }
 
@@ -161,7 +165,7 @@ class User{
             //select all data
             $query = "SELECT
                         u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                        u.isAdmin, u.suspended, u.`name`
+                        u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`
                         FROM
                         " . $this->table_name . " u
                         WHERE username = ?
@@ -188,6 +192,32 @@ class User{
 
         return false;
     }
+
+    function updateFailedAttempts($id, $failedloginattempts, bool $suspended){
+        $query = "UPDATE
+                    " . $this->table_name . "
+                    SET 
+                    failedloginattempts=:failedloginattempts,
+                    suspended=:suspended
+                 WHERE
+                    iduser=:id";
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // bind values
+        $stmt->bindParam(":id", $id);      
+        $stmt->bindParam(":failedloginattempts", $failedloginattempts);     
+        $stmt->bindValue(":suspended", $suspended ? 1 : 0);
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+        
+        return false;
+    }
+
 
     // used for paging products
     public function count(){

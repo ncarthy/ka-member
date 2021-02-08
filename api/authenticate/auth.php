@@ -16,9 +16,10 @@ $db = $database->getConnection();
 $user = new User($db);
 $usernm = '';
 $pass = '';
+$numberPasswordAttempts = 5;
 
 // time limit on JWT session tokens
-$expirationLimit = '+1 month';
+$expirationLimit = '+1 hour';
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
@@ -51,7 +52,7 @@ if($num>0){
     // just $name only
     extract($row);
 
-    if ($suspended) {
+    if ($suspended || $failedloginattempts > 4) {
         http_response_code(401);
         echo json_encode(
             array("message" => "User is suspended.")
@@ -72,6 +73,8 @@ if($num>0){
             "expiry" => $expiry->format("Y-m-d H:i:s"),
             "token" => (string)$token
         );
+        
+        $user->updateFailedAttempts($id, 0, false);
 
         // echo json_encode($user_with_token, JSON_PRETTY_PRINT);
         echo json_encode($user_with_token);
@@ -83,6 +86,10 @@ if($num>0){
         );
     }
     else{
+        $failedloginattempts++;
+
+        $user->updateFailedAttempts($id, $failedloginattempts, ($failedloginattempts==$numberPasswordAttempts));
+
         http_response_code(401);
         echo json_encode(
             array("message" => "Unable to validate that username and password.")
