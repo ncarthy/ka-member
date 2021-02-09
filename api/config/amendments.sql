@@ -30,6 +30,10 @@ ALTER TABLE `member` CHANGE `expirydate` `expirydate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` CHANGE `joindate` `joindate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` CHANGE `deletedate` `deletedate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` ADD `postonhold` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'When 1 send no mail to member' AFTER `membership_fee`;
+ALTER TABLE `member` CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'UK';
+UPDATE `member` SET area = '' WHERE area = 'UK';
+UPDATE `member` SET city = 'London', county = '' WHERE county = 'London';
+UPDATE `member` SET country = 'UK' WHERE idmember IN (180,280);
 
 ALTER TABLE `membershipstatus` ADD `multiplier` DECIMAL(11,2) NOT NULL DEFAULT '1' AFTER `name`;
 ALTER TABLE `membershipstatus` ADD `membershipfee` DECIMAL(11,2) NOT NULL DEFAULT '0' AFTER `multiplier`;
@@ -47,7 +51,7 @@ UPDATE `member` SET `membership_idmembership` = '10', multiplier = 100, `usernam
 	WHERE `member`.`idmember` = 418;
 
 UPDATE transaction SET member_idmember = 197 WHERE member_idmember = 534;
-UPDATE member SET expirydate = '2014-10-31 05:00:00', deletedate = '2014-10-31 05:00:00', 
+UPDATE member SET expirydate = '2014-10-31', deletedate = '2014-10-31', 
 	username= 'admin', updatedate=CURRENT_TIMESTAMP WHERE idmember = 197;
 
 DELETE FROM transaction WHERE member_idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906,911,912);
@@ -74,6 +78,8 @@ DELETE FROM membername WHERE member_idmember = 450;
 DELETE FROM member WHERE idmember = 450;
 UPDATE `member` SET deletedate=updatedate, `membership_idmembership` = 9 WHERE `member`.`idmember` =377;
 UPDATE `member` SET deletedate =updatedate, `username` = 'admin', updatedate=CURRENT_TIMESTAMP WHERE membership_idmembership = 7;
+UPDATE `member` SET `country` = 'UK' WHERE `postcode` LIKE 'GY%';
+UPDATE `member` SET `country2` = 'UK' WHERE `postcode2` LIKE 'GY%';
 
 UPDATE `member` SET `phone1` = '07833380717' WHERE `member`.`idmember` = 181;
 UPDATE `member` SET `county` = '' WHERE `member`.`idmember` = 348;
@@ -92,14 +98,41 @@ UPDATE membername SET honorific = TRIM(honorific) WHERE honorific LIKE '% ';
 ALTER TABLE `knightsb_membership`.`membername` ADD UNIQUE `Unique_Name_IdMember` (`honorific`, `firstname`, `surname`, `member_idmember`);
 ALTER TABLE `member` CHANGE `updatedate` `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
+ALTER TABLE `user` ADD `failedloginattempts` INT NOT NULL DEFAULT '0' COMMENT 'The number of failed logins. Resets to zero after success.' AFTER `name`;
+
 DELETE FROM `transaction` WHERE idtransaction = 9005;
 
+DROP VIEW IF EXISTS `vwMember`;
 CREATE VIEW IF NOT EXISTS  `vwMember` AS
-    SELECT m.idmember,m.membership_idmembership,membership_fee,
+    SELECT
+		`m`.`idmember` AS `idmember`,
+        `m`.`membership_idmembership` AS `idmembership`,
+        `ms`.`name` AS `membershiptype`,
+        IFNull(`m`.`membership_fee`,`ms`.`membershipfee`)  AS `membershipfee`,
         `mn1`.`honorific` AS `honorific`,
         `mn1`.`firstname` AS `firstname`,
         `mn1`.`surname` AS `surname`,
+        IFNULL(CONCAT(CASE
+                            WHEN `mn1`.`honorific` = '' THEN ''
+                            ELSE CONCAT(`mn1`.`honorific`, ' ')
+                        END,
+                        `mn1`.`firstname`,
+                        ' ',
+                        `mn1`.`surname`,
+                        CASE
+                            WHEN `mn2`.`firstname` IS NULL THEN ''
+                            ELSE CONCAT(' And ',
+                                    CASE
+                                        WHEN `mn1`.`honorific` = '' THEN ''
+                                        ELSE CONCAT(`mn2`.`honorific`, ' ')
+                                    END,
+                                    `mn2`.`firstname`,
+                                    ' ',
+                                    `mn2`.`surname`)
+                        END),
+                '') AS `Name`,
         `m`.`businessname` AS `businessname`,
+        CONCAT(`m`.`note`, ' ') as `Note`,
         CASE
             WHEN
                 `m`.`country` <> 'UK'
@@ -138,23 +171,274 @@ CREATE VIEW IF NOT EXISTS  `vwMember` AS
                     AND `m`.`country2` = 'UK'
             THEN
                 `m`.`country2`
-            ELSE `m`.`country`
-        END AS `country`
+            ELSE `m`.`country`            
+        END AS `country`,
+        m.updatedate, m.expirydate, m.deletedate, m.reminderdate
+    FROM
+        `member` `m`
+        JOIN `membershipstatus` ms ON m.membership_idmembership = ms.idmembership
+        LEFT JOIN `vwNames` `v` ON `m`.`idmember` = `v`.`member_idmember`
+        LEFT JOIN `membername` `mn1` ON `v`.`FirstName` = `mn1`.`idmembername`
+        LEFT JOIN `membername` `mn2` ON `v`.`SecondName` = `mn2`.`idmembername`;
+        
+DROP VIEW IF EXISTS `vwTransaction`;
+CREATE VIEW IF NOT EXISTS `vwTransaction` AS
+SELECT t.idtransaction,m.idmember,m.idmembership,m.`membershiptype`,
+m.membershipfee,
+m.`Name`, m.businessname,
+t.`time`,t.paymentmethod,t.amount
+FROM  `transaction` t
+JOIN vwMember m ON t.member_idmember = m.idmember;
+
+DROP VIEW IF EXISTS `vwUKActiveMemberAddress` ;
+CREATE VIEW IF NOT EXISTS `vwUKActiveMemberAddress` AS
+    SELECT 
+        IFNULL(CONCAT(CASE
+                            WHEN `mn1`.`honorific` = '' THEN ''
+                            ELSE CONCAT(`mn1`.`honorific`, ' ')
+                        END,
+                        `mn1`.`firstname`,
+                        ' ',
+                        `mn1`.`surname`,
+                        CASE
+                            WHEN `mn2`.`firstname` IS NULL THEN ''
+                            ELSE CONCAT(' And ',
+                                    CASE
+                                        WHEN `mn1`.`honorific` = '' THEN ''
+                                        ELSE CONCAT(`mn2`.`honorific`, ' ')
+                                    END,
+                                    `mn2`.`firstname`,
+                                    ' ',
+                                    `mn2`.`surname`)
+                        END),
+                '') AS `Name`,
+        CASE
+            WHEN `m`.`businessname` <> '' THEN `m`.`businessname`
+            ELSE ''
+        END AS `Position`,
+        `m`.`addressfirstline` AS `Address1`,
+        `m`.`addresssecondline` AS `Address2`,
+        '' AS `Address3`,
+        `m`.`city` AS `Address4`,
+        `m`.`postcode` AS `Postcode`
     FROM
         (((`member` `m`
         LEFT JOIN `vwNames` `v` ON (`m`.`idmember` = `v`.`member_idmember`))
         LEFT JOIN `membername` `mn1` ON (`v`.`FirstName` = `mn1`.`idmembername`))
-        LEFT JOIN `membername` `mn2` ON (`v`.`SecondName` = `mn2`.`idmembername`));
+        LEFT JOIN `membername` `mn2` ON (`v`.`SecondName` = `mn2`.`idmembername`))
+    WHERE
+        `m`.`country` = 'UK'
+            AND `m`.`deletedate` IS NULL AND `m`.`postonhold` = 0;
 
-CREATE VIEW IF NOT EXISTS vwTransactions AS
-SELECT m.idmember,m.membership_idmembership,ms.`name` as `type`,
-IFNULL(m.membership_fee,ms.membershipfee) as fee,
-CONCAT(m.honorific,' ',m.firstname,' ',m.surname) as `Name`, businessname,
-t.`time`,t.paymentmethod,t.amount
-FROM vwMember m
-JOIN `membershipstatus` ms ON m.membership_idmembership = ms.idmembership
-JOIN `transaction` t ON m.idmember = t.member_idmember;
+CREATE TABLE `knightsb_membership`.`country` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB COMMENT = 'List of countries for member table';
+INSERT INTO country(id,name)VALUES(1,"Afghanistan"),
+(2,"Albania"),
+(3,"Algeria"),
+(4,"Andorra"),
+(5,"Angola"),
+(6,"Antigua and Barbuda"),
+(7,"Argentina"),
+(8,"Armenia"),
+(9,"Australia"),
+(10,"Austria"),
+(11,"Azerbaijan"),
+(12,"The Bahamas"),
+(13,"Bahrain"),
+(14,"Bangladesh"),
+(15,"Barbados"),
+(16,"Belarus"),
+(17,"Belgium"),
+(18,"Belize"),
+(19,"Benin"),
+(20,"Bhutan"),
+(21,"Bolivia"),
+(22,"Bosnia and Herzegovina"),
+(23,"Botswana"),
+(24,"Brazil"),
+(25,"Brunei"),
+(26,"Bulgaria"),
+(27,"Burkina Faso"),
+(28,"Burundi"),
+(29,"Cambodia"),
+(30,"Cameroon"),
+(31,"Canada"),
+(32,"Cape Verde"),
+(33,"Central African Republic"),
+(34,"Chad"),
+(35,"Chile"),
+(36,"China"),
+(37,"Colombia"),
+(38,"Comoros"),
+(39,"Congo, Republic of the"),
+(40,"Congo, Democratic Republic of the"),
+(41,"Costa Rica"),
+(42,"Cote d'Ivoire"),
+(43,"Croatia"),
+(44,"Cuba"),
+(45,"Cyprus"),
+(46,"Czech Republic"),
+(47,"Denmark"),
+(48,"Djibouti"),
+(49,"Dominica"),
+(50,"Dominican Republic"),
+(51,"East Timor (Timor-Leste)"),
+(52,"Ecuador"),
+(53,"Egypt"),
+(54,"El Salvador"),
+(55,"Equatorial Guinea"),
+(56,"Eritrea"),
+(57,"Estonia"),
+(58,"Ethiopia"),
+(59,"Fiji"),
+(60,"Finland"),
+(61,"France"),
+(62,"Gabon"),
+(63,"The Gambia"),
+(64,"Georgia"),
+(65,"Germany"),
+(66,"Ghana"),
+(67,"Greece"),
+(68,"Grenada"),
+(69,"Guatemala"),
+(70,"Guinea"),
+(71,"Guinea-Bissau"),
+(72,"Guyana"),
+(73,"Haiti"),
+(74,"Honduras"),
+(75,"Hungary"),
+(76,"Iceland"),
+(77,"India"),
+(78,"Indonesia"),
+(79,"Iran"),
+(80,"Iraq"),
+(81,"Ireland"),
+(82,"Israel"),
+(83,"Italy"),
+(84,"Jamaica"),
+(85,"Japan"),
+(86,"Jordan"),
+(87,"Kazakhstan"),
+(88,"Kenya"),
+(89,"Kiribati"),
+(90,"Korea, North"),
+(91,"Korea, South"),
+(92,"Kosovo"),
+(93,"Kuwait"),
+(94,"Kyrgyzstan"),
+(95,"Laos"),
+(96,"Latvia"),
+(97,"Lebanon"),
+(98,"Lesotho"),
+(99,"Liberia"),
+(100,"Libya"),
+(101,"Liechtenstein"),
+(102,"Lithuania"),
+(103,"Luxembourg"),
+(104,"Macedonia"),
+(105,"Madagascar"),
+(106,"Malawi"),
+(107,"Malaysia"),
+(108,"Maldives"),
+(109,"Mali"),
+(110,"Malta"),
+(111,"Marshall Islands"),
+(112,"Mauritania"),
+(113,"Mauritius"),
+(114,"Mexico"),
+(115,"Micronesia, Federated States of"),
+(116,"Moldova"),
+(117,"Monaco"),
+(118,"Mongolia"),
+(119,"Montenegro"),
+(120,"Morocco"),
+(121,"Mozambique"),
+(122,"Myanmar (Burma)"),
+(123,"Namibia"),
+(124,"Nauru"),
+(125,"Nepal"),
+(126,"Netherlands"),
+(127,"New Zealand"),
+(128,"Nicaragua"),
+(129,"Niger"),
+(130,"Nigeria"),
+(131,"Norway"),
+(132,"Oman"),
+(133,"Pakistan"),
+(134,"Palau"),
+(135,"Panama"),
+(136,"Papua New Guinea"),
+(137,"Paraguay"),
+(138,"Peru"),
+(139,"Philippines"),
+(140,"Poland"),
+(141,"Portugal"),
+(142,"Qatar"),
+(143,"Romania"),
+(144,"Russia"),
+(145,"Rwanda"),
+(146,"Saint Kitts and Nevis"),
+(147,"Saint Lucia"),
+(148,"Saint Vincent and the Grenadines"),
+(149,"Samoa"),
+(150,"San Marino"),
+(151,"Sao Tome and Principe"),
+(152,"Saudi Arabia"),
+(153,"Senegal"),
+(154,"Serbia"),
+(155,"Seychelles"),
+(156,"Sierra Leone"),
+(157,"Singapore"),
+(158,"Slovakia"),
+(159,"Slovenia"),
+(160,"Solomon Islands"),
+(161,"Somalia"),
+(162,"South Africa"),
+(163,"South Sudan"),
+(164,"Spain"),
+(165,"Sri Lanka"),
+(166,"Sudan"),
+(167,"Suriname"),
+(168,"Swaziland"),
+(169,"Sweden"),
+(170,"Switzerland"),
+(171,"Syria"),
+(172,"Taiwan"),
+(173,"Tajikistan"),
+(174,"Tanzania"),
+(175,"Thailand"),
+(176,"Togo"),
+(177,"Tonga"),
+(178,"Trinidad and Tobago"),
+(179,"Tunisia"),
+(180,"Turkey"),
+(181,"Turkmenistan"),
+(182,"Tuvalu"),
+(183,"Uganda"),
+(184,"Ukraine"),
+(185,"United Arab Emirates"),
+(186,"United Kingdom"),
+(187,"United States of America"),
+(188,"Uruguay"),
+(189,"Uzbekistan"),
+(190,"Vanuatu"),
+(191,"Vatican City (Holy See)"),
+(192,"Venezuela"),
+(193,"Vietnam"),
+(194,"Yemen"),
+(195,"Zambia"),
+(196,"Zimbabwe");
 
-ALTER TABLE `user` ADD `failedloginattempts` INT NOT NULL DEFAULT '0' COMMENT 'The number of failed logins. Resets to zero after success.' AFTER `name`;
 
+
+ALTER TABLE `member` ADD `countryID` INT NULL AFTER `country`;
+ALTER TABLE `member` ADD `country2ID` INT NULL AFTER `country2`;
+UPDATE `member` SET countryID = 186 WHERE country = 'UK';
+UPDATE `member` SET countryID = 187 WHERE idmember IN (119,139);
+UPDATE `member` SET countryID = 180 WHERE idmember = 71;
+UPDATE `member` SET countryID = 36 WHERE idmember = 349;
+UPDATE `member` SET countryID = 77 WHERE idmember = 460;
+UPDATE `member` SET countryID = 65 WHERE idmember = 311;
+UPDATE `member` SET country2ID = 186 WHERE country2 = 'UK';
+ALTER TABLE `member` DROP `country`;
+ALTER TABLE `member` DROP `country2`;
 COMMIT;

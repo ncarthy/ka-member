@@ -159,6 +159,7 @@ class Member{
         $this->reminderdate = !empty($this->reminderdate) ? $this->reminderdate : NULL;
         $this->updatedate = !empty($this->updatedate) ? $this->updatedate : NULL;
         $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;
+        $this->country = !empty($this->country) ? $this->country : 'UK';
 
         // bind values
         $stmt->bindParam(":title", $this->title);
