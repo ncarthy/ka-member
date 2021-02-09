@@ -43,7 +43,8 @@ class Members{
                                 m.country,
                                 Count(t.idtransaction) as count
                         FROM vwMember m
-                        LEFT OUTER JOIN vwTransaction t ON m.idmember = t.idmember AND DATE_SUB(NOW(), INTERVAL 12 MONTH) < `t`.`time`
+                        LEFT OUTER JOIN vwTransaction t ON m.idmember = t.idmember 
+                                    AND DATE_SUB(NOW(), INTERVAL 12 MONTH) < `t`.`date`
                         WHERE m.idmembership IN (5,6) AND m.deletedate IS NULL
                         GROUP BY m.idmember
                         ORDER BY membershiptype                                      
@@ -55,7 +56,39 @@ class Members{
             $stmt->execute();
         }
         catch(PDOException $exception){
-            echo "Error retrieving lift/hon members" . $exception->getMessage();
+            echo "Error occurred retrieving lift/hon members.\nError message:" . $exception->getMessage();
+        }
+        
+        return $stmt;
+    }
+
+    public function lapsedMembers($months){
+
+        //select all data
+        $query = "SELECT m.idmember, m.membershiptype,m.Name, 
+                        IFNULL(m.businessname,'') as BusinessName, m.Note,
+                        m.updatedate, m.expirydate,  
+                        m.reminderdate,
+                        COUNT(t.idtransaction) as `count`, 
+                        MAX(t.`date`) AS `last`
+                    FROM vwMember m
+                    LEFT OUTER JOIN vwTransaction t ON m.idmember = t.idmember
+                    WHERE m.idmembership IN (2,3,4,10) AND m.deletedate IS NULL
+                    GROUP BY m.idmember
+                    HAVING `last` IS NULL OR 
+                        `last` < DATE_SUB(NOW(), INTERVAL " .
+                        $months
+                        . " MONTH)
+                    ORDER BY `last`                                     
+                    ";
+
+        $stmt = $this->conn->prepare( $query );
+        try{
+            // execute query
+            $stmt->execute();
+        }
+        catch(PDOException $exception){
+            echo "Error occurred retrieving lapsed members.\nError message:" . $exception->getMessage();
         }
         
         return $stmt;

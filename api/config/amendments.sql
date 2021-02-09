@@ -100,7 +100,8 @@ ALTER TABLE `member` CHANGE `updatedate` `updatedate` TIMESTAMP NOT NULL DEFAULT
 
 ALTER TABLE `user` ADD `failedloginattempts` INT NOT NULL DEFAULT '0' COMMENT 'The number of failed logins. Resets to zero after success.' AFTER `name`;
 
-DELETE FROM `transaction` WHERE idtransaction = 9005;
+DELETE FROM `transaction` WHERE idtransaction IN (6464,8464,9005);
+ALTER TABLE `transaction` CHANGE `time` `date` DATE NOT NULL;
 
 
 CREATE TABLE `knightsb_membership`.`country` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB COMMENT = 'List of countries for member table';
@@ -402,7 +403,7 @@ CREATE VIEW IF NOT EXISTS `vwTransaction` AS
 SELECT t.idtransaction,m.idmember,m.idmembership,m.`membershiptype`,
 m.membershipfee,
 m.`Name`, m.businessname,
-t.`time`,t.paymentmethod,t.amount
+t.`date`,t.paymentmethod,t.amount
 FROM  `transaction` t
 JOIN vwMember m ON t.member_idmember = m.idmember;
 
