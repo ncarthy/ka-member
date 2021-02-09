@@ -93,5 +93,40 @@ class Members{
         
         return $stmt;
     }
+
+    public function contributingExMembers($start, $end){
+
+        //select all data
+        $query1 = "DROP TEMPORARY TABLE IF EXISTS _Transactions;";
+        $query2 = "CREATE TEMPORARY TABLE IF NOT EXISTS _Transactions AS (      
+                    SELECT idmember,membershiptype,Name,businessname, 
+                        SUM(amount) as amount, Max(`date`) as `date`,
+                        CASE WHEN SUM(amount)<0 THEN 1 ELSE 0 END as `Refund`,
+                        CASE WHEN SUM(amount)>=0 AND idmembership=8 THEN 1 ELSE 0 END as `CEM`,
+                        CASE WHEN SUM(amount)>=0 AND amount < membershipfee AND idmembership!=8 THEN 1 ELSE 0 END as `B/O`,
+                        CASE WHEN SUM(amount)>0 AND idmembership IN (5,6) THEN 1 ELSE 0 END as `Hon/Life`,
+                        CASE WHEN SUM(amount) = membershipfee THEN 1 ELSE 0 END as `Correct`
+                    FROM vwTransaction t
+                    WHERE `date` >=  '" . $start ."'
+                     AND `date` <= '" . $end . "'
+                    GROUP BY idmember,membershiptype,Name,businessname
+                    HAVING COUNT(*) = 1 );";
+        $query3 = "SELECT * FROM _Transactions WHERE CEM = 1 ORDER BY `date`;";
+        $query4 = "DROP TEMPORARY TABLE IF EXISTS _Transactions;";
+
+        $this->conn->query($query1);
+        $this->conn->query($query2);
+        $stmt = $this->conn->prepare( $query3 );
+        try{
+            // execute query
+            $stmt->execute();
+            $this->conn->query($query4);
+        }
+        catch(PDOException $exception){
+            echo "Error occurred retrieving contributing ex-members.\nError message:" . $exception->getMessage();
+        }
+        
+        return $stmt;
+    }
 }
 ?>

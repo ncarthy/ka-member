@@ -170,7 +170,7 @@ class Transaction{
         }
 
     function delete(){
-        $query = "DELETE FROM " . $this->table_name . " WHERE iduser = ?";
+        $query = "DELETE FROM " . $this->table_name . " WHERE idtransaction = ?";
 
         $stmt = $this->conn->prepare($query);
         $this->id=htmlspecialchars(strip_tags($this->id));
@@ -184,7 +184,7 @@ class Transaction{
         return false;
     }
 
-    // used for paging products
+    // used for paging
     public function count(){
         $query = "SELECT COUNT(*) as total_rows FROM " . $this->table_name . "";
     
