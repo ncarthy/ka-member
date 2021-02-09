@@ -45,6 +45,7 @@ class Member{
     public $gdpr_tel;
     public $gdpr_address;
     public $gdpr_sm;
+    public $postonhold;
 
     // used by select drop-down list
     public function readAll(){
@@ -56,7 +57,7 @@ class Member{
                     addresssecondline2, city2, county2, postcode2, country2, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate
+                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold
                     FROM
                     " . $this->table_name;                    
 
@@ -109,7 +110,8 @@ class Member{
                     gdpr_email=:gdpr_email, 
                     gdpr_tel=:gdpr_tel, 
                     gdpr_address=:gdpr_address, 
-                    gdpr_sm=:gdpr_sm
+                    gdpr_sm=:gdpr_sm,
+                    postonhold=:postonhold
                     ;";
         
         // prepare query
@@ -150,6 +152,7 @@ class Member{
         $this->gdpr_tel=htmlspecialchars(strip_tags($this->gdpr_tel));
         $this->gdpr_address=htmlspecialchars(strip_tags($this->gdpr_address));
         $this->gdpr_sm=htmlspecialchars(strip_tags($this->gdpr_sm));
+        $this->postonhold=htmlspecialchars(strip_tags($this->postonhold));
         
         $this->expirydate = !empty($this->expirydate) ? $this->expirydate : NULL;
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;
@@ -192,7 +195,7 @@ class Member{
         $stmt->bindParam(":gdpr_tel", $this->gdpr_tel);
         $stmt->bindParam(":gdpr_address", $this->gdpr_address);
         $stmt->bindParam(":gdpr_sm", $this->gdpr_sm);
-        
+        $stmt->bindParam(":postonhold", $this->postonhold);
         
         // execute query
         if($stmt->execute()){
@@ -244,7 +247,8 @@ class Member{
                     gdpr_email=:gdpr_email, 
                     gdpr_tel=:gdpr_tel, 
                     gdpr_address=:gdpr_address, 
-                    gdpr_sm=:gdpr_sm                    
+                    gdpr_sm=:gdpr_sm,
+                    postonhold=:postonhold                    
                  WHERE
                     idmember=:id";
         
@@ -286,6 +290,7 @@ class Member{
         $this->gdpr_tel=htmlspecialchars(strip_tags($this->gdpr_tel));
         $this->gdpr_address=htmlspecialchars(strip_tags($this->gdpr_address));
         $this->gdpr_sm=htmlspecialchars(strip_tags($this->gdpr_sm));
+        $this->postonhold=htmlspecialchars(strip_tags($this->postonhold));
         
         $this->expirydate = !empty($this->expirydate) ? $this->expirydate : NULL;
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;
@@ -329,6 +334,7 @@ class Member{
         $stmt->bindParam(":gdpr_tel", $this->gdpr_tel);
         $stmt->bindParam(":gdpr_address", $this->gdpr_address);
         $stmt->bindParam(":gdpr_sm", $this->gdpr_sm);     
+        $stmt->bindParam(":postonhold", $this->postonhold);
 
         // execute query
         if($stmt->execute()){
@@ -348,7 +354,7 @@ class Member{
                     addresssecondline2, city2, county2, postcode2, country2, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate
+                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold
                     FROM
                     " . $this->table_name . " 
                     WHERE idmember = ?
@@ -403,6 +409,7 @@ class Member{
             $this->gdpr_tel = $row['gdpr_tel'];
             $this->gdpr_address = $row['gdpr_address'];
             $this->gdpr_sm = $row['gdpr_sm'];            
+            $this->postonhold = $row['postonhold'];       
         }
     }
 

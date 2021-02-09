@@ -76,6 +76,7 @@ $item->gdpr_email = $data->gdpr_email;
 $item->gdpr_tel = $data->gdpr_tel;
 $item->gdpr_address = $data->gdpr_address;
 $item->gdpr_sm = $data->gdpr_sm;
+$item->postonhold = $data->postonhold;
 
 // UPDATE the row in the database
 if($item->update()){

@@ -29,6 +29,7 @@ ALTER TABLE `member` ADD `reminderdate` DATE NULL AFTER `joindate`;
 ALTER TABLE `member` CHANGE `expirydate` `expirydate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` CHANGE `joindate` `joindate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` CHANGE `deletedate` `deletedate` DATE NULL DEFAULT NULL;
+ALTER TABLE `member` ADD `postonhold` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'When 1 send no mail to member' AFTER `membership_fee`;
 
 ALTER TABLE `membershipstatus` ADD `multiplier` DECIMAL(11,2) NOT NULL DEFAULT '1' AFTER `name`;
 ALTER TABLE `membershipstatus` ADD `membershipfee` DECIMAL(11,2) NOT NULL DEFAULT '0' AFTER `multiplier`;

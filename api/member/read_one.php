@@ -78,6 +78,7 @@ $member_item=array(
     "gdpr_tel" => $member->gdpr_tel,
     "gdpr_address" => $member->gdpr_address,
     "gdpr_sm" => $member->gdpr_sm,    
+    "postonhold" => $member->postonhold
 );
 
 // make it json format

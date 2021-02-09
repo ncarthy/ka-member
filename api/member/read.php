@@ -81,7 +81,8 @@ if($num>0){
             "gdpr_email" => $gdpr_email,
             "gdpr_tel" => $gdpr_tel,
             "gdpr_address" => $gdpr_address,
-            "gdpr_sm" => $gdpr_sm
+            "gdpr_sm" => $gdpr_sm,
+            "postonhold" => $postonhold
         );
 
         // create associative array keyed on id

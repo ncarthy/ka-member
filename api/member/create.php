@@ -71,6 +71,7 @@ $new_item->gdpr_email = $data->gdpr_email;
 $new_item->gdpr_tel = $data->gdpr_tel;
 $new_item->gdpr_address = $data->gdpr_address;
 $new_item->gdpr_sm = $data->gdpr_sm;
+$new_item->postonhold = $data->postonhold;
 
 // INSERT the row into the database
 if($new_item->create()){
