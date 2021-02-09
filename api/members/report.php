@@ -31,10 +31,19 @@ $member = new Members($db);
 //    plus one day e.g. '2020-02-10'
 $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
 $start = isset($_GET['start']) ? $_GET['start'] : (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
+$reportname = isset($_GET['report_name']) ? $_GET['report_name'] : die();
 
-
-// query 
-$stmt = $member->contributingExMembers($start, $end);
+switch ($reportname) {
+    case 'CEM':
+        $stmt = $member->contributingExMembers($start, $end);
+        break;
+    case 'discounts':
+        $stmt = $member->discountMembers($start, $end);
+        break;
+    case 'payingHonLife':
+        $stmt = $member->payingHonLifeMembers($start, $end);
+        break;
+}
 $num = $stmt->rowCount();
 
 // check if more than 0 record found
@@ -57,7 +66,8 @@ if($num>0){
             "type" => $membershiptype,
             "name" => $Name,
             "business" => $businessname,
-            "amount" => $amount,
+            "expected_fee" => $membershipfee,
+            "amount_received" => $amount,
             "date" => $date
         );
 

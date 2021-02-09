@@ -94,39 +94,68 @@ class Members{
         return $stmt;
     }
 
-    public function contributingExMembers($start, $end){
+    public function contributingExMembers($start, $end){       
+        return $this->tabulateTransactionData('CEM', $start, $end);
+    }
 
-        //select all data
-        $query1 = "DROP TEMPORARY TABLE IF EXISTS _Transactions;";
-        $query2 = "CREATE TEMPORARY TABLE IF NOT EXISTS _Transactions AS (      
-                    SELECT idmember,membershiptype,Name,businessname, 
-                        SUM(amount) as amount, Max(`date`) as `date`,
-                        CASE WHEN SUM(amount)<0 THEN 1 ELSE 0 END as `Refund`,
-                        CASE WHEN SUM(amount)>=0 AND idmembership=8 THEN 1 ELSE 0 END as `CEM`,
-                        CASE WHEN SUM(amount)>=0 AND amount < membershipfee AND idmembership!=8 THEN 1 ELSE 0 END as `B/O`,
-                        CASE WHEN SUM(amount)>0 AND idmembership IN (5,6) THEN 1 ELSE 0 END as `Hon/Life`,
-                        CASE WHEN SUM(amount) = membershipfee THEN 1 ELSE 0 END as `Correct`
-                    FROM vwTransaction t
-                    WHERE `date` >=  '" . $start ."'
-                     AND `date` <= '" . $end . "'
-                    GROUP BY idmember,membershiptype,Name,businessname
-                    HAVING COUNT(*) = 1 );";
-        $query3 = "SELECT * FROM _Transactions WHERE CEM = 1 ORDER BY `date`;";
-        $query4 = "DROP TEMPORARY TABLE IF EXISTS _Transactions;";
+    public function discountMembers($start, $end){       
+        return $this->tabulateTransactionData('Discount', $start, $end);
+    }
 
-        $this->conn->query($query1);
-        $this->conn->query($query2);
-        $stmt = $this->conn->prepare( $query3 );
+    public function payingHonLifeMembers($start, $end){       
+        return $this->tabulateTransactionData('HonLife', $start, $end);
+    }
+
+    private function tabulateTransactionData($column, $start, $end){
+
+        $tablename = '_Transactions_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
+        
+        $query = "SELECT * FROM ".$tablename." WHERE ".$column." = 1 ORDER BY `date`;";      
+        $stmt = $this->conn->prepare( $query );  
+
         try{
-            // execute query
+
+            $this->dropTemporaryTransactionTable($tablename); // Clear any old table
+
+            // Get transaction data for the time period
+            $this->populateTemporaryTransactionTable($tablename, $start, $end);
+
+            // narrow down the data according to criteria          
             $stmt->execute();
-            $this->conn->query($query4);
+
+            $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
         }
         catch(PDOException $exception){
-            echo "Error occurred retrieving contributing ex-members.\nError message:" . $exception->getMessage();
+            echo "Error occurred retrieving transaction data.\nError message:" . $exception->getMessage();
         }
         
         return $stmt;
+    }
+
+    /* SELECT INTO a a temporary table a list of all transaciotns between the start and end dates for members
+      who do not have duplicate transactions */
+    private function populateTemporaryTransactionTable($tablename, $start, $end){
+
+        $query = "CREATE TEMPORARY TABLE IF NOT EXISTS ".$tablename." AS (      
+                        SELECT idmember,membershiptype,Name,businessname, membershipfee,
+                            SUM(amount) as amount, Max(`date`) as `date`,
+                            CASE WHEN SUM(amount)>=0 AND idmembership=8 THEN 1 ELSE 0 END as `CEM`,
+                            CASE WHEN SUM(amount)>=0 AND SUM(amount) < membershipfee AND idmembership NOT IN(5,6,8) THEN 1 ELSE 0 END as `Discount`,
+                            CASE WHEN SUM(amount)>0 AND idmembership IN (5,6) THEN 1 ELSE 0 END as `HonLife`,
+                            CASE WHEN SUM(amount) = membershipfee THEN 1 ELSE 0 END as `Correct`
+                        FROM vwTransaction t
+                        WHERE `date` >=  '" . $start ."'
+                        AND `date` <= '" . $end . "'
+                        GROUP BY idmember,membershiptype,Name,businessname
+                    );";
+        $this->conn->query($query);
+    }
+
+        /* DROP the given temporary table */
+      private function dropTemporaryTransactionTable($tablename){
+
+        $query = "DROP TEMPORARY TABLE IF EXISTS ".$tablename.";";
+        $this->conn->query($query);
     }
 }
 ?>
