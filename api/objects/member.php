@@ -35,6 +35,7 @@ class Member{
     public $statusID;
     public $expirydate;
     public $joindate;
+    public $reminderdate;
     public $updatedate;
     public $deletedate;
     public $repeatpayment;
@@ -55,7 +56,7 @@ class Member{
                     addresssecondline2, city2, county2, postcode2, country2, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                    gdpr_tel, gdpr_address, gdpr_sm
+                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate
                     FROM
                     " . $this->table_name;                    
 
@@ -99,6 +100,7 @@ class Member{
                     membership_idmembership=:statusID, 
                     expirydate=:expirydate, 
                     joindate=:joindate, 
+                    reminderdate=:reminderdate,
                     updatedate=:updatedate, 
                     deletedate=:deletedate, 
                     repeatpayment=:repeatpayment, 
@@ -138,6 +140,7 @@ class Member{
         $this->statusID=htmlspecialchars(strip_tags($this->statusID));
         $this->expirydate=htmlspecialchars(strip_tags($this->expirydate));
         $this->joindate=htmlspecialchars(strip_tags($this->joindate));
+        $this->reminderdate=htmlspecialchars(strip_tags($this->reminderdate));
         $this->updatedate=htmlspecialchars(strip_tags($this->updatedate));
         $this->deletedate=htmlspecialchars(strip_tags($this->deletedate));
         $this->repeatpayment=htmlspecialchars(strip_tags($this->repeatpayment));
@@ -150,6 +153,7 @@ class Member{
         
         $this->expirydate = !empty($this->expirydate) ? $this->expirydate : NULL;
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;
+        $this->reminderdate = !empty($this->reminderdate) ? $this->reminderdate : NULL;
         $this->updatedate = !empty($this->updatedate) ? $this->updatedate : NULL;
         $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;
 
@@ -178,6 +182,7 @@ class Member{
         $stmt->bindParam(":statusID", $this->statusID);
         $stmt->bindParam(":expirydate", $this->expirydate);
         $stmt->bindParam(":joindate", $this->joindate);
+        $stmt->bindParam(":reminderdate", $this->reminderdate);
         $stmt->bindParam(":updatedate", $this->updatedate);
         $stmt->bindParam(":deletedate", $this->deletedate);
         $stmt->bindParam(":repeatpayment", $this->repeatpayment);
@@ -230,6 +235,7 @@ class Member{
                     membership_idmembership=:statusID, 
                     expirydate=:expirydate, 
                     joindate=:joindate, 
+                    reminderdate=:reminderdate,
                     updatedate=:updatedate, 
                     deletedate=:deletedate, 
                     repeatpayment=:repeatpayment, 
@@ -270,6 +276,7 @@ class Member{
         $this->statusID=htmlspecialchars(strip_tags($this->statusID));
         $this->expirydate=htmlspecialchars(strip_tags($this->expirydate));
         $this->joindate=htmlspecialchars(strip_tags($this->joindate));
+        $this->reminderdate=htmlspecialchars(strip_tags($this->reminderdate));
         $this->updatedate=htmlspecialchars(strip_tags($this->updatedate));
         $this->deletedate=htmlspecialchars(strip_tags($this->deletedate));
         $this->repeatpayment=htmlspecialchars(strip_tags($this->repeatpayment));
@@ -282,6 +289,7 @@ class Member{
         
         $this->expirydate = !empty($this->expirydate) ? $this->expirydate : NULL;
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;
+        $this->reminderdate = !empty($this->reminderdate) ? $this->reminderdate : NULL;
         $this->updatedate = !empty($this->updatedate) ? $this->updatedate : NULL;
         $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;
 
@@ -311,6 +319,7 @@ class Member{
         $stmt->bindParam(":statusID", $this->statusID);
         $stmt->bindParam(":expirydate", $this->expirydate);
         $stmt->bindParam(":joindate", $this->joindate);
+        $stmt->bindParam(":reminderdate", $this->reminderdate);
         $stmt->bindParam(":updatedate", $this->updatedate);
         $stmt->bindParam(":deletedate", $this->deletedate);
         $stmt->bindParam(":repeatpayment", $this->repeatpayment);
@@ -339,7 +348,7 @@ class Member{
                     addresssecondline2, city2, county2, postcode2, country2, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                    gdpr_tel, gdpr_address, gdpr_sm
+                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate
                     FROM
                     " . $this->table_name . " 
                     WHERE idmember = ?
@@ -384,6 +393,7 @@ class Member{
             $this->statusID = $row['statusID'];
             $this->expirydate = $row['expirydate'];
             $this->joindate = $row['joindate'];
+            $this->reminderdate = $row['reminderdate'];
             $this->updatedate = $row['updatedate'];
             $this->deletedate = $row['deletedate'];
             $this->repeatpayment = $row['repeatpayment'];

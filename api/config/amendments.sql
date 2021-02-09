@@ -25,6 +25,10 @@ ALTER TABLE `member` CHANGE `addressfirstline2` `addressfirstline2` VARCHAR(255)
 ALTER TABLE `member` CHANGE `addresssecondline2` `addresssecondline2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 ALTER TABLE `member` ADD `multiplier` DECIMAL(11,2) NULL AFTER `gdpr_sm`;
 ALTER TABLE `member` ADD `membership_fee` DECIMAL(11,2) NULL AFTER `multiplier`;
+ALTER TABLE `member` ADD `reminderdate` DATE NULL AFTER `joindate`;
+ALTER TABLE `member` CHANGE `expirydate` `expirydate` DATE NULL DEFAULT NULL;
+ALTER TABLE `member` CHANGE `joindate` `joindate` DATE NULL DEFAULT NULL;
+ALTER TABLE `member` CHANGE `deletedate` `deletedate` DATE NULL DEFAULT NULL;
 
 ALTER TABLE `membershipstatus` ADD `multiplier` DECIMAL(11,2) NOT NULL DEFAULT '1' AFTER `name`;
 ALTER TABLE `membershipstatus` ADD `membershipfee` DECIMAL(11,2) NOT NULL DEFAULT '0' AFTER `multiplier`;

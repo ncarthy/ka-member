@@ -62,6 +62,7 @@ $new_item->statusID = $data->statusID;
 $new_item->expirydate = $data->expirydate;
 $new_item->joindate = $data->joindate;
 $new_item->updatedate = $data->updatedate;
+$new_item->reminderdate = $data->reminderdate;
 $new_item->deletedate = $data->deletedate;
 $new_item->repeatpayment = $data->repeatpayment;
 $new_item->recurringpayment = $data->recurringpayment;

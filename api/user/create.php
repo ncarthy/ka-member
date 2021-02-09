@@ -41,6 +41,7 @@ $new_item->username = $data->username;
 $new_item->isadmin = $data->isadmin;
 $new_item->suspended = $data->suspended;
 $new_item->fullname = $data->fullname;
+$new_item->failedloginattempts = $data->failedloginattempts;
 $new_item->password = password_hash($data->password, PASSWORD_DEFAULT);
 
 // INSERT the row into the database

@@ -72,6 +72,7 @@ if($num>0){
             "statusID" => $statusID,
             "expirydate" => $expirydate,
             "joindate" => $joindate,
+            "reminderdate" => $reminderdate,
             "updatedate" => $updatedate,
             "deletedate" => $deletedate,
             "repeatpayment" => $repeatpayment,

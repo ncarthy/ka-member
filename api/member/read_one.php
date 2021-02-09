@@ -68,6 +68,7 @@ $member_item=array(
     "statusID" => $member->statusID,
     "expirydate" => $member->expirydate,
     "joindate" => $member->joindate,
+    "reminderdate" => $member->reminderdate,
     "updatedate" => $member->updatedate,
     "deletedate" => $member->deletedate,
     "repeatpayment" => $member->repeatpayment,

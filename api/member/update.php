@@ -66,6 +66,7 @@ $item->phone2 = $data->phone2;
 $item->statusID = $data->statusID;
 $item->expirydate = $data->expirydate;
 $item->joindate = $data->joindate;
+$item->reminderdate = $data->reminderdate;
 $item->updatedate = null;
 $item->deletedate = $data->deletedate;
 $item->repeatpayment = $data->repeatpayment;

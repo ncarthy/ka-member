@@ -47,7 +47,8 @@ class User{
                     username=:username,
                     isAdmin=:isadmin, 
                     name=:fullname,
-                    suspended=:suspended
+                    suspended=:suspended,
+                    failedloginattempts=:failedloginattempts
                     " . (isset($this->password)?',new_pass=:password ':'');
         
         // prepare query
@@ -58,12 +59,14 @@ class User{
         $this->isadmin=filter_var($this->isadmin, FILTER_SANITIZE_NUMBER_INT);
         $this->suspended=filter_var($this->suspended, FILTER_SANITIZE_NUMBER_INT);
         $this->fullname=htmlspecialchars(strip_tags($this->fullname));
+        $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
 
         // bind values
         $stmt->bindParam(":username", $this->username);
         $stmt->bindParam(":isadmin", $this->isadmin);
         $stmt->bindParam(":suspended", $this->suspended);
         $stmt->bindParam(":fullname", $this->fullname);
+        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts);
         $stmt->bindParam(":password", $this->password);
         
 
@@ -106,6 +109,8 @@ class User{
             $this->password=htmlspecialchars(strip_tags($this->password));
             $stmt->bindParam(":password", $this->password);
         }
+
+        $this->failedloginattempts = !empty($this->failedloginattempts) ? $this->failedloginattempts : 0;
 
         // bind values
         $stmt->bindParam(":id", $this->id);
