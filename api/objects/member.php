@@ -20,7 +20,7 @@ class Member{
     public $city;
     public $county;
     public $postcode;
-    public $country;
+    public $countryID;
     public $area;
     public $email1;
     public $phone1;
@@ -29,7 +29,7 @@ class Member{
     public $city2;
     public $county2;
     public $postcode2;
-    public $country2;
+    public $country2ID;
     public $email2;
     public $phone2;
     public $statusID;
@@ -53,8 +53,8 @@ class Member{
         //select all data
         $query = "SELECT
                     idmember as `id`, title, businessname, bankpayerref, note, addressfirstline,
-                    addresssecondline, city, county, postcode, country, area, addressfirstline2,
-                    addresssecondline2, city2, county2, postcode2, country2, email1, email2,
+                    addresssecondline, city, county, postcode, countryID, area, addressfirstline2,
+                    addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
                     gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold
@@ -86,7 +86,7 @@ class Member{
                     city=:city, 
                     county=:county, 
                     postcode=:postcode,
-                    country=:country, 
+                    countryID=:countryID, 
                     area=:area,
                     email1=:email1, 
                     phone1=:phone1, 
@@ -95,7 +95,7 @@ class Member{
                     city2=:city2, 
                     county2=:county2, 
                     postcode2=:postcode2,
-                    country2=:country2, 
+                    country2ID=:country2ID, 
                     email2=:email2, 
                     phone2=:phone2, 
                     membership_idmembership=:statusID, 
@@ -127,7 +127,7 @@ class Member{
         $this->city=htmlspecialchars(strip_tags($this->city));
         $this->county=htmlspecialchars(strip_tags($this->county));
         $this->postcode=htmlspecialchars(strip_tags($this->postcode));
-        $this->country=htmlspecialchars(strip_tags($this->country));
+        $this->countryID=htmlspecialchars(strip_tags($this->countryID));
         $this->area=htmlspecialchars(strip_tags($this->area));
         $this->email1=htmlspecialchars(strip_tags($this->email1));
         $this->phone1=htmlspecialchars(strip_tags($this->phone1));
@@ -136,7 +136,7 @@ class Member{
         $this->city2=htmlspecialchars(strip_tags($this->city2));
         $this->county2=htmlspecialchars(strip_tags($this->county2));
         $this->postcode2=htmlspecialchars(strip_tags($this->postcode2));
-        $this->country2=htmlspecialchars(strip_tags($this->country2));
+        $this->country2ID=htmlspecialchars(strip_tags($this->country2ID));
         $this->email2=htmlspecialchars(strip_tags($this->email2));
         $this->phone2=htmlspecialchars(strip_tags($this->phone2));
         $this->statusID=htmlspecialchars(strip_tags($this->statusID));
@@ -158,8 +158,9 @@ class Member{
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;
         $this->reminderdate = !empty($this->reminderdate) ? $this->reminderdate : NULL;
         $this->updatedate = !empty($this->updatedate) ? $this->updatedate : NULL;
-        $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;
-        $this->country = !empty($this->country) ? $this->country : 'UK';
+        $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;        
+        $this->countryID = !empty($this->countryID) ? $this->countryID : NULL;
+        $this->country2ID = !empty($this->country2ID) ? $this->country2ID : NULL;
 
         // bind values
         $stmt->bindParam(":title", $this->title);
@@ -171,7 +172,7 @@ class Member{
         $stmt->bindParam(":city", $this->city);
         $stmt->bindParam(":county", $this->county);
         $stmt->bindParam(":postcode", $this->postcode);
-        $stmt->bindParam(":country", $this->country);
+        $stmt->bindParam(":countryID", $this->countryID);
         $stmt->bindParam(":area", $this->area);
         $stmt->bindParam(":email1", $this->email1);
         $stmt->bindParam(":phone1", $this->phone1);
@@ -180,7 +181,7 @@ class Member{
         $stmt->bindParam(":city2", $this->city2);
         $stmt->bindParam(":county2", $this->county2);
         $stmt->bindParam(":postcode2", $this->postcode2);
-        $stmt->bindParam(":country2", $this->country2);
+        $stmt->bindParam(":country2ID", $this->country2ID);
         $stmt->bindParam(":email2", $this->email2);
         $stmt->bindParam(":phone2", $this->phone2);
         $stmt->bindParam(":statusID", $this->statusID);
@@ -224,7 +225,7 @@ class Member{
                     city=:city, 
                     county=:county, 
                     postcode=:postcode, 
-                    country=:country, 
+                    countryID=:countryID, 
                     area=:area, 
                     email1=:email1, 
                     phone1=:phone1, 
@@ -233,7 +234,7 @@ class Member{
                     city2=:city2, 
                     county2=:county2, 
                     postcode2=:postcode2, 
-                    country2=:country2, 
+                    country2ID=:country2ID, 
                     email2=:email2, 
                     phone2=:phone2, 
                     membership_idmembership=:statusID, 
@@ -266,7 +267,7 @@ class Member{
         $this->city=htmlspecialchars(strip_tags($this->city));
         $this->county=htmlspecialchars(strip_tags($this->county));
         $this->postcode=htmlspecialchars(strip_tags($this->postcode));
-        $this->country=htmlspecialchars(strip_tags($this->country));
+        $this->countryID=htmlspecialchars(strip_tags($this->countryID));
         $this->area=htmlspecialchars(strip_tags($this->area));
         $this->email1=htmlspecialchars(strip_tags($this->email1));
         $this->phone1=htmlspecialchars(strip_tags($this->phone1));
@@ -275,7 +276,7 @@ class Member{
         $this->city2=htmlspecialchars(strip_tags($this->city2));
         $this->county2=htmlspecialchars(strip_tags($this->county2));
         $this->postcode2=htmlspecialchars(strip_tags($this->postcode2));
-        $this->country2=htmlspecialchars(strip_tags($this->country2));
+        $this->country2ID=htmlspecialchars(strip_tags($this->country2ID));
         $this->email2=htmlspecialchars(strip_tags($this->email2));
         $this->phone2=htmlspecialchars(strip_tags($this->phone2));
         $this->statusID=htmlspecialchars(strip_tags($this->statusID));
@@ -298,6 +299,8 @@ class Member{
         $this->reminderdate = !empty($this->reminderdate) ? $this->reminderdate : NULL;
         $this->updatedate = !empty($this->updatedate) ? $this->updatedate : NULL;
         $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;
+        $this->countryID = !empty($this->countryID) ? $this->countryID : NULL;
+        $this->country2ID = !empty($this->country2ID) ? $this->country2ID : NULL;
 
         // bind values
         $stmt->bindParam(":id", $this->id);
@@ -310,7 +313,7 @@ class Member{
         $stmt->bindParam(":city", $this->city);
         $stmt->bindParam(":county", $this->county);
         $stmt->bindParam(":postcode", $this->postcode);
-        $stmt->bindParam(":country", $this->country);
+        $stmt->bindParam(":countryID", $this->countryID);
         $stmt->bindParam(":area", $this->area);
         $stmt->bindParam(":email1", $this->email1);
         $stmt->bindParam(":phone1", $this->phone1);
@@ -319,7 +322,7 @@ class Member{
         $stmt->bindParam(":city2", $this->city2);
         $stmt->bindParam(":county2", $this->county2);
         $stmt->bindParam(":postcode2", $this->postcode2);
-        $stmt->bindParam(":country2", $this->country2);
+        $stmt->bindParam(":country2ID", $this->country2ID);
         $stmt->bindParam(":email2", $this->email2);
         $stmt->bindParam(":phone2", $this->phone2);
         $stmt->bindParam(":statusID", $this->statusID);
@@ -351,8 +354,8 @@ class Member{
         //select all data
         $query = "SELECT
                     idmember as `id`, title, businessname, bankpayerref, note, addressfirstline,
-                    addresssecondline, city, county, postcode, country, area, addressfirstline2,
-                    addresssecondline2, city2, county2, postcode2, country2, email1, email2,
+                    addresssecondline, city, county, postcode, countryID, area, addressfirstline2,
+                    addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
                     gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold
@@ -385,7 +388,7 @@ class Member{
             $this->city = $row['city'];
             $this->county = $row['county'];
             $this->postcode = $row['postcode'];
-            $this->country = $row['country'];
+            $this->countryID = $row['countryID'];
             $this->area = $row['area'];
             $this->email1 = $row['email1'];
             $this->phone1 = $row['phone1'];
@@ -394,7 +397,7 @@ class Member{
             $this->city2 = $row['city2'];
             $this->county2 = $row['county2'];
             $this->postcode2 = $row['postcode2'];
-            $this->country2 = $row['country2'];
+            $this->country2ID = $row['country2ID'];
             $this->email2 = $row['email2'];
             $this->phone2 = $row['phone2'];
             $this->statusID = $row['statusID'];
