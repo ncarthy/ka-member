@@ -29,12 +29,25 @@ $filter->reset();
 $data = json_decode(file_get_contents("php://input"));
 
 if(isset($data->surname)) {
-    $filter->surname($data->surname);
+    $filter->setSurname($data->surname);
 }
-if(isset($data->removed)) {
-    $filter->deleted();
+if(isset($data->businessname)) {
+    $filter->setBusinessname($data->businessname);
+}
+
+// The default is to only view the un-deleted members
+// So if removed is set to 0 or is missing then only
+// non-deleted members will appear in the list
+if (isset($data->removed)) {
+    if ($data->removed !='any') {    
+        if ($data->removed) {
+            $filter->setDeleted();
+        } else {
+            $filter->setNotDeleted();
+        }
+    }
 } else {
-    $filter->notDeleted();
+    $filter->setNotDeleted();
 }
 
 $stmt=$filter->execute();

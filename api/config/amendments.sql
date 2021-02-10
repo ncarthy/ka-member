@@ -470,4 +470,6 @@ CREATE VIEW IF NOT EXISTS `vwUKActiveMemberAddress` AS
         `m`.`countryID` = 186
             AND `m`.`deletedate` IS NULL AND `m`.`postonhold` = 0;
 
+ALTER TABLE `knightsb_membership`.`transaction` ADD INDEX (`member_idmember`);
+
 COMMIT;
