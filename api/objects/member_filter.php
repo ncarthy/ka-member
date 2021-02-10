@@ -63,6 +63,14 @@ class MemberFilter{
         $this->conn->query($query);        
     }
 
+    public function setMemberTypeID($membertypeID){      
+        $query = " DELETE
+                    FROM " . $this->tablename . "
+                    WHERE idmembership != ".$membertypeID."
+                    ;";
+        $this->conn->query($query);        
+    }
+
     /* Update filter to remove members who have been deleted */
     public function setNotDeleted(){      
         $query = " DELETE 

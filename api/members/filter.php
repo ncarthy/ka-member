@@ -34,12 +34,18 @@ if(isset($data->surname)) {
 if(isset($data->businessname)) {
     $filter->setBusinessname($data->businessname);
 }
+if(isset($data->membertypeid)) {
+    $filter->setMemberTypeID($data->membertypeid);
+}
 
 // The default is to only view the un-deleted members
 // So if removed is set to 0 or is missing then only
 // non-deleted members will appear in the list
+// if removed is set to 'amy' then no filter applied
 if (isset($data->removed)) {
-    if ($data->removed !='any') {    
+    if ($data->removed =='any') {    
+        // no filter applied
+    } else {
         if ($data->removed) {
             $filter->setDeleted();
         } else {
@@ -89,7 +95,9 @@ if($num>0){
             "joindate" => $joindate,
             "reminderdate" => $reminderdate,
             "updatedate" => $updatedate,
-            "deletedate" => $deletedate
+            "deletedate" => $deletedate,
+            "paymentmethod" => $paymentmethod,
+            "lasttransactiondate" => $lasttransactiondate
         );
 
         // create un-keyed list
