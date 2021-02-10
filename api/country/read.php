@@ -34,6 +34,8 @@ $item_arr=array();
 // check if more than 0 record found
 if($num>0){
  
+    $item_arr["count"]=$num;
+
     $item_arr["records"]=array(); // associative array keyed on 'id'
     //$item_arr["countries"]=array(); // un-keyed list
 

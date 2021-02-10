@@ -24,6 +24,10 @@ class MemberFilter{
     This list of all memberIDs is then whittled down by repeated application of filters
     until only the required members are left. Then a new join is done with this reduced 
     list and the results resturned to the app. */
+
+    /* For debugging run 'tail -f /var/log/mysql/mysql.log' ON the database  and review output*/
+
+    /* Can also use the Filter.sql file in the config directory that can help to debug SQL */
     public function execute() {
 
         $query = "SELECT m.idmember, m.expirydate,m.joindate,m.reminderdate,m.updatedate,m.deletedate,
@@ -31,7 +35,8 @@ class MemberFilter{
                         addressfirstline,addresssecondline,city,postcode,country,
                         gdpr_email,gdpr_tel,gdpr_address,gdpr_sm,
                         v.idmembership, v.membershiptype,
-                        t.paymentmethod, m.lasttransactiondate
+                        t.paymentmethod, m.lasttransactiondate,
+                        v.email1, v.email2
                         FROM " . $this->tablename . " m
                         JOIN vwMember v ON m.idmember = v.idmember
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
@@ -44,6 +49,12 @@ class MemberFilter{
         return $stmt;
     }
 
+    /*
+            NB: All the 'set' methods work by subtraction
+
+            The filter works to remove memberids from the temporary table
+
+    */
 
     public function setSurname($surname){      
         $query = " DELETE M
@@ -68,6 +79,69 @@ class MemberFilter{
                     FROM " . $this->tablename . "
                     WHERE idmembership != ".$membertypeID."
                     ;";
+        $this->conn->query($query);        
+    }
+
+    public function setAddress($addressfirstline){      
+        $query = " DELETE M
+                    FROM " . $this->tablename . " M
+                    JOIN member M2 ON M.idmember = M2.idmember
+                    WHERE M2.`addressfirstline` IS NULL OR M2.`addressfirstline` NOT LIKE '%".$addressfirstline."%'
+                    ;";
+        $this->conn->query($query);        
+    }
+
+    public function setPaymentMethod($paymentmethod){      
+        $query = " DELETE 
+                        FROM " . $this->tablename . "
+                        WHERE paymentmethod IS NULL OR 
+                            paymentmethod = '                     ' OR 
+                            paymentmethod NOT LIKE '".$paymentmethod."%'
+                        ;";
+        $this->conn->query($query);        
+    }
+
+    public function setEmail1($email1){      
+        if(($email1 || $email1 = 'y') && $email1 != 'n') {
+            $query = " DELETE M
+                    FROM " . $this->tablename . " M
+                    JOIN member m1 ON M.idmember = m1.idmember
+                    WHERE email1 IS NULL OR email1 = ''
+                    ;";
+        } else {
+            $query = " DELETE M
+                    FROM " . $this->tablename . " M
+                    JOIN member m1 ON M.idmember = m1.idmember
+                    WHERE email1 IS NOT NULL AND email1 != ''
+                    ;";
+        }
+        $this->conn->query($query);        
+    }
+
+    public function setExpiryRange($start, $end){      
+        $this->setDateRange('expirydate',$start,$end);
+    }
+    public function setJoinRange($start, $end){      
+        $this->setDateRange('joindate',$start,$end);
+    }
+    public function setDeleteRange($start, $end){      
+        $this->setDateRange('deletedate',$start,$end);
+    }
+    public function setUpdateRange($start, $end){      
+        $this->setDateRange('updatedate',$start,$end);
+    }
+    public function setReminderRange($start, $end){      
+        $this->setDateRange('reminderdate',$start,$end);
+    }
+    public function setLastTransactionRange($start, $end){      
+        $this->setDateRange('lasttransactiondate',$start,$end);
+    }
+
+    private function setDateRange($columnname, $start, $end){      
+        $query = " DELETE
+                    FROM " . $this->tablename . "
+                    WHERE `" . $columnname . "` < '".$start."' OR 
+                    `" . $columnname . "` > '".$end."' OR `" . $columnname . "` IS NULL;";
         $this->conn->query($query);        
     }
 
@@ -110,7 +184,8 @@ class MemberFilter{
         $query = "CREATE TEMPORARY TABLE IF NOT EXISTS `".$tablename."` AS ( 
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
-                        MAX(`date`) as lasttransactiondate, 0 as lasttransactionid
+                        MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
+                        '                     ' as paymentmethod
                         FROM member m
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
                         GROUP BY m.idmember
@@ -118,11 +193,67 @@ class MemberFilter{
         $this->conn->query($query);
 
         $query = "UPDATE `".$tablename."` M, transaction T
-                        SET M.lasttransactionid = T.idtransaction
+                        SET M.lasttransactionid = T.idtransaction,
+                            M.paymentmethod = LEFT(T.paymentmethod,20)
                         WHERE M.idmember = T.member_idmember AND M.lasttransactiondate = T.`date`;";
 
         $this->conn->query($query);
     }
 
+    // Given two strings that represent dates (but one of them may be empty/null/unset)
+    public function sanitizeDateValues($startdate, $enddate)
+    {
+        $end = date('Y-m-d');
+
+        if(empty($startdate) && empty($enddate)) {
+            // default values are the period 1 year back from today            
+            $start = (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
+            return array($start, $end); 
+        } else if (empty($startdate)) {
+            if ($this->validateDate($enddate)) {
+                $start = (new DateTime($enddate))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
+                return array($start, $enddate); 
+            }
+            else {
+                http_response_code(422);  
+                echo json_encode(
+                    array("message" => "Enddate is in the wrong format.")
+                );
+                exit(1);
+            }
+        } else if (empty($enddate)) {
+            if ($this->validateDate($startdate)) {
+                return array($startdate, $end); 
+            }
+            else {
+                http_response_code(422);  
+                echo json_encode(
+                    array("message" => "Startdate is in the wrong format.")
+                );
+                exit(1);
+            }
+        } else {
+            if (!$this->validateDate($startdate)) {
+                http_response_code(422);  
+                echo json_encode(
+                    array("message" => "Startdate is in the wrong format.")
+                );
+                exit(1);
+            } else if (!$this->validateDate($enddate)) {
+                http_response_code(422);  
+                echo json_encode(
+                    array("message" => "Enddate is in the wrong format.")
+                );
+                exit(1);
+            }
+            return array($startdate, $enddate);
+        }
+
+    }
+
+    private function validateDate($date, $format = 'Y-m-d'){
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) === $date;
+    }
 }
 ?>

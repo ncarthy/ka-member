@@ -471,5 +471,16 @@ CREATE VIEW IF NOT EXISTS `vwUKActiveMemberAddress` AS
             AND `m`.`deletedate` IS NULL AND `m`.`postonhold` = 0;
 
 ALTER TABLE `knightsb_membership`.`transaction` ADD INDEX (`member_idmember`);
+UPDATE transaction SET paymentmethod = 'BO' WHERE paymentmethod LIKE 'B/O%' OR paymentmethod = '' OR paymentmethod LIKE 'BO%';
+UPDATE transaction SET paymentmethod = 'Recurring' WHERE paymentmethod LIKE 'Paypal%' OR paymentmethod ='Recurring' OR paymentmethod ='Online';
+UPDATE transaction SET paymentmethod = 'Cheque' WHERE paymentmethod LIKE 'BACs%' OR paymentmethod LIKE 'Cheque%' OR paymentmethod LIKE 'Life%' OR paymentmethod LIKE 'Bank%' OR paymentmethod = 'See 2011';
+UPDATE transaction SET paymentmethod = 'SO' WHERE paymentmethod LIKE 'SO%';
+UPDATE transaction SET paymentmethod = 'Cash' WHERE paymentmethod LIKE 'Cash%';
+
+ALTER TABLE `transaction` CHANGE `paymentmethod` `paymentmethod` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `transaction` CHANGE `amount` `amount` DECIMAL(10,0) NOT NULL DEFAULT '0';
 
 COMMIT;
+
+OPTIMIZE TABLE member;
+OPTIMIZE TABLE `transaction`;
