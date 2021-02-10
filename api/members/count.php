@@ -34,7 +34,7 @@ if($num>0){
     $members_arr=array();
     $members_arr["records"]=array();
 
-    $contribution_total =0; // sum of member contribution as we go along
+    $contribution_total =0; // sum of member contribution as we loop over rows
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()

@@ -94,6 +94,38 @@ class Members{
         return $stmt;
     }
 
+    public function membersPayingTwice($start, $end){       
+        $tablename = '_Duplicated_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
+        
+        $query = "SELECT t.idmember,membershiptype,Name,businessname, 
+                        CASE WHEN idtransaction = first_transaction THEN membershipfee ELSE 0 END as membershipfee,
+                        amount,`date` 
+                        FROM vwTransaction t
+                        JOIN ".$tablename." d ON t.idmember = d.idmember
+                        WHERE `date` >=  '" . $start ."'
+                        AND `date` <= '" . $end . "'                  
+                        ORDER BY t.idmember,`date`;";      
+        $stmt = $this->conn->prepare( $query );  
+
+        try{
+
+            $this->dropTemporaryTransactionTable($tablename); // Clear any old table
+
+            // Get transaction data for the time period
+            $this->populateTemporaryDuplicateTable($tablename, $start, $end);
+
+            // narrow down the data according to criteria          
+            $stmt->execute();
+
+            $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
+        }
+        catch(PDOException $exception){
+            echo "Error occurred retrieving duplicate transaction data.\nError message:" . $exception->getMessage();
+        }
+        
+        return $stmt;        
+    }
+
     public function contributingExMembers($start, $end){       
         return $this->tabulateTransactionData('CEM', $start, $end);
     }
@@ -105,6 +137,7 @@ class Members{
     public function payingHonLifeMembers($start, $end){       
         return $this->tabulateTransactionData('HonLife', $start, $end);
     }
+
 
     private function tabulateTransactionData($column, $start, $end){
 
@@ -132,8 +165,8 @@ class Members{
         return $stmt;
     }
 
-    /* SELECT INTO a a temporary table a list of all transaciotns between the start and end dates for members
-      who do not have duplicate transactions */
+    /* SELECT INTO a a temporary table a list of all transaciotns between the start and end dates */
+    /* 'GROUP' to sum duplicates into one amount */
     private function populateTemporaryTransactionTable($tablename, $start, $end){
 
         $query = "CREATE TEMPORARY TABLE IF NOT EXISTS ".$tablename." AS (      
@@ -155,6 +188,21 @@ class Members{
       private function dropTemporaryTransactionTable($tablename){
 
         $query = "DROP TEMPORARY TABLE IF EXISTS ".$tablename.";";
+        $this->conn->query($query);
+    }
+
+        /* SELECT INTO a a temporary table a list of all idmembers between the start and end dates for members
+      who have duplicate transactions */
+      private function populateTemporaryDuplicateTable($tablename, $start, $end){
+
+        $query = "CREATE TEMPORARY TABLE IF NOT EXISTS ".$tablename." AS (      
+                        SELECT `member_idmember` as `idmember`, Min(idtransaction) as first_transaction
+                        FROM `transaction` t
+                        WHERE `date` >=  '" . $start ."'
+                        AND `date` <= '" . $end . "'
+                        GROUP BY `idmember`
+                        HAVING Count(*) > 1
+                    );";
         $this->conn->query($query);
     }
 }
