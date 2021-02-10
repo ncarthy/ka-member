@@ -478,7 +478,7 @@ UPDATE transaction SET paymentmethod = 'SO' WHERE paymentmethod LIKE 'SO%';
 UPDATE transaction SET paymentmethod = 'Cash' WHERE paymentmethod LIKE 'Cash%';
 
 ALTER TABLE `transaction` CHANGE `paymentmethod` `paymentmethod` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-ALTER TABLE `transaction` CHANGE `amount` `amount` DECIMAL(10,0) NOT NULL DEFAULT '0';
+ALTER TABLE `transaction` CHANGE `amount` `amount` DECIMAL(10,2) NOT NULL DEFAULT '0';
 
 COMMIT;
 

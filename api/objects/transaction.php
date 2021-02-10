@@ -17,57 +17,45 @@ class Transaction{
     public $idmember;
     public $bankID;
     
-    public function readMemberTransactions(){
-
-        //select all data
-        $query = "SELECT
-                    u.iduser as `id`, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`
-                    FROM
-                    " . $this->table_name . " u";                    
-
-        $stmt = $this->conn->prepare( $query );
-        try{
-            // execute query
-            $stmt->execute();
-        }
-        catch(PDOException $exception){
-            echo "Error retrieving transactions: " . $exception->getMessage();
-        }
-        
-        return $stmt;
-    }
-
     function create(){
         $query = "INSERT INTO
                     " . $this->table_name . "
                     SET 
-                    username=:username,
-                    isAdmin=:isadmin, 
-                    name=:fullname,
-                    suspended=:suspended
-                    " . (isset($this->password)?',new_pass=:password ':'');
+                    date=:date,
+                    amount=:amount, 
+                    paymentmethod=:paymentmethod,
+                    member_idmember=:idmember,
+                    bankID=:bankID
+                    ";
         
         // prepare query
         $stmt = $this->conn->prepare($query);
 
         // sanitize
-        $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->isadmin=htmlspecialchars(strip_tags($this->isadmin));
-        $this->suspended=htmlspecialchars(strip_tags($this->suspended));
-        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
+        $this->date=htmlspecialchars(strip_tags($this->date));
+        $this->amount=filter_var($this->amount, FILTER_SANITIZE_NUMBER_FLOAT,
+                                                            FILTER_FLAG_ALLOW_FRACTION);        
+        $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
+        $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
+        $this->bankID=filter_var($this->bankID, FILTER_SANITIZE_NUMBER_INT);
+
+        $this->bankID = !empty($this->bankID) ? $this->bankID : NULL;
 
         // bind values
-        $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":isadmin", $this->isadmin);
-        $stmt->bindParam(":suspended", $this->suspended);
-        $stmt->bindParam(":fullname", $this->fullname);
-        $stmt->bindParam(":password", $this->password);
+        $stmt->bindParam(":date", $this->date);
+        $stmt->bindParam(":amount", $this->amount);
+        $stmt->bindParam(":paymentmethod", $this->paymentmethod);
+        $stmt->bindParam(":idmember", $this->idmember);
+        $stmt->bindParam(":bankID", $this->bankID);
         
-
         // execute query
         if($stmt->execute()){
-            return true;
+            $this->id = $this->conn->lastInsertId();
+            if($this->id) {
+                return true;
+            } else {
+                return false;
+            }
         }
         
         return false;
@@ -77,33 +65,34 @@ class Transaction{
         $query = "UPDATE
                     " . $this->table_name . "
                     SET 
-                    username=:username,
-                    isAdmin=:isadmin, 
-                    suspended=:suspended,
-                    name=:fullname
-                    " . (isset($this->password)?',new_pass=:password ':'') ."
+                    date=:date,
+                    amount=:amount, 
+                    paymentmethod=:paymentmethod,
+                    member_idmember=:idmember,
+                    bankID=:bankID
                  WHERE
-                    iduser=:id";
+                    idtransaction=:id";
         
         // prepare query
         $stmt = $this->conn->prepare($query);
 
         // sanitize
-        $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->isadmin=htmlspecialchars(strip_tags($this->isadmin));
-        $this->suspended=htmlspecialchars(strip_tags($this->suspended));
-        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
-        if(isset($this->password)) {
-            $this->password=htmlspecialchars(strip_tags($this->password));
-            $stmt->bindParam(":password", $this->password);
-        }
+        $this->date=htmlspecialchars(strip_tags($this->date));
+        $this->amount=filter_var($this->amount, FILTER_SANITIZE_NUMBER_FLOAT,
+                                                            FILTER_FLAG_ALLOW_FRACTION);        
+        $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
+        $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
+        $this->bankID=filter_var($this->bankID, FILTER_SANITIZE_NUMBER_INT);
 
+        $this->bankID = !empty($this->bankID) ? $this->bankID : NULL;
+        
         // bind values
         $stmt->bindParam(":id", $this->id);
-        $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":isadmin", $this->isadmin);
-        $stmt->bindParam(":suspended", $this->suspended);
-        $stmt->bindParam(":fullname", $this->fullname);        
+        $stmt->bindParam(":date", $this->date);
+        $stmt->bindParam(":amount", $this->amount);
+        $stmt->bindParam(":paymentmethod", $this->paymentmethod);
+        $stmt->bindParam(":idmember", $this->idmember);
+        $stmt->bindParam(":bankID", $this->bankID);       
 
         // execute query
         if($stmt->execute()){
@@ -118,11 +107,11 @@ class Transaction{
 
         //select all data
         $query = "SELECT
-                    u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`
+                    t.idtransaction as `id`, t.`date`, t.`amount`,
+                    t.paymentmethod, t.member_idmember as idmember, t.`bankID`
                     FROM
-                    " . $this->table_name . " u
-                    WHERE u.iduser = ?
+                    " . $this->table_name . " t
+                    WHERE t.idtransaction = ?
                     LIMIT 0,1";
                 
         // prepare query statement
@@ -140,28 +129,28 @@ class Transaction{
         // set values to object properties
         if ( !empty($row) ) {
             $this->id = $row['id'];
-            $this->username = $row['username'];
-            $this->fullname = $row['name'];
-            $this->password = $row['password'];
-            $this->isadmin = $row['isAdmin'];
-            $this->suspended = $row['suspended'];
+            $this->date = $row['date'];
+            $this->amount = $row['amount'];
+            $this->paymentmethod = $row['paymentmethod'];
+            $this->idmember = $row['idmember'];
+            $this->bankID = $row['bankID'];
         }
     }
 
-        // find the details of one user using $username
-        public function readOneRaw($username){
+        // find the details of transactions using $idmember
+        public function readOneRaw($idmember){
 
             //select all data
             $query = "SELECT
-                        u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                        u.isAdmin, u.suspended, u.`name`
-                        FROM
-                        " . $this->table_name . " u
-                        WHERE username = ?
-                        LIMIT 0,1";
+                    t.idtransaction as `id`, t.`date`, t.`amount`,
+                    t.paymentmethod, t.member_idmember as idmember, t.`bankID`
+                    FROM
+                    " . $this->table_name . " t
+                    WHERE t.member_idmember = ?
+                    LIMIT 0,1";
                     
             $stmt = $this->conn->prepare( $query );
-            $stmt->bindParam(1, $username);
+            $stmt->bindParam(1, $idmember);
             $stmt->execute();
     
             return $stmt;
