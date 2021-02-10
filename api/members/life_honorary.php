@@ -32,6 +32,7 @@ $num = $stmt->rowCount();
 if($num>0){
  
     $members_arr=array();
+    $members_arr["count"] = $num; // add the count of lifetime members
     $members_arr["records"]=array();
 
     $honorary_count =0; // count of hon members
@@ -68,9 +69,7 @@ if($num>0){
     }
 
     $members_arr["honorary"] = $honorary_count; // add the count of hon members
-    $members_arr["lifetime"] = $num - $honorary_count; // add the count of lifetime members
-    $members_arr["total"] = $num; // add the count of lifetime members
-
+    $members_arr["lifetime"] = $num - $honorary_count; // add the count of lifetime members    
 
     echo json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
 }

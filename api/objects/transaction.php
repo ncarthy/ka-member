@@ -11,15 +11,13 @@ class Transaction{
 
     // object properties
     public $id;
-    public $username;
-    public $isadmin;
-    public $suspended;
-    public $password;
-    public $fullname;
-
-
-    // used by select drop-down list
-    public function readAll(){
+    public $date;
+    public $amount;
+    public $paymentmethod;
+    public $idmember;
+    public $bankID;
+    
+    public function readMemberTransactions(){
 
         //select all data
         $query = "SELECT
@@ -34,7 +32,7 @@ class Transaction{
             $stmt->execute();
         }
         catch(PDOException $exception){
-            echo "Error retrieving users: " . $exception->getMessage();
+            echo "Error retrieving transactions: " . $exception->getMessage();
         }
         
         return $stmt;

@@ -54,9 +54,10 @@ UPDATE transaction SET member_idmember = 197 WHERE member_idmember = 534;
 UPDATE member SET expirydate = '2014-10-31', deletedate = '2014-10-31', 
 	username= 'admin', updatedate=CURRENT_TIMESTAMP WHERE idmember = 197;
 
-DELETE FROM transaction WHERE member_idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906,911,912);
-DELETE FROM membername WHERE member_idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906,911,912);
-DELETE FROM member WHERE idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906,911,912);
+# Complete removal of these member records
+DELETE FROM transaction WHERE member_idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906);
+DELETE FROM membername WHERE member_idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906);
+DELETE FROM member WHERE idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906);
 
 UPDATE member SET deletedate = expirydate, username= 'admin', updatedate=CURRENT_TIMESTAMP WHERE idmember IN (111);
 UPDATE member SET membership_idmembership=9,deletedate = '2019-02-27', expirydate = '2019-02-27', username= 'admin'
@@ -102,6 +103,26 @@ ALTER TABLE `user` ADD `failedloginattempts` INT NOT NULL DEFAULT '0' COMMENT 'T
 
 DELETE FROM `transaction` WHERE idtransaction IN (6464,8464,9005);
 ALTER TABLE `transaction` CHANGE `time` `date` DATE NOT NULL;
+
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =53;
+UPDATE member SET reminderdate='2019-08-31' WHERE idmember =132;
+
+UPDATE member SET reminderdate='2021-02-08' WHERE idmember =169;
+UPDATE member SET reminderdate='2021-02-09' WHERE idmember =246;
+UPDATE member SET reminderdate='2021-02-09' WHERE idmember =303;
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =313;
+UPDATE member SET reminderdate='2021-02-08' WHERE idmember =364;
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =400;
+UPDATE member SET reminderdate='2021-02-08' WHERE idmember =407;
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =419;
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =445;
+UPDATE member SET reminderdate='2021-02-08' WHERE idmember =569;
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =578;
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =592;
+
+UPDATE member SET reminderdate='2020-06-12' WHERE idmember =834;
+UPDATE member SET reminderdate='2020-06-10' WHERE idmember =845;
+
 
 
 CREATE TABLE `knightsb_membership`.`country` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB COMMENT = 'List of countries for member table';
@@ -388,7 +409,9 @@ CREATE VIEW IF NOT EXISTS  `vwMember` AS
                 `c2`.`name`
             ELSE `c1`.`name`            
         END AS `country`,
-        m.updatedate, m.expirydate, m.deletedate, m.reminderdate
+        m.updatedate, m.expirydate, m.deletedate, m.reminderdate,
+        m.gdpr_email,gdpr_sm,gdpr_tel,gdpr_address,
+        m.email1,m.email2
     FROM
         `member` `m`
         JOIN `membershipstatus` ms ON m.membership_idmembership = ms.idmembership

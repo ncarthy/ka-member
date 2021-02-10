@@ -59,6 +59,7 @@ $num = $stmt->rowCount();
 if($num>0){
  
     $members_arr=array();
+    $members_arr["count"] = $num; // add the count of rows
     $members_arr["records"]=array();
 
     $total_received = 0; // sum of member payments as we loop over rows
@@ -89,8 +90,7 @@ if($num>0){
         // create un-keyed list
         array_push ($members_arr["records"], $members_item);
     }
-
-    $members_arr["count"] = $num; // add the count of rows
+    
     $members_arr["start"] = $start;
     $members_arr["end"] = $end;
     $members_arr["total"] = $total_received;

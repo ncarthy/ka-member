@@ -15,20 +15,29 @@ if(!$jwt->loggedIn){
 
 // include database and object files
 include_once '../config/database.php';
-include_once '../objects/members.php';
+include_once '../objects/member_filter.php';
 
 // instantiate database and member object
 $database = new Database();
 $db = $database->getConnection();
 
 // initialize object
-$member = new Members($db);
+$filter = new MemberFilter($db);
+$filter->reset();
 
-// set number of months to use, default is 18
-$months = isset($_GET['months']) ? $_GET['months'] : 18;
+// get posted data
+$data = json_decode(file_get_contents("php://input"));
 
-// query 
-$stmt = $member->lapsedMembers($months);
+if(isset($data->surname)) {
+    $filter->surname($data->surname);
+}
+if(isset($data->removed)) {
+    $filter->deleted();
+} else {
+    $filter->notDeleted();
+}
+
+$stmt=$filter->execute();
 $num = $stmt->rowCount();
 
 // check if more than 0 record found
@@ -49,20 +58,30 @@ if($num>0){
     
         $members_item=array(
             "id" => $idmember,
+            "idmembership" => $idmembership,
             "type" => $membershiptype,
-            "name" => $Name,
-            "business" => $BusinessName,
-            "note" => $Note,
-            "updatedate" => $updatedate,
+            "name" => $name,
+            "business" => $businessname,
+            "note" => $note,
+            "addressfirstline" => $addressfirstline,
+            "addresssecondline" => $addresssecondline,
+            "city" => $city,
+            "postcode" => $postcode,
+            "country" => $country,
+            "gdpr_email" => $gdpr_email,
+            "gdpr_tel" => $gdpr_tel,
+            "gdpr_address" => $gdpr_address,
+            "gdpr_sm" => $gdpr_sm,
             "expirydate" => $expirydate,
+            "joindate" => $joindate,
             "reminderdate" => $reminderdate,
-            "count" => $count,
-            "last" => $last
+            "updatedate" => $updatedate,
+            "deletedate" => $deletedate
         );
 
         // create un-keyed list
         array_push ($members_arr["records"], $members_item);
-    }
+    }    
 
     echo json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
 }
