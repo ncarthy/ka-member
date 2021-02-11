@@ -44,8 +44,15 @@ $new_item->fullname = $data->fullname;
 $new_item->failedloginattempts = $data->failedloginattempts;
 $new_item->password = password_hash($data->password, PASSWORD_DEFAULT);
 
-// INSERT the row into the database
-if($new_item->create()){
+$new_item->checkPassword($data->password, $errors);
+if ($errors) {
+    http_response_code(422);  
+    echo '{';
+        echo '"message": "'.implode(" & ",$errors).'"';
+    echo '}';
+} 
+
+else if($new_item->create()) {
     echo '{';
         echo '"message": "New user with id=' . $new_item->id . ' was created.",';
         echo '"id":' . $new_item->id;
@@ -54,6 +61,7 @@ if($new_item->create()){
 
 // if unable to create the new_item, tell the admin
 else{
+    http_response_code(422);  
     echo '{';
         echo '"message": "Unable to INSERT row."';
     echo '}';
