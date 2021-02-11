@@ -48,6 +48,14 @@ $item->isadmin = $data->isadmin;
 $item->suspended = $data->suspended;
 if (isset($data->password)) {
     $item->password = password_hash($data->password, PASSWORD_DEFAULT);
+    $item->checkPassword($data->password, $errors);
+    if ($errors) {
+        http_response_code(422);  
+        echo '{';
+            echo '"message": "'.implode(" & ",$errors).'"';
+        echo '}';
+    } 
+    exit(1);
 }
 
 // UPDATE the row in the database
@@ -60,6 +68,7 @@ if($item->update()){
 
 // if unable to create the new_item, tell the admin
 else{
+    http_response_code(422);
     echo '{';
         echo '"message": "Unable to UPDATE row.",';
         echo '"id":' . $item->id;
