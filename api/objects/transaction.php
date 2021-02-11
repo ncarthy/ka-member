@@ -45,8 +45,8 @@ class Transaction{
         $stmt->bindParam(":date", $this->date);
         $stmt->bindParam(":amount", $this->amount);
         $stmt->bindParam(":paymentmethod", $this->paymentmethod);
-        $stmt->bindParam(":idmember", $this->idmember);
-        $stmt->bindParam(":bankID", $this->bankID);
+        $stmt->bindParam(":idmember", $this->idmember, PDO::PARAM_INT);
+        $stmt->bindParam(":bankID", $this->bankID, PDO::PARAM_INT);
         
         // execute query
         if($stmt->execute()){
@@ -178,7 +178,7 @@ class Transaction{
 
         $stmt = $this->conn->prepare($query);
         $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
-        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(1, $this->id, PDO::PARAM_INT);
 
         // execute query
         if($stmt->execute()){

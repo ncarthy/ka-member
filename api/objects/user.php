@@ -63,10 +63,10 @@ class User{
 
         // bind values
         $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":isadmin", $this->isadmin);
-        $stmt->bindParam(":suspended", $this->suspended);
+        $stmt->bindParam(":isadmin", $this->isadmin, PDO::PARAM_INT);
+        $stmt->bindParam(":suspended", $this->suspended, PDO::PARAM_INT);
         $stmt->bindParam(":fullname", $this->fullname);
-        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts);
+        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts, PDO::PARAM_INT);
         $stmt->bindParam(":password", $this->password);
         
 
@@ -113,12 +113,12 @@ class User{
         $this->failedloginattempts = !empty($this->failedloginattempts) ? $this->failedloginattempts : 0;
 
         // bind values
-        $stmt->bindParam(":id", $this->id);
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
         $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":isadmin", $this->isadmin);
-        $stmt->bindParam(":suspended", $this->suspended);
+        $stmt->bindParam(":isadmin", $this->isadmin, PDO::PARAM_INT);
+        $stmt->bindParam(":suspended", $this->suspended, PDO::PARAM_INT);
         $stmt->bindParam(":fullname", $this->fullname);        
-        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts);     
+        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts, PDO::PARAM_INT);     
 
         // execute query
         if($stmt->execute()){
@@ -188,7 +188,7 @@ class User{
 
         $stmt = $this->conn->prepare($query);
         $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
-        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(1, $this->id, PDO::PARAM_INT);
 
         // execute query
         if($stmt->execute()){

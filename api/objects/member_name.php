@@ -42,7 +42,7 @@ class MemberName{
         $stmt->bindParam(":honorific", $this->honorific);
         $stmt->bindParam(":firstname", $this->firstname);
         $stmt->bindParam(":surname", $this->surname);
-        $stmt->bindParam(":idmember", $this->idmember);
+        $stmt->bindParam(":idmember", $this->idmember, PDO::PARAM_INT);
         
 
         // execute query
@@ -80,11 +80,11 @@ class MemberName{
         $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
 
         // bind values
-        $stmt->bindParam(":id", $this->id);
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
         $stmt->bindParam(":honorific", $this->honorific);
         $stmt->bindParam(":firstname", $this->firstname);
         $stmt->bindParam(":surname", $this->surname);
-        $stmt->bindParam(":idmember", $this->idmember);     
+        $stmt->bindParam(":idmember", $this->idmember, PDO::PARAM_INT);     
 
         // execute query
         if($stmt->execute()){
@@ -167,7 +167,7 @@ class MemberName{
         $stmt = $this->conn->prepare($query);
         $this->idmember=htmlspecialchars(strip_tags($this->idmember));
         $idmember = filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
-        $stmt->bindParam(1, $idmember);
+        $stmt->bindParam(1, $idmember, PDO::PARAM_INT);
 
         // execute query
         if($stmt->execute()){
@@ -184,7 +184,7 @@ class MemberName{
         $stmt = $this->conn->prepare($query);
         $this->id=htmlspecialchars(strip_tags($this->id));
         $idmembername = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
-        $stmt->bindParam(1, $idmembername);
+        $stmt->bindParam(1, $idmembername, PDO::PARAM_INT);
 
         // execute query
         if($stmt->execute()){

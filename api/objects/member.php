@@ -348,6 +348,95 @@ class Member{
         return false;
     }
 
+    function anonymize(){
+        /* sanitize */
+        $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+
+        /* Remove name */
+        $query = "DELETE FROM `membername` WHERE member_idmember = " . $this->id . " ;";
+        $this->conn->query($query);
+        /* Insert dummy name */
+        $query = "INSERT INTO `membername` 
+            ( `honorific`, `firstname`, `surname`, `member_idmember`) 
+            VALUES ('', 'Anonymized', 'Anonymized', " . $this->id . ");";
+        $this->conn->query($query);
+
+
+        $query = "UPDATE
+                    " . $this->table_name . "
+                    SET 
+                    note='',
+                    addressfirstline='', 
+                    addresssecondline='', 
+                    city='', 
+                    county='', 
+                    postcode='', 
+                    countryID=NULL, 
+                    area='', 
+                    email1='', 
+                    phone1='', 
+                    addressfirstline2='', 
+                    addresssecondline2='', 
+                    city2='', 
+                    county2='', 
+                    postcode2='', 
+                    country2ID=NULL, 
+                    email2='', 
+                    phone2='', 
+                    updatedate= NULL, 
+                    username=:username                  
+                 WHERE
+                    idmember=:id";
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->username=htmlspecialchars(strip_tags($this->username));
+
+        // bind values
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(":username", $this->username);
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+        
+        return false;
+    }
+
+    /* update membership status from  e.g. Individual to 'Former Member' */
+    function setToFormerMember(){
+        /* sanitize */
+        $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+
+        $query = "UPDATE
+                    " . $this->table_name . "
+                    SET `membership_idmembership` = 
+                        (SELECT idmembership FROM `membershipstatus` WHERE name LIKE 'former%'),
+                        updatedate= NULL, 
+                        username=:username  
+                    WHERE idmember=:id; ";
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->username=htmlspecialchars(strip_tags($this->username));
+
+        // bind values
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(":username", $this->username);
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+        
+        return false;
+    }
+
     // find the details of one user using $id
     public function readOne(){
 
@@ -419,11 +508,19 @@ class Member{
 
     // Delete one member from the database
     function delete(){
-        $query = "DELETE FROM " . $this->table_name . " WHERE idmember = ?";
+        /* sanitize */
+        $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
 
-        $stmt = $this->conn->prepare($query);
-        $this->id=htmlspecialchars(strip_tags($this->id));
-        $stmt->bindParam(1, $this->id);
+        /* delete from FK-lined tables first */
+        $query = "DELETE FROM `transaction` WHERE member_idmember = " . $this->id . " ;";
+        $this->conn->query($query);
+        $query = "DELETE FROM `membername` WHERE member_idmember = " . $this->id . " ;";
+        $this->conn->query($query);
+
+        /* Now delete from member table */
+        $query = "DELETE FROM " . $this->table_name . " WHERE idmember = ?";
+        $stmt = $this->conn->prepare($query);        
+        $stmt->bindParam(1, $this->id, PDO::PARAM_INT);
 
         // execute query
         if($stmt->execute()){

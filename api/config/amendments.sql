@@ -339,6 +339,7 @@ ALTER TABLE `member` DROP `country2`;
 
 
 DROP VIEW IF EXISTS `vwMember`;
+DROP VIEW IF EXISTS `vwMembers`;
 CREATE VIEW IF NOT EXISTS  `vwMember` AS
     SELECT
 		`m`.`idmember` AS `idmember`,
@@ -429,6 +430,65 @@ m.`Name`, m.businessname,
 t.`date`,t.paymentmethod,t.amount
 FROM  `transaction` t
 JOIN vwMember m ON t.member_idmember = m.idmember;
+
+DROP VIEW IF EXISTS `vwUKMembers`;
+CREATE VIEW IF NOT EXISTS `vwUKMembers` AS
+    SELECT 
+        `mn1`.`honorific` AS `honorific`,
+        `mn1`.`firstname` AS `firstname`,
+        `mn1`.`surname` AS `surname`,
+        `m`.`businessname` AS `businessname`,
+        CASE
+            WHEN
+                `m`.`countryID` <> 186
+                    AND `m`.`country2ID` = 186
+            THEN
+                `m`.`addressfirstline2`
+            ELSE `m`.`addressfirstline`
+        END AS `addressfirstline`,
+        CASE
+            WHEN
+                `m`.`countryID` <> 186
+                    AND `m`.`country2ID` = 186
+            THEN
+                `m`.`addresssecondline2`
+            ELSE `m`.`addresssecondline`
+        END AS `addresssecondline`,
+        CASE
+            WHEN
+                `m`.`countryID` <> 186
+                    AND `m`.`country2ID` = 186
+            THEN
+                `m`.`city2`
+            ELSE `m`.`city`
+        END AS `city`,
+        CASE
+            WHEN
+                `m`.`countryID` <> 186
+                    AND `m`.`country2ID` = 186
+            THEN
+                `m`.`postcode2`
+            ELSE `m`.`postcode`
+        END AS `postcode`,
+        CASE
+            WHEN
+                `m`.`countryID` <> 186
+                    AND `m`.`country2ID` = 186
+            THEN
+                `c2`.`name`
+            ELSE `c1`.`name`
+        END AS `country`
+    FROM
+        `member` `m`
+		LEFT JOIN `country` `c1` ON `m`.`countryID` = `c1`.`id`
+        LEFT JOIN `country` `c2` ON `m`.`country2ID` = `c2`.`id`
+        LEFT JOIN `vwNames` `v` ON `m`.`idmember` = `v`.`member_idmember`
+        LEFT JOIN `membername` `mn1` ON `v`.`FirstName` = `mn1`.`idmembername`
+        LEFT JOIN `membername` `mn2` ON `v`.`SecondName` = `mn2`.`idmembername`
+    WHERE
+        `m`.`deletedate` IS NULL
+            AND (`m`.`addressfirstline` <> ''
+            OR `m`.`addressfirstline2` <> '');
 
 DROP VIEW IF EXISTS `vwUKActiveMemberAddress` ;
 CREATE VIEW IF NOT EXISTS `vwUKActiveMemberAddress` AS
