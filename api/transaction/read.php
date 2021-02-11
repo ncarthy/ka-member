@@ -12,36 +12,36 @@ if(!$jwt->loggedIn){
     );
     exit(1);
 }
-else if (!$jwt->isAdmin){
-    http_response_code(401);  
-    echo json_encode(
-        array("message" => "Must be an admin.")
-    );
-    exit(1);
-}
 
 // include database and object files
 include_once '../config/database.php';
-include_once '../objects/user.php';
+include_once '../objects/transaction.php';
 
-// instantiate database and user object
+// instantiate database and transaction object
 $database = new Database();
 $db = $database->getConnection();
 
 // initialize object
-$user = new User($db);
+$item = new Transaction($db);
 
-// query database, return with dataset
-$stmt = $user->readAll();
+// set idmember property of transaction, if it exists.
+// Then query database, return with dataset
+if( isset($_GET['idmember']) ) {
+    $item->idmember = $_GET['idmember'];
+    $stmt = $item->readMember($item->idmember);
+} else {
+    $stmt = $item->readAll();
+}
+
 $num = $stmt->rowCount();
 
 // check if more than 0 record found
 if($num>0){
  
     // products array
-    $users_arr=array();
+    $items_arr=array();
     $items_arr["count"]=$num;
-    $users_arr["records"]=array();
+    $items_arr["records"]=array();
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -52,18 +52,19 @@ if($num>0){
         // just $name only
         extract($row);
     
-            $user_item=array(
-                "id" => $id,
-                "username" => $username,
-                "fullname" => html_entity_decode($name),
-                "isadmin" => $isAdmin,
-                "suspended" => $suspended
+            $item_item=array(
+                "idtransaction" => $id,
+                "date" => $date,
+                "amount" => $amount,
+                "paymentmethod" => html_entity_decode($paymentmethod),
+                "idmember" => $idmember,
+                "bankID" => $bankID
             );
 
             // create associative array keyed on username
-            $users_arr["records"][$username] = $user_item;
+            $items_arr["records"][$id] = $item_item;
         }
 
-        echo json_encode($users_arr, JSON_NUMERIC_CHECK);
+        echo json_encode($items_arr, JSON_NUMERIC_CHECK);
 }
 ?>

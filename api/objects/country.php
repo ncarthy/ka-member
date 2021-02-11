@@ -32,7 +32,7 @@ class Country{
         
         public function readOne(){
 
-            //select data for one shop
+            //select data for one item using PK of table
             $query = "SELECT
                         " . $this->table_id ." as `id`, `name`
                     FROM

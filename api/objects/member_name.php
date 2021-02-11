@@ -96,7 +96,7 @@ class MemberName{
  
     public function readOne(){
 
-        //select data for one shop
+        //select data for one item using PK of table
         $query = "SELECT
                     " . $this->table_id ." as `id`, `honorific`, 
                     `firstname`, `surname`, `member_idmember`
@@ -138,7 +138,7 @@ class MemberName{
 
     public function readMemberNames(){
 
-        //select data for one shop
+        //select data for one item using PK of table
         $query = "SELECT
                     " . $this->table_id ." as `id`, `honorific`, 
                     `firstname`, `surname`, `member_idmember` as `idmember`

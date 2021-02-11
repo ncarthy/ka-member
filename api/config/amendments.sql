@@ -482,5 +482,5 @@ ALTER TABLE `transaction` CHANGE `amount` `amount` DECIMAL(10,2) NOT NULL DEFAUL
 
 COMMIT;
 
-OPTIMIZE TABLE member;
+OPTIMIZE TABLE `member`;
 OPTIMIZE TABLE `transaction`;

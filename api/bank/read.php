@@ -24,7 +24,7 @@ $db = $database->getConnection();
 // initialize object
 $status = new BankAccount($db);
 
-// query shops
+// query database, return with dataset
 $stmt = $status->read();
 $num = $stmt->rowCount();
 

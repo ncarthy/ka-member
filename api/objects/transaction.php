@@ -102,6 +102,23 @@ class Transaction{
         return false;
     }
 
+    // used by select drop-down list
+    public function readAll(){
+
+        //select all data
+        $query = "SELECT
+                    t.idtransaction as `id`, t.`date`, t.`amount`,
+                    t.paymentmethod, t.member_idmember as idmember, t.`bankID`
+                FROM
+                    " . $this->table_name . " t
+                ORDER BY t.idtransaction; ";
+
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+
+        return $stmt;
+    }
+
     // find the details of one user using $id
     public function readOne(){
 
@@ -138,7 +155,7 @@ class Transaction{
     }
 
         // find the details of transactions using $idmember
-        public function readOneRaw($idmember){
+        public function readMember($idmember){
 
             //select all data
             $query = "SELECT
@@ -147,7 +164,7 @@ class Transaction{
                     FROM
                     " . $this->table_name . " t
                     WHERE t.member_idmember = ?
-                    LIMIT 0,1";
+                    ORDER BY t.`date` DESC";
                     
             $stmt = $this->conn->prepare( $query );
             $stmt->bindParam(1, $idmember);
@@ -160,7 +177,7 @@ class Transaction{
         $query = "DELETE FROM " . $this->table_name . " WHERE idtransaction = ?";
 
         $stmt = $this->conn->prepare($query);
-        $this->id=htmlspecialchars(strip_tags($this->id));
+        $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
         $stmt->bindParam(1, $this->id);
 
         // execute query

@@ -24,7 +24,7 @@ $db = $database->getConnection();
 // initialize object
 $member = new Member($db);
 
-// query shops
+// query database, return with dataset
 $stmt = $member->readAll();
 $num = $stmt->rowCount();
 

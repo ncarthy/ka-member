@@ -187,7 +187,7 @@ class User{
         $query = "DELETE FROM " . $this->table_name . " WHERE iduser = ?";
 
         $stmt = $this->conn->prepare($query);
-        $this->id=htmlspecialchars(strip_tags($this->id));
+        $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
         $stmt->bindParam(1, $this->id);
 
         // execute query
