@@ -44,7 +44,7 @@ class Members{
                                 Count(t.idtransaction) as count
                         FROM vwMember m
                         LEFT OUTER JOIN vwTransaction t ON m.idmember = t.idmember 
-                                    AND DATE_SUB(NOW(), INTERVAL 12 MONTH) < `t`.`date`
+                                    AND DATE_SUB(CURDATE(), INTERVAL 12 MONTH) < `t`.`date`
                         WHERE m.idmembership IN (5,6) AND m.deletedate IS NULL
                         GROUP BY m.idmember
                         ORDER BY membershiptype                                      
@@ -76,7 +76,7 @@ class Members{
                     WHERE m.idmembership IN (2,3,4,10) AND m.deletedate IS NULL
                     GROUP BY m.idmember
                     HAVING `last` IS NULL OR 
-                        `last` < DATE_SUB(NOW(), INTERVAL " .
+                        `last` < DATE_SUB(CURDATE(), INTERVAL " .
                         $months
                         . " MONTH)
                     ORDER BY `last`                                     

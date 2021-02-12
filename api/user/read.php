@@ -31,6 +31,10 @@ $db = $database->getConnection();
 // initialize object
 $user = new User($db);
 
+if (isset($_GET['suspended']) ) {
+    $user->suspended = $_GET['suspended'];
+}
+
 // query database, return with dataset
 $stmt = $user->readAll();
 $num = $stmt->rowCount();
@@ -40,7 +44,7 @@ if($num>0){
  
     // products array
     $users_arr=array();
-    $items_arr["count"]=$num;
+    $users_arr["count"]=$num;
     $users_arr["records"]=array();
 
     // retrieve our table contents

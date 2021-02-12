@@ -358,7 +358,7 @@ class Member{
         /* Insert dummy name */
         $query = "INSERT INTO `membername` 
             ( `honorific`, `firstname`, `surname`, `member_idmember`) 
-            VALUES ('', 'Anonymized', 'Anonymized', " . $this->id . ");";
+            VALUES ('', '', 'Anonymized', " . $this->id . ");";
         $this->conn->query($query);
 
 

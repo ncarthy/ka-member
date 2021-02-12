@@ -64,6 +64,14 @@ class MemberFilter{
                     ;";
         $this->conn->query($query);        
     }
+    public function setNotSurname($surname){      
+        $query = " DELETE M
+                    FROM " . $this->tablename . " M
+                    LEFT JOIN membername MN ON M.idmember = MN.member_idmember
+                    WHERE MN.member_idmember IS NULL OR MN.surname LIKE '".$surname."%'
+                    ;";
+        $this->conn->query($query);        
+    }
 
     public function setBusinessname($businessname){      
         $query = " DELETE M
@@ -198,6 +206,64 @@ class MemberFilter{
                         WHERE M.idmember = T.member_idmember AND M.lasttransactiondate = T.`date`;";
 
         $this->conn->query($query);
+    }
+
+    public function anonymize($username)
+    {
+        /* Remove names of all members to be anonymized */
+        $query = "DELETE MN
+                    FROM membername MN
+                    JOIN `".$this->tablename."` M ON MN.member_idmember = M.idmember;";
+        $this->conn->query($query);
+
+        /* Insert dummy names */
+        $query = "INSERT INTO `membername` (`honorific`, `firstname`, `surname`, `member_idmember`) 
+        SELECT '','', 'Anonymized',idmember FROM `".$this->tablename."`;";
+        $this->conn->query($query);
+
+        
+        $query = "UPDATE `member` M,
+                    `" . $this->tablename . "` FM
+                    SET 
+                    M.note='',
+                    M.addressfirstline='', 
+                    M.addresssecondline='', 
+                    M.city='', 
+                    M.county='', 
+                    M.postcode='', 
+                    M.countryID=NULL, 
+                    M.area='', 
+                    M.email1='', 
+                    M.phone1='', 
+                    M.addressfirstline2='', 
+                    M.addresssecondline2='', 
+                    M.city2='', 
+                    M.county2='', 
+                    M.postcode2='', 
+                    M.country2ID=NULL, 
+                    M.email2='', 
+                    M.phone2='', 
+                    M.updatedate= NULL, 
+                    M.username=:username                  
+                 WHERE
+                    M.idmember=FM.idmember
+                ";
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $username=htmlspecialchars(strip_tags($username));
+
+        // bind values
+        $stmt->bindParam(":username", $username);
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+        
+        return false;
     }
 
     // Given two strings that represent dates (but one of them may be empty/null/unset)

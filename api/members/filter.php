@@ -37,6 +37,13 @@ if(isset($data->surname)) {
         $filter->setSurname($data->surname);
     }
 }
+if(isset($data->notsurname)) {
+    if (empty($data->notsurname)) {
+        // no filter applied
+    } else {
+        $filter->setNotSurname($data->notsurname);
+    }
+}
 if(isset($data->businessname)) {
     if (empty($data->businessname)) {
         // no filter applied
@@ -186,7 +193,7 @@ if($num>0){
             "id" => $idmember,
             "idmembership" => $idmembership,
             "type" => $membershiptype,
-            "name" => $name,
+            "name" => trim($name),
             "business" => $businessname,
             "note" => $note,
             "addressfirstline" => $addressfirstline,

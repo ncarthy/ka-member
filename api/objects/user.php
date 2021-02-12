@@ -26,7 +26,8 @@ class User{
                     u.iduser as `id`, u.`username`, u.`new_pass` as `password`,
                     u.isAdmin, u.suspended, u.`name`, u.failedloginattempts
                     FROM
-                    " . $this->table_name . " u";                    
+                    " . $this->table_name . " u " . 
+                    (isset($this->suspended)?'WHERE suspended = '.$this->suspended.' ':'');                    
 
         $stmt = $this->conn->prepare( $query );
         try{

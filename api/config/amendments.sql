@@ -55,9 +55,9 @@ UPDATE member SET expirydate = '2014-10-31', deletedate = '2014-10-31',
 	username= 'admin', updatedate=CURRENT_TIMESTAMP WHERE idmember = 197;
 
 # Complete removal of these member records
-DELETE FROM transaction WHERE member_idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906);
-DELETE FROM membername WHERE member_idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906);
-DELETE FROM member WHERE idmember IN (432,534,625,741,832,833,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,883,892,894,899,906);
+DELETE FROM transaction WHERE member_idmember IN (432,534,625,741,832,833,838,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,877,883,890,891,892,894,899,906);
+DELETE FROM membername WHERE member_idmember IN (432,534,625,741,832,833,838,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,877,883,890,891,892,894,899,906);
+DELETE FROM member WHERE idmember IN (432,534,625,741,832,833,838,852,853,854,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,876,877,883,890,891,892,894,899,906);
 
 UPDATE member SET deletedate = expirydate, username= 'admin', updatedate=CURRENT_TIMESTAMP WHERE idmember IN (111);
 UPDATE member SET membership_idmembership=9,deletedate = '2019-02-27', expirydate = '2019-02-27', username= 'admin'
@@ -78,7 +78,7 @@ UPDATE `transaction` SET member_idmember = 377 WHERE member_idmember = 450;
 DELETE FROM membername WHERE member_idmember = 450;
 DELETE FROM member WHERE idmember = 450;
 UPDATE `member` SET deletedate=updatedate, `membership_idmembership` = 9 WHERE `member`.`idmember` =377;
-UPDATE `member` SET deletedate =updatedate, `username` = 'admin', updatedate=CURRENT_TIMESTAMP WHERE membership_idmembership = 7;
+UPDATE `member` SET deletedate =updatedate, `username` = 'admin', updatedate=CURRENT_TIMESTAMP WHERE membership_idmembership = 7 AND deletedate IS NOT NULL;
 UPDATE `member` SET `country` = 'UK' WHERE `postcode` LIKE 'GY%';
 UPDATE `member` SET `country2` = 'UK' WHERE `postcode2` LIKE 'GY%';
 
@@ -90,7 +90,7 @@ UPDATE `member` SET `expirydate` = NULL,`username` = 'admin', updatedate=CURRENT
 UPDATE `member` SET `deletedate`= (CASE WHEN IFNULL(updatedate,0) > IFNULL(expirydate,0) THEN updatedate ELSE expirydate END) 
 	,`username` = 'admin', updatedate=CURRENT_TIMESTAMP 
 	WHERE `deletedate` = 0 AND (expirydate IS NOT NULL OR updatedate IS NOT NULL);
-UPDATE `member` SET `expirydate` = NULL,`username` = 'admin', updatedate=CURRENT_TIMESTAMP  WHERE `expirydate` = 0;
+UPDATE `member` SET `expirydate` = NULL,`username` = 'admin', updatedate=CURRENT_TIMESTAMP  WHERE `expirydate` = 0 AND idmember < 876;
 
 UPDATE membername SET firstname = TRIM(firstname) WHERE firstname LIKE '% ';
 UPDATE membername SET surname = TRIM(surname) WHERE surname LIKE '% ';
@@ -119,12 +119,27 @@ UPDATE member SET reminderdate='2020-06-10' WHERE idmember =445;
 UPDATE member SET reminderdate='2021-02-08' WHERE idmember =569;
 UPDATE member SET reminderdate='2020-06-10' WHERE idmember =578;
 UPDATE member SET reminderdate='2020-06-10' WHERE idmember =592;
-
+UPDATE member SET reminderdate='2021-02-10' WHERE idmember IN (614,693);
 UPDATE member SET reminderdate='2020-06-12' WHERE idmember =834;
 UPDATE member SET reminderdate='2020-06-10' WHERE idmember =845;
 
+/* Totally remove  members who are not former members or pending members and have no transaction  */
+    CREATE TEMPORARY TABLE IF NOT EXISTS `_RemovedNoTrans` AS ( 
+		SELECT idmember  FROM `member` m
+			LEFT JOIN transaction t ON m.idmember = t.member_idmember
+			WHERE `membership_idmembership` NOT IN(7, 9) AND `deletedate` IS NOT NULL AND t.idtransaction IS NULL
+			GROUP BY idmember
+);
+    DELETE MN
+    FROM membername MN
+    JOIN _RemovedNoTrans M ON MN.member_idmember = M.idmember;
+	DELETE MN
+    FROM member MN
+    JOIN _RemovedNoTrans M ON MN.idmember = M.idmember;
+/**********************************************************************************************/
 
-
+/**********************************************************************************************/
+/**********************************************************************************************/
 CREATE TABLE `knightsb_membership`.`country` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB COMMENT = 'List of countries for member table';
 INSERT INTO country(id,name)VALUES(1,"Afghanistan"),
 (2,"Albania"),
@@ -539,6 +554,63 @@ UPDATE transaction SET paymentmethod = 'Cash' WHERE paymentmethod LIKE 'Cash%';
 
 ALTER TABLE `transaction` CHANGE `paymentmethod` `paymentmethod` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE `transaction` CHANGE `amount` `amount` DECIMAL(10,2) NOT NULL DEFAULT '0';
+
+/* Anonymize members who are deleted but whose last transaction was more than 3 years ago */
+	DROP TEMPORARY TABLE IF EXISTS `_RemovedWithTrans`;
+    CREATE TEMPORARY TABLE IF NOT EXISTS `_RemovedWithTrans` AS ( 
+		SELECT idmember,membership_idmembership  FROM `member` m
+			LEFT JOIN transaction t ON m.idmember = t.member_idmember
+			WHERE `membership_idmembership` NOT IN(7, 9) AND `deletedate` IS NOT NULL AND t.idtransaction IS NOT NULL
+			GROUP BY idmember, membership_idmembership
+            HAVING MAX(t.date) < '2018-01-01'
+);
+    DELETE MN
+    FROM membername MN
+    JOIN `_RemovedWithTrans` M ON MN.member_idmember = M.idmember;
+    
+    INSERT INTO `membername` (`honorific`, `firstname`, `surname`, `member_idmember`) 
+    SELECT '','', 'Anonymized',idmember FROM `_RemovedWithTrans`;
+    
+    UPDATE member M, `_RemovedWithTrans` FM
+                        SET 
+                    M.note='',
+                    M.addressfirstline='', 
+                    M.addresssecondline='', 
+                    M.city='', 
+                    M.county='', 
+                    M.postcode='', 
+                    M.countryID=NULL, 
+                    M.area='', 
+                    M.email1='', 
+                    M.phone1='', 
+                    M.addressfirstline2='', 
+                    M.addresssecondline2='', 
+                    M.city2='', 
+                    M.county2='', 
+                    M.postcode2='', 
+                    M.country2ID=NULL, 
+                    M.email2='', 
+                    M.phone2='', 
+                    M.updatedate= NULL, 
+                    M.username='admin'                  
+                 WHERE
+                    M.idmember = FM.idmember;
+/**********************************************************************************************/
+	DROP TEMPORARY TABLE IF  EXISTS `_MoveToFormerMember_LastTransactionLongAgo`;
+    CREATE TEMPORARY TABLE IF NOT EXISTS `_MoveToFormerMember_LastTransactionLongAgo` AS ( 
+		SELECT idmember,membership_idmembership  FROM `member` m
+			LEFT JOIN transaction t ON m.idmember = t.member_idmember
+			WHERE `membership_idmembership` NOT IN(7, 8, 9) AND `deletedate` IS NOT NULL AND t.idtransaction IS NOT NULL
+			GROUP BY idmember, membership_idmembership
+            
+);
+    UPDATE member M, `_MoveToFormerMember_LastTransactionLongAgo` FM
+                        SET 
+                    M.membership_idmembership = 9,
+                    M.updatedate= NULL, 
+                    M.username='admin'                  
+                 WHERE
+                    M.idmember = FM.idmember;
 
 COMMIT;
 
