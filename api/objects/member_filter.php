@@ -82,6 +82,17 @@ class MemberFilter{
         $this->conn->query($query);        
     }
 
+    public function setBusinessOrSurname($name){      
+        $query = " DELETE M
+                    FROM " . $this->tablename . " M
+                    JOIN member m ON M.idmember = m.idmember
+                    LEFT JOIN membername mn ON m.idmember = mn.member_idmember
+                    WHERE m.businessname NOT LIKE '".$name."%' AND 
+                        (mn.surname NOT LIKE '".$name."%' OR mn.surname IS NULL)
+                    ;";
+        $this->conn->query($query);        
+    }
+
     public function setMemberTypeID($membertypeID){      
         $query = " DELETE
                     FROM " . $this->tablename . "

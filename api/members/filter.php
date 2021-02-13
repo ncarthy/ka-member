@@ -51,6 +51,13 @@ if(isset($data->businessname)) {
         $filter->setBusinessname($data->businessname);
     }
 }
+if(isset($data->businessorsurname)) {
+    if (empty($data->businessorsurname)) {
+        // no filter applied
+    } else {
+        $filter->setBusinessOrSurname($data->businessorsurname);
+    }
+}
 if(isset($data->membertypeid)) {
     if (empty($data->membertypeid)) {
         // no filter applied
