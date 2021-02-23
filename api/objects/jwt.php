@@ -20,7 +20,6 @@ class JWTWrapper{
     private $config; // Jwt configuration object, contains the signer and constraints
     private $issuer = 'https://knightsbridgeassociation.com';
     private $audience = 'https://member.knightsbridgeassociation.com';
-    //private $expirationLimit;
 
     // object properties
     public $user;
@@ -29,9 +28,7 @@ class JWTWrapper{
     public $expiry;
 
     // constructor
-    public function __construct(string $expirationLimit = '+1 hour'){
-
-        //$this->expirationLimit = $expirationLimit;
+    public function __construct(){
 
         $this->config = Configuration::forSymmetricSigner(
             // You may use any HMAC variations (256, 384, and 512)

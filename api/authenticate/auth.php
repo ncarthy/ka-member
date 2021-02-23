@@ -21,7 +21,7 @@ $pass = '';
 $numberPasswordAttempts = 5;
 
 // time limit on JWT session tokens
-$expirationLimit = '+1 hour';
+$expirationLimit = '+15 minute';
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
@@ -64,7 +64,7 @@ if($num>0){
         // Create a new JWT, with claims of username and isAdmin        
         $jwt = new JWTWrapper();
         $now = new DateTimeImmutable();
-        $expiry = $now->modify('+1 hour');
+        $expiry = $now->modify($expirationLimit);
         $token = $jwt->getToken($username, $isAdmin, $now, $expiry);
 
         $user_with_token=array(
