@@ -33,9 +33,6 @@ $data = json_decode(file_get_contents("php://input"));
 if (isset($data)) {
     $usernm = isset($data->username) ? $data->username : '';
     $pass = isset($data->password) ? $data->password : '';
-} else {
-    // Maybe a preflight OPTIONS request. Just exit
-    exit(0);
 }
 
 // query database for a user with that username
