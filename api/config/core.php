@@ -1,17 +1,13 @@
 <?php
-// show error reporting
+// development
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// home page url
-$home_url="http://localhost/";
+// production
+//ini_set('display_errors', 0);
+//ini_set('log_errors', 1);
+//error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-// page given in URL parameter, default page is one
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$ORIGIN="http://localhost:4200";
 
-// set number of records per page
-$records_per_page = 5;
-
-// calculate for the query LIMIT clause
-$from_record_num = ($records_per_page * $page) - $records_per_page;
 ?>
