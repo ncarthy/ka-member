@@ -41,7 +41,7 @@ class Country{
 
             // WHERE clause depends on parameters
             if($this->name) {
-                $query .= "LOWER(name) LIKE :name '%' ";
+                $query .= "LOWER(name) LIKE :name ";
             }            
             else {
                 $query .= $this->table_id ." = :id ";
@@ -52,7 +52,7 @@ class Country{
             $stmt = $this->conn->prepare($query);      
 
             if($this->name) {
-                $name = htmlspecialchars(strip_tags($this->name));
+                $name = htmlspecialchars(strip_tags($this->name)).'%';
                 $stmt->bindParam (":name", $name, PDO::PARAM_STR);
             }
             else {
