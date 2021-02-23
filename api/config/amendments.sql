@@ -621,6 +621,19 @@ SET username='admin', isAdmin='1', name='Admin User', suspended='0', failedlogin
 
 ALTER TABLE `user` DROP `password`;
 
+CREATE TABLE `knightsb_membership`.`usertoken` ( 
+`iduser` INT NOT NULL ,
+`primaryKey` VARCHAR(36) NOT NULL , 
+`secondaryKey` VARCHAR(36) NOT NULL , 
+`status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'When 0 token is invalid', 
+`issuedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+`expiresAt` DATETIME NOT NULL ) ENGINE = InnoDB COMMENT = 'Store of access/refresh token pairs';
+
+ALTER TABLE usertoken
+    ADD CONSTRAINT fk_usertoken_user_idx
+    FOREIGN KEY (iduser)
+    REFERENCES user(iduser);
+
 COMMIT;
 
 OPTIMIZE TABLE `member`;

@@ -7,8 +7,17 @@ class Database{
     private $password = "SsP4qIm4omu4M";
     public $conn;
 
-    // get the database connection
-    public function getConnection(){
+    // Singleton pattern from https://stackoverflow.com/a/2047999/6941165
+    private static $instance;
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            $object = __CLASS__;
+            self::$instance = new $object;
+        }
+        return self::$instance;
+    }
+
+    private function __construct(){
 
         $this->conn = null;
 
@@ -24,8 +33,6 @@ class Database{
         }catch(PDOException $exception){
             echo "Connection error: " . $exception->getMessage();
         }
-
-        return $this->conn;
     }
 }
 ?>

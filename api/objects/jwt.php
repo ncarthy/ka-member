@@ -4,6 +4,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // This code uses Luis Cobucci' implementation of JWT: https://github.com/lcobucci/jwt/
 
+include_once 'usertoken.php';
+include_once '../config/database.php';
 
 // /https://lcobucci-jwt.readthedocs.io/en/latest/upgrading/
 use Lcobucci\JWT\Configuration;
@@ -20,6 +22,7 @@ class JWTWrapper{
     private $config; // Jwt configuration object, contains the signer and constraints
     private $issuer = 'https://knightsbridgeassociation.com';
     private $audience = 'https://member.knightsbridgeassociation.com';
+    private $usertoken;
 
     // object properties
     public $id;
@@ -27,9 +30,11 @@ class JWTWrapper{
     public $isAdmin;
     public $loggedIn;
     public $expiry;
+    public $hash;
 
     // constructor
     public function __construct(){
+        $this->usertoken = new UserToken(Database::getInstance()->conn);
 
         $this->config = Configuration::forSymmetricSigner(
             // You may use any HMAC variations (256, 384, and 512)
@@ -50,7 +55,6 @@ class JWTWrapper{
         $this->checkAuth();
     }
 
-    // used by select drop-down list
     private function getAuthorizationHeader(){
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
@@ -109,8 +113,15 @@ class JWTWrapper{
             $this->id = $claims->get('sub');
             $this->user = $claims->get('user');
             $this->isAdmin=$claims->get('isAdmin')?true:false;
-            $this->loggedIn = true;
             $this->expiry = $claims->get('exp')->format("Y-m-d H:i:s");
+            $this->hash = $claims->get('jti');
+
+            // Check database for existance of the JWT for the given user
+            if ($this->usertoken->getAccessTokenStatus($this->id, $this->hash)) {
+                $this->loggedIn = true;
+            } else {
+                $this->initializeToken();
+            }
         }
         else {
             $this->initializeToken();
@@ -122,6 +133,8 @@ class JWTWrapper{
 
         $builder = $this->config->builder();
 
+        $this->hash = $this->GUIDv4();
+
         $token = $builder->issuedBy($this->issuer)
                         ->withHeader('iss', $this->issuer)
                         ->permittedFor($this->audience)
@@ -130,9 +143,9 @@ class JWTWrapper{
                         ->relatedTo($userid)
                         ->withClaim('user', $username)
                         ->withClaim('isAdmin', $isAdmin)
-                        ->withClaim('prm', $this->GUIDv4())
+                        ->identifiedBy($this->hash)
                         ->getToken($this->config->signer(), $this->config->signingKey());
-
+        
         return $token->toString();
     }
 
@@ -145,6 +158,7 @@ class JWTWrapper{
         $this->loggedIn = false;
         $this->expiry = '';
         $this->id = 0;
+        $this->hash = '';
     }
 
     /**

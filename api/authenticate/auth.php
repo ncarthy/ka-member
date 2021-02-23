@@ -4,18 +4,21 @@ header("Access-Control-Allow-Origin: ".$ORIGIN);
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
+header("Access-Control-Max-Age: 600");
+//header("Access-Control-Allow-Headers: Origin, Content-Type, Access-Control-Allow-Headers, Authorization");
+
+if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
 
 // include database and object files
 include_once '../config/database.php';
 include_once '../objects/user.php';
+include_once '../objects/usertoken.php';
 include_once '../objects/jwt.php';
 
 // instantiate database and user object
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getInstance()->conn;
 $user = new User($db);
+$usertoken = new UserToken($db);
 $usernm = '';
 $pass = '';
 $numberPasswordAttempts = 5;
@@ -68,8 +71,13 @@ if($num>0){
         $now = new DateTimeImmutable();
         $accessTokenExpiry = $now->modify($accessTokenExpirationLimit);
         $accessToken = $jwt->getToken($id, $username, $isAdmin, $now, $accessTokenExpiry);
+        $primaryKey = $jwt->hash;
         $refreshTokenExpiry = $now->modify($refreshTokenExpirationLimit);
         $refreshToken = $jwt->getToken($id, $username, $isAdmin, $now, $refreshTokenExpiry);
+        $secondaryKey = $jwt->hash;
+
+        $usertoken->deleteAll($id);
+        $usertoken->store($id, $primaryKey, $secondaryKey, true, $refreshTokenExpiry->format("Y-m-d H:i:s"));
 
         $user_with_token=array(
             "username" => $username,
@@ -80,9 +88,10 @@ if($num>0){
             "accessToken" => (string)$accessToken
         );
 
-        setcookie('refreshToken', (string)$refreshToken, $refreshTokenExpiry->getTimestamp(), '', '', true, true);
-        
-        //$user->storeTokens($id, $accessToken, $refreshToken);
+        // TODO: change to 'Secure'
+        setcookie('refreshToken', (string)$refreshToken, $refreshTokenExpiry->getTimestamp()
+                        , '/', '', false, true);
+                
 
         $user->updateFailedAttempts($id, 0, false);
 

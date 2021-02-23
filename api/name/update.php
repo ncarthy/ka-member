@@ -3,7 +3,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
+header("Access-Control-Max-Age: 600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 //Check logged in
@@ -29,8 +29,7 @@ include_once '../config/database.php';
 include_once '../objects/member_name.php';
 
 // get database connection
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getInstance()->conn;
 $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
 // prepare object to be updated

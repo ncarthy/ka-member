@@ -28,8 +28,7 @@ include_once '../config/database.php';
 include_once '../objects/transaction.php';
 
 // get database connection
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getInstance()->conn;
 
 // prepare user object
 $item = new Transaction($db);

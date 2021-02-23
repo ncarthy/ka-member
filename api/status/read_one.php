@@ -19,8 +19,7 @@ include_once '../config/database.php';
 include_once '../objects/membership_status.php';
 
 // get database connection
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getInstance()->conn;
 
 // prepare takings object
 $item = new MembershipStatus($db);

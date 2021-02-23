@@ -18,8 +18,7 @@ include_once '../config/database.php';
 include_once '../objects/transaction.php';
 
 // instantiate database and transaction object
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getInstance()->conn;
 
 // initialize object
 $item = new Transaction($db);

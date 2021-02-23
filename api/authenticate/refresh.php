@@ -3,8 +3,17 @@ header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
 
+if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
+
+// include database and object files
+include_once '../config/database.php';
+include_once '../objects/usertoken.php';
+include_once '../objects/jwt.php';
+
+// instantiate database and user object
+$jwt = new JWTWrapper();
+
+$refreshToken = $_COOKIE["refreshToken"]
 
 ?>

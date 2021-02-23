@@ -25,8 +25,7 @@ include_once '../config/database.php';
 include_once '../objects/user.php';
 
 // instantiate database and user object
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getInstance()->conn;
 
 // initialize object
 $user = new User($db);

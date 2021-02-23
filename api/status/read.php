@@ -18,8 +18,7 @@ include_once '../config/database.php';
 include_once '../objects/membership_status.php';
 
 // instantiate database and status object
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getInstance()->conn;
 
 // initialize object
 $status = new MembershipStatus($db);
