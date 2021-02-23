@@ -49,9 +49,11 @@ class Members{
                         GROUP BY m.idmember
                         ORDER BY membershiptype                                      
                     ";
-
-        $stmt = $this->conn->prepare( $query );
+        
         try{
+            
+            $stmt = $this->conn->prepare( $query );
+
             // execute query
             $stmt->execute();
         }
@@ -95,6 +97,7 @@ class Members{
     }
 
     public function membersPayingTwice($start, $end){       
+
         $tablename = '_Duplicated_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
         
         $query = "SELECT t.idmember,membershiptype,Name,businessname, 
@@ -104,8 +107,7 @@ class Members{
                         JOIN ".$tablename." d ON t.idmember = d.idmember
                         WHERE `date` >=  '" . $start ."'
                         AND `date` <= '" . $end . "'                  
-                        ORDER BY t.idmember,`date`;";      
-        $stmt = $this->conn->prepare( $query );  
+                        ORDER BY t.idmember,`date`;";               
 
         try{
 
@@ -114,7 +116,8 @@ class Members{
             // Get transaction data for the time period
             $this->populateTemporaryDuplicateTable($tablename, $start, $end);
 
-            // narrow down the data according to criteria          
+            // narrow down the data according to criteria  
+            $stmt = $this->conn->prepare( $query );         
             $stmt->execute();
 
             $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
@@ -143,8 +146,7 @@ class Members{
 
         $tablename = '_Transactions_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
         
-        $query = "SELECT * FROM ".$tablename." WHERE ".$column." = 1 ORDER BY `date`;";      
-        $stmt = $this->conn->prepare( $query );  
+        $query = "SELECT * FROM ".$tablename." WHERE ".$column." = 1 ORDER BY `date`;";               
 
         try{
 
@@ -154,6 +156,7 @@ class Members{
             $this->populateTemporaryTransactionTable($tablename, $start, $end);
 
             // narrow down the data according to criteria          
+            $stmt = $this->conn->prepare( $query ); 
             $stmt->execute();
 
             $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
