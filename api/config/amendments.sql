@@ -612,6 +612,15 @@ ALTER TABLE `transaction` CHANGE `amount` `amount` DECIMAL(10,2) NOT NULL DEFAUL
                  WHERE
                     M.idmember = FM.idmember;
 
+INSERT INTO user
+SET username='test', isAdmin='0', name='Test User', suspended='0', failedloginattempts='0',new_pass='$2y$10$Annq5/qbt5w9VnaSj3qWKOElR5lj1KpjTshqKghW3v9xb5Wbbbovm';
+INSERT INTO user
+SET username='user', isAdmin='0', name='Normal User', suspended='0', failedloginattempts='0',new_pass='$2y$10$EjYfEuhGJsrwDfReJDk8Au2wJeIQDs0TuBZoLWq.pU4K7P2bFo8/W';
+INSERT INTO user
+SET username='admin', isAdmin='1', name='Admin User', suspended='0', failedloginattempts='0',new_pass='$2y$10$FJ8kSpWlrCbv18SIhVwK1.Thx9xzBEkVvqhjurlYk2n853KH9IW8G';
+
+ALTER TABLE `user` DROP `password`;
+
 COMMIT;
 
 OPTIMIZE TABLE `member`;

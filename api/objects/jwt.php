@@ -22,6 +22,7 @@ class JWTWrapper{
     private $audience = 'https://member.knightsbridgeassociation.com';
 
     // object properties
+    public $id;
     public $user;
     public $isAdmin;
     public $loggedIn;
@@ -105,7 +106,7 @@ class JWTWrapper{
         // If its a valid token the update the class properties
         // the '...' means to pass an array as function arguments
         if($this->config->validator()->validate($token, ...$constraints)){
-            
+            $this->id = $claims->get('id');
             $this->user = $claims->get('user');
             $this->isAdmin=$claims->get('isAdmin')?true:false;
             $this->loggedIn = true;
@@ -117,7 +118,7 @@ class JWTWrapper{
     }
 
     // Get a string representation of a new JWT
-    public function getToken($username, $isAdmin, $issuedAt, $expiresAt){
+    public function getToken($userid, $username, $isAdmin, $issuedAt, $expiresAt){
 
         $builder = $this->config->builder();
 
@@ -126,6 +127,7 @@ class JWTWrapper{
                         ->permittedFor($this->audience)
                         ->issuedAt($issuedAt)
                         ->expiresAt($expiresAt)
+                        ->withClaim('id', $userid)
                         ->withClaim('user', $username)
                         ->withClaim('isAdmin', $isAdmin)
                         ->getToken($this->config->signer(), $this->config->signingKey());
@@ -141,6 +143,7 @@ class JWTWrapper{
         $this->isAdmin = false;
         $this->loggedIn = false;
         $this->expiry = '';
+        $this->id = 0;
     }
 }
 ?>

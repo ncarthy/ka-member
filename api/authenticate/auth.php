@@ -67,9 +67,9 @@ if($num>0){
         $jwt = new JWTWrapper();
         $now = new DateTimeImmutable();
         $accessTokenExpiry = $now->modify($accessTokenExpirationLimit);
-        $accessToken = $jwt->getToken($username, $isAdmin, $now, $accessTokenExpiry);
+        $accessToken = $jwt->getToken($id, $username, $isAdmin, $now, $accessTokenExpiry);
         $refreshTokenExpiry = $now->modify($refreshTokenExpirationLimit);
-        $refreshToken = $jwt->getToken($username, $isAdmin, $now, $refreshTokenExpiry);
+        $refreshToken = $jwt->getToken($id, $username, $isAdmin, $now, $refreshTokenExpiry);
 
         $user_with_token=array(
             "username" => $username,
