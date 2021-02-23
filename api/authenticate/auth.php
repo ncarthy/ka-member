@@ -1,9 +1,11 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
 
 // include database and object files
 include_once '../config/database.php';
@@ -27,13 +29,12 @@ $data = json_decode(file_get_contents("php://input"));
 if (isset($data)) {
     $usernm = isset($data->username) ? $data->username : '';
     $pass = isset($data->password) ? $data->password : '';
+} else {
+    // Maybe a preflight OPTIONS request. Just exit
+    exit(0);
 }
 
-// Un-comment these 2 lines for testing via GET
-//$usernm = isset($_GET["username"]) ? $_GET["username"] : '';
-//$pass = isset($_GET["password"]) ? $_GET["password"] : '';
-
-// query takings
+// query database for a user with that username
 $stmt = $user->readOneRaw(strtolower($usernm));
 $num = $stmt->rowCount();
 
@@ -71,19 +72,15 @@ if($num>0){
             "id" => $id,
             "isAdmin" => $isAdmin,
             "expiry" => $expiry->format("Y-m-d H:i:s"),
-            "token" => (string)$token
+            "fullname" => $name,
+            "suspended" => $suspended,
+            "jwtToken" => (string)$token
         );
         
         $user->updateFailedAttempts($id, 0, false);
 
         // echo json_encode($user_with_token, JSON_PRETTY_PRINT);
         echo json_encode($user_with_token);
-    }
-    else if (empty($pass)) {
-        http_response_code(401);
-        echo json_encode(
-            array("message" => "Please supply a password.")
-        );
     }
     else{
         $failedloginattempts++;
