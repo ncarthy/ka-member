@@ -1,6 +1,6 @@
 <?php
-//header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Origin: http://localhost:4200");
+include_once '../config/core.php';
+header("Access-Control-Allow-Origin: ".$ORIGIN);
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -21,7 +21,8 @@ $pass = '';
 $numberPasswordAttempts = 5;
 
 // time limit on JWT session tokens
-$expirationLimit = '+15 minute';
+$accessTokenExpirationLimit = '+15 minute';
+$refreshTokenExpirationLimit = '+7 day';
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
@@ -61,20 +62,22 @@ if($num>0){
     }
     else if (password_verify($pass, $password)){
         
-        // Create a new JWT, with claims of username and isAdmin        
+        // Create a new JWT, with claims of username and isAdmin  
+        // Suspended is not a claim because you can't get to this point if user is suspended
         $jwt = new JWTWrapper();
         $now = new DateTimeImmutable();
-        $expiry = $now->modify($expirationLimit);
-        $token = $jwt->getToken($username, $isAdmin, $now, $expiry);
+        $accessTokenExpiry = $now->modify($accessTokenExpirationLimit);
+        $accessToken = $jwt->getToken($username, $isAdmin, $now, $accessTokenExpiry);
+        $refreshTokenExpiry = $now->modify($refreshTokenExpirationLimit);
+        $refreshToken = $jwt->getToken($username, $isAdmin, $now, $refreshTokenExpiry);
 
         $user_with_token=array(
             "username" => $username,
             "id" => $id,
-            "role" => $isAdmin ? 'Admin' : 'User',
-            "expiry" => $expiry->format("Y-m-d H:i:s"),
+            "role" => $isAdmin ? 'Admin' : 'User', 
             "fullname" => $name,
-            "suspended" => $suspended,
-            "jwtToken" => (string)$token
+            "expiry" => $accessTokenExpiry->format("Y-m-d H:i:s"), // For debugging purposes
+            "jwtToken" => (string)$accessToken
         );
         
         $user->updateFailedAttempts($id, 0, false);
