@@ -54,6 +54,7 @@ $user_arr = array(
     "username" => $user->username,
     "fullname" => html_entity_decode($user->fullname),
     "isadmin" => $user->isadmin,
+    "role" => $user->isadmin?'Admin':'User',
     "suspended" => $user->suspended
 );
 

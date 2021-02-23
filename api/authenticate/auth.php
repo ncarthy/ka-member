@@ -1,6 +1,6 @@
 <?php
-//header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -70,7 +70,7 @@ if($num>0){
         $user_with_token=array(
             "username" => $username,
             "id" => $id,
-            "isAdmin" => $isAdmin,
+            "role" => $isAdmin ? 'Admin' : 'User',
             "expiry" => $expiry->format("Y-m-d H:i:s"),
             "fullname" => $name,
             "suspended" => $suspended,

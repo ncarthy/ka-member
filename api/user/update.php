@@ -45,6 +45,7 @@ $item->id = $data->id;
 $item->username = $data->username;
 $item->fullname = $data->fullname;
 $item->isadmin = $data->isadmin;
+$item->role = $data->isadmin?'Admin':'User';
 $item->suspended = $data->suspended;
 if (isset($data->password)) {
     $item->password = password_hash($data->password, PASSWORD_DEFAULT);

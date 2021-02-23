@@ -61,6 +61,7 @@ if($num>0){
                 "username" => $username,
                 "fullname" => html_entity_decode($name),
                 "isadmin" => $isAdmin,
+                "role" => $isAdmin?'Admin':'User',
                 "suspended" => $suspended
             );
 

@@ -82,7 +82,7 @@ class JWTWrapper{
                 return $matches[1];
             }
         }
-        return null;
+        return NULL;
     }
 
     // Check the headers for the presence of a valid JWT
@@ -91,7 +91,7 @@ class JWTWrapper{
         $token = $this->getBearerTokenFromHeaders(); // get token from Auth header
         
         // If no token just exit
-        if($token === NULL){
+        if( is_null($token) ){
             $this->initializeToken();
             return;
         }

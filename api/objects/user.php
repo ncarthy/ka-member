@@ -12,7 +12,7 @@ class User{
     // object properties
     public $id;
     public $username;
-    public $isadmin;
+    public $role;
     public $suspended;
     public $password;
     public $fullname;
