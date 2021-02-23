@@ -77,9 +77,13 @@ if($num>0){
             "role" => $isAdmin ? 'Admin' : 'User', 
             "fullname" => $name,
             "expiry" => $accessTokenExpiry->format("Y-m-d H:i:s"), // For debugging purposes
-            "jwtToken" => (string)$accessToken
+            "accessToken" => (string)$accessToken
         );
+
+        setcookie('refreshToken', (string)$refreshToken, $refreshTokenExpiry->getTimestamp(), '', '', true, true);
         
+        //$user->storeTokens($id, $accessToken, $refreshToken);
+
         $user->updateFailedAttempts($id, 0, false);
 
         // echo json_encode($user_with_token, JSON_PRETTY_PRINT);
