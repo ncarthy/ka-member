@@ -5,7 +5,7 @@ header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Max-Age: 600");
-//header("Access-Control-Allow-Headers: Origin, Content-Type, Access-Control-Allow-Headers, Authorization");
+header("Access-Control-Allow-Headers: Origin, Content-Type, Access-Control-Allow-Headers, Authorization");
 
 if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
 
@@ -62,7 +62,7 @@ if($num>0){
     }
     else if (password_verify($pass, $password)){
         
-        // Create a new JWT, with claims of username and isAdmin  
+        // Create a new access and refresh JWT pair, with claims of username and isAdmin  
         // Suspended is not a claim because you can't get to this point if user is suspended
         $jwt = new JWTWrapper();
         $now = new DateTimeImmutable();
@@ -73,7 +73,6 @@ if($num>0){
         $refreshToken = $jwt->getToken($id, $username, $isAdmin, $now, $refreshTokenExpiry);
         $secondaryKey = $jwt->hash;
 
-        $usertoken->deleteAll($id);
         $usertoken->store($id, $primaryKey, $secondaryKey, true, $refreshTokenExpiry->format("Y-m-d H:i:s"));
 
         $user_with_token=array(
@@ -87,7 +86,7 @@ if($num>0){
 
         // TODO: change to 'Secure'
         setcookie('refreshToken', (string)$refreshToken, $refreshTokenExpiry->getTimestamp()
-                        , '/', '', false, true);
+                        , '/api/authenticate', '', false, true);
                 
 
         $user->updateFailedAttempts($id, 0, false);

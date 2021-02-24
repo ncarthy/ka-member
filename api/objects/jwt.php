@@ -8,12 +8,14 @@ include_once 'usertoken.php';
 include_once '../config/database.php';
 
 // /https://lcobucci-jwt.readthedocs.io/en/latest/upgrading/
+use Lcobucci\Clock\FrozenClock;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Validation\Constraint;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Constraint\ValidAt;
+use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Lcobucci\JWT\Validation\Constraint\PermittedFor;
 
@@ -44,10 +46,13 @@ class JWTWrapper{
             // You may also override the JOSE encoder/decoder if needed by providing extra arguments here
         );
 
+        $clock = new FrozenClock(new DateTimeImmutable());
+
         $this->config->setValidationConstraints(
             new SignedWith($this->config->signer(), $this->config->verificationKey()),
             new PermittedFor($this->audience),
-            new IssuedBy($this->issuer)
+            new IssuedBy($this->issuer),
+            new LooseValidAt($clock)
         );
 
         $this->initializeToken();
@@ -76,7 +81,7 @@ class JWTWrapper{
     /**
     * get access token from header
     * */
-    private function getBearerTokenFromHeaders() {
+    private function getAccessTokenFromHeaders() {
         $headers = $this->getAuthorizationHeader();
         // HEADER: Get the access token from the header
         if (!empty($headers)) {
@@ -87,10 +92,24 @@ class JWTWrapper{
         return NULL;
     }
 
+    /**
+    * get refresh token
+    * */
+    private function getRefreshTokenFromCookies() {
+        $cookie_name = "refreshToken";
+        if(isset($_COOKIE[$cookie_name])) {
+            $cookie = $_COOKIE["refreshToken"];
+            if (!empty($cookie)) {
+                return $cookie;
+            }
+        }
+        return NULL;
+    }
+
     // Check the headers for the presence of a valid JWT
     public function checkAuth(){
 
-        $token = $this->getBearerTokenFromHeaders(); // get token from Auth header
+        $token = $this->getAccessTokenFromHeaders(); // get token from Auth header
         
         // If no token just exit
         if( is_null($token) ){
@@ -107,26 +126,81 @@ class JWTWrapper{
 
         $constraints = $this->config->validationConstraints();      
         
-        // If its a valid token the update the class properties
+        // If its a valid token then update the class properties
         // the '...' means to pass an array as function arguments
-        if($this->config->validator()->validate($token, ...$constraints)){
-            $this->id = $claims->get('sub');
-            $this->user = $claims->get('user');
-            $this->isAdmin=$claims->get('isAdmin')?true:false;
-            $this->expiry = $claims->get('exp')->format("Y-m-d H:i:s");
-            $this->hash = $claims->get('jti');
+        try {
+            if($this->config->validator()->validate($token, ...$constraints)){
+                $this->id = $claims->get('sub');
+                $this->user = $claims->get('user');
+                $this->isAdmin=$claims->get('isAdmin')?true:false;
+                $this->expiry = $claims->get('exp')->format("Y-m-d H:i:s");
+                $this->hash = $claims->get('jti');
 
-            // Check database for existance of the JWT for the given user
-            if ($this->usertoken->getAccessTokenStatus($this->id, $this->hash)) {
-                $this->loggedIn = true;
-            } else {
+                // Check database for existance of the JWT for the given user
+                // By checking access token only this ensures refresh tokens cannot
+                // be used in place of access tokens
+                if ($this->usertoken->getAccessTokenStatus($this->id, $this->hash)) {
+                    $this->loggedIn = true;
+                } else {
+                    $this->initializeToken();
+                }
+            }
+            else {
                 $this->initializeToken();
             }
         }
-        else {
+        catch (Exception $e) {
             $this->initializeToken();
         }
     }
+
+        
+        public function checkRefreshToken(){
+            $token = $this->getRefreshTokenFromCookies(); // get token from Auth header
+
+            // If no token just exit
+            if( is_null($token) ){
+                $this->initializeToken();
+                return false;
+            }
+    
+            // convert from string into JWT object
+            $parser = $this->config->parser();
+            $token = $parser->parse((string) $token);
+    
+            $token->headers(); // Retrieves the token headers
+            $claims = $token->claims(); // Retrieves the token claims
+    
+            $constraints = $this->config->validationConstraints();      
+            
+            // If its a valid token then update the class properties
+            // the '...' means to pass an array as function arguments
+            try {
+                if($this->config->validator()->validate($token, ...$constraints)){
+                    $this->id = $claims->get('sub');
+                    $this->hash = $claims->get('jti');
+        
+                    // Check database for existance of the JWT for the given user
+                    // By checking access token only this ensures refresh tokens cannot
+                    // be used in place of access tokens
+                    if ($this->usertoken->getRefreshTokenStatus($this->id, $this->hash)) {
+                        $this->initializeToken();
+                        return true;
+                    } else {
+                        $this->initializeToken();
+                        return false;
+                    }
+                }
+                else {
+                    $this->initializeToken();
+                    return false;
+                }
+            }
+            catch (Exception $e) {
+                $this->initializeToken();
+                return false;
+            }
+        }
 
     // Get a string representation of a new JWT
     public function getToken($userid, $username, $isAdmin, $issuedAt, $expiresAt){

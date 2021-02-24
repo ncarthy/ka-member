@@ -3,6 +3,7 @@ header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Origin, Content-Type, Access-Control-Allow-Headers, Authorization");
 
 if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
 
@@ -19,6 +20,8 @@ if(!$jwt->loggedIn){
     $db = Database::getInstance()->conn;
     $usertoken = new UserToken($db);
     $usertoken->deleteAll($jwt->id);
+
+    setcookie('refreshToken', '', time() - 3600);
 }
 
 ?>
