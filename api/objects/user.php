@@ -159,7 +159,7 @@ class User{
             $this->username = $row['username'];
             $this->fullname = $row['name'];
             $this->password = $row['password'];
-            $this->isadmin = $row['isAdmin'];
+            $this->role = $row['isAdmin'] ? 'Admin' : 'User';
             $this->suspended = $row['suspended'];
             $this->failedloginattempts = $row['failedloginattempts'];
         }

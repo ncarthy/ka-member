@@ -1,6 +1,6 @@
 <?php
 include_once '../config/core.php';
-header("Access-Control-Allow-Origin: ".$ORIGIN);
+header("Access-Control-Allow-Origin: ". Config::read('server'));
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -22,10 +22,6 @@ $usertoken = new UserToken($db);
 $usernm = '';
 $pass = '';
 $numberPasswordAttempts = 5;
-
-// time limit on JWT session tokens
-$accessTokenExpirationLimit = '+15 minute';
-$refreshTokenExpirationLimit = '+7 day';
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
@@ -65,29 +61,16 @@ if($num>0){
         // Create a new access and refresh JWT pair, with claims of username and isAdmin  
         // Suspended is not a claim because you can't get to this point if user is suspended
         $jwt = new JWTWrapper();
-        $now = new DateTimeImmutable();
-        $accessTokenExpiry = $now->modify($accessTokenExpirationLimit);
-        $accessToken = $jwt->getToken($id, $username, $isAdmin, $now, $accessTokenExpiry);
-        $primaryKey = $jwt->hash;
-        $refreshTokenExpiry = $now->modify($refreshTokenExpirationLimit);
-        $refreshToken = $jwt->getToken($id, $username, $isAdmin, $now, $refreshTokenExpiry);
-        $secondaryKey = $jwt->hash;
-
-        $usertoken->store($id, $primaryKey, $secondaryKey, true, $refreshTokenExpiry->format("Y-m-d H:i:s"));
+        $accessToken = $jwt->getAccessToken($id,$username,$isAdmin ? 'Admin' : 'User');
 
         $user_with_token=array(
             "username" => $username,
             "id" => $id,
             "role" => $isAdmin ? 'Admin' : 'User', 
             "fullname" => $name,
-            "expiry" => $accessTokenExpiry->format("Y-m-d H:i:s"), // For debugging purposes
+            //"expiry" => $accessTokenExpiry->format("Y-m-d H:i:s"), // For debugging purposes
             "accessToken" => (string)$accessToken
         );
-
-        // TODO: change to 'Secure'
-        setcookie('refreshToken', (string)$refreshToken, $refreshTokenExpiry->getTimestamp()
-                        , '/api/authenticate', '', false, true);
-                
 
         $user->updateFailedAttempts($id, 0, false);
 

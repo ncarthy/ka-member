@@ -1,6 +1,6 @@
 <?php
 include_once '../config/core.php';
-header("Access-Control-Allow-Origin: ".$ORIGIN);
+header("Access-Control-Allow-Origin: ". Config::read('server'));
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
@@ -56,8 +56,7 @@ $user_arr = array(
     "id" => $user->id,
     "username" => $user->username,
     "fullname" => html_entity_decode($user->fullname),
-    "isadmin" => $user->isadmin,
-    "role" => $user->isadmin?'Admin':'User',
+    "role" => $user->role,
     "suspended" => $user->suspended
 );
 

@@ -8,6 +8,44 @@ error_reporting(E_ALL);
 //ini_set('log_errors', 1);
 //error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-$ORIGIN="http://localhost:4200";
+// Config pattern from https://stackoverflow.com/a/2047999/6941165
+class Config
+{
+    static $confArray;
+
+    public static function read($name)
+    {
+        return self::$confArray[$name];
+    }
+
+    public static function write($name, $value)
+    {
+        self::$confArray[$name] = $value;
+    }
+
+}
+
+// server location (for Access-Origin)
+Config::write('server', 'http://localhost:4200');
+
+// db
+Config::write('db.host', '192.168.1.22');
+Config::write('db.port', '3306');
+Config::write('db.name', 'knightsb_membership');
+Config::write('db.user', 'knightsb_member');
+Config::write('db.password', 'SsP4qIm4omu4M');
+
+// number of allowed password attempts
+Config::write('password_attempts', 5);
+
+// token settings
+Config::write('token.accessExpiry', '+15 minute');
+Config::write('token.refreshExpiry', '+7 day');
+Config::write('token.iss', 'https://knightsbridgeassociation.com');
+Config::write('token.aud', 'https://member.knightsbridgeassociation.com');
+Config::write('token.envkeyname', 'KA_MEMBER_KEY');
+Config::write('token.cookiename', 'refreshToken');
+Config::write('token.cookiepath', '/api/authenticate');
+Config::write('token.cookiesecure', false);
 
 ?>

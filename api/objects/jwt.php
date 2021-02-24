@@ -4,8 +4,9 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // This code uses Luis Cobucci' implementation of JWT: https://github.com/lcobucci/jwt/
 
-include_once 'usertoken.php';
+include_once '../config/core.php';
 include_once '../config/database.php';
+include_once 'usertoken.php';
 
 // /https://lcobucci-jwt.readthedocs.io/en/latest/upgrading/
 use Lcobucci\Clock\FrozenClock;
@@ -22,31 +23,42 @@ use Lcobucci\JWT\Validation\Constraint\PermittedFor;
 class JWTWrapper{
     
     private $config; // Jwt configuration object, contains the signer and constraints
-    private $issuer = 'https://knightsbridgeassociation.com';
-    private $audience = 'https://member.knightsbridgeassociation.com';
+    private $issuer;
+    private $audience;
+    private $cookiename;
+    private $cookiepath;
+    private $cookiesecure;
     private $usertoken;
 
     // object properties
     public $id;
     public $user;
     public $isAdmin;
+    public $role;
     public $loggedIn;
     public $expiry;
     public $hash;
 
     // constructor
     public function __construct(){
+
         $this->usertoken = new UserToken(Database::getInstance()->conn);
 
         $this->config = Configuration::forSymmetricSigner(
             // You may use any HMAC variations (256, 384, and 512)
             new Sha256(),
             // replace the value below with a key of your own!
-            InMemory::plainText( getenv('KA_MEMBER_KEY') )
+            InMemory::plainText( getenv(Config::read('token.envkeyname')) )
             // You may also override the JOSE encoder/decoder if needed by providing extra arguments here
         );
 
         $clock = new FrozenClock(new DateTimeImmutable());
+
+        $this->issuer = Config::read('token.iss');
+        $this->audience = Config::read('token.aud');
+        $this->cookiename = Config::read('token.cookiename');
+        $this->cookiepath = Config::read('token.cookiepath');
+        $this->cookiesecure = Config::read('token.cookiesecure');
 
         $this->config->setValidationConstraints(
             new SignedWith($this->config->signer(), $this->config->verificationKey()),
@@ -96,13 +108,17 @@ class JWTWrapper{
     * get refresh token
     * */
     private function getRefreshTokenFromCookies() {
-        $cookie_name = "refreshToken";
-        if(isset($_COOKIE[$cookie_name])) {
-            $cookie = $_COOKIE["refreshToken"];
+
+        if(isset($_COOKIE[$this->cookiename])) {
+
+            $cookie = $_COOKIE[$this->cookiename];
+
             if (!empty($cookie)) {
                 return $cookie;
             }
+
         }
+
         return NULL;
     }
 
@@ -132,7 +148,8 @@ class JWTWrapper{
             if($this->config->validator()->validate($token, ...$constraints)){
                 $this->id = $claims->get('sub');
                 $this->user = $claims->get('user');
-                $this->isAdmin=$claims->get('isAdmin')?true:false;
+                $this->isAdmin=$claims->get('role')=='Admin'?true:false;
+                $this->role=$claims->get('role');
                 $this->expiry = $claims->get('exp')->format("Y-m-d H:i:s");
                 $this->hash = $claims->get('jti');
 
@@ -160,8 +177,7 @@ class JWTWrapper{
 
             // If no token just exit
             if( is_null($token) ){
-                $this->initializeToken();
-                return false;
+                return NULL;
             }
     
             // convert from string into JWT object
@@ -177,48 +193,73 @@ class JWTWrapper{
             // the '...' means to pass an array as function arguments
             try {
                 if($this->config->validator()->validate($token, ...$constraints)){
-                    $this->id = $claims->get('sub');
-                    $this->hash = $claims->get('jti');
+                    $id = $claims->get('sub');
+                    $hash = $claims->get('jti');
         
                     // Check database for existance of the JWT for the given user
-                    // By checking access token only this ensures refresh tokens cannot
-                    // be used in place of access tokens
-                    if ($this->usertoken->getRefreshTokenStatus($this->id, $this->hash)) {
-                        $this->initializeToken();
-                        return true;
+                    if ($this->usertoken->getRefreshTokenStatus($id, $hash)) {
+                        return $id;
                     } else {
-                        $this->initializeToken();
-                        return false;
+                        return NULL;
                     }
                 }
                 else {
-                    $this->initializeToken();
-                    return false;
+                    return NULL;
                 }
             }
             catch (Exception $e) {
-                $this->initializeToken();
-                return false;
+                return NULL;
             }
         }
 
+        public function getAccessToken($userid, $username = '', $role = ''){
+
+            $builder = $this->config->builder();
+
+            // time limit on JWT session tokens
+            $now = new DateTimeImmutable();
+            $accessTokenExpiry = $now->modify(Config::read('token.accessExpiry'));
+            $refreshTokenExpiry = $now->modify(Config::read('token.refreshExpiry'));
+
+            $accessHash = $this->GUIDv4();
+            $accessToken = $this->getToken($userid, $accessHash, $now, 
+                                            $accessTokenExpiry, $username, $role);
+
+            $refreshHash = $this->GUIDv4();
+            $refreshToken = $this->getToken($userid, $refreshHash, $now, $refreshTokenExpiry);
+
+            setcookie($this->cookiename, $refreshToken, $refreshTokenExpiry->getTimestamp()
+            , $this->cookiepath, '', $this->cookiesecure, true); // 'true' = HttpOnly
+
+            $this->usertoken->store($userid, $accessHash, $refreshHash, 
+                            true, $refreshTokenExpiry->format("Y-m-d H:i:s"));
+
+            return $accessToken;
+
+        }
+
     // Get a string representation of a new JWT
-    public function getToken($userid, $username, $isAdmin, $issuedAt, $expiresAt){
+    private function getToken($userid, $hash, $issuedAt, $expiresAt, $username = '', $role = ''){
 
         $builder = $this->config->builder();
 
-        $this->hash = $this->GUIDv4();
-
         $token = $builder->issuedBy($this->issuer)
-                        ->withHeader('iss', $this->issuer)
-                        ->permittedFor($this->audience)
-                        ->issuedAt($issuedAt)
-                        ->expiresAt($expiresAt)
-                        ->relatedTo($userid)
-                        ->withClaim('user', $username)
-                        ->withClaim('isAdmin', $isAdmin)
-                        ->identifiedBy($this->hash)
-                        ->getToken($this->config->signer(), $this->config->signingKey());
+                                ->withHeader('iss', $this->issuer)
+                                ->permittedFor($this->audience)
+                                ->issuedAt($issuedAt)
+                                ->expiresAt($expiresAt)
+                                ->relatedTo($userid);
+
+        if (!empty($username)) {
+        $token = $token->withClaim('user', $username);
+        }
+
+        if (!empty($role)) {
+        $token = $token->withClaim('role', $role);
+        }
+
+        $token = $token->identifiedBy($hash)
+                                ->getToken($this->config->signer(), $this->config->signingKey());
         
         return $token->toString();
     }
@@ -229,6 +270,7 @@ class JWTWrapper{
     private function initializeToken(){
         $this->user = '';
         $this->isAdmin = false;
+        $this->role = '';
         $this->loggedIn = false;
         $this->expiry = '';
         $this->id = 0;

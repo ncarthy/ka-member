@@ -9,20 +9,44 @@ if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
 
 // include database and object files
 include_once '../config/database.php';
-include_once '../objects/usertoken.php';
+include_once '../objects/user.php';
 include_once '../objects/jwt.php';
 
-// instantiate database and user object
+// instantiate JWT and user object
 $jwt = new JWTWrapper();
+$user = new User(Database::getInstance()->conn);
+$user->id = $jwt->checkRefreshToken();
 
-if ($jwt->checkRefreshToken()) {
+if ($user->id) {
 
-    // Now return new access / refresh token pair
+    // read the details of user to be edited
+    $user->readOne();
 
-    echo 'Refresh is good';
+    if (empty($user->username) ) {
+        http_response_code(422);   
+        echo json_encode(
+            array("message" => "No User found with id = " . $user->id)
+        );
+        exit(1);
+    }
+
+    $accessToken = $jwt->getAccessToken($user->id,$user->username,$user->role);
+
+    $user_with_token=array(
+        "username" => $user->username,
+        "id" => $user->id,
+        "role" => $user->role, 
+        "fullname" => $user->fullname,
+        "accessToken" => (string)$accessToken
+    );
+
+    echo json_encode($user_with_token);
 }
 else {
-    echo 'Failure';
+    http_response_code(401); 
+    echo json_encode(
+        array("message" => "Unauthorized")
+    );
 }
 
 ?>
