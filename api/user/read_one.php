@@ -57,6 +57,7 @@ $user_arr = array(
     "username" => $user->username,
     "fullname" => html_entity_decode($user->fullname),
     "role" => $user->role,
+    "isadmin" => $user->role=='Admin' ? true : false,
     "suspended" => $user->suspended
 );
 

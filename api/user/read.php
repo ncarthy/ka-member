@@ -1,6 +1,9 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
+
+if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
 
 // Check logged in
 include_once '../objects/jwt.php';
@@ -59,13 +62,13 @@ if($num>0){
                 "id" => $id,
                 "username" => $username,
                 "fullname" => html_entity_decode($name),
-                "isadmin" => $isAdmin,
                 "role" => $isAdmin?'Admin':'User',
+                "isadmin" => $isAdmin,
                 "suspended" => $suspended
             );
 
-            // create associative array keyed on username
-            $users_arr["records"][$username] = $user_item;
+            // create nonindexed array keyed on username
+            array_push ($users_arr["records"], $user_item);
         }
 
         echo json_encode($users_arr, JSON_NUMERIC_CHECK);
