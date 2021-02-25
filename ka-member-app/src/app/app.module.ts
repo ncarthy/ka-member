@@ -11,7 +11,8 @@ import { AuthenticationService } from './_services';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { AdminComponent } from './admin/admin.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastContainerComponent } from './toast-container/toast-container.component';
 
 @NgModule({
     imports: [
@@ -25,7 +26,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
         AppComponent,
         HomeComponent,
         LoginComponent,
-        AdminComponent
+        AdminComponent,
+        ToastContainerComponent
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

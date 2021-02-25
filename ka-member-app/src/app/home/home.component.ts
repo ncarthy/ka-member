@@ -2,7 +2,7 @@
 import { first } from 'rxjs/operators';
 
 import { User } from '@app/_models';
-import { UserService, AuthenticationService } from '@app/_services';
+import { UserService, AuthenticationService, ToastService } from '@app/_services';
 
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent implements OnInit{
@@ -12,7 +12,8 @@ export class HomeComponent implements OnInit{
 
     constructor(
         private userService: UserService,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private toastService : ToastService
     ) {
         this.user = this.authenticationService.userValue;
     }
@@ -23,5 +24,9 @@ export class HomeComponent implements OnInit{
             this.loading = false;
             this.userFromApi = user;
         });
+
+        this.toastService.show('You have logged in!', 
+            { classname: 'bg-success text-light', delay: 3000 });
+
     }
 }
