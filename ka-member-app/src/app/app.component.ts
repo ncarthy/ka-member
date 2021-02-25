@@ -6,13 +6,15 @@ import { User, Role } from './_models';
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
     user: User;
+    active: any = 1;
+    isMenuCollapsed: boolean = true;
 
     constructor(private authenticationService: AuthenticationService) {
         this.authenticationService.user.subscribe(x => this.user = x);
     }
 
     get isAdmin() {
-        return this.user && this.user.role === Role.Admin;
+        return this.user && this.user.role &&  this.user.role === Role.Admin;
     }
 
     logout() {

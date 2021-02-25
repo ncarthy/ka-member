@@ -10,20 +10,21 @@ import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AuthenticationService } from './_services';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
-import { AdminComponent } from './admin/admin.component'
+import { AdminComponent } from './admin/admin.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 
 @NgModule({
     imports: [
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
-        AppRoutingModule
+        AppRoutingModule,
+        NgbModule
     ],
     declarations: [
         AppComponent,
         HomeComponent,
-        LoginComponent
-,
+        LoginComponent,
         AdminComponent
     ],
     providers: [
