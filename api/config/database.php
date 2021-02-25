@@ -1,10 +1,6 @@
 <?php
+include_once '../config/core.php';
 class Database{
-    // specify your own database credentials
-    private $host = "192.168.1.22";
-    private $db_name = "knightsb_membership";
-    private $username = "knightsb_member";
-    private $password = "SsP4qIm4omu4M";
     public $conn;
 
     // Singleton pattern from https://stackoverflow.com/a/2047999/6941165
@@ -22,9 +18,10 @@ class Database{
         $this->conn = null;
 
         try{
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name
-                , $this->username, $this->password);
-            $this->conn->exec("set names utf8");    
+            $this->conn = new PDO("mysql:host=" . Config::read('db.host'). ";port=" . 
+                                        Config::read('db.port'). ";dbname=" . 
+                                        Config::read('db.name') . ";charset=utf8"
+                                        , Config::read('db.user'), Config::read('db.password'));
 
             // From https://stackoverflow.com/a/60496/6941165
             $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
