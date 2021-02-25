@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AuthenticationService } from './_services';
 import { HomeComponent } from './home';
-import { LoginComponent } from './login';;
+import { LoginComponent } from './login';
 import { AdminComponent } from './admin/admin.component'
 
 @NgModule({
