@@ -13,6 +13,7 @@ import { LoginComponent } from './login';
 import { AdminComponent } from './admin/admin.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
+import { MemberSearchComponent } from './member-search/member-search.component';
 
 @NgModule({
     imports: [
@@ -27,7 +28,8 @@ import { ToastContainerComponent } from './toast-container/toast-container.compo
         HomeComponent,
         LoginComponent,
         AdminComponent,
-        ToastContainerComponent
+        ToastContainerComponent,
+        MemberSearchComponent
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

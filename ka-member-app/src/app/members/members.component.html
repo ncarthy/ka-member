@@ -1,0 +1,10 @@
+<h2>Members</h2>
+
+<div class="navLinks">
+  Enter id: <input #id size="6">
+  <button (click)="goToMember(id.value)">Go</button>
+</div>
+
+<div class="members-area">
+  <router-outlet></router-outlet>
+</div>
