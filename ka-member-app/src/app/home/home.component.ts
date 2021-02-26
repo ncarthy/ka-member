@@ -1,19 +1,22 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { User } from '@app/_models';
-import { UserService, AuthenticationService, ToastService } from '@app/_services';
+import { Member, User } from '@app/_models';
+import { UserService, AuthenticationService, ToastService, MemberService } from '@app/_services';
 
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent implements OnInit{
     loading = false;
     user: User;
     userFromApi: User;
+    members: Member[];
+    member: Member;
 
     constructor(
         private userService: UserService,
         private authenticationService: AuthenticationService,
-        private toastService : ToastService
+        private toastService : ToastService,
+        private memberService : MemberService
     ) {
         this.user = this.authenticationService.userValue;
     }
@@ -26,7 +29,16 @@ export class HomeComponent implements OnInit{
         });
 
         this.toastService.show('You have logged in!', 
-            { classname: 'bg-success text-light', delay: 3000 });
+            { classname: 'bg-success text-light', delay: 3000 }
+        );
+
+        this.memberService.getAll().pipe(first()).subscribe(members => {
+            this.members = members;
+        });
+
+        this.memberService.getById(413).pipe(first()).subscribe(member => {
+            this.member = member;
+        });
 
     }
 }

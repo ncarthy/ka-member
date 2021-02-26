@@ -10,10 +10,16 @@ import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AuthenticationService } from './_services';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
-import { AdminComponent } from './admin/admin.component';
+import { AdminComponent } from './admin';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
-import { MemberSearchComponent } from './member-search/member-search.component';
+/*import { 
+    MemberSearchComponent, 
+    SearchBoxComponent,
+    SearchResultComponent
+ } from './member-search';*/
+ import { MembersModule } from './members/members.module';
+ import { MemberSearchModule } from './member-search/member-search.module';
 
 @NgModule({
     imports: [
@@ -21,7 +27,9 @@ import { MemberSearchComponent } from './member-search/member-search.component';
         ReactiveFormsModule,
         HttpClientModule,
         AppRoutingModule,
-        NgbModule
+        NgbModule,
+        MembersModule,
+        MemberSearchModule
     ],
     declarations: [
         AppComponent,
@@ -29,7 +37,9 @@ import { MemberSearchComponent } from './member-search/member-search.component';
         LoginComponent,
         AdminComponent,
         ToastContainerComponent,
-        MemberSearchComponent
+        /*MemberSearchComponent,
+        SearchBoxComponent,
+        SearchResultComponent*/
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

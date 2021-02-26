@@ -10,11 +10,12 @@ import {
 import { MembersComponent } from './members.component';
 import { MemberComponent } from './member/member.component';
 
+//import { MemberSearchComponent } from '@app/member-search/member-search.component';
 
 @NgModule({
   declarations: [
     MembersComponent,
-    MemberComponent,
+    MemberComponent
   ],
   exports: [
     MembersComponent,
