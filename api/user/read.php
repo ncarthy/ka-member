@@ -2,7 +2,6 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
-
 if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
 
 // Check logged in

@@ -1,6 +1,8 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
+if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
 
 // Check logged in
 include_once '../objects/jwt.php';
@@ -32,9 +34,8 @@ if($num>0){
  
     // products array
     $member_arr=array();
+    $member_arr["count"] = $num;
     $member_arr["records"]=array();
-
-    $count =$num;
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -85,13 +86,13 @@ if($num>0){
         );
 
         // create associative array keyed on id
-        $members_arr["records"][$id] = $member_item;
+        array_push($member_arr["records"], $member_item);
 
     }
 
-    $members_arr["count"] = $count;
+    
 
-    $encoded_json = json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
+    $encoded_json = json_encode($member_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
     echo str_replace('xn#','',$encoded_json);
 }
 ?>
