@@ -1,5 +1,14 @@
 <?php
 
+/*
+    Router logic supplied by bramus\router (https://github.com/bramus/router)
+
+    Useing some example uses from https://github.com/wdekkers/raspberry-pi-app
+
+    Regex cheat sheet: https://courses.cs.washington.edu/courses/cse154/15sp/cheat-sheets/php-regex-cheat-sheet.pdf
+
+*/
+
 $router->setNamespace('\Controllers');
 
 /**************/
