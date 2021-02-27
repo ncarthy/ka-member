@@ -29,6 +29,8 @@ include_once 'models/membership_status.php';
 include_once 'models/transaction.php';
 include_once 'models/user.php';
 include_once 'models/usertoken.php';
+include_once 'controllers/bank_account.controller.php';
+include_once 'controllers/country.controller.php';
 include_once 'controllers/status.controller.php';
 include_once 'controllers/user.controller.php';
 

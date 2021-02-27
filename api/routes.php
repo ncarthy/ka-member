@@ -36,6 +36,36 @@ $router->mount('/authenticate', function() use ($router) {
   
   });
 /***************/
+/* Bank Routes */
+/***************/
+$router->mount('/bank_account', function () use ($router) {
+
+    // will result in '/memberstatus'
+    $router->get('/', 'BankAccountCtl@read_all');
+
+    // will result in '/memberstatus/id'
+    $router->get('/(\d+)', 'BankAccountCtl@read_one');
+
+    // will result in '/memberstatus/name'
+    $router->get('/(\D+)', 'BankAccountCtl@read_one_name');
+
+});
+/***************/
+/* Country Routes */
+/***************/
+$router->mount('/country', function () use ($router) {
+
+    // will result in '/memberstatus'
+    $router->get('/', 'CountryCtl@read_all');
+
+    // will result in '/memberstatus/id'
+    $router->get('/(\d+)', 'CountryCtl@read_one');
+
+    // will result in '/memberstatus/name'
+    $router->get('/(\D+)', 'CountryCtl@read_one_name');
+
+});
+/***************/
 /* Status Routes */
 /***************/
 $router->mount('/status', function () use ($router) {

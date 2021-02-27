@@ -16,8 +16,7 @@ class MembershipStatus{
     public $name;
 
     public function __construct(){
-        $db = \Core\Database::getInstance()->conn;
-        $this->conn = $db;
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     // used by select drop-down list
@@ -35,7 +34,6 @@ class MembershipStatus{
 
         $num = $stmt->rowCount();
 
-        // products array
         $item_arr=array();
 
         // check if more than 0 record found
@@ -102,12 +100,12 @@ class MembershipStatus{
             $this->name = $row['name'];
 
             // create array
-            $member_status = array(
+            $item = array(
                 "id" => $this->id,
                 "name" => $this->name    
             );
 
-            return $member_status;
+            return $item;
         }
 }
 ?>

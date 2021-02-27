@@ -1,4 +1,6 @@
 <?php
+namespace Models;
+use \PDO;
 class BankAccount{
     // database conn 
     private $conn;
@@ -10,12 +12,12 @@ class BankAccount{
     public $id;
     public $name;
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     // used by select drop-down list
-    public function readAll(){
+    public function read(){
         $query = "SELECT
                     " . $this->table_id ." as `id`, `name`
                 FROM
@@ -24,24 +26,34 @@ class BankAccount{
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
-        return $stmt;
+        $num = $stmt->rowCount();
+
+        $item_arr=array();
+
+        // check if more than 0 record found
+        if($num>0){
+
+            // retrieve our table contents
+            // fetch() is faster than fetchAll()
+            // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                // extract row
+                // this will make $row['name'] to
+                // just $name only
+                extract($row);
+            
+                    $item=array(
+                        "id" => $id,
+                        "name" => $name
+                    );
+
+                    $item_arr[] = $item;
+                }
+        }
+
+        return $item_arr;
     }
 
-    // used by select drop-down list
-    public function read(){
-
-        //select all data
-        $query = "SELECT
-                    " . $this->table_id ." as `id`, `name`
-                FROM
-                    " . $this->table_name . "
-                ORDER BY ". $this->table_id;
-
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-
-        return $stmt;
-    }
         
         public function readOne(){
 
@@ -81,7 +93,13 @@ class BankAccount{
             // set values to object properties
             $this->id = $row['id'];
             $this->name = $row['name'];
-            return $stmt;
+            // create array
+            $item = array(
+                "id" => $this->id,
+                "name" => $this->name    
+            );
+
+            return $item;
         }
 }
 ?>

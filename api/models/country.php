@@ -1,4 +1,6 @@
 <?php
+namespace Models;
+use \PDO;
 class Country{
     // database conn 
     private $conn;
@@ -10,8 +12,8 @@ class Country{
     public $id;
     public $name;
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     // used by select drop-down list
@@ -27,7 +29,32 @@ class Country{
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
 
-        return $stmt;
+        $num = $stmt->rowCount();
+
+        $item_arr=array();
+
+        // check if more than 0 record found
+        if($num>0){
+
+            // retrieve our table contents
+            // fetch() is faster than fetchAll()
+            // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                // extract row
+                // this will make $row['name'] to
+                // just $name only
+                extract($row);
+            
+                    $item=array(
+                        "id" => $id,
+                        "name" => $name
+                    );
+
+                    $item_arr[] = $item;
+                }
+        }
+
+        return $item_arr;
     }
         
         public function readOne(){
@@ -68,7 +95,13 @@ class Country{
             // set values to object properties
             $this->id = $row['id'];
             $this->name = $row['name'];
-            return $stmt;
+            // create array
+            $item = array(
+                "id" => $this->id,
+                "name" => $this->name    
+            );
+
+            return $item;
         }
 }
 ?>
