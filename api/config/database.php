@@ -1,5 +1,9 @@
 <?php
-include_once '../config/core.php';
+
+namespace Core;
+
+use \PDO;
+
 class Database{
     public $conn;
 

@@ -1,4 +1,9 @@
 <?php
+
+namespace Models;
+
+use \PDO;
+
 class MembershipStatus{
     // database conn 
     private $conn;
@@ -10,7 +15,8 @@ class MembershipStatus{
     public $id;
     public $name;
 
-    public function __construct($db){
+    public function __construct(){
+        $db = \Core\Database::getInstance()->conn;
         $this->conn = $db;
     }
 
@@ -27,7 +33,33 @@ class MembershipStatus{
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
 
-        return $stmt;
+        $num = $stmt->rowCount();
+
+        // products array
+        $item_arr=array();
+
+        // check if more than 0 record found
+        if($num>0){
+
+            // retrieve our table contents
+            // fetch() is faster than fetchAll()
+            // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                // extract row
+                // this will make $row['name'] to
+                // just $name only
+                extract($row);
+            
+                    $item=array(
+                        "id" => $id,
+                        "name" => $name
+                    );
+
+                    $item_arr[] = $item;
+                }
+        }
+
+        return $item_arr;
     }
         
         public function readOne(){
@@ -68,7 +100,14 @@ class MembershipStatus{
             // set values to object properties
             $this->id = $row['id'];
             $this->name = $row['name'];
-            return $stmt;
+
+            // create array
+            $member_status = array(
+                "id" => $this->id,
+                "name" => $this->name    
+            );
+
+            return $member_status;
         }
 }
 ?>

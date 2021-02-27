@@ -1,12 +1,17 @@
 <?php
+
+namespace Models;
+
+use \PDO;
+
 class UserToken{
     // database conn 
     private $conn;
     // table name
     private $table_name = "usertoken";
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     function store($iduser, $primaryKey, $secondaryKey, $status, $expiresAt){

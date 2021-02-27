@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Content-Type, Access-Control-Allow-Headers, Authorization");
 if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
-
+$start = microtime(true);
 // Check logged in
 include_once '../objects/jwt.php';
 $jwt = new JWTWrapper();
@@ -21,13 +21,18 @@ include_once '../objects/member_filter.php';
 
 // instantiate database and member object
 $db = Database::getInstance()->conn;
-
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('Start', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 // initialize object
 $filter = new MemberFilter($db);
 $filter->reset();
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('PostReset', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 
 // Go through each possible filter and apply each in turn
 // This means all filters are 'AND' filters
@@ -52,6 +57,9 @@ if(isset($data->businessname)) {
         $filter->setBusinessname($data->businessname);
     }
 }
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('PreTest', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 if(isset($data->businessorsurname)) {
     if (empty($data->businessorsurname)) {
         // no filter applied
@@ -59,6 +67,9 @@ if(isset($data->businessorsurname)) {
         $filter->setBusinessOrSurname($data->businessorsurname);
     }
 }
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('PostTest', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 if(isset($data->membertypeid)) {
     if (empty($data->membertypeid)) {
         // no filter applied
@@ -152,7 +163,9 @@ if(isset($data->deletedatestart) || isset($data->deletedateend)) {
     $filter->setDeleteRange($start, $end);
     $deleteDateFilterIsSet = true;
 }
-
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('PreDeleted', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 // Normally you only want to view the un-deleted members
 // and that is the defaul setting.
 // So if "removed" is set to 0 or is missing then only
@@ -162,7 +175,7 @@ if (isset($data->removed)) {
     if ($data->removed =='any') {    
         // no filter applied
     } else {
-        if ($data->removed && $data->removed == 'y') {
+        if ($data->removed && ($data->removed == 'y' || $data->removed == 'yes')) {
             $filter->setDeleted();
         } else if ($deleteDateFilterIsSet) {
             // filter already applied
@@ -177,9 +190,15 @@ if (isset($data->removed)) {
     $filter->setNotDeleted();
     
 }
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('PreMysQL', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 
 $stmt=$filter->execute();
 $num = $stmt->rowCount();
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('Mysql', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 
 // check if more than 0 record found
 if($num>0){
@@ -236,4 +255,7 @@ if($num>0){
 
     echo json_encode($members_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
 }
+$time_elapsed_secs = microtime(true) - $start;
+file_put_contents('php://stderr', print_r('End', TRUE));
+file_put_contents('php://stderr', print_r($time_elapsed_secs, TRUE));
 ?>

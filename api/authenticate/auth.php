@@ -1,24 +1,11 @@
 <?php
-include_once '../config/core.php';
-header("Access-Control-Allow-Origin: ". Config::read('server'));
+
 header("Access-Control-Allow-Credentials: true");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Max-Age: 600");
-header("Access-Control-Allow-Headers: Origin, Content-Type, Access-Control-Allow-Headers, Authorization");
-
-if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
-
-// include database and object files
-include_once '../config/database.php';
-include_once '../objects/user.php';
-include_once '../objects/usertoken.php';
-include_once '../objects/jwt.php';
 
 // instantiate database and user object
-$db = Database::getInstance()->conn;
-$user = new User($db);
-$usertoken = new UserToken($db);
+$db = \Core\Database::getInstance()->conn;
+$user = new \Models\User($db);
+$usertoken = new \Models\UserToken($db);
 $usernm = '';
 $pass = '';
 $numberPasswordAttempts = 5;
@@ -60,7 +47,7 @@ if($num>0){
         
         // Create a new access and refresh JWT pair, with claims of username and isAdmin  
         // Suspended is not a claim because you can't get to this point if user is suspended
-        $jwt = new JWTWrapper();
+        $jwt = new \Models\JWTWrapper();
         $accessToken = $jwt->getAccessToken($id,$username,$isAdmin ? 'Admin' : 'User');
 
         $user_with_token=array(

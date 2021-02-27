@@ -1,12 +1,10 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-
 // This code uses Luis Cobucci' implementation of JWT: https://github.com/lcobucci/jwt/
 
-include_once '../config/core.php';
-include_once '../config/database.php';
-include_once 'usertoken.php';
+namespace Models;
+
+use DateTimeImmutable;
 
 // /https://lcobucci-jwt.readthedocs.io/en/latest/upgrading/
 use Lcobucci\Clock\FrozenClock;
@@ -42,23 +40,23 @@ class JWTWrapper{
     // constructor
     public function __construct(){
 
-        $this->usertoken = new UserToken(Database::getInstance()->conn);
+        $this->usertoken = new UserToken(\Core\Database::getInstance()->conn);
 
         $this->config = Configuration::forSymmetricSigner(
             // You may use any HMAC variations (256, 384, and 512)
             new Sha256(),
             // replace the value below with a key of your own!
-            InMemory::plainText( getenv(Config::read('token.envkeyname')) )
+            InMemory::plainText( getenv(\Core\Config::read('token.envkeyname')) )
             // You may also override the JOSE encoder/decoder if needed by providing extra arguments here
         );
 
         $clock = new FrozenClock(new DateTimeImmutable());
 
-        $this->issuer = Config::read('token.iss');
-        $this->audience = Config::read('token.aud');
-        $this->cookiename = Config::read('token.cookiename');
-        $this->cookiepath = Config::read('token.cookiepath');
-        $this->cookiesecure = Config::read('token.cookiesecure');
+        $this->issuer = \Core\Config::read('token.iss');
+        $this->audience = \Core\Config::read('token.aud');
+        $this->cookiename = \Core\Config::read('token.cookiename');
+        $this->cookiepath = \Core\Config::read('token.cookiepath');
+        $this->cookiesecure = \Core\Config::read('token.cookiesecure');
 
         $this->config->setValidationConstraints(
             new SignedWith($this->config->signer(), $this->config->verificationKey()),
@@ -218,8 +216,8 @@ class JWTWrapper{
 
             // time limit on JWT session tokens
             $now = new DateTimeImmutable();
-            $accessTokenExpiry = $now->modify(Config::read('token.accessExpiry'));
-            $refreshTokenExpiry = $now->modify(Config::read('token.refreshExpiry'));
+            $accessTokenExpiry = $now->modify(\Core\Config::read('token.accessExpiry'));
+            $refreshTokenExpiry = $now->modify(\Core\Config::read('token.refreshExpiry'));
 
             $accessHash = $this->GUIDv4();
             $accessToken = $this->getToken($userid, $accessHash, $now, 

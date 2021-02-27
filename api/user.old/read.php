@@ -45,8 +45,8 @@ if($num>0){
  
     // products array
     $users_arr=array();
-    //$users_arr["count"]=$num;
-    //$users_arr["records"]=array();
+    $users_arr["count"]=$num;
+    $users_arr["records"]=array();
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -67,9 +67,10 @@ if($num>0){
             );
 
             // create nonindexed array
-            array_push ($users_arr, $user_item);
+            array_push ($users_arr["records"], $user_item);
         }
 
         echo json_encode($users_arr, JSON_NUMERIC_CHECK);
+        
 }
 ?>

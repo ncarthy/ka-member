@@ -1,12 +1,17 @@
 <?php
+
+namespace Models;
+
+use \PDO;
+
 class User{
     // database conn 
     private $conn;
     // table name
     private $table_name = "user";
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     // object properties
@@ -19,7 +24,7 @@ class User{
     public $failedloginattempts;
 
     // used by select drop-down list
-    public function readAll(){
+    public function read(){
 
         //select all data
         $query = "SELECT
@@ -30,15 +35,41 @@ class User{
                     (isset($this->suspended)?'WHERE suspended = '.$this->suspended.' ':'');                    
 
         $stmt = $this->conn->prepare( $query );
-        try{
-            // execute query
-            $stmt->execute();
-        }
-        catch(PDOException $exception){
-            echo "Error retrieving users: " . $exception->getMessage();
-        }
+        $stmt->execute();
+
+        $num = $stmt->rowCount();
+
+        $users_arr=array();
+
+        if($num>0){
+ 
+            
         
-        return $stmt;
+            // retrieve our table contents
+            // fetch() is faster than fetchAll()
+            // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                // extract row
+                // this will make $row['name'] to
+                // just $name only
+                extract($row);
+            
+                    $user_item=array(
+                        "id" => $id,
+                        "username" => $username,
+                        "fullname" => html_entity_decode($name),
+                        "role" => $isAdmin?'Admin':'User',
+                        "isadmin" => $isAdmin,
+                        "suspended" => $suspended
+                    );
+        
+                    // create nonindexed array
+                    array_push ($users_arr, $user_item);
+                }
+               
+        }
+
+        return $users_arr;
     }
 
     function create(){
@@ -138,14 +169,15 @@ class User{
                     u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`
                     FROM
                     " . $this->table_name . " u
-                    WHERE u.iduser = ?
+                    WHERE u.iduser = :id
                     LIMIT 0,1";
                 
         // prepare query statement
         $stmt = $this->conn->prepare( $query );
 
         // bind id of product to be updated
-        $stmt->bindParam(1, $this->id);
+        $id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+        $stmt->bindParam (":id", $id, PDO::PARAM_INT);
 
         // execute query
         $stmt->execute();

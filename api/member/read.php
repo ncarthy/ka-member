@@ -88,11 +88,10 @@ if($num>0){
         // create associative array keyed on id
         array_push($member_arr["records"], $member_item);
 
-    }
-
-    
+    }    
 
     $encoded_json = json_encode($member_arr, JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
     echo str_replace('xn#','',$encoded_json);
+    file_put_contents('php://stderr', print_r($member_item, TRUE));
 }
 ?>

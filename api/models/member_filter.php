@@ -200,7 +200,7 @@ class MemberFilter{
     results resturned to the app. */
     private function createTemporaryMemberTable($tablename){
 
-        $query = "CREATE TEMPORARY TABLE IF NOT EXISTS `".$tablename."` AS ( 
+        $query = "CREATE TEMPORARY TABLE IF NOT EXISTS `".$tablename."` ENGINE=MEMORY AS ( 
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,

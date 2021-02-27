@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '65412ec5d7bfeefb77245d1a18936bddd990b254',
+    'reference' => 'b31b8059202b3e488410a1b56672e0b73a0e350f',
     'name' => '__root__',
   ),
   'versions' => 
@@ -42,7 +42,16 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '65412ec5d7bfeefb77245d1a18936bddd990b254',
+      'reference' => 'b31b8059202b3e488410a1b56672e0b73a0e350f',
+    ),
+    'bramus/router' => 
+    array (
+      'pretty_version' => '1.5',
+      'version' => '1.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6adc0182dc6b0ebc22fd10543f65a36de10d8c05',
     ),
     'lcobucci/clock' => 
     array (

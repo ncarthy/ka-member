@@ -1,5 +1,6 @@
 {
     "require": {
-        "lcobucci/jwt": "^4.1"
+        "lcobucci/jwt": "^4.1",
+        "bramus/router": "~1.5"
     }
 }

@@ -96,7 +96,7 @@ UPDATE membername SET firstname = TRIM(firstname) WHERE firstname LIKE '% ';
 UPDATE membername SET surname = TRIM(surname) WHERE surname LIKE '% ';
 UPDATE membername SET honorific = TRIM(honorific) WHERE honorific LIKE '% ';
 
-ALTER TABLE `knightsb_membership`.`membername` ADD UNIQUE `Unique_Name_IdMember` (`honorific`, `firstname`, `surname`, `member_idmember`);
+#ALTER TABLE `knightsb_membership`.`membername` ADD UNIQUE `Unique_Name_IdMember` (`honorific`, `firstname`, `surname`, `member_idmember`);
 ALTER TABLE `member` CHANGE `updatedate` `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 ALTER TABLE `user` ADD `failedloginattempts` INT NOT NULL DEFAULT '0' COMMENT 'The number of failed logins. Resets to zero after success.' AFTER `name`;
@@ -633,6 +633,11 @@ ALTER TABLE usertoken
     ADD CONSTRAINT fk_usertoken_user_idx
     FOREIGN KEY (iduser)
     REFERENCES user(iduser);
+
+ALTER TABLE membername
+    ADD CONSTRAINT fk_membername_member_idx
+    FOREIGN KEY (member_idmember)
+    REFERENCES member(idmember);
 
 COMMIT;
 
