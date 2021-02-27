@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators'; // Need to import map https://stackoverflow.com/a/50218001/6941165
+import { map, filter } from 'rxjs/operators'; // Need to import map https://stackoverflow.com/a/50218001/6941165
 import { MemberSearchResult } from '@app/_models';
 
 import { environment } from '@environments/environment';
@@ -32,7 +32,9 @@ export class MemberSearchService {
         });
 
         // Add pipe command from https://stackoverflow.com/a/50218001/6941165
-        return this.http.post(queryUrl,body).pipe(map(response => {
+        return this.http.post(queryUrl,body).pipe(
+            filter((x) => !!x), // exclude nulls (From https://stackoverflow.com/a/51421833/6941165)
+            map(response => {
 
             // The <any>response means we are telling TypeScript that we’re not 
             // interested in doing strict type checking.

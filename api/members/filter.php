@@ -162,7 +162,7 @@ if (isset($data->removed)) {
     if ($data->removed =='any') {    
         // no filter applied
     } else {
-        if ($data->removed || $data->removed == 'y') {
+        if ($data->removed && $data->removed == 'y') {
             $filter->setDeleted();
         } else if ($deleteDateFilterIsSet) {
             // filter already applied
