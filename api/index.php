@@ -32,6 +32,7 @@ include_once 'models/usertoken.php';
 include_once 'controllers/bank_account.controller.php';
 include_once 'controllers/country.controller.php';
 include_once 'controllers/member.controller.php';
+include_once 'controllers/name.controller.php';
 include_once 'controllers/status.controller.php';
 include_once 'controllers/user.controller.php';
 

@@ -1,12 +1,17 @@
 <?php
+
+namespace Models;
+
+use \PDO;
+
 class Transaction{
     // database conn 
     private $conn;
     // table name
     private $table_name = "transaction";
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     // object properties

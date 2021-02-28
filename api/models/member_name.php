@@ -1,4 +1,9 @@
 <?php
+
+namespace Models;
+
+use \PDO;
+
 class MemberName{
     // database conn 
     private $conn;
@@ -13,8 +18,8 @@ class MemberName{
     public $surname;
     public $idmember;
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     function create(){
@@ -94,7 +99,7 @@ class MemberName{
         return false;
     }
  
-    public function readOne(){
+    public function read_by_id(){
 
         //select data for one item using PK of table
         $query = "SELECT
@@ -103,22 +108,14 @@ class MemberName{
                 FROM
                     " . $this->table_name . "
                     WHERE "; 
-
-        // WHERE clause depends on parameters
         $query .= $this->table_id ." = :id ";
         $query .= "LIMIT 0,1";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);      
 
-        if($this->idmember) {
-            $idmember = filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
-            $stmt->bindParam (":idmember", $idmember, PDO::PARAM_INT);
-        }
-        else {
-            $id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
-            $stmt->bindParam (":id", $id, PDO::PARAM_INT);
-        }
+        $this->id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+        $stmt->bindParam (":id", $this->id, PDO::PARAM_INT);
         
         $stmt->execute();
         
@@ -132,11 +129,29 @@ class MemberName{
             $this->firstname = $row['firstname'];
             $this->surname = $row['surname'];
             $this->idmember = $row['member_idmember'];
-            return $stmt;
         }
+
+        $item = array(
+            "id" => $this->id,
+            "honorific" => $this->honorific,
+            "firstname" => $this->firstname,
+            "surname" => $this->surname,
+            "idmember" => $this->idmember
+        );
+
+        if (!$this->surname) {
+            http_response_code(422); 
+            echo json_encode(
+                array("message" => "No names found with that idmembername.",
+                        "idmembername" => $this->id), JSON_NUMERIC_CHECK
+            );
+            exit(1);
+        }
+
+        return $item;
     }
 
-    public function readMemberNames(){
+    public function read_by_idmember(){
 
         //select data for one item using PK of table
         $query = "SELECT
@@ -156,8 +171,37 @@ class MemberName{
         $stmt->bindParam (":idmember", $idmember, PDO::PARAM_INT);
         
         $stmt->execute();
+        $num = $stmt->rowCount();
 
-        return $stmt;
+        $items_arr=array();
+        $items_arr["count"]=$num;
+        $items_arr["names"]=array();
+
+        // check if more than 0 record found
+        if($num>0){
+
+            // retrieve our table contents
+            // fetch() is faster than fetchAll()
+            // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                // extract row
+                // this will make $row['name'] to
+                // just $name only
+                extract($row);
+            
+                    $item=array(
+                        "id" => $id,
+                        "honorific" => html_entity_decode($honorific),
+                        "firstname" => html_entity_decode($firstname),
+                        "surname" => html_entity_decode($surname),
+                        "idmember" => $idmember
+                    );
+
+                array_push ($items_arr["names"], $item);
+            }
+        }
+
+        return $items_arr;
     }
 
     /* Delete all names for a member from the database by providing the idmember FK */

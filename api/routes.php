@@ -103,6 +103,21 @@ $router->mount('/member', function () use ($router) {
     $router->patch('/(\d+)', 'MemberCtl@patch');
     // PATCH vs PUT: https://stackoverflow.com/a/34400076/6941165
 });
+/**********************/
+/* Member Name Routes */
+/**********************/
+$router->mount('/name', function () use ($router) {
+
+    // will result in '/name/id'
+    $router->get('/(\d+)', 'MemberNameCtl@read_by_id');
+
+    // will result in '/name/idmember/id'
+    $router->get('/idmember/(\d+)', 'MemberNameCtl@read_by_idmember');
+
+    // delete all names for a member
+    $router->delete('/idmember/(\d+)', 'MemberNameCtl@delete_by_idmember');
+
+});
 /***************/
 /* Status Routes */
 /***************/
