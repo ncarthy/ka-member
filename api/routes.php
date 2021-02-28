@@ -7,43 +7,48 @@
 
     Regex cheat sheet: https://courses.cs.washington.edu/courses/cse154/15sp/cheat-sheets/php-regex-cheat-sheet.pdf
 
+    I'm using three different ways of handinling routes:
+        1. Pure funciton call. See _>before in 'pre_routes.php'
+        2. Whole file like the post route for auth
+        3. Method call like read_all for Bank Account
+
 */
 
-$router->setNamespace('\Controllers');
+// General config
+$router->setNamespace('\Controllers'); // Allows us to omit '\Controllers' from method names
+$router->options('/(\S+)',''); // Will immediately return from any 'Options' call
 
-/**************/
-/* Pre-Router */
-/* Auth Check */ 
-/**************/
-$router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
-    
-    $path_only = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    $first_part_of_path = substr( $path_only, 1, 4 );
-
-    // Only check if logged in if non-'auth' path
-    if ($first_part_of_path != "auth") {
-        $jwt = new \Models\JWTWrapper();
-
-        if(!$jwt->loggedIn){      
-            http_response_code(401);  
-            echo json_encode(
-                array("message" => "Not logged in.")
-            );
-            exit();
-        }
-    }
+// Custom 404 Handler
+$router->set404(function() {
+  header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+  echo '404, route not found!';
 });
+
+
 /***************/
 /* Auth Routes */
 /***************/
-$router->post('/auth', function () {
+/*$router->post('/auth', function () {
     require 'authenticate/auth.php'; 
-} );
+} );*/
+$router->mount('/auth', function() use ($router) {
+
+    $router->post('/', function () {include 'authenticate/auth.php'; } );
+
+    $router->post('/refresh', function () {include 'authenticate/refresh.php'; } );
+
+    $router->delete('/revoke', function () {include 'authenticate/revoke.php'; } );
+  
+});
 $router->mount('/authenticate', function() use ($router) {
 
     $router->post('/auth', function () {include 'authenticate/auth.php'; } );
+
+    $router->post('/refresh', function () {include 'authenticate/refresh.php'; } );
+
+    $router->delete('/revoke', function () {include 'authenticate/revoke.php'; } );
   
-  });
+});
 /***************/
 /* Bank Routes */
 /***************/
@@ -101,12 +106,13 @@ $router->mount('/user', function () use ($router) {
     // will result in '/user/id'
     $router->get('/(\d+)', 'UserCtl@read_one');
 
+    // new user
+    $router->post('/', 'UserCtl@create');
+
+    // delete user
+    $router->delete('/(\d+)', 'UserCtl@delete');
+
+    // update user
+    $router->put('/(\d+)', 'UserCtl@update');
 });
 
-$router->options('/(\S+)','');
-
-// Custom 404 Handler
-$router->set404(function() {
-  header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-  echo '404, route not found!';
-});

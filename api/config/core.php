@@ -30,6 +30,7 @@ class Config
 
 // server location (for Access-Origin)
 Config::write('server', 'http://localhost:4200');
+Config::write('api.path', '/api/');
 
 // db
 Config::write('db.host', '192.168.1.22');

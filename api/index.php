@@ -35,6 +35,7 @@ include_once 'controllers/status.controller.php';
 include_once 'controllers/user.controller.php';
 
 // Define routes
+require 'pre_routes.php'; // Comment this io remove auth on API
 require 'routes.php';
 
 // Run it!

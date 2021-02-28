@@ -67,7 +67,7 @@ if($num>0){
     else{
         $failedloginattempts++;
 
-        $user->updateFailedAttempts($id, $failedloginattempts, ($failedloginattempts==$numberPasswordAttempts));
+        $user->updateFailedAttempts($id, $failedloginattempts, ($failedloginattempts>=$numberPasswordAttempts));
 
         http_response_code(401);
         echo json_encode(

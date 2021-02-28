@@ -22,18 +22,43 @@ class Database{
         $this->conn = null;
 
         try{
-            $this->conn = new PDO("mysql:host=" . Config::read('db.host'). ";port=" . 
-                                        Config::read('db.port'). ";dbname=" . 
-                                        Config::read('db.name') . ";charset=utf8"
-                                        , Config::read('db.user'), Config::read('db.password'));
+            $host = Config::read('db.host');
+            $port = Config::read('db.port');
 
-            // From https://stackoverflow.com/a/60496/6941165
-            $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);    
+            if ($this->testConnection($host, $port)) {
+
+                $this->conn = new PDO("mysql:host=" . $host . ";port=" . 
+                                            $port. ";dbname=" . 
+                                            Config::read('db.name') . ";charset=utf8"
+                                            , Config::read('db.user'), Config::read('db.password'));
+
+                // From https://stackoverflow.com/a/60496/6941165
+                $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);    
+            }
+            else {
+                http_response_code(501);
+                echo json_encode(
+                    array("message" => "Connection error: " . "Connection refused by " .$host . " on ". $port)
+                );
+                exit(1);
+            }
                 
         }catch(PDOException $exception){
             echo "Connection error: " . $exception->getMessage();
         }
+    }
+
+    private function testConnection($host, $port){
+        $waitTimeoutInSeconds = 1;
+        if ($fp = fsockopen($host,$port,$errCode,$errStr,$waitTimeoutInSeconds)) {
+            // It worked
+            return true;
+        } else {
+            // It didn't work
+            return false;
+        }
+        fclose($fp);
     }
 }
 ?>
