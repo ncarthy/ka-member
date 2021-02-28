@@ -114,9 +114,17 @@ $router->mount('/name', function () use ($router) {
     // will result in '/name/idmember/id'
     $router->get('/idmember/(\d+)', 'MemberNameCtl@read_by_idmember');
 
+    // delete all a single membername
+    $router->delete('/(\d+)', 'MemberNameCtl@delete_by_id');
+
     // delete all names for a member
     $router->delete('/idmember/(\d+)', 'MemberNameCtl@delete_by_idmember');
 
+    // new member name
+    $router->post('/', 'MemberNameCtl@create');
+
+    // update member name
+    $router->put('/(\d+)', 'MemberNameCtl@update');
 });
 /***************/
 /* Status Routes */

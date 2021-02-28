@@ -69,8 +69,7 @@ class MemberName{
                     SET 
                     honorific=:honorific,
                     firstname=:firstname, 
-                    surname=:surname,
-                    member_idmember=:idmember
+                    surname=:surname
                  WHERE
                     idmembername=:id";
         
@@ -82,14 +81,12 @@ class MemberName{
         $this->honorific=htmlspecialchars(strip_tags($this->honorific));
         $this->firstname=htmlspecialchars(strip_tags($this->firstname));
         $this->surname=htmlspecialchars(strip_tags($this->surname));
-        $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
 
         // bind values
         $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
         $stmt->bindParam(":honorific", $this->honorific);
         $stmt->bindParam(":firstname", $this->firstname);
-        $stmt->bindParam(":surname", $this->surname);
-        $stmt->bindParam(":idmember", $this->idmember, PDO::PARAM_INT);     
+        $stmt->bindParam(":surname", $this->surname); 
 
         // execute query
         if($stmt->execute()){
@@ -205,11 +202,10 @@ class MemberName{
     }
 
     /* Delete all names for a member from the database by providing the idmember FK */
-    function deleteNamesForMember(){
+    function delete_by_idmember(){
         $query = "DELETE FROM " . $this->table_name . " WHERE member_idmember = ?";
 
         $stmt = $this->conn->prepare($query);
-        $this->idmember=htmlspecialchars(strip_tags($this->idmember));
         $idmember = filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
         $stmt->bindParam(1, $idmember, PDO::PARAM_INT);
 
@@ -221,8 +217,8 @@ class MemberName{
         return false;
     }
 
-    /* Delete a single member name fromt he database by providing the idmembername PK */
-    function delete(){
+    /* Delete a single member name from the database by providing the idmembername PK */
+    function delete_by_id(){
         $query = "DELETE FROM " . $this->table_name . " WHERE idmembername = ?";
 
         $stmt = $this->conn->prepare($query);
