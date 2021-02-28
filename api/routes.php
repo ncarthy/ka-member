@@ -35,20 +35,20 @@ $router->mount('/auth', function() use ($router) {
 
     $router->post('/', function () {include 'authenticate/auth.php'; } );
 
-    $router->post('/refresh', function () {include 'authenticate/refresh.php'; } );
+    $router->get('/refresh', function () {include 'authenticate/refresh.php'; } );
 
     $router->delete('/revoke', function () {include 'authenticate/revoke.php'; } );
   
 });
-$router->mount('/authenticate', function() use ($router) {
+/*$router->mount('/authenticate', function() use ($router) {
 
     $router->post('/auth', function () {include 'authenticate/auth.php'; } );
 
-    $router->post('/refresh', function () {include 'authenticate/refresh.php'; } );
+    $router->get('/refresh', function () {include 'authenticate/refresh.php'; } );
 
     $router->delete('/revoke', function () {include 'authenticate/revoke.php'; } );
   
-});
+});*/
 /***************/
 /* Bank Routes */
 /***************/

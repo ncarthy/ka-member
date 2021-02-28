@@ -1,20 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Credentials: true");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Origin, Content-Type, Access-Control-Allow-Headers, Authorization");
-
-if($_SERVER['REQUEST_METHOD']=='OPTIONS') exit(0);
-
-// include database and object files
-include_once '../config/database.php';
-include_once '../objects/user.php';
-include_once '../objects/jwt.php';
 
 // instantiate JWT and user object
-$jwt = new JWTWrapper();
-$user = new User(Database::getInstance()->conn);
+$jwt = new \Models\JWTWrapper();
+$user = new \Models\User();
 $user->id = $jwt->checkRefreshToken();
 
 if ($user->id) {
