@@ -27,16 +27,122 @@ class UserCtl{
 
     $model->readOne();
 
+    if (empty($model->username) ) {
+      http_response_code(422);   
+      echo json_encode(
+          array("message" => "No User found with id = " . $model->id)
+      );
+      exit(1);
+    }
+
     $user = array(
         "id" => $model->id,
         "username" => $model->username,
         "fullname" => html_entity_decode($model->fullname),
         "role" => $model->role,
-        "isadmin" => $model->role=='Admin' ? true : false,
         "suspended" => $model->suspended
     );
 
     echo json_encode($user, JSON_NUMERIC_CHECK);
   }
 
+  public static function create(){
+    $model = new \Models\User();
+
+    $data = json_decode(file_get_contents("php://input"));
+
+    $model->username = $data->username;
+    $model->role = $data->role;
+    $model->suspended = $data->suspended;
+    $model->fullname = $data->fullname;
+    $model->failedloginattempts = $data->failedloginattempts;
+    $model->password = password_hash($data->password, PASSWORD_DEFAULT);
+
+    $model->checkPassword($data->password, $errors);
+    if ($errors) {
+        http_response_code(422);  
+        echo json_encode(
+          array("message" => implode(" & ",$errors))
+        );
+    } else if( $model->create()) {
+      echo json_encode(
+        array(
+          "message" => "New user with id=$model->id was created.",
+          "id" => $model->id
+        )
+      , JSON_NUMERIC_CHECK);
+    } else{
+      // if unable to create the new_item, tell the admin
+        http_response_code(422);  
+        echo json_encode(
+          array("message" => "Unable to INSERT row.")
+        );
+    }
+  }
+
+  public static function update($id){
+    $model = new \Models\User();
+
+    $data = json_decode(file_get_contents("php://input"));
+
+    $model->id = $id;
+    $model->username = $data->username;
+    $model->role = $data->role;
+    $model->suspended = $data->suspended;
+    $model->fullname = $data->fullname;
+    $model->failedloginattempts = $data->failedloginattempts;
+
+    if (isset($data->password)) {
+      $model->password = password_hash($data->password, PASSWORD_DEFAULT);
+      $model->checkPassword($data->password, $errors);
+      if ($errors) {
+          http_response_code(422);  
+          echo json_encode(
+            array("message" => implode(" & ",$errors))
+          );
+      } 
+      exit(1);
+    }
+
+    if( $model->update()) {
+      echo json_encode(
+        array(
+          "message" => "User with id=$model->id was updated.",
+          "id" => $model->id
+        )
+      , JSON_NUMERIC_CHECK);
+    } else{
+        http_response_code(422);  
+        echo json_encode(
+          array(
+            "message" => "Unable to UPDATE row.",
+            "id" => $model->id
+          )
+        );
+    }
+  }
+
+
+  public static function delete($id){
+    $model = new \Models\User();
+
+    $model->id = $id;
+
+    if( $model->delete()) {
+      echo json_encode(
+        array(
+          "message" => "User with id=$model->id was deleted.",
+          "id" => $model->id
+        )
+      , JSON_NUMERIC_CHECK);
+    } else{
+        http_response_code(422);  
+        echo json_encode(
+          array(
+            "message" => "Unable to DELETE row.",
+            "id" => $model->id
+          )
+        );
+    }
+  }
 }

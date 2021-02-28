@@ -59,8 +59,7 @@ class User{
                         "username" => $username,
                         "fullname" => html_entity_decode($name),
                         "role" => $isAdmin?'Admin':'User',
-                        "isadmin" => $isAdmin,
-                        "suspended" => $suspended
+                        "suspended" => $suspended?true:false
                     );
         
                     // create nonindexed array
@@ -70,94 +69,6 @@ class User{
         }
 
         return $users_arr;
-    }
-
-    function create(){
-        $query = "INSERT INTO
-                    " . $this->table_name . "
-                    SET 
-                    username=:username,
-                    isAdmin=:isadmin, 
-                    name=:fullname,
-                    suspended=:suspended,
-                    failedloginattempts=:failedloginattempts
-                    " . (isset($this->password)?',new_pass=:password ':'');
-        
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-
-        // sanitize
-        $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->isadmin=filter_var($this->isadmin, FILTER_SANITIZE_NUMBER_INT);
-        $this->suspended=filter_var($this->suspended, FILTER_SANITIZE_NUMBER_INT);
-        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
-        $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
-
-        // bind values
-        $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":isadmin", $this->isadmin, PDO::PARAM_INT);
-        $stmt->bindParam(":suspended", $this->suspended, PDO::PARAM_INT);
-        $stmt->bindParam(":fullname", $this->fullname);
-        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts, PDO::PARAM_INT);
-        $stmt->bindParam(":password", $this->password);
-        
-
-        // execute query
-        if($stmt->execute()){
-            $this->id = $this->conn->lastInsertId();
-            if($this->id) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        
-        return false;
-    }
-
-    function update(){
-        $query = "UPDATE
-                    " . $this->table_name . "
-                    SET 
-                    username=:username,
-                    isAdmin=:isadmin, 
-                    suspended=:suspended,
-                    name=:fullname,
-                    failedloginattempts=:failedloginattempts
-                    " . (isset($this->password)?',new_pass=:password ':'') ."
-                 WHERE
-                    iduser=:id";
-        
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-
-        // sanitize
-        $this->username=htmlspecialchars(strip_tags($this->username));
-        $this->isadmin=filter_var($this->isadmin, FILTER_SANITIZE_NUMBER_INT);
-        $this->suspended=filter_var($this->suspended, FILTER_SANITIZE_NUMBER_INT);
-        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
-        $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
-        if(isset($this->password)) {
-            $this->password=htmlspecialchars(strip_tags($this->password));
-            $stmt->bindParam(":password", $this->password);
-        }
-
-        $this->failedloginattempts = !empty($this->failedloginattempts) ? $this->failedloginattempts : 0;
-
-        // bind values
-        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
-        $stmt->bindParam(":username", $this->username);
-        $stmt->bindParam(":isadmin", $this->isadmin, PDO::PARAM_INT);
-        $stmt->bindParam(":suspended", $this->suspended, PDO::PARAM_INT);
-        $stmt->bindParam(":fullname", $this->fullname);        
-        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts, PDO::PARAM_INT);     
-
-        // execute query
-        if($stmt->execute()){
-            return true;
-        }
-        
-        return false;
     }
 
     // find the details of one user using $id
@@ -192,29 +103,118 @@ class User{
             $this->fullname = $row['name'];
             $this->password = $row['password'];
             $this->role = $row['isAdmin'] ? 'Admin' : 'User';
-            $this->suspended = $row['suspended'];
+            $this->suspended = $row['suspended']?true:false;
             $this->failedloginattempts = $row['failedloginattempts'];
         }
     }
 
-        // find the details of one user using $username
-        public function readOneRaw($username){
+    // find the details of one user using $username
+    public function readOneRaw($username){
 
-            //select all data
-            $query = "SELECT
-                        u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                        u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`
-                        FROM
-                        " . $this->table_name . " u
-                        WHERE username = ?
-                        LIMIT 0,1";
-                    
-            $stmt = $this->conn->prepare( $query );
-            $stmt->bindParam(1, $username);
-            $stmt->execute();
-    
-            return $stmt;
+        //select all data
+        $query = "SELECT
+                    u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
+                    u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`
+                    FROM
+                    " . $this->table_name . " u
+                    WHERE username = ?
+                    LIMIT 0,1";
+                
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindParam(1, $username);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function create(){
+        $query = "INSERT INTO
+                    " . $this->table_name . "
+                    SET 
+                    username=:username,
+                    isAdmin=:isadmin, 
+                    name=:fullname,
+                    suspended=:suspended,
+                    failedloginattempts=:failedloginattempts
+                    " . (isset($this->password)?',new_pass=:password ':'');
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->username=htmlspecialchars(strip_tags($this->username));
+        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
+        $this->role=htmlspecialchars(strip_tags($this->role));
+        $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
+        $isadmin = ($this->role=='Admin') ? 1 : 0;
+        $suspended = $this->suspended ? 1 : 0;
+
+        // bind values
+        $stmt->bindParam(":username", $this->username);
+        $stmt->bindParam(":isadmin", $isadmin, PDO::PARAM_INT);
+        $stmt->bindParam(":suspended", $suspended, PDO::PARAM_INT);
+        $stmt->bindParam(":fullname", $this->fullname);
+        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts, PDO::PARAM_INT);
+        $stmt->bindParam(":password", $this->password);
+        
+        // execute query
+        if($stmt->execute()){
+            $this->id = $this->conn->lastInsertId();
+            if($this->id) {
+                return true;
+            } else {
+                return false;
+            }
         }
+        
+        return false;
+    }
+
+    function update(){
+        $query = "UPDATE
+                    " . $this->table_name . "
+                    SET 
+                    username=:username,
+                    isAdmin=:isadmin, 
+                    suspended=:suspended,
+                    name=:fullname,
+                    failedloginattempts=:failedloginattempts
+                    " . (isset($this->password)?',new_pass=:password ':'') ."
+                 WHERE
+                    iduser=:id";
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->username=htmlspecialchars(strip_tags($this->username));
+        $this->fullname=htmlspecialchars(strip_tags($this->fullname));
+        $this->role=htmlspecialchars(strip_tags($this->role));
+        $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
+        if(isset($this->password)) {
+            $this->password=htmlspecialchars(strip_tags($this->password));
+            $stmt->bindParam(":password", $this->password);
+        }
+        $isadmin = ($this->role=='Admin') ? 1 : 0;
+        $suspended = $this->suspended ? 1 : 0;
+
+        $this->failedloginattempts = !empty($this->failedloginattempts) ? $this->failedloginattempts : 0;
+
+        // bind values
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(":username", $this->username);
+        $stmt->bindParam(":isadmin", $isadmin, PDO::PARAM_INT);
+        $stmt->bindParam(":suspended", $suspended, PDO::PARAM_INT);
+        $stmt->bindParam(":fullname", $this->fullname);        
+        $stmt->bindParam(":failedloginattempts", $this->failedloginattempts, PDO::PARAM_INT);     
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+        
+        return false;
+    }
 
     function delete(){
         $query = "DELETE FROM " . $this->table_name . " WHERE iduser = ?";
