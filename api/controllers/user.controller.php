@@ -3,7 +3,7 @@
 namespace Controllers;
 
 /**
- * Controller to acomplish USer related tasks
+ * Controller to acomplish User related tasks
  *
  * @category  Controller
  * @uses      

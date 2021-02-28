@@ -79,6 +79,30 @@ $router->mount('/country', function () use ($router) {
     $router->get('/(\D+)', 'CountryCtl@read_one_name');
 
 });
+/*****************/
+/* Member Routes */
+/*****************/
+$router->mount('/member', function () use ($router) {
+
+    // will result in '/member'
+    $router->get('/', 'MemberCtl@read_all');
+
+    // will result in '/member/id'
+    $router->get('/(\d+)', 'MemberCtl@read_one');
+
+    // new member
+    $router->post('/', 'MemberCtl@create');
+
+    // delete member
+    $router->delete('/(\d+)', 'MemberCtl@delete');
+
+    // update member
+    $router->put('/(\d+)', 'MemberCtl@update');
+
+    // take action on member; One of 'settoformer' or 'anonymize'
+    $router->patch('/(\d+)', 'MemberCtl@patch');
+    // PATCH vs PUT: https://stackoverflow.com/a/34400076/6941165
+});
 /***************/
 /* Status Routes */
 /***************/
