@@ -126,9 +126,9 @@ $router->mount('/name', function () use ($router) {
     // update member name
     $router->put('/(\d+)', 'MemberNameCtl@update');
 });
-/***************/
+/*****************/
 /* Status Routes */
-/***************/
+/*****************/
 $router->mount('/status', function () use ($router) {
 
     // will result in '/memberstatus'
@@ -141,7 +141,18 @@ $router->mount('/status', function () use ($router) {
     $router->get('/(\D+)', 'MembershipStatusCtl@read_one_name');
 
 });
-
+/**********************/
+/* Transaction Routes */
+/**********************/
+$router->mount('/transaction', function () use ($router) {
+    $router->get('/', 'TransactionCtl@read_all');
+    $router->get('/(\d+)', 'TransactionCtl@read_one');
+    $router->get('/idmember/(\d+)', 'TransactionCtl@read_by_idmember');
+    $router->post('/', 'TransactionCtl@create');
+    $router->put('/(\d+)', 'TransactionCtl@update');
+    $router->delete('/(\d+)', 'TransactionCtl@delete_by_id');
+    $router->delete('/idmember/(\d+)', 'TransactionCtl@delete_by_idmember');
+});
 /***************/
 /* User Routes */
 /***************/

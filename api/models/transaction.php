@@ -108,7 +108,7 @@ class Transaction{
     }
 
     // used by select drop-down list
-    public function readAll(){
+    public function read(){
 
         //select all data
         $query = "SELECT
@@ -120,12 +120,35 @@ class Transaction{
 
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
+        $num = $stmt->rowCount();
 
-        return $stmt;
+        $items_arr=array();
+        $items_arr["count"]=$num;
+        $items_arr["records"]=array();
+
+        if($num>0){       
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+                extract($row);
+            
+                $item_item=array(
+                    "idtransaction" => $id,
+                    "date" => $date,
+                    "amount" => $amount,
+                    "paymentmethod" => html_entity_decode($paymentmethod),
+                    "idmember" => $idmember,
+                    "bankID" => $bankID
+                );
+    
+                array_push($items_arr["records"], $item_item);
+            }
+        }
+
+        return $items_arr;
     }
 
     // find the details of one user using $id
-    public function readOne(){
+    public function readone(){
 
         //select all data
         $query = "SELECT
@@ -157,10 +180,21 @@ class Transaction{
             $this->idmember = $row['idmember'];
             $this->bankID = $row['bankID'];
         }
+
+        $item = array(
+            "id" => $this->id,
+            "date" => $this->date,
+            "paymentmethod" => html_entity_decode($this->paymentmethod),
+            "amount" => $this->amount,
+            "idmember" => $this->idmember,
+            "bankID" => $this->bankID
+        );
+
+        return $item;
     }
 
         // find the details of transactions using $idmember
-        public function readMember($idmember){
+        public function read_by_idmember(){
 
             //select all data
             $query = "SELECT
@@ -172,13 +206,44 @@ class Transaction{
                     ORDER BY t.`date` DESC";
                     
             $stmt = $this->conn->prepare( $query );
-            $stmt->bindParam(1, $idmember);
+            $stmt->bindParam(1, $this->idmember);
             $stmt->execute();
-    
-            return $stmt;
+            $num = $stmt->rowCount();
+
+            $items_arr=array();
+            $items_arr["count"]=$num;
+            $items_arr["transactions"]=array();
+
+            // check if more than 0 record found
+            if($num>0){
+
+                // retrieve our table contents
+                // fetch() is faster than fetchAll()
+                // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    // extract row
+                    // this will make $row['name'] to
+                    // just $name only
+                    extract($row);
+                
+                    $item = array(
+                        "id" => $id,
+                        "date" => $date,
+                        "paymentmethod" => html_entity_decode($paymentmethod),
+                        "amount" => $amount,
+                        "idmember" => $idmember,
+                        "bankID" => $bankID
+                    );
+
+                    array_push ($items_arr["transactions"], $item);
+                }
+            }
+
+            return $items_arr;
+
         }
 
-    function delete(){
+    function delete_by_id(){
         $query = "DELETE FROM " . $this->table_name . " WHERE idtransaction = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -193,15 +258,20 @@ class Transaction{
         return false;
     }
 
-    // used for paging
-    public function count(){
-        $query = "SELECT COUNT(*) as total_rows FROM " . $this->table_name . "";
+        /* Delete all transactions for a member from the database by providing the idmember FK */
+        function delete_by_idmember(){
+            $query = "DELETE FROM " . $this->table_name . " WHERE member_idmember = ?";
     
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $row['total_rows'];
-    }
+            $stmt = $this->conn->prepare($query);
+            $idmember = filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
+            $stmt->bindParam(1, $idmember, PDO::PARAM_INT);
+    
+            // execute query
+            if($stmt->execute()){
+                return true;
+            }
+    
+            return false;
+        }
 }
 ?>

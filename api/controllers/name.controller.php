@@ -79,8 +79,6 @@ class MemberNameCtl{
             )
         );
     }
-    
-    // if unable to delete the member_name
     else{
         http_response_code(422); 
         echo json_encode(
@@ -108,8 +106,6 @@ class MemberNameCtl{
             )
         );
     }
-    
-    // if unable to delete the member_name
     else{
         http_response_code(422); 
         echo json_encode(

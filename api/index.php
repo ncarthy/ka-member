@@ -34,6 +34,7 @@ include_once 'controllers/country.controller.php';
 include_once 'controllers/member.controller.php';
 include_once 'controllers/name.controller.php';
 include_once 'controllers/status.controller.php';
+include_once 'controllers/transaction.controller.php';
 include_once 'controllers/user.controller.php';
 
 // Define routes
