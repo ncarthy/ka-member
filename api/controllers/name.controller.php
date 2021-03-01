@@ -77,7 +77,7 @@ class MemberNameCtl{
                 "message" => "New name with idmembername=$model->id was created.",
                 "idmembername" => $model->id
             )
-        );
+            , JSON_NUMERIC_CHECK);
     }
     else{
         http_response_code(422); 
@@ -104,7 +104,7 @@ class MemberNameCtl{
                 "message" => "New name with idmembername=$model->id was updated.",
                 "idmembername" => $model->id
             )
-        );
+            , JSON_NUMERIC_CHECK);
     }
     else{
         http_response_code(422); 

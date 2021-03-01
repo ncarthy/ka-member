@@ -138,7 +138,7 @@ class MemberCtl{
             "message" => "Unable to UPDATE row.",
             "id" => $model->id
           )
-        );
+          , JSON_NUMERIC_CHECK);
     }
   }
 
@@ -153,7 +153,7 @@ class MemberCtl{
         array(
           "message" => "Member with id=$model->id was deleted.",
           "id" => $model->id
-        )
+          , JSON_NUMERIC_CHECK)
       , JSON_NUMERIC_CHECK);
     } else{
         http_response_code(422);  
@@ -161,7 +161,7 @@ class MemberCtl{
           array(
             "message" => "Unable to DELETE row.",
             "id" => $model->id
-          )
+            , JSON_NUMERIC_CHECK)
         );
     }
   }

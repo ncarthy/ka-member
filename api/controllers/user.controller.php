@@ -118,7 +118,7 @@ class UserCtl{
             "message" => "Unable to UPDATE row.",
             "id" => $model->id
           )
-        );
+          , JSON_NUMERIC_CHECK);
     }
   }
 
@@ -142,7 +142,7 @@ class UserCtl{
             "message" => "Unable to DELETE row.",
             "id" => $model->id
           )
-        );
+          , JSON_NUMERIC_CHECK);
     }
   }
 }

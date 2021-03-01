@@ -16,7 +16,17 @@ class TransactionCtl{
     $model = new \Models\Transaction();
     $model->id = $id;
 
-    echo json_encode($model->readone(), JSON_NUMERIC_CHECK);
+    $tx = $model->readone();
+
+    if (empty($model->amount) ) {
+      http_response_code(422);   
+      echo json_encode(
+          array("message" => "No transaction found with id = " . $model->id)
+      );
+      exit(1);
+    }
+
+    echo json_encode($tx, JSON_NUMERIC_CHECK);
   }
 
   public static function read_by_idmember($idmember){  
@@ -39,7 +49,7 @@ class TransactionCtl{
                 "message" => "New transaction with id=$model->id was created.",
                 "id" => $model->id
             )
-        );
+            , JSON_NUMERIC_CHECK);
     }
     else{
         http_response_code(422); 
@@ -63,7 +73,7 @@ class TransactionCtl{
                 "message" => "Transaction with id=$model->id was updated.",
                 "id" => $model->id
             )
-        );
+            , JSON_NUMERIC_CHECK);
     }
     else{
         http_response_code(422); 
