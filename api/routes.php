@@ -102,6 +102,14 @@ $router->mount('/member', function () use ($router) {
     $router->patch('/(\d+)', 'MemberCtl@patch');
     // PATCH vs PUT: https://stackoverflow.com/a/34400076/6941165
 });
+/*****************/
+/* Members Routes */
+/*****************/
+$router->mount('/members', function () use ($router) {
+
+    // will result in '/member/id'
+    $router->get('/life_and_hon', 'MembersCtl@lifeAndHonorary');
+});
 /**********************/
 /* Member Name Routes */
 /**********************/

@@ -1,10 +1,15 @@
 <?php
+
+namespace Models;
+
+use \PDO;
+
 class Members{
     // database conn 
     private $conn;
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
     }
 
     public function activeMembersByType(){
@@ -50,18 +55,51 @@ class Members{
                         ORDER BY membershiptype                                      
                     ";
         
-        try{
-            
-            $stmt = $this->conn->prepare( $query );
+        $stmt = $this->conn->prepare( $query );
 
-            // execute query
-            $stmt->execute();
-        }
-        catch(PDOException $exception){
-            echo "Error occurred retrieving lift/hon members.\nError message:" . $exception->getMessage();
-        }
+        // execute query
+        $stmt->execute();
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num; // add the count of lifetime members
+        $members_arr["honorary"] = 0; // add the count of hon members
+        $members_arr["lifetime"] = 0; // add the count of lifetime members  
+        $members_arr["records"]=array();
+
+        $honorary_count =0; // count of hon members
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+            
+                $members_item=array(
+                    "id" => $idmember,
+                    "type" => $membershiptype,
+                    "name" => $name,
+                    "business" => $businessname,
+                    "note" => $note,
+                    "address1" => $address1,
+                    "address2" => $address2,
+                    "city" => $city,
+                    "postcode" => $postcode,
+                    "country" => $country,
+                    "still_paying" => $count > 0 ? true : false
+                );
         
-        return $stmt;
+                if ($idmembership == 6) {
+                    $honorary_count++;
+                }
+        
+                // create un-keyed list
+                array_push ($members_arr["records"], $members_item);
+            }
+        }
+
+        $members_arr["honorary"] = $honorary_count; // add the count of hon members
+        $members_arr["lifetime"] = $num - $honorary_count; // add the count of lifetime members  
+        
+        return $members_arr;
     }
 
     public function lapsedMembers($months){

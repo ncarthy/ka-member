@@ -1,10 +1,10 @@
 <?php
 // CORS when your origin is not localhost you are going to need this or else it will not work.
 // if you are using it outside of your home network please reconsider the * of allow origin
-header("Access-Control-Allow-Methods: POST, PUT, DELETE, GET, OPTIONS");
+/*header("Access-Control-Allow-Methods: POST, PUT, DELETE, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, Content-Type, Access-Control-Allow-Headers, Authorization");
 header("Access-Control-Max-Age: 1728000");
-header("Content-Type: application/json; charset=UTF-8");
+header("Content-Type: application/json; charset=UTF-8");*/
 
 // Load the composer autoloader
 require __DIR__ . '/vendor/autoload.php';
@@ -14,11 +14,12 @@ $router = new \Bramus\Router\Router();
 
 // include database and object files
 
-// Define core and database
-include_once 'config/core.php';
-include_once 'config/database.php';
+// Define core, database and headers helper class
+include_once 'core/config.php';
+include_once 'core/database.php';
+include_once 'core/headers.php';
 
-// Define models
+// Define models & controllers
 include_once 'models/bank_account.php';
 include_once 'models/country.php';
 include_once 'models/jwt.php';
@@ -33,6 +34,7 @@ include_once 'models/usertoken.php';
 include_once 'controllers/bank_account.controller.php';
 include_once 'controllers/country.controller.php';
 include_once 'controllers/member.controller.php';
+include_once 'controllers/members.controller.php';
 include_once 'controllers/name.controller.php';
 include_once 'controllers/status.controller.php';
 include_once 'controllers/transaction.controller.php';
