@@ -106,9 +106,8 @@ $router->mount('/member', function () use ($router) {
 /* Members Routes */
 /*****************/
 $router->mount('/members', function () use ($router) {
-
-    // will result in '/member/id'
     $router->get('/life_and_hon', 'MembersCtl@lifeAndHonorary');
+    $router->get('/summary', 'MembersCtl@activeMembersByType');
 });
 /**********************/
 /* Member Name Routes */
