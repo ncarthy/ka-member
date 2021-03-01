@@ -103,6 +103,7 @@ $router->mount('/members', function () use ($router) {
     $router->get('/cem', 'MembersCtl@cem');
     $router->get('/discount', 'MembersCtl@discount');
     $router->get('/payinghonlife', 'MembersCtl@payingHonLife');
+    $router->get('/duplicatepayers', 'MembersCtl@duplicatepayers');
 });
 /**********************/
 /* Member Name Routes */

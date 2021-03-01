@@ -68,6 +68,17 @@ class MembersCtl{
     echo json_encode($model->payingHonLifeMembers($start, $end), JSON_NUMERIC_CHECK);
   }
 
+  public static function duplicatepayers(){  
+    
+    $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
+    $start = isset($_GET['start']) ? $_GET['start'] : 
+                (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
+
+    $model = new \Models\Members();
+
+    echo json_encode($model->membersPayingTwice($start, $end), JSON_NUMERIC_CHECK);
+  }
+
 
 }
 
