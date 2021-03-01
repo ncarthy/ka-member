@@ -99,12 +99,13 @@ $router->mount('/member', function () use ($router) {
 $router->mount('/members', function () use ($router) {
     $router->get('/life_and_hon', 'MembersCtl@lifeAndHonorary');
     $router->get('/summary', 'MembersSummaryCtl@activeMembersByType');
-    $router->get('/lapsed/(\d+)', 'MembersCtl@lapsed');
+    $router->get('/lapsed', 'MembersCtl@lapsed');
     $router->get('/cem', 'MembersCtl@cem');
     $router->get('/discount', 'MembersCtl@discount');
     $router->get('/payinghonlife', 'MembersCtl@payingHonLife');
     $router->get('/duplicatepayers', 'MembersCtl@duplicatepayers');
     $router->get('/filter', 'MembersCtl@filter');
+    $router->patch('/', 'MembersCtl@patch');
 });
 /**********************/
 /* Member Name Routes */

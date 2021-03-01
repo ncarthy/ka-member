@@ -3,6 +3,9 @@
 namespace Controllers;
 
 use DateTime;
+use \Models\Members;
+use \Models\MemberFilter;
+use \Models\MembershipStatus;
 
 /**
  * Controller to acomplish  tasks with multiple members
@@ -17,15 +20,17 @@ class MembersCtl{
 
   public static function lifeAndHonorary(){  
 
-    $model = new \Models\Members();
+    $model = new Members();
 
     echo json_encode($model->lifeAndHonorary(), JSON_NUMERIC_CHECK);
   }
 
   //$months is th enumber of months since last payment
-  public static function lapsed($months){  
+  public static function lapsed(){  
 
-    $model = new \Models\Members();
+    $model = new Members();
+
+    $months = isset($_GET['months']) ? $_GET['months'] : 18;
 
     echo json_encode($model->lapsedMembers($months), JSON_NUMERIC_CHECK);
   }
@@ -41,7 +46,7 @@ class MembersCtl{
     $start = isset($_GET['start']) ? $_GET['start'] : 
                 (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
 
-    $model = new \Models\Members();
+    $model = new Members();
 
     echo json_encode($model->contributingExMembers($start, $end), JSON_NUMERIC_CHECK);
   }
@@ -52,7 +57,7 @@ class MembersCtl{
     $start = isset($_GET['start']) ? $_GET['start'] : 
                 (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
 
-    $model = new \Models\Members();
+    $model = new Members();
 
     echo json_encode($model->discountMembers($start, $end), JSON_NUMERIC_CHECK);
   }
@@ -63,7 +68,7 @@ class MembersCtl{
     $start = isset($_GET['start']) ? $_GET['start'] : 
                 (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
 
-    $model = new \Models\Members();
+    $model = new Members();
 
     echo json_encode($model->payingHonLifeMembers($start, $end), JSON_NUMERIC_CHECK);
   }
@@ -74,14 +79,14 @@ class MembersCtl{
     $start = isset($_GET['start']) ? $_GET['start'] : 
                 (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
 
-    $model = new \Models\Members();
+    $model = new Members();
 
     echo json_encode($model->membersPayingTwice($start, $end), JSON_NUMERIC_CHECK);
   }
 
   public static function filter(){  
 
-    $model = new \Models\MemberFilter();
+    $model = new MemberFilter();
 
     if (isset($_GET['surname']) && !empty($_GET['surname'])) {
           $model->setSurname($_GET['surname']);
@@ -180,7 +185,8 @@ class MembersCtl{
       if ($_GET['removed'] =='any') {    
         // no filter applied
       } else {
-          if ($_GET['removed'] && ($_GET['removed'] == 'y' || $_GET['removed'] == 'yes')) {
+          if ($_GET['removed'] && ($_GET['removed'] == 'y' || $_GET['removed'] == 'yes' 
+                                || $_GET['removed'] == 'true')) {
               $model->setDeleted();
           } else if ($deleteDateFilterIsSet) {
               // filter already applied
@@ -198,6 +204,83 @@ class MembersCtl{
     echo json_encode($model->execute(), JSON_NUMERIC_CHECK);
   }
 
+  
+  public static function patch(){
+    $data = json_decode(file_get_contents("php://input"));
+    if(isset($data->method)){
+
+        switch (strtolower($data->method)) {
+            case 'anonymize':
+                MembersCtl::anonymize();
+                break;
+            default:
+            http_response_code(422);  
+            echo json_encode(
+              array(
+                "message" => "Unknown method",
+                "method" => $data->method
+              )
+            );
+        }
+    }
+
+  }
+
+  public static function anonymize(){  
+
+    $filter_model = new MemberFilter();
+    $filter_model->username = MembersCtl::username();
+
+
+    $status_model = new MembershipStatus();
+    $status_model->name = 'former';
+    $status = $status_model->readOne();
+
+    if ($status &&  $status['id']) {
+      $filter_model->setMemberTypeID($status['id']);
+    } else {
+      http_response_code(501);   
+      echo json_encode(
+          array("message" => "No member status found with name like " . $status_model->name)
+      );
+      exit();
+    }
+
+    if(isset($_GET['deletedatestart']) || isset($_GET['deletedateend'])) {
+      $start='';
+      $end='';
+      list($start, $end) = $filter_model->sanitizeDateValues(
+                                  !isset($_GET['deletedatestart']) ? '' : $_GET['deletedatestart'], 
+                                  !isset($_GET['deletedateend']) ? '' : $_GET['deletedateend']
+                              );
+  
+      $filter_model->setDeleteRange($start, $end);
+    } else {
+      http_response_code(501);   
+      echo json_encode(
+          array("message" => "No delete dat range set!")
+      );
+      exit();
+    }
+
+
+  if($filter_model->anonymize()){
+    echo '{';
+        echo '"message": "Former members anonymized."';
+    echo '}';
+  }
+  else{
+      http_response_code(422);
+      echo '{';
+          echo '"message": "Unable to anonymize former members."';
+      echo '}';
+  }
+}
+
+private static function username(){
+  $jwt = new \Models\JWTWrapper();
+  return $jwt->user;
+}
 
 }
 

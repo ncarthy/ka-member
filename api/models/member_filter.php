@@ -17,7 +17,6 @@ class MemberFilter{
 
     private $tablename = '_Members';
 
-
     /* rest the filter for this user */
     public function reset(){
 
@@ -269,8 +268,10 @@ class MemberFilter{
         $this->conn->query($query);
     }
 
-    public function anonymize($username)
+    public function anonymize()
     {
+        $username = $this->username;
+
         /* Remove names of all members to be anonymized */
         $query = "DELETE MN
                     FROM membername MN
