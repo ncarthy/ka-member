@@ -161,26 +161,50 @@ class Members{
 
         $tablename = '_Transactions_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
         
-        $query = "SELECT * FROM ".$tablename." WHERE ".$column." = 1 ORDER BY `date`;";               
+        $query = "SELECT * FROM ".$tablename." WHERE ".$column." = 1 ORDER BY `last`;";               
 
-        try{
+        $this->dropTemporaryTransactionTable($tablename); // Clear any old table
 
-            $this->dropTemporaryTransactionTable($tablename); // Clear any old table
+        // Get transaction data for the time period
+        $this->populateTemporaryTransactionTable($tablename, $start, $end);
 
-            // Get transaction data for the time period
-            $this->populateTemporaryTransactionTable($tablename, $start, $end);
+        // narrow down the data according to criteria          
+        $stmt = $this->conn->prepare( $query ); 
+        $stmt->execute();
+        $num = $stmt->rowCount();
 
-            // narrow down the data according to criteria          
-            $stmt = $this->conn->prepare( $query ); 
-            $stmt->execute();
+        $members_arr=array();
+        $members_arr["start"] = $start;
+        $members_arr["end"] = $end;
+        $members_arr["total"] = 0;  // total amount of fees received
+        $members_arr["expected"] = 0; // expected amount of fees
+        $members_arr["count"] = $num; // add the count of rows
+        $members_arr["records"]=array();
 
-            $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
+        $total_received = 0; // sum of member payments as we loop over rows
+        $total_expected = 0; // sum of member fees as we loop over rows
+
+        // check if more than 0 record found
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+                $member = $this->extractMember($row);
+
+                $total_received+=$row['amount'];
+                $total_expected+=$row['membershipfee'];
+
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
         }
-        catch(PDOException $exception){
-            echo "Error occurred retrieving transaction data.\nError message:" . $exception->getMessage();
-        }
-        
-        return $stmt;
+        $members_arr["total"] = $total_received;
+        // honorary and life members aren't expected to pay anything
+        $members_arr["expected"] = $column=='HonLife'?0:$total_expected; 
+
+        $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
+
+        return $members_arr;
+
     }
 
     /* SELECT INTO a a temporary table a list of all transaciotns between the start and end dates */
@@ -194,7 +218,8 @@ class Members{
                             `t`.`address1`, `t`.`address2`, `t`.`city`,
                             `t`.`postcode`, t.country, t.updatedate, t.expirydate,  
                             t.reminderdate,
-                            SUM(amount) as amount, Max(`date`) as `date`,
+                            SUM(amount) as amount, Max(`date`) as `last`,
+                            COUNT(t.idtransaction) as `count`,
                             CASE WHEN SUM(amount)>=0 AND idmembership=8 THEN 1 ELSE 0 END as `CEM`,
                             CASE WHEN SUM(amount)>=0 AND SUM(amount) < membershipfee AND idmembership NOT IN(5,6,8) THEN 1 ELSE 0 END as `Discount`,
                             CASE WHEN SUM(amount)>0 AND idmembership IN (5,6) THEN 1 ELSE 0 END as `HonLife`,

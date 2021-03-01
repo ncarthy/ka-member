@@ -455,6 +455,7 @@ CREATE VIEW IF NOT EXISTS `vwTransaction` AS
         `m`.`updatedate` AS `updatedate`,
         `m`.`expirydate` AS `expirydate`,
         `m`.`reminderdate` AS `reminderdate`,
+        `m`.membershipfee,
         `t`.`date` AS `date`,
         `t`.`paymentmethod` AS `paymentmethod`,
         `t`.`amount` AS `amount`

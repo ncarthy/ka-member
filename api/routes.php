@@ -101,6 +101,8 @@ $router->mount('/members', function () use ($router) {
     $router->get('/summary', 'MembersSummaryCtl@activeMembersByType');
     $router->get('/lapsed/(\d+)', 'MembersCtl@lapsed');
     $router->get('/cem', 'MembersCtl@cem');
+    $router->get('/discount', 'MembersCtl@discount');
+    $router->get('/payinghonlife', 'MembersCtl@payingHonLife');
 });
 /**********************/
 /* Member Name Routes */
