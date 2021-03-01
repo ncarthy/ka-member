@@ -25,7 +25,7 @@ export class AuthenticationService {
     }
 
     login(username: string, password: string) {
-        return this.http.post<any>(`${environment.apiUrl}/authenticate/auth.php`,
+        return this.http.post<any>(`${environment.apiUrl}/auth`,
                      { username, password }, { withCredentials: true })
             .pipe(map(user => {
                 this.userSubject.next(user);
@@ -35,14 +35,14 @@ export class AuthenticationService {
     }
 
     logout() {
-        this.http.post<any>(`${environment.apiUrl}/authenticate/revoke.php`, {}, { withCredentials: true }).subscribe();
+        this.http.delete<any>(`${environment.apiUrl}/auth/revoke`, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
         this.userSubject.next(null);
         this.router.navigate(['/login']);
     }
 
     refreshToken() {
-        return this.http.post<any>(`${environment.apiUrl}/authenticate/refresh.php`, {}, { withCredentials: true })
+        return this.http.get<any>(`${environment.apiUrl}/auth/refresh`, { withCredentials: true })
             .pipe(map((user) => {
                 this.userSubject.next(user);
                 this.startRefreshTokenTimer();

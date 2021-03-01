@@ -14,7 +14,10 @@
 
     Router logic supplied by bramus\router (https://github.com/bramus/router)
 */
- 
+
+$router->options('/(\S+)',function() {
+    \Core\Headers::getHeaders();
+}); // just return headers when OPTIONS call
 
 /**************************************************************/
 /* Before Router Middleware:                                  */
@@ -23,15 +26,11 @@
 /**************************************************************/
 $router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
     
-    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    $api_prefix = \Core\Config::read('api.path');
-
-    if (substr($path, 0, strlen($api_prefix)) == $api_prefix) {
-        $path = substr($path, strlen($api_prefix));
-    } 
+    $isAuthPath = \Core\Headers::path_is_auth();
+    \Core\Headers::getHeaders($isAuthPath);
 
     // Don't do the logged-in check when it's an 'auth' path    
-    if (  (strlen($path) < 4) || (substr($path, 0, 4) != "auth") ) {
+    if ( !$isAuthPath ) {
         $jwt = new \Models\JWTWrapper();
 
         if(!$jwt->loggedIn){      
@@ -42,10 +41,6 @@ $router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
             exit();
         }
     }
-    else {
-        // It's a request to '/auth'
-        header("Access-Control-Allow-Credentials: true");
-    }
 });
 
 /**************************************************************/
@@ -55,17 +50,11 @@ $router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
 /**************************************************************/
 $router->before('POST|PUT|DELETE|PATCH', '/.*', function() {
 
-    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    $api_prefix = \Core\Config::read('api.path');
-
-    if (substr($path, 0, strlen($api_prefix)) == $api_prefix) {
-        $path = substr($path, strlen($api_prefix));
-    } 
-    
-    $jwt = new \Models\JWTWrapper();
+    $isAuthPath = \Core\Headers::path_is_auth();
 
     // Don't do the is-admin check when it's an 'auth' path    
-    if (  (strlen($path) < 4) || (substr($path, 0, 4) != "auth") ) {
+    if ( !$isAuthPath ) {
+        $jwt = new \Models\JWTWrapper();
         if (!$jwt->isAdmin){
             http_response_code(401);  
             echo json_encode(

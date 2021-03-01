@@ -16,7 +16,6 @@
 
 // General config
 $router->setNamespace('\Controllers'); // Allows us to omit '\Controllers' from method names
-$router->options('/(\S+)',''); // Will immediately return from any 'Options' call
 
 // Custom 404 Handler
 $router->set404(function() {
