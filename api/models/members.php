@@ -295,8 +295,8 @@ class Members{
             "postcode" => $postcode,
             "country" => $country,
             "updatedate" => $updatedate,
-            "expirydate" => null,
-            "reminderdate" => null,
+            "expirydate" => $expirydate,
+            "reminderdate" => $reminderdate,
             "count" => $count,
             "last" => $last
         );

@@ -79,6 +79,17 @@ class MembersCtl{
     echo json_encode($model->membersPayingTwice($start, $end), JSON_NUMERIC_CHECK);
   }
 
+  public static function filter(){  
+
+    $model = new \Models\MemberFilter();
+
+    if (isset($_GET['surname']) && !empty($_GET['surname'])) {
+          $model->setSurname($_GET['surname']);
+    }
+
+    echo json_encode($model->execute(), JSON_NUMERIC_CHECK);
+  }
+
 
 }
 

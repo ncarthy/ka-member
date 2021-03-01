@@ -1,10 +1,18 @@
 <?php
+
+namespace Models;
+
+use \PDO;
+use DateTime;
+
 class MemberFilter{
     // database conn 
     private $conn;
 
-    public function __construct($db){
-        $this->conn = $db;
+    public function __construct(){
+        $this->conn = \Core\Database::getInstance()->conn;
+
+        $this->reset();
     }
 
     private $tablename = '_Members';
@@ -30,23 +38,71 @@ class MemberFilter{
     /* Can also use the Filter.sql file in the config directory that can help to debug SQL */
     public function execute() {
 
-        $query = "SELECT m.idmember, m.expirydate,m.joindate,m.reminderdate,m.updatedate,m.deletedate,
-                        v.`Name` as `name`, v.businessname, v.Note as `note`, 
+        $query = "SELECT temp.idmember, temp.expirydate,temp.joindate,temp.reminderdate,
+                        temp.updatedate,temp.deletedate, temp.lasttransactiondate,
+                        m.`Name` as `name`, m.businessname, m.Note as `note`, 
                         addressfirstline,addresssecondline,city,postcode,country,
                         gdpr_email,gdpr_tel,gdpr_address,gdpr_sm,
-                        v.idmembership, v.membershiptype,
-                        t.paymentmethod, m.lasttransactiondate,
-                        v.email1, v.email2
-                        FROM " . $this->tablename . " m
-                        JOIN vwMember v ON m.idmember = v.idmember
-                        LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
-                            AND m.lasttransactionid = t.`idtransaction`;";      
+                        m.idmembership, m.membershiptype,
+                        t.paymentmethod, 
+                        m.email1, m.email2
+                        FROM " . $this->tablename . " temp
+                        JOIN vwMember m ON temp.idmember = m.idmember
+                        LEFT JOIN `transaction` t ON temp.idmember = t.member_idmember
+                            AND temp.lasttransactionid = t.`idtransaction`;";      
         $stmt = $this->conn->prepare( $query );  
 
         // Show member attributes for the members in the temp table     
         $stmt->execute();
+        $num = $stmt->rowCount();
+        $members_arr=array();
+        $members_arr["count"] = $num; // add the count of rows
+        $members_arr["records"]=array();
         
-        return $stmt;
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+                extract($row);
+            
+                $members_item=array(
+                    "id" => $idmember,
+                    "idmembership" => $idmembership,
+                    "type" => $membershiptype,
+                    "name" => trim($name),
+                    "business" => $businessname,
+                    "note" => $note,
+                    "addressfirstline" => $addressfirstline,
+                    "addresssecondline" => $addresssecondline,
+                    "city" => $city,
+                    "postcode" => $postcode,
+                    "country" => $country,
+                    "gdpr_email" => $gdpr_email,
+                    "gdpr_tel" => $gdpr_tel,
+                    "gdpr_address" => $gdpr_address,
+                    "gdpr_sm" => $gdpr_sm,
+                    "expirydate" => $expirydate,
+                    "joindate" => $joindate,
+                    "reminderdate" => $reminderdate,
+                    "updatedate" => $updatedate,
+                    "deletedate" => $deletedate,
+                    "paymentmethod" => $paymentmethod,
+                    "lasttransactiondate" => $lasttransactiondate,
+                    "email1" => $email1
+                );
+        
+                // create un-keyed list
+                array_push ($members_arr["records"], $members_item);
+        
+                if (isset($start)){
+                    $members_arr["start"] = $start; // the starting date of a date range
+                }
+                if (isset($end)){
+                    $members_arr["end"] = $end; // the starting date of a date range
+                }
+            }   
+        }
+        
+        return $members_arr;
     }
 
     /*
