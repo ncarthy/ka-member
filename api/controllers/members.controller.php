@@ -20,12 +20,6 @@ class MembersCtl{
     echo json_encode($model->lifeAndHonorary(), JSON_NUMERIC_CHECK);
   }
 
-  public static function activeMembersByType(){  
-
-    $model = new \Models\Members();
-
-    echo json_encode($model->activeMembersByType(), JSON_NUMERIC_CHECK| JSON_UNESCAPED_SLASHES);
-  }
 
 }
 
