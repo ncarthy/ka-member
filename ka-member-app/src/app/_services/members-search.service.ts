@@ -25,34 +25,34 @@ export class MemberSearchService {
   */
   search(query: string): Observable<MemberSearchResult[]> {
 
-        const queryUrl = `${environment.apiUrl}/members/filter.php`;
-        const body = JSON.stringify({
-            businessorsurname: query,
-            removed: 'no'
-        });
+    const params: string = [
+      `businessorsurname=${query}`,
+      `removed=no`
+    ].join('&');
 
-        // Add pipe command from https://stackoverflow.com/a/50218001/6941165
-        return this.http.post(queryUrl,body).pipe(
-            filter((x) => !!x), // exclude nulls (From https://stackoverflow.com/a/51421833/6941165)
-            map(response => {
+    const queryUrl = `${environment.apiUrl}/members/filter?${params}`;
 
-            // The <any>response means we are telling TypeScript that we’re not 
-            // interested in doing strict type checking.
-            return <any>response['records'].map(item => {
-                console.log("raw item", item); // uncomment if you want to debug
-                return new MemberSearchResult({
-                    id: item.id,
-                    membershiptype: item.type,
-                    name: item.name,
-                    businessname: item.business,
-                    note: item.note,
-                    postcode: item.postcode,
-                    reminderdate: item.reminderdate,
-                    deletedate: item.deletedate,
-                    lasttransactiondate: item.lasttransactiondate,
-                    email: item.email1
-                });
+    // Add pipe command from https://stackoverflow.com/a/50218001/6941165
+    return this.http.get(queryUrl).pipe(
+        map(response => {
+
+        // The <any>response means we are telling TypeScript that we’re not 
+        // interested in doing strict type checking.
+        return <any>response['records'].map(item => {
+            console.log("raw item", item); // uncomment if you want to debug
+            return new MemberSearchResult({
+                id: item.id,
+                membershiptype: item.type,
+                name: item.name,
+                businessname: item.business,
+                note: item.note,
+                postcode: item.postcode,
+                reminderdate: item.reminderdate,
+                deletedate: item.deletedate,
+                lasttransactiondate: item.lasttransactiondate,
+                email: item.email1
             });
-         }));
+        });
+      }));
     }
 }
