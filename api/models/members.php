@@ -188,7 +188,12 @@ class Members{
     private function populateTemporaryTransactionTable($tablename, $start, $end){
 
         $query = "CREATE TEMPORARY TABLE IF NOT EXISTS ".$tablename." AS (      
-                        SELECT idmember,membershiptype,Name,businessname, membershipfee,
+                        SELECT 
+                            idmember,t.idmembership, t.membershiptype,t.`name`, membershipfee,
+                            IFNULL(t.businessname,'') as businessname, t.note as `note`,
+                            `t`.`address1`, `t`.`address2`, `t`.`city`,
+                            `t`.`postcode`, t.country, t.updatedate, t.expirydate,  
+                            t.reminderdate,
                             SUM(amount) as amount, Max(`date`) as `date`,
                             CASE WHEN SUM(amount)>=0 AND idmembership=8 THEN 1 ELSE 0 END as `CEM`,
                             CASE WHEN SUM(amount)>=0 AND SUM(amount) < membershipfee AND idmembership NOT IN(5,6,8) THEN 1 ELSE 0 END as `Discount`,

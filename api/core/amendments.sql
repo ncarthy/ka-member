@@ -439,12 +439,28 @@ CREATE VIEW IF NOT EXISTS  `vwMember` AS
         
 DROP VIEW IF EXISTS `vwTransaction`;
 CREATE VIEW IF NOT EXISTS `vwTransaction` AS
-SELECT t.idtransaction,m.idmember,m.idmembership,m.`membershiptype`,
-m.membershipfee,
-m.`Name`, m.businessname,
-t.`date`,t.paymentmethod,t.amount
-FROM  `transaction` t
-JOIN vwMember m ON t.member_idmember = m.idmember;
+    SELECT 
+        `t`.`idtransaction` AS `idtransaction`,
+        `m`.`idmember` AS `idmember`,
+        `m`.`idmembership` AS `idmembership`,
+        `m`.`membershiptype` AS `membershiptype`,
+        `m`.`Name` AS `name`,
+        IFNULL(`m`.`businessname`, '') AS `businessname`,
+        `m`.`Note` AS `note`,
+        `m`.`addressfirstline` AS `address1`,
+        `m`.`addresssecondline` AS `address2`,
+        `m`.`city` AS `city`,
+        `m`.`postcode` AS `postcode`,
+        `m`.`country` AS `country`,
+        `m`.`updatedate` AS `updatedate`,
+        `m`.`expirydate` AS `expirydate`,
+        `m`.`reminderdate` AS `reminderdate`,
+        `t`.`date` AS `date`,
+        `t`.`paymentmethod` AS `paymentmethod`,
+        `t`.`amount` AS `amount`
+    FROM
+        (`transaction` `t`
+        JOIN `vwMember` `m` ON (`t`.`member_idmember` = `m`.`idmember`));
 
 DROP VIEW IF EXISTS `vwUKMembers`;
 CREATE VIEW IF NOT EXISTS `vwUKMembers` AS

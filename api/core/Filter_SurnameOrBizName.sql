@@ -5,7 +5,7 @@
     # Run first
     DROP TEMPORARY TABLE IF EXISTS `_Members`;    
     #Run second
-    CREATE TEMPORARY TABLE IF NOT EXISTS `_Members` AS ( 
+    CREATE TEMPORARY TABLE IF NOT EXISTS `_Members` ENGINE=MEMORY AS ( 
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
@@ -25,7 +25,7 @@
     FROM _Members M    
     JOIN member m ON M.idmember = m.idmember
 	LEFT JOIN membername mn ON m.idmember = mn.member_idmember
-	WHERE m.businessname NOT LIKE 'pa%' AND (mn.surname NOT LIKE 'pa%' OR mn.surname IS NULL);
+	WHERE m.businessname NOT LIKE 'co%' AND (mn.surname NOT LIKE 'co%' OR mn.surname IS NULL);
       
 SELECT * FROM    _Members M JOIN vwMember V ON M.idmember = V.idmember;     
 
@@ -39,12 +39,12 @@ DROP TEMPORARY TABLE IF EXISTS `_members1`;
 CREATE TEMPORARY TABLE IF NOT EXISTS `_members1` AS ( 
 SELECT mn.member_idmember as id
 FROM membername mn
-WHERE mn.surname LIKE 'pa%'
+WHERE mn.surname LIKE 'co%'
 GROUP BY mn.member_idmember);
 INSERT INTO `_members1`
 SELECT m.idmember as id FROM member m
 LEFT JOIN `_members1` m1 ON m.idmember = m1.id
-WHERE m.businessname LIKE 'pa%' AND m1.id IS NULL 
+WHERE m.businessname LIKE 'co%' AND m1.id IS NULL 
 GROUP BY m.idmember
 ORDER BY id;
 
