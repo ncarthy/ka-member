@@ -56,7 +56,6 @@ export class AuthenticationService {
 
     private startRefreshTokenTimer() {
         // parse json object from base64 encoded jwt token
-        const j = this.userValue.accessToken;
         const accessToken = JSON.parse(atob(this.userValue.accessToken.split('.')[1]));
 
         // set a timeout to refresh the token a minute before it expires

@@ -37,7 +37,7 @@ class Database{
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);    
             }
             else {
-                http_response_code(501);
+                http_response_code(503);
                 echo json_encode(
                     array("message" => "Connection error: " . "Connection refused by " .$host . " on ". $port)
                 );
