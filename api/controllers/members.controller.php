@@ -20,6 +20,14 @@ class MembersCtl{
     echo json_encode($model->lifeAndHonorary(), JSON_NUMERIC_CHECK);
   }
 
+  //$months is th enumber of months since last payment
+  public static function lapsed($months){  
+
+    $model = new \Models\Members();
+
+    echo json_encode($model->lapsedMembers($months), JSON_NUMERIC_CHECK);
+  }
+
 
 }
 

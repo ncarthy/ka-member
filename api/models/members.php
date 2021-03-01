@@ -22,10 +22,12 @@ class Members{
                                 `m`.`city`,
                                 `m`.`postcode`,
                                 m.country,
-                                Count(t.idtransaction) as count
+                                m.updatedate, m.expirydate,  
+                                m.reminderdate,
+                                Count(t.idtransaction) as `count`,
+                                MAX(t.`date`) AS `last`
                         FROM vwMember m
                         LEFT OUTER JOIN vwTransaction t ON m.idmember = t.idmember 
-                                    AND DATE_SUB(CURDATE(), INTERVAL 12 MONTH) < `t`.`date`
                         WHERE m.idmembership IN (5,6) AND m.deletedate IS NULL
                         GROUP BY m.idmember
                         ORDER BY membershiptype                                      
@@ -47,28 +49,14 @@ class Members{
 
         if($num>0){
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                extract($row);
-            
-                $members_item=array(
-                    "id" => $idmember,
-                    "type" => $membershiptype,
-                    "name" => $name,
-                    "business" => $businessname,
-                    "note" => $note,
-                    "address1" => $address1,
-                    "address2" => $address2,
-                    "city" => $city,
-                    "postcode" => $postcode,
-                    "country" => $country,
-                    "still_paying" => $count > 0 ? true : false
-                );
+                $member = $this->extractMember($row);
         
-                if ($idmembership == 6) {
+                if ($row['idmembership'] == 6) {
                     $honorary_count++;
                 }
         
                 // create un-keyed list
-                array_push ($members_arr["records"], $members_item);
+                array_push ($members_arr["records"], $member);
             }
         }
 
@@ -81,8 +69,13 @@ class Members{
     public function lapsedMembers($months){
 
         //select all data
-        $query = "SELECT m.idmember, m.membershiptype,m.Name, 
-                        IFNULL(m.businessname,'') as BusinessName, m.Note,
+        $query = "SELECT m.idmember,m.idmembership, m.membershiptype,m.Name as `name`,  
+                        IFNULL(m.businessname,'') as businessname, m.note as `note`,
+                        `m`.`addressfirstline` AS `address1`,
+                        `m`.`addresssecondline` AS `address2`,
+                        `m`.`city`,
+                        `m`.`postcode`,
+                        m.country,
                         m.updatedate, m.expirydate,  
                         m.reminderdate,
                         COUNT(t.idtransaction) as `count`, 
@@ -99,15 +92,23 @@ class Members{
                     ";
 
         $stmt = $this->conn->prepare( $query );
-        try{
-            // execute query
-            $stmt->execute();
-        }
-        catch(PDOException $exception){
-            echo "Error occurred retrieving lapsed members.\nError message:" . $exception->getMessage();
+        $stmt->execute();
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num; // add the count of lifetime members
+        $members_arr["records"]=array();
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                $member = $this->extractMember($row);
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
         }
         
-        return $stmt;
+        return $members_arr;
+
     }
 
     public function membersPayingTwice($start, $end){       
@@ -221,6 +222,31 @@ class Members{
                         HAVING Count(*) > 1
                     );";
         $this->conn->query($query);
+    }
+
+    private function extractMember($row) {
+        extract($row);
+            
+        $member=array(
+            "id" => $idmember,
+            "statusID" => $idmembership,
+            "statusname" => $membershiptype,
+            "name" => $name,
+            "business" => $businessname,
+            "note" => $note,
+            "address1" => $address1,
+            "address2" => $address2,
+            "city" => $city,
+            "postcode" => $postcode,
+            "country" => $country,
+            "updatedate" => $updatedate,
+            "expirydate" => null,
+            "reminderdate" => null,
+            "count" => $count,
+            "last" => $last
+        );
+
+        return $member;
     }
 }
 ?>

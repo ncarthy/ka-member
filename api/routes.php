@@ -39,15 +39,6 @@ $router->mount('/auth', function() use ($router) {
     $router->delete('/revoke', function () {include 'authenticate/revoke.php'; } );
   
 });
-/*$router->mount('/authenticate', function() use ($router) {
-
-    $router->post('/auth', function () {include 'authenticate/auth.php'; } );
-
-    $router->get('/refresh', function () {include 'authenticate/refresh.php'; } );
-
-    $router->delete('/revoke', function () {include 'authenticate/revoke.php'; } );
-  
-});*/
 /***************/
 /* Bank Routes */
 /***************/
@@ -108,6 +99,7 @@ $router->mount('/member', function () use ($router) {
 $router->mount('/members', function () use ($router) {
     $router->get('/life_and_hon', 'MembersCtl@lifeAndHonorary');
     $router->get('/summary', 'MembersSummaryCtl@activeMembersByType');
+    $router->get('/lapsed/(\d+)', 'MembersCtl@lapsed');
 });
 /**********************/
 /* Member Name Routes */
