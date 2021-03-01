@@ -92,13 +92,7 @@ class MemberFilter{
         
                 // create un-keyed list
                 array_push ($members_arr["records"], $members_item);
-        
-                if (isset($start)){
-                    $members_arr["start"] = $start; // the starting date of a date range
-                }
-                if (isset($end)){
-                    $members_arr["end"] = $end; // the starting date of a date range
-                }
+
             }   
         }
         
@@ -157,7 +151,7 @@ class MemberFilter{
         $this->conn->query($query);        
     }
 
-    public function setAddress($addressfirstline){      
+    public function setAddressLineOne($addressfirstline){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member M2 ON M.idmember = M2.idmember
