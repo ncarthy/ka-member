@@ -16,7 +16,7 @@ export class AuthenticationService {
         private router: Router,
         private http: HttpClient
     ) {
-        this.userSubject = new BehaviorSubject<User>(new User);
+        this.userSubject = new BehaviorSubject<User>(new User());
         this.user = this.userSubject.asObservable();
     }
 
@@ -37,7 +37,7 @@ export class AuthenticationService {
     logout() {
         this.http.delete<any>(`${environment.apiUrl}/auth/revoke`, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
-        this.userSubject.next(new User);
+        this.userSubject.next(new User());
         this.router.navigate(['/login']);
     }
 

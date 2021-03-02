@@ -9,8 +9,6 @@ export class HomeComponent implements OnInit{
     loading = false;
     user: User;
     userFromApi!: User;
-    //members: Member[];
-    //member: Member;
 
     constructor(
         private userService: UserService,
@@ -31,14 +29,5 @@ export class HomeComponent implements OnInit{
         this.toastService.show('You have logged in!', 
             { classname: 'bg-success text-light', delay: 3000 }
         );
-/*
-        this.memberService.getAll().pipe(first()).subscribe(members => {
-            this.members = members;
-        });
-
-        this.memberService.getById(413).pipe(first()).subscribe(member => {
-            this.member = member;
-        });*/
-
     }
 }
