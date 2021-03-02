@@ -18,7 +18,7 @@
 use \Core\Headers;
 
 $router->options('/(\S+)',function() {
-    \Headers::getHeaders();
+    Headers::getHeaders();
 }); // just return headers when OPTIONS call
 
 /**************************************************************/
