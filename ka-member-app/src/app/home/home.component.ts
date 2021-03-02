@@ -8,9 +8,9 @@ import { UserService, AuthenticationService, ToastService, MemberService } from 
 export class HomeComponent implements OnInit{
     loading = false;
     user: User;
-    userFromApi: User;
-    members: Member[];
-    member: Member;
+    userFromApi!: User;
+    //members: Member[];
+    //member: Member;
 
     constructor(
         private userService: UserService,

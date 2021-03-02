@@ -5,7 +5,7 @@ import { User, Role } from './_models';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
-    user: User;
+    user?: User;
     active: any = 1;
     isMenuCollapsed: boolean = true;
 

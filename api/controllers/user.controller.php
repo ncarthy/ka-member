@@ -89,9 +89,7 @@ class UserCtl{
     $model->username = $data->username;
     $model->role = $data->role;
     $model->suspended = $data->suspended;
-    $model->fullname = $data->fullname;
-    $model->failedloginattempts = $data->failedloginattempts;
-
+    $model->fullname = $data->fullname;    
     if (isset($data->password)) {
       $model->password = password_hash($data->password, PASSWORD_DEFAULT);
       $model->checkPassword($data->password, $errors);
@@ -100,9 +98,13 @@ class UserCtl{
           echo json_encode(
             array("message" => implode(" & ",$errors))
           );
-      } 
-      exit(1);
+          exit(1);
+      }       
+      $model->failedloginattempts = 0;
+    } else {
+      $model->failedloginattempts = $data->failedloginattempts?$data->failedloginattempts:0;
     }
+
 
     if( $model->update()) {
       echo json_encode(

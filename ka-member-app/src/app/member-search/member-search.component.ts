@@ -7,8 +7,8 @@ import {MemberSearchResult} from '@app/_models';
   styleUrls: ['./member-search.component.css']
 })
 export class MemberSearchComponent implements OnInit {
-  results: MemberSearchResult[];
-  loading: boolean;
+  results!: MemberSearchResult[];
+  loading: boolean = false;
 
   constructor() { }
 

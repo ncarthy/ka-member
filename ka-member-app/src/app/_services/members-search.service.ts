@@ -34,11 +34,11 @@ export class MemberSearchService {
 
     // Add pipe command from https://stackoverflow.com/a/50218001/6941165
     return this.http.get(queryUrl).pipe(
-        map(response => {
+        map((response : any) => {
 
         // The <any>response means we are telling TypeScript that we’re not 
         // interested in doing strict type checking.
-        return <any>response['records'].map(item => {
+        return <any>response['records'].map((item : any) => {
             console.log("raw item", item); // uncomment if you want to debug
             return new MemberSearchResult({
                 id: item.id,

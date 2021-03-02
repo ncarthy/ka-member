@@ -7,20 +7,29 @@ import { Member } from '@app/_models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+const baseUrl = `${environment.apiUrl}/member`;
+
 @Injectable({ providedIn: 'root' })
 export class MemberService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get<Member[]>(`${environment.apiUrl}/member/read.php`).pipe(
-            map(response => {  
-                return <any>response['records'];
-            })
-        );
+        return this.http.get<Member[]>(baseUrl);
     }
 
-    
-    getById(id: number) {
-        return this.http.get<Member>(`${environment.apiUrl}/member/read_one.php?id=${id}`);
+    getById(id: string) {
+        return this.http.get<Member>(`${baseUrl}/${id}`);
+    }
+
+    create(params: any) {
+        return this.http.post(baseUrl, params);
+    }
+
+    update(id: string, params: any) {
+        return this.http.put(`${baseUrl}/${id}`, params);
+    }
+
+    delete(id: string) {
+        return this.http.delete(`${baseUrl}/${id}`);
     }
 }

@@ -10,10 +10,10 @@ import { AuthenticationService } from '@app/_services';
     styles: ['img { max-width:340px; max-height:240px;}']
  })
 export class LoginComponent implements OnInit {
-    loginForm: FormGroup;
+    loginForm!: FormGroup;
     loading = false;
     submitted = false;
-    returnUrl: string;
+    returnUrl!: string;
     error = '';
 
     constructor(

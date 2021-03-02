@@ -8,18 +8,16 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AuthenticationService } from './_services';
+import { AlertComponent } from './_components';
+
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { AdminComponent } from './admin';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
-/*import { 
-    MemberSearchComponent, 
-    SearchBoxComponent,
-    SearchResultComponent
- } from './member-search';*/
- import { MembersModule } from './members/members.module';
- import { MemberSearchModule } from './member-search/member-search.module';
+
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MembersModule } from './members/members.module';
+import { MemberSearchModule } from './member-search/member-search.module';
 
 @NgModule({
     imports: [
@@ -37,9 +35,7 @@ import { ToastContainerComponent } from './toast-container/toast-container.compo
         LoginComponent,
         AdminComponent,
         ToastContainerComponent,
-        /*MemberSearchComponent,
-        SearchBoxComponent,
-        SearchResultComponent*/
+        AlertComponent
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

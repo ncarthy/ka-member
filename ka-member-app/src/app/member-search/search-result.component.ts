@@ -13,7 +13,7 @@ import {MemberSearchResult } from '@app/_models';
     styleUrls: ['./search-result.component.css']
 })
 export class SearchResultComponent implements OnInit {
-    @Input() member: MemberSearchResult;    
+    @Input() member!: MemberSearchResult;    
     
     constructor() { }
     

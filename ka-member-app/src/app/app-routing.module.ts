@@ -11,6 +11,8 @@ import { MemberComponent } from './members/member/member.component';
 import { MembersComponent } from './members/members.component';
 import { MembersModule } from './members/members.module';
 
+const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
+
 const routes: Routes = [
     {
         path: '',
@@ -26,6 +28,12 @@ const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'users',
+        loadChildren: usersModule,
+        canActivate: [AuthGuard],
+        data: { roles: [Role.Admin] }
     },
 
     // From https://www.tektutorialshub.com/angular/angular-child-routes-nested-routes/

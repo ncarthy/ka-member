@@ -72,9 +72,6 @@ class Member{
             
             // check if more than 0 record found
             if($num>0){        
-                $member_arr["count"] = $num;
-                $member_arr["records"]=array();
-
                 // retrieve our table contents
                 // fetch() is faster than fetchAll()
                 // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
@@ -123,7 +120,7 @@ class Member{
                         "postonhold" => $postonhold?true:false
                     );
 
-                    array_push($member_arr["records"], $member_item);
+                    array_push($member_arr, $member_item);
 
                 }    
             }

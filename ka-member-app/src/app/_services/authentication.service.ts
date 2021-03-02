@@ -16,7 +16,7 @@ export class AuthenticationService {
         private router: Router,
         private http: HttpClient
     ) {
-        this.userSubject = new BehaviorSubject<User>(null);
+        this.userSubject = new BehaviorSubject<User>(new User);
         this.user = this.userSubject.asObservable();
     }
 
@@ -37,7 +37,7 @@ export class AuthenticationService {
     logout() {
         this.http.delete<any>(`${environment.apiUrl}/auth/revoke`, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
-        this.userSubject.next(null);
+        this.userSubject.next(new User);
         this.router.navigate(['/login']);
     }
 
@@ -51,20 +51,25 @@ export class AuthenticationService {
     }
 
     // helper methods
-
-    private refreshTokenTimeout;
+    private refreshTokenTimeout: number | undefined; //https://stackoverflow.com/a/54507207/6941165
 
     private startRefreshTokenTimer() {
+        if (this.userValue && this.userValue.accessToken) {
         // parse json object from base64 encoded jwt token
         const accessToken = JSON.parse(atob(this.userValue.accessToken.split('.')[1]));
 
         // set a timeout to refresh the token a minute before it expires
         const expires = new Date(accessToken.exp * 1000);
         const timeout = expires.getTime() - Date.now() - (60 * 1000);
-        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+
+        //use of 'window' : https://stackoverflow.com/a/54507207/6941165
+        this.refreshTokenTimeout = window.setTimeout(() => this.refreshToken().subscribe(), timeout);
+        } else {
+            this.stopRefreshTokenTimer();
+        }
     }
 
     private stopRefreshTokenTimer() {
-        clearTimeout(this.refreshTokenTimeout);
+        window.clearTimeout(this.refreshTokenTimeout); //https://stackoverflow.com/a/54507207/6941165
     }
 }

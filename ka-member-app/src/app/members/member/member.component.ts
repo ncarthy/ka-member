@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./member.component.css']
 })
 export class MemberComponent implements OnInit {
-  id: number;
+  id: number =0;
 
   constructor(private route: ActivatedRoute) {
     route.params.subscribe(params => { this.id = params['id']; });
