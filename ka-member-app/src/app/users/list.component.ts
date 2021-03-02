@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { UserService } from '@app/_services';
+import { UserService, AlertService } from '@app/_services';
 import { User, Role } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
@@ -10,7 +10,10 @@ export class ListComponent implements OnInit {
     roles = Object.keys(Role).map((key :string) => Role[key as Role]);
     roles2 = Role;
 
-    constructor(private userService: UserService) {}
+    constructor(
+        private userService: UserService,
+        private alertService: AlertService
+        ) {}
 
     ngOnInit() {
         this.userService.getAll()
@@ -24,6 +27,9 @@ export class ListComponent implements OnInit {
         user.isDeleting = true;
         this.userService.delete(id)
             .pipe(first())
-            .subscribe(() => this.users = this.users.filter(x => x.id !== id));
+            .subscribe(() => {
+                this.alertService.success('User deleted', { keepAfterRouteChange: true });
+                this.users = this.users.filter(x => x.id !== id);
+            });
     }
 }

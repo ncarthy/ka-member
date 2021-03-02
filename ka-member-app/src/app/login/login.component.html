@@ -12,6 +12,7 @@
                 <div class="form-group">
                     <label for="username">Username</label>
                     <!-- Autocomplete from https://developer.apple.com/documentation/security/password_autofill/enabling_password_autofill_on_an_html_input_element -->
+                    <!-- Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete -->
                     <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" autocomplete="username" />
                     <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                         <div *ngIf="f.username.errors.required">Username is required</div>

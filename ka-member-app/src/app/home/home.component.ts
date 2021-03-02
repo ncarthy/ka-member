@@ -26,8 +26,8 @@ export class HomeComponent implements OnInit{
             this.userFromApi = user;
         });
 
-        this.toastService.show('You have logged in!', 
-            { classname: 'bg-success text-light', delay: 3000 }
-        );
+        //this.toastService.show('You have logged in!', 
+        //    { classname: 'bg-success text-light', delay: 3000 }
+        //);
     }
 }

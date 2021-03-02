@@ -3,32 +3,45 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { UserService, AlertService } from '@app/_services';
+import { UserService, AlertService, AuthenticationService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
+import { Role, User, UserFormMode } from '@app/_models';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
     form!: FormGroup;
     id!: number;
-    isAddMode!: boolean;
+    //isAddMode!: boolean;
+    formMode!: UserFormMode;
     loading = false;
     submitted = false;
+    apiUser! : User;    
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private userService: UserService,
-        private alertService: AlertService
-    ) {}
+        private alertService: AlertService,
+        private authenticationService: AuthenticationService
+    ) {
+        this.apiUser = authenticationService.userValue;
+    }
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
-        this.isAddMode = !this.id;
+
+        if (!this.id) {
+            this.formMode = UserFormMode.Add;
+        } else if (this.id == this.apiUser.id) {
+            this.formMode = UserFormMode.Profile;
+        } else {
+            this.formMode = UserFormMode.Edit;
+        }
         
         // password not required in edit mode
         const passwordValidators = [Validators.minLength(6)];
-        if (this.isAddMode) {
+        if (this.formMode == UserFormMode.Add) {
             passwordValidators.push(Validators.required);
         }
 
@@ -38,11 +51,11 @@ export class AddEditComponent implements OnInit {
             suspended: [''],
             username: ['', [Validators.required]],
             role: ['', Validators.required],
-            password: ['', [Validators.minLength(8), this.isAddMode ? Validators.required : Validators.nullValidator]],
-            confirmPassword: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
+            password: ['', [Validators.minLength(8), (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]],
+            confirmPassword: ['', (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]
         }, formOptions);
 
-        if (!this.isAddMode) {
+        if (this.formMode != UserFormMode.Add) {
             this.userService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => this.form.patchValue(x));
@@ -51,6 +64,10 @@ export class AddEditComponent implements OnInit {
 
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
+
+    get isAdmin() {
+        return this.apiUser && this.apiUser.role &&  this.apiUser.role === Role.Admin;
+    }
 
     onSubmit() {
         this.submitted = true;
@@ -64,12 +81,16 @@ export class AddEditComponent implements OnInit {
         }
 
         this.loading = true;
-        if (this.isAddMode) {
+        if (this.formMode == UserFormMode.Add) {
             this.createUser();
         } else {
             this.updateUser();
         }
     }
+
+    get isUserAdd() { return this.formMode == UserFormMode.Add; }
+    get isUserEdit() { return this.formMode == UserFormMode.Edit; }
+    get isUserProfile() { return this.formMode == UserFormMode.Profile; }
 
     private createUser() {
         this.userService.create(this.form.value)
@@ -86,7 +107,13 @@ export class AddEditComponent implements OnInit {
             .pipe(first())
             .subscribe(() => {
                 this.alertService.success('User updated', { keepAfterRouteChange: true });
-                this.router.navigate(['../../'], { relativeTo: this.route });
+
+                if (this.formMode == UserFormMode.Edit) {
+                    this.router.navigate(['../../'], { relativeTo: this.route });    
+                } else {
+                    this.router.navigate(['/'], { relativeTo: this.route });
+                }
+                
             })
             .add(() => this.loading = false);
     }

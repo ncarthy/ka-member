@@ -17,6 +17,10 @@ export class AppComponent {
         return this.user && this.user.role &&  this.user.role === Role.Admin;
     }
 
+    get userID() {
+        return this.user && this.user.id || this.user?.id;
+    }
+
     logout() {
         this.authenticationService.logout();
     }

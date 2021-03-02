@@ -43,7 +43,7 @@
                         <span class="fas fa-user"></span> Account
                     </a>
                     <div ngbDropdownMenu>
-                        <button ngbDropdownItem routerLink="/profile">Profile</button>
+                        <button ngbDropdownItem [routerLink]="'/users/edit/'+user.id">Profile</button>
                         <div class="dropdown-divider"></div>
                         <button ngbDropdownItem (click)="logout()">Logout</button>
                     </div>
