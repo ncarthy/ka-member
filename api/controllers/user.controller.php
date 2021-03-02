@@ -55,7 +55,7 @@ class UserCtl{
     $model->role = $data->role;
     $model->suspended = $data->suspended;
     $model->fullname = $data->fullname;
-    $model->failedloginattempts = $data->failedloginattempts;
+    $model->failedloginattempts = isset($data->failedloginattempts)?$data->failedloginattempts:0;
     $model->password = password_hash($data->password, PASSWORD_DEFAULT);
 
     $model->checkPassword($data->password, $errors);
@@ -90,7 +90,7 @@ class UserCtl{
     $model->role = $data->role;
     $model->suspended = $data->suspended;
     $model->fullname = $data->fullname;    
-    if (isset($data->password)) {
+    if (isset($data->password) && !empty($data->password)) {
       $model->password = password_hash($data->password, PASSWORD_DEFAULT);
       $model->checkPassword($data->password, $errors);
       if ($errors) {
