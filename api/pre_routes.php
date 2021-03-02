@@ -15,8 +15,10 @@
     Router logic supplied by bramus\router (https://github.com/bramus/router)
 */
 
+use \Core\Headers;
+
 $router->options('/(\S+)',function() {
-    \Core\Headers::getHeaders();
+    \Headers::getHeaders();
 }); // just return headers when OPTIONS call
 
 /**************************************************************/
@@ -26,11 +28,15 @@ $router->options('/(\S+)',function() {
 /**************************************************************/
 $router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
     
-    $isAuthPath = \Core\Headers::path_is_auth();
-    \Core\Headers::getHeaders($isAuthPath);
+    $path = Headers::stripped_path();
+    $isAuthPath = Headers::path_is_auth($path);
+    $isUserPath = Headers::path_is_user($path);
+
+    // Add Headers to the reply
+    Headers::getHeaders($isAuthPath);
 
     // Don't do the logged-in check when it's an 'auth' path    
-    if ( !$isAuthPath ) {
+    if ( !$isAuthPath ) {        
         $jwt = new \Models\JWTWrapper();
 
         if(!$jwt->loggedIn){      
@@ -39,6 +45,16 @@ $router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
                 array("message" => "Not logged in.")
             );
             exit();
+        } 
+        else if ($isUserPath && !$jwt->isAdmin) { // Also forbid normal users GET'ing user info
+            // Except their own info, of course
+            if (!preg_match('/\d+/', $path, $matches) || ($matches[0] != $jwt->id)) {
+                    http_response_code(401);  
+                    echo json_encode(
+                        array("message" => "Must be an admin.")
+                    );
+                    exit(1);
+            }
         }
     }
 });
@@ -50,12 +66,16 @@ $router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
 /**************************************************************/
 $router->before('POST|PUT|DELETE|PATCH', '/.*', function() {
 
-    $isAuthPath = \Core\Headers::path_is_auth();
+    $path = Headers::stripped_path();
+    $isAuthPath = Headers::path_is_auth($path);
+    $isUserUpdate = Headers::path_is_user($path);
 
     // Don't do the is-admin check when it's an 'auth' path    
     if ( !$isAuthPath ) {
         $jwt = new \Models\JWTWrapper();
-        if (!$jwt->isAdmin){
+
+        // Allow user to maintain own data
+        if  (!$jwt->isAdmin && !preg_match('/user\/\d+/', $path)){
             http_response_code(401);  
             echo json_encode(
                 array("message" => "Must be an admin.")

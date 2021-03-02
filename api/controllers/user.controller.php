@@ -102,7 +102,7 @@ class UserCtl{
       }       
       $model->failedloginattempts = 0;
     } else {
-      $model->failedloginattempts = $data->failedloginattempts?$data->failedloginattempts:0;
+        $model->failedloginattempts = isset($data->failedloginattempts)?$data->failedloginattempts:0;
     }
 
 

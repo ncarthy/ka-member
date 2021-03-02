@@ -4,6 +4,18 @@ namespace Core;
 
 class Headers
 {
+
+    public static function stripped_path() {
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $api_prefix = \Core\Config::read('api.path');
+    
+        if (substr($path, 0, strlen($api_prefix)) == $api_prefix) {
+            $path = substr($path, strlen($api_prefix));
+        } 
+
+        return $path;
+    }
+    
     public static function getHeaders($path_is_auth = false) {
         if ($path_is_auth || Headers::path_is_auth()) {
             Headers::cors_headers();
@@ -12,20 +24,27 @@ class Headers
         }
     }
 
-    public static function path_is_auth()
+    public static function path_is_auth($path = '')
     {
-        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $api_prefix = \Core\Config::read('api.path');
-    
-        if (substr($path, 0, strlen($api_prefix)) == $api_prefix) {
-            $path = substr($path, strlen($api_prefix));
-        } 
-
-        if (  (strlen($path) < 4) || (substr($path, 0, 4) != "auth") ) {
-            return false;
-        } else {
-            return true;
+        if (empty($path)) {
+            $path = Headers::stripped_path();
         }
+
+        return preg_match('/^auth/', $path);
+    }
+
+    public static function path_is_user($path = '')
+    {
+        if (empty($path)) {
+            $path = Headers::stripped_path();
+        }
+
+        return preg_match('/^user/', $path);
+    }
+
+    public static function path_is_user_update($path)
+    {
+        return false;
     }
 
     private static function cors_headers()
