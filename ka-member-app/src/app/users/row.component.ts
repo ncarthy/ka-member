@@ -39,4 +39,28 @@ export class RowComponent {
             });
     }
 
+    onSuspendedChange(value : any) {
+        if (!this.user) return;
+        this.user.isUpdating = true;
+        this.user.suspended = !this.user.suspended;
+        this.userService.update(this.user.id, this.user)
+        .pipe(first())
+        .subscribe(() => {
+            this.alertService.success('User Updated', { keepAfterRouteChange: true });
+            this.user.isUpdating = false;
+        });
+    }
+
+    onRoleChange(value : Role) {
+        if (!this.user) return;
+        this.user.isUpdating = true;      
+        this.user.role = value;  
+        this.userService.update(this.user.id, this.user)
+        .pipe(first())
+        .subscribe(() => {
+            this.alertService.success('User Updated', { keepAfterRouteChange: true });
+            this.user.isUpdating = false;
+        });
+    }
+
 }

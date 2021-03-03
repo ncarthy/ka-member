@@ -9,6 +9,7 @@ export class User {
     password?: string;
     accessToken?: string;
     isDeleting: boolean = false;
+    isUpdating: boolean = false;
 
     constructor(obj?: any) {
 

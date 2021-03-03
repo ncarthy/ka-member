@@ -1,22 +1,25 @@
 <td>{{user.fullname}}</td>
 <td>{{user.username}}</td>
 <td>
-    <select> 
+    <select (change)="onRoleChange($event.target.value)"> 
         <option *ngFor="let role of roles" [ngValue]="role" [selected]="role===user.role">{{roles2[role]}}</option>
         </select>
 </td>
 <td class="text-center">
     <div>
-        <div class="form-check" *ngIf="user.suspended">
+        <div (change)="onSuspendedChange($event.target.value)" class="form-check" *ngIf="user.suspended">
             <input class="form-check-input" type="checkbox" id="flexCheckCheckedDisabled" checked>
         </div>
-        <div class="form-check" *ngIf="!user.suspended">
+        <div (change)="onSuspendedChange($event.target.value)" class="form-check" *ngIf="!user.suspended">
             <input class="form-check-input" type="checkbox" id="flexCheckDisabled">
         </div>
     </div>
 </td>
 <td style="white-space: nowrap">
-    <a routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+    <button routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary mr-1" [disabled]="user.isUpdating">
+        <span *ngIf="user.isUpdating" class="spinner-border spinner-border-sm"></span>
+        <span *ngIf="!user.isUpdating">Edit</span>
+    </button>
     <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
         <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
         <span *ngIf="!user.isDeleting">Delete</span>

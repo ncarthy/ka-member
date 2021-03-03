@@ -178,6 +178,7 @@ class User{
                     isAdmin=:isadmin, 
                     suspended=:suspended,
                     name=:fullname,
+                    timestamp=NULL,
                     failedloginattempts=:failedloginattempts
                     " . (isset($this->password)?',new_pass=:password ':'') ."
                  WHERE
