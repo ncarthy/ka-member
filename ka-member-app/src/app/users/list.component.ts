@@ -1,19 +1,13 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { UserService, AlertService } from '@app/_services';
-import { User, Role } from '@app/_models';
+import { User } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit {
     users!: User[];
-    roles = Object.keys(Role).map((key :string) => Role[key as Role]);
-    roles2 = Role;
 
-    constructor(
-        private userService: UserService,
-        private alertService: AlertService
-        ) {}
+    constructor() {}
 
     ngOnInit() {
         this.userService.getAll()
@@ -21,15 +15,7 @@ export class ListComponent implements OnInit {
             .subscribe(users => this.users = users);
     }
 
-    deleteUser(id: number) {
-        const user = this.users.find(x => x.id === id);
-        if (!user) return;
-        user.isDeleting = true;
-        this.userService.delete(id)
-            .pipe(first())
-            .subscribe(() => {
-                this.alertService.success('User deleted', { keepAfterRouteChange: true });
-                this.users = this.users.filter(x => x.id !== id);
-            });
+    userWasDeleted(user: User): void {
+        this.users = this.users.filter(x => x.id !== user.id);
     }
 }
