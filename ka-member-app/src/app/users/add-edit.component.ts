@@ -48,7 +48,7 @@ export class AddEditComponent implements OnInit {
         const formOptions: AbstractControlOptions = { validators: MustMatch('password', 'confirmPassword') };
         this.form = this.formBuilder.group({
             fullname: ['', Validators.required],
-            suspended: [''],
+            suspended: [{value: '', disabled: true}],
             username: ['', [Validators.required]],
             role: ['', Validators.required],
             password: ['', [Validators.minLength(8), (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]],
@@ -65,8 +65,14 @@ export class AddEditComponent implements OnInit {
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
+    // public protperty to simplify controls If status
     get isAdmin() {
         return this.apiUser && this.apiUser.role &&  this.apiUser.role === Role.Admin;
+    }
+
+    // 
+    get isProfileEdit() {
+        return this.formMode && this.formMode === UserFormMode.Profile;
     }
 
     onSubmit() {
