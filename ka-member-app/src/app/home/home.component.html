@@ -1,17 +1,65 @@
 ﻿<div class="card mt-4">
-    <h4 class="card-header">You're logged in with Angular 10 + JWT & Refresh Tokens!!</h4>
+    <h4 class="card-header">Summary By Member Class</h4>
     <div class="card-body">
-        <p>You're logged in with Angular 10 & JWT!!</p>
-        <p>Your role is: <strong>{{user.role}}</strong>.</p>
-        <p>This page can be accessed by <u>all authenticated users</u>.</p>
-        <p class="mb-1">Current user from secure api end point:</p>
+        <p *ngIf="!loading">Total Number of members: <strong>{{total}}</strong></p>
+        <p>Different membership classes have different contributions to the membership total:</p>
+        <p>Each household member counts as 2 individual members, a corporate member counts as 4, a lifetime member counts as 1.5.</p>
+        <p>Residence members are a special case. 100 Knightsbridge has a single membership but counts as 100 individual members.</p>
         <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
-        <ul *ngIf="userFromApi">
-            <li>{{userFromApi.fullname}} ({{userFromApi.username}})</li>
-        </ul>
+        <table class="table table-striped table-responsive w-auto">
+            <thead>
+                <tr>
+                    <th>Class Name</th>
+                    <th>Number</th>
+                    <th *ngIf="!showCalculations">
+                        <a class="btn btn-sm btn-success" placement="bottom" ngbTooltip="Show Calculations"
+                            (click)="showCalculations = !showCalculations">
+                            +
+                        </a>
+                    </th>
+                    <th *ngIf="showCalculations">Standard Multiplier</th> 
+                    <th *ngIf="showCalculations" 
+                        placement="bottom" 
+                        ngbTooltip="Multiplier can vary by Member. This is the average value used for this class of member."
+                        >Applied Multiplier
+                    </th> 
+                    <th *ngIf="showCalculations"
+                        placement="bottom" 
+                        ngbTooltip="The effective number of members in this membership class"
+                        >Contribution
+                    </th>
+                    <th *ngIf="showCalculations">
+                        <a class="btn btn-sm btn-danger" 
+                            placement="bottom" ngbTooltip="Hide Calculations"
+                            (click)="showCalculations = !showCalculations">-</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let item of membersByType">
+                    <td>{{item.name}}</td>
+                    <td>{{item.count}}</td>
+                    <td *ngIf="showCalculations">{{item.multiplier}}</td>
+                    <td *ngIf="showCalculations">{{item.actmultiplier}}</td>
+                    <td *ngIf="showCalculations">{{item.contribution}}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>{{count}}</td>
+                    <td *ngIf="showCalculations"></td>
+                    <td *ngIf="showCalculations"></td>
+                    <td *ngIf="showCalculations">{{total}}</td>
+                </tr>
+                <tr *ngIf="!membersByType">
+                    <td colspan="4" class="text-center">
+                        <span class="spinner-border spinner-border-lg align-center"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
-<div class = "member-search">
+<!--<div class = "member-search">
   <member-search></member-search>
-</div>
+</div>-->

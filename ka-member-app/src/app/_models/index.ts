@@ -4,3 +4,4 @@ export * from './member-search-result';
 export * from './member';
 export * from './alert';
 export * from './user-form-mode';
+export * from './member-count';
