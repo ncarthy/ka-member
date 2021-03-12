@@ -32,9 +32,11 @@ class MembersSummary{
 
         $members_arr=array();
         $members_arr["total"] = 0;
+        $members_arr["count"] = 0;
         $members_arr["records"]=array();
 
         $contribution_total =0; // sum of member contribution as we loop over rows
+        $count_total =0; // sum of number of members
 
         // check if more than 0 record found
         if($num>0){
@@ -51,12 +53,14 @@ class MembersSummary{
                 );
 
                 $contribution_total+=$contribution;
+                $count_total+=$count;
 
                 // create un-keyed list
                 array_push ($members_arr["records"], $members_item);
             }
 
             $members_arr["total"] = $contribution_total; // add a contribution_total field  
+            $members_arr["count"] = $count_total; // add a count_total field  
         }
 
         return $members_arr;
