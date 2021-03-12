@@ -14,6 +14,8 @@ export class MemberSearchResult {
     deletedate: Date;
     lasttransactiondate: Date;
     email: Date;
+    isDeleting: boolean = false;
+    isUpdating: boolean = false;
     
     constructor(obj?: any) {
 

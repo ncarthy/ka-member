@@ -1,6 +1,6 @@
 /**
- * MemberSearchResult is a data-structure that holds an individual
- * record from a Member database search
+ * Member is a data-structure that holds all the information stored
+ * about the member in the database
  */
 export class Member {
 
@@ -38,6 +38,8 @@ export class Member {
     gdpr_address: boolean;
     gdpr_sm: boolean;
     postonhold: boolean;
+    isDeleting: boolean = false;
+    isUpdating: boolean = false;
     
     constructor(obj?: any) {
 

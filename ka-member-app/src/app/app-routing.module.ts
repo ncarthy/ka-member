@@ -7,11 +7,8 @@ import { AdminComponent } from './admin';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
 
-import { MemberComponent } from './members/member/member.component';
-import { MembersComponent } from './members/members.component';
-import { MembersModule } from './members/members.module';
-
 const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
+const membersModule = () => import('./members/members.module').then(x => x.MembersModule);
 
 const routes: Routes = [
     {
@@ -36,18 +33,10 @@ const routes: Routes = [
         data: { roles: [Role.Admin] }
     },
 
-    // From https://www.tektutorialshub.com/angular/angular-child-routes-nested-routes/
     {
         path: 'members',
-        component: MembersComponent,
-        canActivate: [AuthGuard],
-        children: [
-            { 
-                path: 'id/:id', 
-                component: MemberComponent,
-                canActivate: [AuthGuard]
-            }
-        ]
+        loadChildren: membersModule,
+        canActivate: [AuthGuard]
     },
 
     // otherwise redirect to home
@@ -57,7 +46,7 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forRoot(routes),
-        MembersModule],
+        ],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }

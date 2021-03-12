@@ -1,29 +1,26 @@
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {
-  RouterModule,
-  ActivatedRoute,
-  Router,
-  Routes
-} from '@angular/router';
 
-import { MembersComponent } from './members.component';
-import { MemberComponent } from './member/member.component';
+import { MembersRoutingModule } from './members-routing.module';
+import { LayoutComponent } from './layout.component';
+import { ListComponent } from './list.component';
+import { AddEditComponent } from './add-edit.component';
+import { RowComponent } from './row.component';
 
 //import { MemberSearchComponent } from '@app/member-search/member-search.component';
 
 @NgModule({
-  declarations: [
-    MembersComponent,
-    MemberComponent
-  ],
-  exports: [
-    MembersComponent,
-    MemberComponent,
-  ],
   imports: [
-    CommonModule,
-    RouterModule
+      CommonModule,
+      ReactiveFormsModule,
+      MembersRoutingModule
+  ],
+  declarations: [
+      LayoutComponent,
+      ListComponent,
+      AddEditComponent,
+      RowComponent
   ]
 })
 export class MembersModule { }

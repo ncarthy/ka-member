@@ -17,7 +17,7 @@ export class MemberService {
         return this.http.get<Member[]>(baseUrl);
     }
 
-    getById(id: string) {
+    getById(id: number) {
         return this.http.get<Member>(`${baseUrl}/${id}`);
     }
 
@@ -25,11 +25,11 @@ export class MemberService {
         return this.http.post(baseUrl, params);
     }
 
-    update(id: string, params: any) {
+    update(id: number, params: any) {
         return this.http.put(`${baseUrl}/${id}`, params);
     }
 
-    delete(id: string) {
+    delete(id: number) {
         return this.http.delete(`${baseUrl}/${id}`);
     }
 }

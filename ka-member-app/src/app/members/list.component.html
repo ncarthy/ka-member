@@ -1,0 +1,25 @@
+﻿<h1>Members</h1>
+<a routerLink="add" class="btn btn-sm btn-success mb-2">Add Member</a>
+<table class="table table-striped table-responsive">
+    <thead>
+        <tr>
+            <th style="width: 25%">Name</th>
+            <th style="width: 25%">Type</th>
+            <th style="width: 15%">Business Name</th> <!-- Hide on screens smaller than Lg ' class="d-none d-lg-block"  ' -->
+            <th style="width: 15%">email</th> <!-- From https://getbootstrap.com/docs/4.1/utilities/display/#hiding-elements -->
+            <th style="width: 20%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr  *ngFor="let myMember of members"
+            member-row
+            [member]="myMember"
+            (onMemberDeleted)="memberWasDeleted($event)">
+        </tr>
+        <tr *ngIf="!members">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
