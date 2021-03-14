@@ -38,10 +38,10 @@ import { regExpEscape } from '@ng-bootstrap/ng-bootstrap/util/util';
 
       // From https://stackoverflow.com/a/51885364/6941165
       /*const postcode = new RegExp("^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$", "i");      //'i' = case insensitive
-      const postcode1 = new RegExp("^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$");
+      const postcode1 = new RegExp("^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$");*/
       const postcode2 = new RegExp("^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$", "i");
-      const postcode3 = new RegExp("^([A-Z][A-HJ-Y]?\d[A-Z\d]? ?\d[A-Z]{2}|GIR ?0A{2})$", "i"); // didn't work*/
-      const postcode4 = new RegExp("^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2})$", "i");
+      /*const postcode3 = new RegExp("^([A-Z][A-HJ-Y]?\d[A-Z\d]? ?\d[A-Z]{2}|GIR ?0A{2})$", "i"); // didn't work
+      const postcode4 = new RegExp("^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2})$", "i");*/
 
       /*console.log("Try 1", postcode.test("sw7 1jy"));
       console.log("Try 2", postcode.test("SW7 1JY"));
@@ -59,7 +59,7 @@ import { regExpEscape } from '@ng-bootstrap/ng-bootstrap/util/util';
         fromEvent(this.el.nativeElement, 'keyup').pipe(
           map((e: any) => e.target.value),            // extract the value of the input
           //map((t:string) => t.toUpperCase()),
-          filter((text: string) => text.length > 3 && postcode4.test(text)),  // filter out if invalid postcode
+          filter((text: string) => text.length > 3 && postcode2.test(text)),  // filter out if invalid postcode
           debounceTime(250),                          // only once every 250ms
           tap(() => this.loading.emit(true)),         // enable loading
           // search, discarding old events if new input comes in

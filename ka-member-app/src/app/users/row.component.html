@@ -1,9 +1,9 @@
 <td>{{user.fullname}}</td>
 <td>{{user.username}}</td>
 <td>
-    <select (change)="onRoleChange($event.target.value)"> 
+    <select (change)="onRoleChange($event.target.value)">
         <option *ngFor="let role of roles" [ngValue]="role" [selected]="role===user.role">{{roles2[role]}}</option>
-        </select>
+    </select>
 </td>
 <td class="text-center">
     <div>

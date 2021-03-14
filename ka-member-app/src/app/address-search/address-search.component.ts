@@ -1,21 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import {Address} from '@app/_models';
+import {Address, Country} from '@app/_models';
+import {CountryService} from '@app/_services';
+
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'address-search',
   templateUrl: './address-search.component.html'
 })
 export class AddressSearchComponent implements OnInit {
-  results!: Address[];
+  addresses!: Address[];
   loading: boolean = false;
+  countries!: Country[];
 
-  constructor() { }
+  constructor(private countryService : CountryService) {   }
 
   ngOnInit(): void {
+    this.countryService.getAll()
+    .pipe(first())
+    .subscribe(x => this.countries = x);
   }
 
-  updateResults(results: Address[]): void {
-    this.results = results;
+  updateAddresses(results: Address[]): void {
+    this.addresses = results;
   }
 
 }
