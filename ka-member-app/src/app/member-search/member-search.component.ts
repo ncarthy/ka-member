@@ -18,6 +18,6 @@ export class MemberSearchComponent implements OnInit {
 
   updateResults(results: MemberSearchResult[]): void {
     this.results = results;
-    console.log("results:", this.results); // uncomment to take a look
+    //console.log("results:", this.results); // uncomment to take a look
   }
 }

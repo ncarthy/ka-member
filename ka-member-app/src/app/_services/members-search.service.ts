@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 import {
   HttpClient,
-  //HttpRequest,
-  //HttpHeaders
+  HttpRequest,
+  HttpHeaders
 } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators'; // Need to import map https://stackoverflow.com/a/50218001/6941165
+import { map } from 'rxjs/operators'; // Need to import map https://stackoverflow.com/a/50218001/6941165
 import { MemberSearchResult } from '@app/_models';
 
 import { environment } from '@environments/environment';
@@ -39,7 +39,7 @@ export class MemberSearchService {
         // The <any>response means we are telling TypeScript that we’re not 
         // interested in doing strict type checking.
         return <any>response['records'].map((item : any) => {
-            console.log("raw item", item); // uncomment if you want to debug
+            //console.log("raw item", item); // uncomment if you want to debug
             return new MemberSearchResult({
                 id: item.id,
                 membershiptype: item.type,

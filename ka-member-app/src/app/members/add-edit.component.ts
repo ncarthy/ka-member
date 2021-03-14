@@ -1,17 +1,15 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { UserService, AlertService, AuthenticationService } from '@app/_services';
-import { MustMatch } from '@app/_helpers';
+import { MemberService, AlertService, AuthenticationService } from '@app/_services';
 import { Role, User, UserFormMode } from '@app/_models';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
     form!: FormGroup;
     id!: number;
-    //isAddMode!: boolean;
     formMode!: UserFormMode;
     loading = false;
     submitted = false;
@@ -21,7 +19,7 @@ export class AddEditComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private userService: UserService,
+        private memberService: MemberService,
         private alertService: AlertService,
         private authenticationService: AuthenticationService
     ) {
@@ -33,19 +31,10 @@ export class AddEditComponent implements OnInit {
 
         if (!this.id) {
             this.formMode = UserFormMode.Add;
-        } else if (this.id == this.apiUser.id) {
-            this.formMode = UserFormMode.Profile;
         } else {
             this.formMode = UserFormMode.Edit;
         }
-        
-        // password not required in edit mode
-        const passwordValidators = [Validators.minLength(6)];
-        if (this.formMode == UserFormMode.Add) {
-            passwordValidators.push(Validators.required);
-        }
 
-        const formOptions: AbstractControlOptions = { validators: MustMatch('password', 'confirmPassword') };
         this.form = this.formBuilder.group({
             fullname: ['', Validators.required],
             suspended: [{value: '', disabled: true}],
@@ -53,10 +42,10 @@ export class AddEditComponent implements OnInit {
             role: ['', Validators.required],
             password: ['', [Validators.minLength(8), (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]],
             confirmPassword: ['', (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]
-        }, formOptions);
+        });
 
         if (this.formMode != UserFormMode.Add) {
-            this.userService.getById(this.id)
+            this.memberService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => this.form.patchValue(x));
         }
@@ -68,11 +57,6 @@ export class AddEditComponent implements OnInit {
     // public protperty to simplify controls If status
     get isAdmin() {
         return this.apiUser && this.apiUser.role &&  this.apiUser.role === Role.Admin;
-    }
-
-    // 
-    get isProfileEdit() {
-        return this.formMode && this.formMode === UserFormMode.Profile;
     }
 
     onSubmit() {
@@ -88,31 +72,30 @@ export class AddEditComponent implements OnInit {
 
         this.loading = true;
         if (this.formMode == UserFormMode.Add) {
-            this.createUser();
+            this.createMember();
         } else {
-            this.updateUser();
+            this.updateMember();
         }
     }
 
-    get isUserAdd() { return this.formMode == UserFormMode.Add; }
-    get isUserEdit() { return this.formMode == UserFormMode.Edit; }
-    get isUserProfile() { return this.formMode == UserFormMode.Profile; }
+    get isMemberAdd() { return this.formMode == UserFormMode.Add; }
+    get isMemberEdit() { return this.formMode == UserFormMode.Edit; }
 
-    private createUser() {
-        this.userService.create(this.form.value)
+    private createMember() {
+        this.memberService.create(this.form.value)
             .pipe(first())
             .subscribe(() => {
-                this.alertService.success('User added', { keepAfterRouteChange: true });
+                this.alertService.success('Member added', { keepAfterRouteChange: true });
                 this.router.navigate(['../'], { relativeTo: this.route });
             })
             .add(() => this.loading = false);
     }
 
-    private updateUser() {
-        this.userService.update(this.id, this.form.value)
+    private updateMember() {
+        this.memberService.update(this.id, this.form.value)
             .pipe(first())
             .subscribe(() => {
-                this.alertService.success('User updated', { keepAfterRouteChange: true });
+                this.alertService.success('Member updated', { keepAfterRouteChange: true });
 
                 if (this.formMode == UserFormMode.Edit) {
                     this.router.navigate(['../../'], { relativeTo: this.route });    

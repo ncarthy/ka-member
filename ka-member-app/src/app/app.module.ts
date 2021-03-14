@@ -18,6 +18,7 @@ import { ToastContainerComponent } from './toast-container/toast-container.compo
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersModule } from './members/members.module';
 import { MemberSearchModule } from './member-search/member-search.module';
+import { AddressSearchModule } from './address-search/address-search.module';
 
 @NgModule({
     imports: [
@@ -27,7 +28,8 @@ import { MemberSearchModule } from './member-search/member-search.module';
         AppRoutingModule,
         NgbModule,
         MembersModule,
-        MemberSearchModule
+        MemberSearchModule,
+        AddressSearchModule
     ],
     declarations: [
         AppComponent,
@@ -35,7 +37,7 @@ import { MemberSearchModule } from './member-search/member-search.module';
         LoginComponent,
         AdminComponent,
         ToastContainerComponent,
-        AlertComponent
+        AlertComponent        
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

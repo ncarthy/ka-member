@@ -1,6 +1,4 @@
-﻿<h1 *ngIf="isUserAdd">Add User</h1>
-<h1 *ngIf="isUserEdit">Edit User</h1>
-<h1 *ngIf="isUserProfile">Profile</h1>
+﻿<h1>Add User</h1>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-row">
         <div class="form-group col-7">
@@ -37,10 +35,6 @@
             <input type="checkbox" formControlName="suspended" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.suspended.errors }" >
         </div>
     </div>
-    <div *ngIf="!isUserAdd">
-        <h3 class="pt-3">Change Password</h3>
-        <p>Leave blank to keep the same password</p>
-    </div>
     <div class="form-row">
         <div class="form-group col">
             <label>Password</label>
@@ -64,7 +58,6 @@
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
             Save
         </button>
-        <a *ngIf="!isProfileEdit" routerLink="/users" class="btn btn-link">Cancel</a>
-        <a *ngIf="isProfileEdit" routerLink="/" class="btn btn-link">Cancel</a>
+        <a routerLink="/" class="btn btn-link">Cancel</a>
     </div>
 </form>

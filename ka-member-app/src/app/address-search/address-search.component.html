@@ -1,0 +1,25 @@
+<div class='container'>
+    <div class="page-header">
+      <h1>Members
+        <img
+          style="float: right;"
+          *ngIf="loading"
+          src='assets/images/loading.gif' />
+      </h1>
+    </div>
+
+    <div class="row">
+      <div class="input-group input-group-lg col-md-12">
+        <address-search-box
+           (loading)="loading = $event"
+           (results)="updateResults($event)"
+            ></address-search-box>
+      </div>
+    </div>
+
+    <div class="row">
+        <select>
+            <option [value]="result" *ngFor="let result of results">{{result.line1}}</option>
+          </select>
+    </div>
+</div>
