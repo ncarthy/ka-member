@@ -1,55 +1,136 @@
-﻿<h1>Add User</h1>
+﻿<h1 *ngIf="isMemberAdd">Add Member</h1>
+<h1 *ngIf="isMemberEdit">Edit Member</h1>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
     <div class="form-row">
-        <div class="form-group col-7">
-            <label>Username</label>
-            <!-- Autocomplete from https://developer.apple.com/documentation/security/password_autofill/enabling_password_autofill_on_an_html_input_element -->
-            <!-- Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete -->
-            <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" autocomplete="username"/>
-            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                <div *ngIf="f.username.errors.required">Username is required</div>
+        <div class="form-group col-5">
+            <h4>Primary Address</h4>
+            <label>Line 1</label>
+            <input type="text" formControlName="addressfirstline" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }" />
+            <div *ngIf="submitted && f.addressfirstline.errors" class="invalid-feedback">
+                <div *ngIf="f.addressfirstline.errors.required">Line 1 is required</div>
             </div>
-        </div>
-        <div class="form-group col">
-            <label>Role</label>
-            <select formControlName="role" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
-                <option value=""></option>
-                <option value="User">User</option>
-                <option value="Admin" *ngIf="isAdmin">Admin</option>
+            <label>Line 2</label>
+            <input type="text" formControlName="addresssecondline" class="form-control" />
+            <label>City</label>
+            <input type="text" formControlName="city" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.city.errors }" />
+            <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+                <div *ngIf="f.city.errors.required">City is required</div>
+            </div>
+            <label>County</label>
+            <input type="text" formControlName="county" class="form-control" />
+            <label>Postcode</label>
+            <input type="text" formControlName="postcode" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.postcode.errors }" />
+            <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
+                <div *ngIf="f.postcode.errors.required">Postcode is required</div>
+            </div>
+            <label>Country</label>
+            <select formControlName="countryID" [compareWith]="compareCountries" id="countrySelect" name="countrySelect"
+                class="form-control">
+                <option [ngValue]="null">Select</option>
+                <option *ngFor="let country of countries" [ngValue]="country.id">
+                    {{country.name }}
+                </option>
             </select>
-            <div *ngIf="submitted && f.role.errors" class="invalid-feedback">
-                <div *ngIf="f.role.errors.required">Role is required</div>
+            <label>Email</label>
+            <input type="text" formControlName="email1" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.email1.errors }" />
+            <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
+                <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
+            </div>
+            <label>Telephone</label>
+            <input type="text" formControlName="phone1" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }" />
+            <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
+                <div *ngIf="f.phone1.errors.pattern">Only 0-9 and +/- or () allowed</div>
+            </div>
+        </div>
+        <div class="form-group col-5">
+            <h4>Secondary Address</h4>
+            <label>Line 1</label>
+            <input type="text" formControlName="addressfirstline2" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.addressfirstline2.errors }" />
+            <div *ngIf="submitted && f.addressfirstline2.errors" class="invalid-feedback">
+                <div *ngIf="f.addressfirstline2.errors.required">Line 1 is required</div>
+            </div>
+            <label>Line 2</label>
+            <input type="text" formControlName="addresssecondline2" class="form-control" />
+            <label>City</label>
+            <input type="text" formControlName="city2" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.city2.errors }" />
+            <div *ngIf="submitted && f.city2.errors" class="invalid-feedback">
+                <div *ngIf="f.city2.errors.required">City is required</div>
+            </div>
+            <label>County</label>
+            <input type="text" formControlName="county2" class="form-control" />
+            <label>Postcode</label>
+            <input type="text" formControlName="postcode2" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.postcode2.errors }" />
+            <div *ngIf="submitted && f.postcode2.errors" class="invalid-feedback">
+                <div *ngIf="f.postcode2.errors.required">Postcode is required</div>
+            </div>
+            <label>Country</label>
+            <select formControlName="countryID2" [compareWith]="compareCountries" id="countrySelect"
+                name="countrySelect" class="form-control">
+                <option [ngValue]="null">Select</option>
+                <option *ngFor="let country of countries" [ngValue]="country.id">
+                    {{country.name }}
+                </option>
+            </select>
+            <label>Email</label>
+            <input type="text" formControlName="email2" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.email2.errors }" />
+            <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
+                <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
+            </div>
+            <label>Telephone</label>
+            <input type="text" formControlName="phone2" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }" />
+            <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
+                <div *ngIf="f.phone2.errors.pattern">Only 0-9 and +/- or () allowed</div>
             </div>
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-7">
-            <label>Full Name</label>
-            <input type="text" formControlName="fullname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }" />
-            <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
-                <div *ngIf="f.fullname.errors.required">Full Name is required</div>
-            </div>
-        </div>
-        <div class="form-group col">
-            <div class="row justify-content-center"><label>Suspended</label></div>
-            <input type="checkbox" formControlName="suspended" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.suspended.errors }" >
+        <div class="form-group col-5">
+
         </div>
     </div>
-    <div class="form-row">
-        <div class="form-group col">
-            <label>Password</label>
-            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="new-password"/>
-            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                <div *ngIf="f.password.errors.required">Password is required</div>
-                <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters</div>
+    <div class="form-row p-2">
+        <div class="card col-5">
+            <h2 class="card-header">GDPR</h2>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-2">
+                        <div class="row justify-content-center"><label>Email</label></div>
+                        <input type="checkbox" formControlName="gdpr_email" class="form-control">
+                    </div>
+                    <div class="form-group col-3">
+                        <div class="row justify-content-center"><label>Address</label></div>
+                        <input type="checkbox" formControlName="gdpr_address" class="form-control">
+                    </div>
+                    <div class="form-group col-3">
+                        <div class="row justify-content-center"><label>Telephone</label></div>
+                        <input type="checkbox" formControlName="gdpr_tel" class="form-control">
+                    </div>
+                    <div class="form-group col-3">
+                        <div class="row justify-content-center"><label>Social Media</label></div>
+                        <input type="checkbox" formControlName="gdpr_sm" class="form-control">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form-group col">
-            <label>Confirm Password</label>
-            <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" autocomplete="new-password"/>
-            <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
-                <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
-                <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+        <div class="card col-5">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-5">
+                        <label>Join Date</label>
+                        <ngb-datepicker #dp formControlName="expirydate"></ngb-datepicker>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -58,6 +139,7 @@
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
             Save
         </button>
-        <a routerLink="/" class="btn btn-link">Cancel</a>
+        <a class="btn btn-link" *ngIf="isMemberAdd">Reset</a>
+        <a routerLink="/members" class="btn btn-link">Cancel</a>
     </div>
 </form>

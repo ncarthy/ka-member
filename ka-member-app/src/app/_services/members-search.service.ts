@@ -12,13 +12,13 @@ import { MemberSearchResult } from '@app/_models';
 import { environment } from '@environments/environment';
 
 
- //The @Injectable annotation allows us to inject things into this classes constructor.
+//The @Injectable annotation allows us to inject things into this classes constructor.
 @Injectable()
-export class MemberSearchService {    
+export class MemberSearchService {
 
   constructor(
     private http: HttpClient
-  ) {}
+  ) { }
 
   /**
   * search
@@ -34,25 +34,25 @@ export class MemberSearchService {
 
     // Add pipe command from https://stackoverflow.com/a/50218001/6941165
     return this.http.get(queryUrl).pipe(
-        map((response : any) => {
+      map((response: any) => {
 
         // The <any>response means we are telling TypeScript that we’re not 
         // interested in doing strict type checking.
-        return <any>response['records'].map((item : any) => {
-            //console.log("raw item", item); // uncomment if you want to debug
-            return new MemberSearchResult({
-                id: item.id,
-                membershiptype: item.type,
-                name: item.name,
-                businessname: item.business,
-                note: item.note,
-                postcode: item.postcode,
-                reminderdate: item.reminderdate,
-                deletedate: item.deletedate,
-                lasttransactiondate: item.lasttransactiondate,
-                email: item.email1
-            });
+        return <any>response['records'].map((item: any) => {
+          //console.log("raw item", item); // uncomment if you want to debug
+          return new MemberSearchResult({
+            id: item.id,
+            membershiptype: item.type,
+            name: item.name,
+            businessname: item.business,
+            note: item.note,
+            postcode: item.postcode,
+            reminderdate: item.reminderdate,
+            deletedate: item.deletedate,
+            lasttransactiondate: item.lasttransactiondate,
+            email: item.email1
+          });
         });
       }));
-    }
+  }
 }

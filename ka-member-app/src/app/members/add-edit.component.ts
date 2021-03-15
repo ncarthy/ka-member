@@ -1,10 +1,11 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule  } from '@angular/forms';
+
 import { first } from 'rxjs/operators';
 
-import { MemberService, AlertService, AuthenticationService } from '@app/_services';
-import { Role, User, UserFormMode } from '@app/_models';
+import { MemberService, AlertService, AuthenticationService, CountryService } from '@app/_services';
+import { Country, Role, User, UserFormMode } from '@app/_models';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -14,6 +15,8 @@ export class AddEditComponent implements OnInit {
     loading = false;
     submitted = false;
     apiUser! : User;    
+    countries!: Country[];
+    countryControl!: AbstractControl;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -21,13 +24,14 @@ export class AddEditComponent implements OnInit {
         private router: Router,
         private memberService: MemberService,
         private alertService: AlertService,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private countryService: CountryService
     ) {
         this.apiUser = authenticationService.userValue;
     }
 
     ngOnInit() {
-        this.id = this.route.snapshot.params['id'];
+        this.id = this.route.snapshot.params['id'];       
 
         if (!this.id) {
             this.formMode = UserFormMode.Add;
@@ -36,19 +40,70 @@ export class AddEditComponent implements OnInit {
         }
 
         this.form = this.formBuilder.group({
-            fullname: ['', Validators.required],
-            suspended: [{value: '', disabled: true}],
-            username: ['', [Validators.required]],
-            role: ['', Validators.required],
-            password: ['', [Validators.minLength(8), (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]],
-            confirmPassword: ['', (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]
+            //name: ['', Validators.required],
+
+            // Checkboxes
+            gdpr_email: [''],
+            gdpr_tel: [''],
+            gdpr_address: [''],
+            gdpr_sm: [''],
+            postonhold: [''],
+
+            // Individual / Corporate/ Lifetime etc.
+            statusID: [null, Validators.required],
+
+            addressfirstline: ['', [Validators.required]],
+            addresssecondline: [''],
+            city: ['', [Validators.required]],
+            county: [''],
+            postcode: ['', [Validators.required]],
+            countryID: [null, Validators.required],
+            email1: ['', [Validators.email]],
+            phone1: ['', [Validators.pattern('[- +()0-9]+')]], // From https://stackoverflow.com/a/65589987/6941165
+
+            expirydate: [''],
+            joindate: [''],
+            reminderdate: [''],
+            deletedate: [''],
+
+            username: [{value: '', disabled: true}],
+            updatedate: [''],
+
+            businessname: [''],
+            jobtitle: [''],
+
+            bankpayerref: [''],
+            note: [''],
+
+            addressfirstline2: ['', [Validators.nullValidator]],
+            addresssecondline2: [''],
+            city2: ['', [Validators.nullValidator]],
+            county2: [''],
+            postcode2: ['', [Validators.nullValidator]],
+            countryID2: ['', Validators.nullValidator],
+            email2: ['', [Validators.email]],
+            phone2: ['', [Validators.pattern('[- +()0-9]+')]],
+            
         });
+
+        this.countryService.getAll().pipe(first())
+        .subscribe(x => {
+            this.countries = x;
+        }); 
 
         if (this.formMode != UserFormMode.Add) {
             this.memberService.getById(this.id)
                 .pipe(first())
-                .subscribe(x => this.form.patchValue(x));
+                .subscribe(x => {
+                    this.form.patchValue(x);
+                    //this.form.controls['countryID'].setValue(x.countryID);
+                });
         }
+
+        this.countryControl = this.form.controls['countryID'];
+        this.countryControl.valueChanges.subscribe((cty:any) => {
+            console.log('Country changed to:', cty);
+            });
     }
 
     // convenience getter for easy access to form fields
@@ -106,4 +161,8 @@ export class AddEditComponent implements OnInit {
             })
             .add(() => this.loading = false);
     }
+
+    compareCountries(val1: Country, val2: Country) {
+        return val1 && val2 && val1 === val2;
+      }
 }

@@ -1,3 +1,4 @@
+import { Country } from '@app/_models';
 /**
  * Member is a data-structure that holds all the information stored
  * about the member in the database
@@ -14,7 +15,7 @@ export class Member {
     city: string;
     county: string;
     postcode: string;
-    countryID: string;
+    countryID: number;
     email1: string;
     phone1: string;
     addressfirstline2: string;
@@ -22,13 +23,14 @@ export class Member {
     city2: string;
     county2: string;
     postcode2: string;
-    country2ID: string;
+    country2ID: number;
     email2: string;
     phone2: string; 
     statusID: number;
     expirydate: Date;
     joindate: Date;
     reminderdate: Date;
+    updatedate: Date;
     deletedate: Date;
     repeatpayment: number;
     recurringpayment: number;
@@ -53,7 +55,7 @@ export class Member {
         this.county = obj && obj.county || null;
         this.city = obj && obj.city || null;
         this.postcode = obj && obj.postcode || null;
-        this.countryID = obj && obj.countryID || null;
+        this.countryID = obj && obj.country || null;
         this.email1 = obj && obj.email1 || null;
         this.phone1 = obj && obj.phone1 || null;
         this.addressfirstline2 = obj && obj.addressfirstline2 || null;
@@ -61,13 +63,14 @@ export class Member {
         this.county2 = obj && obj.county2 || null;
         this.city2 = obj && obj.city2 || null;
         this.postcode2 = obj && obj.postcode2 || null;
-        this.country2ID = obj && obj.country2ID || null;
+        this.country2ID = obj && obj.country2 || null;
         this.email2 = obj && obj.email2 || null;
         this.phone2 = obj && obj.phone2 || null;
         this.statusID = obj && obj.statusID || null;
         this.expirydate = obj && obj.expirydate || null;
         this.reminderdate = obj && obj.reminderdate || null;
         this.joindate = obj && obj.joindate || null;
+        this.updatedate = obj && obj.updatedate || null;
         this.deletedate = obj && obj.deletedate || null;
         this.repeatpayment = obj && obj.repeatpayment || null;
         this.recurringpayment = obj && obj.recurringpayment || null;
