@@ -45,6 +45,7 @@ UPDATE `membershipstatus` SET `name` = 'Honorary' WHERE `membershipstatus`.`idme
 UPDATE `membershipstatus` SET `name` = 'Pending' WHERE `membershipstatus`.`idmembership` = 7;
 UPDATE `membershipstatus` SET `name` = 'Contributing Ex-member' WHERE `membershipstatus`.`idmembership` = 8;
 UPDATE `membershipstatus` SET `name` = 'Former Member' WHERE `membershipstatus`.`idmembership` = 9;
+DELETE FROM `membershipstatus` WHERE `membershipstatus`.`idmembership` = 1;
 
 INSERT INTO `membershipstatus` (`idmembership`, `name`, `multiplier`, `membershipfee`) VALUES ('10', 'Residence', 20,500);
 UPDATE `member` SET `membership_idmembership` = '10', multiplier = 100, `username` = "ncarthy", updatedate=CURRENT_TIMESTAMP

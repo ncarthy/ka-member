@@ -5,5 +5,6 @@ export * from './country.service';
 export * from './members-search.service';
 export * from './member.service';
 export * from './members.service';
+export * from './membership-status.service';
 export * from './toast.service';
 export * from './user.service';

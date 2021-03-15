@@ -4,8 +4,18 @@ import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModul
 
 import { first } from 'rxjs/operators';
 
-import { MemberService, AlertService, AuthenticationService, CountryService } from '@app/_services';
-import { Country, Role, User, UserFormMode } from '@app/_models';
+import { MemberService, 
+    AlertService, 
+    AuthenticationService, 
+    CountryService,
+    MembershipStatusService
+     } from '@app/_services';
+import { Country, 
+    MembershipStatus, 
+    Role, 
+    User, 
+    UserFormMode 
+} from '@app/_models';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -16,6 +26,7 @@ export class AddEditComponent implements OnInit {
     submitted = false;
     apiUser! : User;    
     countries!: Country[];
+    statuses!: MembershipStatus[];
     countryControl!: AbstractControl;
 
     constructor(
@@ -25,7 +36,8 @@ export class AddEditComponent implements OnInit {
         private memberService: MemberService,
         private alertService: AlertService,
         private authenticationService: AuthenticationService,
-        private countryService: CountryService
+        private countryService: CountryService,
+        private membershipStatusService: MembershipStatusService
     ) {
         this.apiUser = authenticationService.userValue;
     }
@@ -70,7 +82,7 @@ export class AddEditComponent implements OnInit {
             updatedate: [''],
 
             businessname: [''],
-            jobtitle: [''],
+            title: [''],
 
             bankpayerref: [''],
             note: [''],
@@ -89,6 +101,10 @@ export class AddEditComponent implements OnInit {
         this.countryService.getAll().pipe(first())
         .subscribe(x => {
             this.countries = x;
+        }); 
+        this.membershipStatusService.getAll().pipe(first())
+        .subscribe(x => {
+            this.statuses = x;
         }); 
 
         if (this.formMode != UserFormMode.Add) {
@@ -112,6 +128,12 @@ export class AddEditComponent implements OnInit {
     // public protperty to simplify controls If status
     get isAdmin() {
         return this.apiUser && this.apiUser.role &&  this.apiUser.role === Role.Admin;
+    }
+
+    // public protperty to simplify controls If status
+    get isCorporateMember() {
+        return this.form && this.form.controls && this.statuses &&
+            this.form.controls['statusID'].value === this.statuses.filter(x => x.name==='Corporate')[0].id ;
     }
 
     onSubmit() {

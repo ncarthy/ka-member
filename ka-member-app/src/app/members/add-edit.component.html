@@ -1,12 +1,42 @@
 ﻿<h1 *ngIf="isMemberAdd">Add Member</h1>
 <h1 *ngIf="isMemberEdit">Edit Member</h1>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
+    <div class="row">
+        <div class="col-sm">
+            <div class="form-group">
+                <label for="statusSelect">Membership Status</label>
+                <select formControlName="statusID" id="statusSelect" name="statusSelect" class="form-control">
+                    <option *ngFor="let status of statuses" [ngValue]="status.id">
+                        {{status.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                    placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                    else.</small>
+            </div>
+        </div>
+    </div>
+    <!--<div>
+        <div class="input-group mb-3">
+            <label>Membership Status</label>
+            <select formControlName="statusID" id="statusSelect" name="statusSelect" class="form-control">
+                <option *ngFor="let status of statuses" [ngValue]="status.id">
+                    {{status.name }}
+                </option>
+            </select>
+        </div>
+    </div>-->
     <div class="form-row">
-        <div class="form-group col-5">
+        <div class="form-group col-sm">
             <h4>Primary Address</h4>
-            <label>Line 1</label>
-            <input type="text" formControlName="addressfirstline" class="form-control"
+            <label for="unputAddressLine1" class="form-label">Line 1</label>
+            <input type="text" formControlName="addressfirstline" class="form-control" id="unputAddressLine1"
                 [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }" />
             <div *ngIf="submitted && f.addressfirstline.errors" class="invalid-feedback">
                 <div *ngIf="f.addressfirstline.errors.required">Line 1 is required</div>
@@ -36,7 +66,7 @@
                 </option>
             </select>
             <label>Email</label>
-            <input type="text" formControlName="email1" class="form-control"
+            <input type="email" formControlName="email1" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && f.email1.errors }" />
             <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
                 <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
@@ -48,8 +78,8 @@
                 <div *ngIf="f.phone1.errors.pattern">Only 0-9 and +/- or () allowed</div>
             </div>
         </div>
-        <div class="form-group col-5">
-            <h4>Secondary Address</h4>
+        <div class="form-group col-sm">
+            <h4>Secondary Address</h4><a>Show</a>
             <label>Line 1</label>
             <input type="text" formControlName="addressfirstline2" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && f.addressfirstline2.errors }" />
@@ -73,7 +103,7 @@
                 <div *ngIf="f.postcode2.errors.required">Postcode is required</div>
             </div>
             <label>Country</label>
-            <select formControlName="countryID2" [compareWith]="compareCountries" id="countrySelect"
+            <select formControlName="countryID2" [compareWith]="compareCountries" id="country2Select"
                 name="countrySelect" class="form-control">
                 <option [ngValue]="null">Select</option>
                 <option *ngFor="let country of countries" [ngValue]="country.id">
@@ -81,7 +111,7 @@
                 </option>
             </select>
             <label>Email</label>
-            <input type="text" formControlName="email2" class="form-control"
+            <input type="email" formControlName="email2" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && f.email2.errors }" />
             <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
                 <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
@@ -94,13 +124,29 @@
             </div>
         </div>
     </div>
-    <div class="form-row">
-        <div class="form-group col-5">
-
+    <div class="input-group mb-1">
+        <span class="input-group-text">Note</span>
+        <textarea class="form-control" aria-label="With textarea" formControlName="note"></textarea>
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Bank Ref</span>
+        <input type="text" class="form-control" formControlName="bankpayerref" aria-label="BankPayerRef"
+            aria-describedby="basic-addon1">
+        <div id="bankPayerRefHelpBlock" class="form-text small">
+            The payment reference found on printed bank statement. May be left blank.
         </div>
     </div>
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="floatingBizName" formControlName="businessname"
+            placeholder="Joe Bloggs, Inc.">
+        <label for="floatingBizName">Business Name</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingJobTitle" formControlName="title" placeholder="Job Title">
+        <label for="floatingJobTitle">Job Title</label>
+    </div>
     <div class="form-row p-2">
-        <div class="card col-5">
+        <div class="card col-5" *ngIf="!isCorporateMember">
             <h2 class="card-header">GDPR</h2>
             <div class="card-body">
                 <div class="form-row">
@@ -127,8 +173,35 @@
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-5">
-                        <label>Join Date</label>
-                        <ngb-datepicker #dp formControlName="expirydate"></ngb-datepicker>
+                        <div class="form-row">
+                            <label>Join Date:</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                    #d="ngbDatepicker" formControlName="expirydate">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                        <!-- From https://avmaisak.github.io/ngx-bootstrap-icons/home -->
+                                        <i-bs name="calendar-date" class="text-primary" width="1rem" height="1rem">
+                                        </i-bs>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-5">
+                        <div class="form-row">
+                            <label>Join Date:</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                                    #d="ngbDatepicker" formControlName="expirydate">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                                        <i-bs name="calendar-date" class="text-primary" width="1rem" height="1rem">
+                                        </i-bs>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
