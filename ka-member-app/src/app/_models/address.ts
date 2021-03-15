@@ -1,3 +1,5 @@
+import { Country } from "./country";
+
 /*
 AddressApiResponse holds the object received from https://getaddress.io
 
@@ -46,6 +48,7 @@ export class Address {
     line3?: string;
     town?: string;
     county?: string;
+    country: Country = new Country();
 
     constructor(obj?: string[]) {
 
