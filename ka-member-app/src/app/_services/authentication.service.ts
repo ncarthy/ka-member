@@ -39,15 +39,15 @@ export class AuthenticationService {
         this.http.delete<any>(`${environment.apiUrl}/auth/revoke`, { withCredentials: true }).subscribe(
             result => {
                 // Handle result
-                console.log(result)
+                //console.log(result)
               },
               error => {
-                console.log(error)
+                //console.log(error)
               },
               () => {
                 // 'onCompleted' callback.
                 // No errors, route to new page here
-                console.log('Completed.');
+                //console.log('Completed.');
               }
         );
         this.stopRefreshTokenTimer();
@@ -58,6 +58,7 @@ export class AuthenticationService {
     refreshToken() {
         return this.http.get<any>(`${environment.apiUrl}/auth/refresh`, { withCredentials: true })
             .pipe(map((user) => {
+                user.isAdmin = user && user.role && user.role === Role.Admin; // Add extra property
                 this.userSubject.next(user);
                 this.startRefreshTokenTimer();
                 return user;

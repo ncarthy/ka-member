@@ -8,13 +8,7 @@
                 <tr>
                     <th>Type</th>
                     <th >Number</th>
-                    <th *ngIf="!showCalculations">
-                        <a class="btn btn-sm btn-success" placement="bottom" ngbTooltip="Show Calculations"
-                            (click)="showCalculations = !showCalculations">
-                            +
-                        </a>
-                    </th>
-                    <th *ngIf="showCalculations">Standard Multiplier</th> 
+                    <th *ngIf="showCalculations">Default Multiplier</th> 
                     <th *ngIf="showCalculations" 
                         placement="bottom" 
                         ngbTooltip="Multiplier can vary by Member. This is the average value used for this class of member."
@@ -24,11 +18,6 @@
                         placement="bottom" 
                         ngbTooltip="The effective number of members in this membership class"
                         >Contribution
-                    </th>
-                    <th *ngIf="showCalculations">
-                        <a class="btn btn-sm btn-danger" 
-                            placement="bottom" ngbTooltip="Hide Calculations"
-                            (click)="showCalculations = !showCalculations">-</a>
                     </th>
                 </tr>
             </thead>
@@ -54,9 +43,10 @@
                 </tr>
             </tbody>
         </table>
+        <a class="text-primary" (click)="showCalculations = !showCalculations">Show/Hide Calculations</a>
     </div>
 </div>
-<div class="card mt-4">
+<div class="card mt-4 col-sm-8">
     <div class="card-body">
         <p>Different membership classes have different contributions to the membership total.</p>
         <p>Each household member counts as 2 individual members, a corporate member counts as 4, a lifetime member counts as 1.5. The exact contribution from each member can be edited in the <a routerLink="/members">members</a> section.</p>
