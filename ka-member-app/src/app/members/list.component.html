@@ -14,7 +14,8 @@
         <tr  *ngFor="let myMember of members"
             member-row
             [member]="myMember"
-            (onMemberDeleted)="memberWasDeleted($event)">
+            (onMemberDeleted)="memberWasDeleted($event)"
+            (click)="memberSelected(myMember)">
         </tr>
         <tr *ngIf="!members">
             <td colspan="4" class="text-center">
