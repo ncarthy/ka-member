@@ -9,8 +9,9 @@ export class AdminComponent implements OnInit {
     loading = false;
     users: User[] = [];
     productName: string;
-    selectedUser!: User;
+    selectedUser: User = new User();
     address!: Address;
+    defaultUser: User  = new User();
   
     onSubmit(value: string): void {
       console.log('you submitted value: ', value);
@@ -49,5 +50,9 @@ export class AdminComponent implements OnInit {
       onUpddatedAddress(value: any) {
         console.log(value);        
         this.address = value;
+      }
+
+      compareByID(first: any, second: any) {
+        return first && second && first.id == second.id;
       }
 }

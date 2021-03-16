@@ -1,223 +1,361 @@
 ﻿<h1 *ngIf="isMemberAdd">Add Member</h1>
 <h1 *ngIf="isMemberEdit">Edit Member</h1>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<div *ngIf="loading">
+  <span class="spinner-border spinner-border-lg align-center"></span>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+  <div class="row">
+    <div class="col-sm">
+      <div class="form-group">
+        <label for="statusSelect">Membership Status</label>
+        <select
+          formControlName="statusID"
+          id="statusSelect"
+          name="statusSelect"
+          class="form-control"
+        >
+          <option *ngFor="let status of statuses" [ngValue]="status.id">
+            {{ status.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+  <div class="card col" *ngIf="isCorporateMember">
+    <h4>Business</h4>
     <div class="row">
-        <div class="col-sm">
-            <div class="form-group">
-                <label for="statusSelect">Membership Status</label>
-                <select formControlName="statusID" id="statusSelect" name="statusSelect" class="form-control">
-                    <option *ngFor="let status of statuses" [ngValue]="status.id">
-                        {{status.name }}
-                    </option>
-                </select>
-            </div>
+      <div class="col-sm">
+        <div class="form-group">
+          <label for="inputBusinessName">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputBusinessName"
+            formControlName="businessname"
+          />
         </div>
-        <div class="col-sm">
+      </div>
+      <div class="col-sm">
+        <div class="form-group">
+          <label for="inputJobTitle">Job Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputJobTitle"
+            formControlName="title"
+          />
         </div>
+      </div>
     </div>
-    <div class="card col" *ngIf="isCorporateMember">
-        <h4>Business</h4>
-        <div class="row">
-            <div class="col-sm">
-                <div class="form-group">
-                    <label for="inputBusinessName">Name</label>
-                    <input type="text" class="form-control" id="inputBusinessName" formControlName="businessname">
+  </div>
+  <div class="form-row">
+    <div class="card col-sm m-2 p-4">
+      <h4>Primary Address</h4>
+      <label class="form-label">Postcode *</label>
+      <address-search
+        (address)="onUpddatedAddress($event)"
+        (manualEntry)="onManualEntry($event)"
+        type="text"
+        formControlName="postcode"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.postcode.errors }"
+      ></address-search>
+      <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
+        <div *ngIf="f.postcode.errors.required">Postcode is required</div>
+      </div>
+      <div *ngIf="!manualPrimaryAddress">
+        <label for="unputAddressLine1" class="form-label">Line 1 *</label>
+        <input
+          type="text"
+          formControlName="addressfirstline"
+          class="form-control"
+          id="unputAddressLine1"
+          [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }"
+        />
+        <div
+          *ngIf="submitted && f.addressfirstline.errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f.addressfirstline.errors.required">
+            Line 1 is required
+          </div>
+        </div>
+        <label>Line 2</label>
+        <input
+          type="text"
+          formControlName="addresssecondline"
+          class="form-control"
+        />
+        <label>City *</label>
+        <input
+          type="text"
+          formControlName="city"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.city.errors }"
+        />
+        <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+          <div *ngIf="f.city.errors.required">City is required</div>
+        </div>
+        <label>County</label>
+        <input type="text" formControlName="county" class="form-control" />
+
+        <label>Country *</label>
+        <select
+          formControlName="countryID"
+          [compareWith]="compareCountries"
+          id="countrySelect"
+          name="countrySelect"
+          class="form-control"
+        >
+          <option [ngValue]="null">Select</option>
+          <option *ngFor="let country of countries" [ngValue]="country.id">
+            {{ country.name }}
+          </option>
+        </select>
+      </div>
+      <label>Email</label>
+      <input
+        type="email"
+        formControlName="email1"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
+      />
+      <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
+        <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
+      </div>
+      <label>Telephone</label>
+      <input
+        type="text"
+        formControlName="phone1"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
+      />
+      <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
+        <div *ngIf="f.phone1.errors.pattern">
+          Only 0-9 and +/- or () allowed
+        </div>
+      </div>
+    </div>
+    <div class="card col-sm m-2 p-4"></div>
+    <div class="card col-sm m-2 p-4">
+      <h4>Secondary Address</h4>
+      <a>Show</a>
+      <label>Line 1</label>
+      <input
+        type="text"
+        formControlName="addressfirstline2"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.addressfirstline2.errors }"
+      />
+      <div
+        *ngIf="submitted && f.addressfirstline2.errors"
+        class="invalid-feedback"
+      >
+        <div *ngIf="f.addressfirstline2.errors.required">
+          Line 1 is required
+        </div>
+      </div>
+      <label>Line 2</label>
+      <input
+        type="text"
+        formControlName="addresssecondline2"
+        class="form-control"
+      />
+      <label>City</label>
+      <input
+        type="text"
+        formControlName="city2"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.city2.errors }"
+      />
+      <div *ngIf="submitted && f.city2.errors" class="invalid-feedback">
+        <div *ngIf="f.city2.errors.required">City is required</div>
+      </div>
+      <label>County</label>
+      <input type="text" formControlName="county2" class="form-control" />
+      <label>Postcode</label>
+      <input
+        type="text"
+        formControlName="postcode2"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.postcode2.errors }"
+      />
+      <div *ngIf="submitted && f.postcode2.errors" class="invalid-feedback">
+        <div *ngIf="f.postcode2.errors.required">Postcode is required</div>
+      </div>
+      <label>Country</label>
+      <select
+        formControlName="countryID2"
+        [compareWith]="compareCountries"
+        id="country2Select"
+        name="countrySelect"
+        class="form-control"
+      >
+        <option [ngValue]="null">Select</option>
+        <option *ngFor="let country of countries" [ngValue]="country.id">
+          {{ country.name }}
+        </option>
+      </select>
+      <label>Email</label>
+      <input
+        type="email"
+        formControlName="email2"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
+      />
+      <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
+        <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
+      </div>
+      <label>Telephone</label>
+      <input
+        type="text"
+        formControlName="phone2"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
+      />
+      <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
+        <div *ngIf="f.phone2.errors.pattern">
+          Only 0-9 and +/- or () allowed
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="input-group mb-1">
+    <span class="input-group-text col-2">Note</span>
+    <textarea
+      class="form-control"
+      aria-label="With textarea"
+      formControlName="note"
+    ></textarea>
+  </div>
+  <div class="input-group mb-3">
+    <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="bankpayerref"
+      aria-label="BankPayerRef"
+      aria-describedby="basic-addon1"
+    />
+    <div id="bankPayerRefHelpBlock" class="form-text small">
+      The payment reference found on printed bank statement. May be left blank.
+    </div>
+  </div>
+  <div class="form-row p-2">
+    <div class="card col-5" *ngIf="!isCorporateMember">
+      <h2 class="card-header">GDPR</h2>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-2">
+            <div class="row justify-content-center"><label>Email</label></div>
+            <input
+              type="checkbox"
+              formControlName="gdpr_email"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group col-3">
+            <div class="row justify-content-center"><label>Address</label></div>
+            <input
+              type="checkbox"
+              formControlName="gdpr_address"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group col-3">
+            <div class="row justify-content-center">
+              <label>Telephone</label>
+            </div>
+            <input
+              type="checkbox"
+              formControlName="gdpr_tel"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group col-3">
+            <div class="row justify-content-center">
+              <label>Social Media</label>
+            </div>
+            <input
+              type="checkbox"
+              formControlName="gdpr_sm"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card col-5">
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-5">
+            <div class="form-row">
+              <label>Join Date:</label>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                  formControlName="expirydate"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    (click)="d.toggle()"
+                    type="button"
+                  >
+                    <i class="bi-calendar-date" style="color: blue"></i>
+                  </button>
                 </div>
+              </div>
             </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    <label for="inputJobTitle">Job Title</label>
-                    <input type="text" class="form-control" id="inputJobTitle" formControlName="title">
+          </div>
+          <div class="form-group col-5">
+            <div class="form-row">
+              <label>Join Date:</label>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                  formControlName="expirydate"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    (click)="d.toggle()"
+                    type="button"
+                  >
+                    <i
+                      class="bi-alarm"
+                      style="font-size: 2rem; color: cornflowerblue"
+                    ></i>
+                  </button>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    <!--<div>
-        <div class="input-group mb-3">
-            <label>Membership Status</label>
-            <select formControlName="statusID" id="statusSelect" name="statusSelect" class="form-control">
-                <option *ngFor="let status of statuses" [ngValue]="status.id">
-                    {{status.name }}
-                </option>
-            </select>
-        </div>
-    </div>-->
-    <div class="form-row">
-        <div class="card col-sm m-2 p-4">
-            <h4>Primary Address</h4>
-            <label for="unputAddressLine1" class="form-label">Line 1</label>
-            <input type="text" formControlName="addressfirstline" class="form-control" id="unputAddressLine1"
-                [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }" />
-            <div *ngIf="submitted && f.addressfirstline.errors" class="invalid-feedback">
-                <div *ngIf="f.addressfirstline.errors.required">Line 1 is required</div>
-            </div>
-            <label>Line 2</label>
-            <input type="text" formControlName="addresssecondline" class="form-control" />
-            <label>City</label>
-            <input type="text" formControlName="city" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.city.errors }" />
-            <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
-                <div *ngIf="f.city.errors.required">City is required</div>
-            </div>
-            <label>County</label>
-            <input type="text" formControlName="county" class="form-control" />
-            <label>Postcode</label>
-            <input type="text" formControlName="postcode" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.postcode.errors }" />
-            <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
-                <div *ngIf="f.postcode.errors.required">Postcode is required</div>
-            </div>
-            <label>Country</label>
-            <select formControlName="countryID" [compareWith]="compareCountries" id="countrySelect" name="countrySelect"
-                class="form-control">
-                <option [ngValue]="null">Select</option>
-                <option *ngFor="let country of countries" [ngValue]="country.id">
-                    {{country.name }}
-                </option>
-            </select>
-            <label>Email</label>
-            <input type="email" formControlName="email1" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.email1.errors }" />
-            <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
-                <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
-            </div>
-            <label>Telephone</label>
-            <input type="text" formControlName="phone1" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }" />
-            <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
-                <div *ngIf="f.phone1.errors.pattern">Only 0-9 and +/- or () allowed</div>
-            </div>
-        </div>
-        <div class="card col-sm  m-2 p-4">
-            <h4>Secondary Address</h4><a>Show</a>
-            <label>Line 1</label>
-            <input type="text" formControlName="addressfirstline2" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.addressfirstline2.errors }" />
-            <div *ngIf="submitted && f.addressfirstline2.errors" class="invalid-feedback">
-                <div *ngIf="f.addressfirstline2.errors.required">Line 1 is required</div>
-            </div>
-            <label>Line 2</label>
-            <input type="text" formControlName="addresssecondline2" class="form-control" />
-            <label>City</label>
-            <input type="text" formControlName="city2" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.city2.errors }" />
-            <div *ngIf="submitted && f.city2.errors" class="invalid-feedback">
-                <div *ngIf="f.city2.errors.required">City is required</div>
-            </div>
-            <label>County</label>
-            <input type="text" formControlName="county2" class="form-control" />
-            <label>Postcode</label>
-            <input type="text" formControlName="postcode2" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.postcode2.errors }" />
-            <div *ngIf="submitted && f.postcode2.errors" class="invalid-feedback">
-                <div *ngIf="f.postcode2.errors.required">Postcode is required</div>
-            </div>
-            <label>Country</label>
-            <select formControlName="countryID2" [compareWith]="compareCountries" id="country2Select"
-                name="countrySelect" class="form-control">
-                <option [ngValue]="null">Select</option>
-                <option *ngFor="let country of countries" [ngValue]="country.id">
-                    {{country.name }}
-                </option>
-            </select>
-            <label>Email</label>
-            <input type="email" formControlName="email2" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.email2.errors }" />
-            <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
-                <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
-            </div>
-            <label>Telephone</label>
-            <input type="text" formControlName="phone2" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }" />
-            <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
-                <div *ngIf="f.phone2.errors.pattern">Only 0-9 and +/- or () allowed</div>
-            </div>
-        </div>
-    </div>
-    <div class="input-group mb-1">
-        <span class="input-group-text col-2">Note</span>
-        <textarea class="form-control" aria-label="With textarea" formControlName="note"></textarea>
-    </div>
-    <div class="input-group mb-3">
-        <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
-        <input type="text" class="form-control" formControlName="bankpayerref" aria-label="BankPayerRef"
-            aria-describedby="basic-addon1">
-        <div id="bankPayerRefHelpBlock" class="form-text small">
-            The payment reference found on printed bank statement. May be left blank.
-        </div>
-    </div>
-    <div class="form-row p-2">
-        <div class="card col-5" *ngIf="!isCorporateMember">
-            <h2 class="card-header">GDPR</h2>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-2">
-                        <div class="row justify-content-center"><label>Email</label></div>
-                        <input type="checkbox" formControlName="gdpr_email" class="form-control">
-                    </div>
-                    <div class="form-group col-3">
-                        <div class="row justify-content-center"><label>Address</label></div>
-                        <input type="checkbox" formControlName="gdpr_address" class="form-control">
-                    </div>
-                    <div class="form-group col-3">
-                        <div class="row justify-content-center"><label>Telephone</label></div>
-                        <input type="checkbox" formControlName="gdpr_tel" class="form-control">
-                    </div>
-                    <div class="form-group col-3">
-                        <div class="row justify-content-center"><label>Social Media</label></div>
-                        <input type="checkbox" formControlName="gdpr_sm" class="form-control">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card col-5">
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-5">
-                        <div class="form-row">
-                            <label>Join Date:</label>
-                            <div class="input-group">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                                    #d="ngbDatepicker" formControlName="expirydate">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                                        <i class="bi-calendar-date" style="color: blue"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-5">
-                        <div class="form-row">
-                            <label>Join Date:</label>
-                            <div class="input-group">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                                    #d="ngbDatepicker" formControlName="expirydate">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                                        <i class="bi-alarm" style="font-size: 2rem; color: cornflowerblue;"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <button [disabled]="loading" class="btn btn-primary">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-            Save
-        </button>
-        <a class="btn btn-link" *ngIf="isMemberAdd">Reset</a>
-        <a routerLink="/members" class="btn btn-link">Cancel</a>
-    </div>
+  </div>
+  <div class="form-group">
+    <button [disabled]="loading" class="btn btn-primary">
+      <span
+        *ngIf="loading"
+        class="spinner-border spinner-border-sm mr-1"
+      ></span>
+      Save
+    </button>
+    <a class="btn btn-link" *ngIf="isMemberAdd">Reset</a>
+    <a routerLink="/members" class="btn btn-link">Cancel</a>
+  </div>
+  <hr />
+  <p>Form Value: {{ form.value | json }}</p>
+  <p>Form Status: {{ form.status | json }}</p>
 </form>
-<hr>
-<p>
-    Form Value: {{ form.value | json }}
-</p>
-<p>
-    Form Status: {{ form.status | json }}
-</p>

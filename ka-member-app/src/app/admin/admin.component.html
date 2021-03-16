@@ -31,7 +31,8 @@ class="ui error message">Form is invalid</div>
 <button type="submit" class="ui button">Submit</button>
 </form>
 
-<select [(ngModel)]="selectedUser" (ngModelChange)="onUserChange($event)" name="selectedUser">
+<select [(ngModel)]="selectedUser" (ngModelChange)="onUserChange($event)" name="selectedUser" [compareWith]="compareByID" >
+    <option disabled selected [ngValue]="defaultUser"> -- select an option -- </option>
     <option *ngFor="let user of users" [ngValue]="user">
         {{user.username}}
     </option>

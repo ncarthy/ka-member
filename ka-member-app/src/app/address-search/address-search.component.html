@@ -1,11 +1,25 @@
 <div class="row">
   <div class="col">
-    <address-search-box (loading)="loading = $event" (results)="updateAddresses($event)">
+    <address-search-box
+      (loading)="loading = $event"
+      (results)="updateAddresses($event)"
+      [disable]="disable"
+    >
     </address-search-box>
-    <select [(ngModel)]="selectedAddress" (ngModelChange)="onAddressChange($event)" name="selectedAddress">
+    <select
+      class="mt-3"
+      *ngIf="addresses"
+      [(ngModel)]="selectedAddress"
+      (ngModelChange)="onAddressChange($event)"
+      name="selectedAddress"
+    >
+      <option disabled selected [ngValue]="null">
+        -- select an option --
+      </option>
       <option *ngFor="let address of addresses" [ngValue]="address">
-        {{address.line1}}
+        {{ address.line1 }}
       </option>
     </select>
+    <a class="text-primary" (click)="toggleManualEntry">Enter address manually</a>
   </div>
 </div>

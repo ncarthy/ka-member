@@ -1,5 +1,6 @@
 import {
     Component,
+    Input,
     OnInit,
     Output,
     EventEmitter,
@@ -24,6 +25,7 @@ import { regExpEscape } from '@ng-bootstrap/ng-bootstrap/util/util';
   export class SearchBoxComponent implements OnInit {
     @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() results: EventEmitter<Address[]> = new EventEmitter<Address[]>();
+    @Input() disable: boolean =false;
   
     constructor(private addressSearchService: AddressSearchService,
                 private el: ElementRef) {
@@ -35,7 +37,9 @@ import { regExpEscape } from '@ng-bootstrap/ng-bootstrap/util/util';
 
     // See https://rxjs-dev.firebaseapp.com/guide/v6/migration for pipe format.
     ngOnInit(): void {
-
+      if (this.disable) {
+        return;
+      }      
       // From https://stackoverflow.com/a/51885364/6941165
       /*const postcode = new RegExp("^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$", "i");      //'i' = case insensitive
       const postcode1 = new RegExp("^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$");*/

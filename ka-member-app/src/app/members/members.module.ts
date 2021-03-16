@@ -3,8 +3,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { MembersRoutingModule } from './members-routing.module';
+import { AddressSearchModule } from '@app/address-search/address-search.module';
+
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
@@ -16,7 +17,8 @@ import { RowComponent } from './row.component';
       CommonModule,
       ReactiveFormsModule,
       MembersRoutingModule,
-      NgbModule
+      NgbModule,
+      AddressSearchModule
   ],
   declarations: [
       LayoutComponent,

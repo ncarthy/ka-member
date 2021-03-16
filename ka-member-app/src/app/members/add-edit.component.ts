@@ -10,7 +10,9 @@ import { MemberService,
     CountryService,
     MembershipStatusService
      } from '@app/_services';
-import { Country, 
+import { 
+    Address,
+    Country, 
     MembershipStatus, 
     Role, 
     User, 
@@ -28,7 +30,7 @@ export class AddEditComponent implements OnInit {
     apiUser! : User;    
     countries!: Country[];
     statuses!: MembershipStatus[];
-    countryControl!: AbstractControl;
+    manualPrimaryAddress: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -44,6 +46,8 @@ export class AddEditComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loading = true;
+
         this.id = this.route.snapshot.params['id'];       
 
         if (!this.id) {
@@ -113,14 +117,10 @@ export class AddEditComponent implements OnInit {
                 .pipe(first())
                 .subscribe(x => {
                     this.form.patchValue(x);
-                    //this.form.controls['countryID'].setValue(x.countryID);
+                    this.loading = false;
                 });
         }
 
-        this.countryControl = this.form.controls['countryID'];
-        this.countryControl.valueChanges.subscribe((cty:any) => {
-            console.log('Country changed to:', cty);
-            });
     }
 
     // convenience getter for easy access to form fields
@@ -184,5 +184,15 @@ export class AddEditComponent implements OnInit {
     // TODO: Remove?
     compareCountries(val1: Country, val2: Country) {
         return val1 && val2 && val1 === val2;
+      }
+
+      onUpddatedAddress(value: Address) {
+        console.log(value);      
+        this.manualPrimaryAddress = true;  
+      }
+
+      onManualEntry(value: boolean) {
+        this.manualPrimaryAddress = value;
+        console.log('ManualEntry:',value); 
       }
 }
