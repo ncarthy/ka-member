@@ -17,7 +17,8 @@ import { Country,
     UserFormMode 
 } from '@app/_models';
 
-@Component({ templateUrl: 'add-edit.component.html' })
+@Component({ templateUrl: 'add-edit.component.html' ,
+                styleUrls: ['./add-edit.component.css']})
 export class AddEditComponent implements OnInit {
     form!: FormGroup;
     id!: number;
@@ -133,7 +134,8 @@ export class AddEditComponent implements OnInit {
     // public protperty to simplify controls If status
     get isCorporateMember() {
         return this.form && this.form.controls && this.statuses &&
-            this.form.controls['statusID'].value === this.statuses.filter(x => x.name==='Corporate')[0].id ;
+            this.statuses.filter(x => x.name==='Corporate' || x.name==='Former Member')
+                .some(el => el.id === this.form.controls['statusID'].value) ;
     }
 
     onSubmit() {

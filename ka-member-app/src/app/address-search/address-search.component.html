@@ -1,38 +1,11 @@
-<div class='container'>
-
-  <div class="row">
-    <div class="input-group input-group-lg col-md-12">
-      <address-search-box (loading)="loading = $event" (results)="updateAddresses($event)"></address-search-box>
-    </div>
-  </div>
-
-  <div class="row">
-    <select>
-      <option [value]="result" *ngFor="let address of addresses">{{result.line1}}</option>
+<div class="row">
+  <div class="col">
+    <address-search-box (loading)="loading = $event" (results)="updateAddresses($event)">
+    </address-search-box>
+    <select [(ngModel)]="selectedAddress" (ngModelChange)="onAddressChange($event)" name="selectedAddress">
+      <option *ngFor="let address of addresses" [ngValue]="address">
+        {{address.line1}}
+      </option>
     </select>
-    <a>Enter Address manually</a>
   </div>
-  <div class="form-group col">
-    <div class="form-row">
-      <div class="form-group col-5">
-        <label>Line 1</label>
-        <input type="text" formControlName="line1" class="form-control" />
-      </div>
-    </div>
-    <div class="form-row col-5">
-      <label>Line 2</label>
-      <input type="text" formControlName="line2" class="form-control" />
-    </div>
-    <div class="form-row col-5">
-      <label>Town/City</label>
-      <input type="text" formControlName="city" class="form-control" />
-    </div>
-    <div class="form-row col-5">
-      <label>Country</label>
-      <select (change)="onCountryChange($event.target.value)">
-        <option *ngFor="let country of countries" [ngValue]="country" 
-          [selected]="address && country===address.country">
-          {{country.name}}</option>
-      </select>
-    </div>
-  </div>
+</div>

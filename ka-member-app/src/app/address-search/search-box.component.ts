@@ -58,17 +58,20 @@ import { regExpEscape } from '@ng-bootstrap/ng-bootstrap/util/util';
         // convert the `keyup` event into an observable stream
         fromEvent(this.el.nativeElement, 'keyup').pipe(
           map((e: any) => e.target.value),            // extract the value of the input
-          //map((t:string) => t.toUpperCase()),
+                    
           filter((text: string) => text.length > 3 && postcode2.test(text)),  // filter out if invalid postcode
+          
           debounceTime(250),                          // only once every 250ms
-          tap(() => this.loading.emit(true)),         // enable loading
+          
+          tap((query: string) => this.loading.emit(true)),         // enable loading
+
           // search, discarding old events if new input comes in
           switchMap((query: string) => this.addressSearchService.search(query))
         )
         // act on the return of the search
         .subscribe(
             (results: Address[]) => { // on sucesss
-                this.loading.emit(false);
+                this.loading.emit(false);                
                 this.results.emit(results);
             },
             (err: any) => { // on error

@@ -29,19 +29,6 @@ every address in the postcode:
 }
 
 */
-export class AddressApiResponse {
-    latitude: number;
-    longitude: number;    
-    addresses: string[];
-
-    constructor(obj?: any) {
-
-        this.latitude = obj && obj.latitude || null;
-        this.longitude = obj && obj.longitude || null;
-        this.addresses = obj && obj.addresses || null;
-    }
-}
-
 export class Address {
     line1?: string;    
     line2?: string;
@@ -49,15 +36,10 @@ export class Address {
     town?: string;
     county?: string;
     country: Country = new Country();
+    postcode: string = '';
 
-    constructor(obj?: string[]) {
-
-        if ( obj ) { 
-            this.line1 = obj[0];
-            this.line2 = obj[1];
-            this.line3 = obj[2];
-            this.town = obj[3];
-            this.county = obj[4];
-        }
+    // From https://stackoverflow.com/a/37682352/6941165
+    public constructor(init?:Partial<Address>) {
+        Object.assign(this, init);
     }
 }

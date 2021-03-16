@@ -5,8 +5,8 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, from } from 'rxjs';
+import { map, mergeAll } from 'rxjs/operators';
 import { Address } from '@app/_models';
 
 export const ADDRESS_API_KEY =
@@ -40,13 +40,37 @@ export class AddressSearchService {
 
     const queryUrl = `${this.apiUrl}${trimmed_postcode}?${params}`;
 
-    return this.http.get(queryUrl).pipe(
-        map((response : any) => {
+    const addresses$:Observable<Address[]> = this.http.get(queryUrl).pipe(
+      map((response : any) => {
+        return <Address[]>response['addresses'].map((item : string[]) => {
+          
+          console.log("raw item", item); // uncomment if you want to debug
 
-          return <Address[]>response['addresses'].map((item : string[]) => {
-            console.log("raw item", item); // uncomment if you want to debug
-            return new Address(item);
+          // From https://stackoverflow.com/a/37682352/6941165
+          return new Address({
+            line1: item[0],
+            line2: item[1],
+            line3: item[2],
+            town: item[3],
+            county: item[4],
+            postcode: trimmed_postcode.toUpperCase(),
+            country: {id: 186, name: "United Kingdom"}
+          });
         });
+      })
+    );
+
+    return  addresses$;
+
+/*
+    return this.http.get(queryUrl).pipe(
+      map((response : any) => {
+        return <Address[]>response['addresses'].map((item : string[]) => {
+          console.log("raw item", item); // uncomment if you want to debug
+          return new Address(item);
+      });
     }));
+
+    */
   }
 }

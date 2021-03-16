@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AddressSearchService, ADDRESS_API_KEY, ADDRESS_API_URL } from '@app/_services';
 import { AddressSearchComponent } from './address-search.component';
 import { SearchBoxComponent } from './search-box.component';
@@ -17,7 +18,8 @@ import { SearchBoxComponent } from './search-box.component';
     //SearchResultComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   providers: [AddressSearchService,
     {provide: ADDRESS_API_KEY, useValue: ADDRESS_API_KEY},

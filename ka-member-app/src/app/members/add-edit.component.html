@@ -13,12 +13,22 @@
             </div>
         </div>
         <div class="col-sm">
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                    placeholder="Enter email">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                    else.</small>
+        </div>
+    </div>
+    <div class="card col" *ngIf="isCorporateMember">
+        <h4>Business</h4>
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label for="inputBusinessName">Name</label>
+                    <input type="text" class="form-control" id="inputBusinessName" formControlName="businessname">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label for="inputJobTitle">Job Title</label>
+                    <input type="text" class="form-control" id="inputJobTitle" formControlName="title">
+                </div>
             </div>
         </div>
     </div>
@@ -33,7 +43,7 @@
         </div>
     </div>-->
     <div class="form-row">
-        <div class="form-group col-sm">
+        <div class="card col-sm m-2 p-4">
             <h4>Primary Address</h4>
             <label for="unputAddressLine1" class="form-label">Line 1</label>
             <input type="text" formControlName="addressfirstline" class="form-control" id="unputAddressLine1"
@@ -78,7 +88,7 @@
                 <div *ngIf="f.phone1.errors.pattern">Only 0-9 and +/- or () allowed</div>
             </div>
         </div>
-        <div class="form-group col-sm">
+        <div class="card col-sm  m-2 p-4">
             <h4>Secondary Address</h4><a>Show</a>
             <label>Line 1</label>
             <input type="text" formControlName="addressfirstline2" class="form-control"
@@ -125,25 +135,16 @@
         </div>
     </div>
     <div class="input-group mb-1">
-        <span class="input-group-text">Note</span>
+        <span class="input-group-text col-2">Note</span>
         <textarea class="form-control" aria-label="With textarea" formControlName="note"></textarea>
     </div>
     <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Bank Ref</span>
+        <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
         <input type="text" class="form-control" formControlName="bankpayerref" aria-label="BankPayerRef"
             aria-describedby="basic-addon1">
         <div id="bankPayerRefHelpBlock" class="form-text small">
             The payment reference found on printed bank statement. May be left blank.
         </div>
-    </div>
-    <div class="form-floating mb-1">
-        <input type="text" class="form-control" id="floatingBizName" formControlName="businessname"
-            placeholder="Joe Bloggs, Inc.">
-        <label for="floatingBizName">Business Name</label>
-    </div>
-    <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="floatingJobTitle" formControlName="title" placeholder="Job Title">
-        <label for="floatingJobTitle">Job Title</label>
     </div>
     <div class="form-row p-2">
         <div class="card col-5" *ngIf="!isCorporateMember">
@@ -180,9 +181,7 @@
                                     #d="ngbDatepicker" formControlName="expirydate">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                                        <!-- From https://avmaisak.github.io/ngx-bootstrap-icons/home -->
-                                        <i-bs name="calendar-date" class="text-primary" width="1rem" height="1rem">
-                                        </i-bs>
+                                        <i class="bi-calendar-date" style="color: blue"></i>
                                     </button>
                                 </div>
                             </div>
@@ -196,8 +195,7 @@
                                     #d="ngbDatepicker" formControlName="expirydate">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                                        <i-bs name="calendar-date" class="text-primary" width="1rem" height="1rem">
-                                        </i-bs>
+                                        <i class="bi-alarm" style="font-size: 2rem; color: cornflowerblue;"></i>
                                     </button>
                                 </div>
                             </div>
@@ -216,3 +214,10 @@
         <a routerLink="/members" class="btn btn-link">Cancel</a>
     </div>
 </form>
+<hr>
+<p>
+    Form Value: {{ form.value | json }}
+</p>
+<p>
+    Form Status: {{ form.status | json }}
+</p>

@@ -1,38 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import {Address, Country} from '@app/_models';
-import {CountryService} from '@app/_services';
+import { 
+  Component, 
+  OnInit,    
+  Output,
+  EventEmitter 
+} from '@angular/core';
 
-import { first } from 'rxjs/operators';
+import {Address} from '@app/_models';
 
 @Component({
   selector: 'address-search',
   templateUrl: './address-search.component.html'
 })
 export class AddressSearchComponent implements OnInit {
+  @Output() address: EventEmitter<Address> = new EventEmitter<Address>();
+
   addresses!: Address[];
   loading: boolean = false;
-  countries!: Country[];
-  address: Address = new Address();
+  selectedAddress: Address = new Address();
+  query!: string;
 
-  constructor(private countryService : CountryService) {   }
+  constructor() {   }
 
-  ngOnInit(): void {
-    this.address = new Address();    
-
-    this.countryService.getAll()
-    .pipe(first())
-    .subscribe(x => {
-      this.countries = x;
-      const arr = x.filter((el) => el.name==='United Kingdom');
-      this.address.country = x.filter(el => el.name==='United Kingdom')[0];
-      });
-  }
+  ngOnInit(): void {  }
 
   updateAddresses(results: Address[]): void {
     this.addresses = results;
   }
 
-  onCountryChange(value : Country) : void {
-    this.address.country = this.countries.filter(el => el.name===value.name)[0];
-  }
+  onAddressChange(value: Address) { 
+      this.selectedAddress = value;
+      
+      this.address.emit(this.selectedAddress);
+    }
 }
