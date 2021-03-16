@@ -3,13 +3,15 @@
 // instantiate JWT and user object
 $jwt = new \Models\JWTWrapper();
 $user = new \Models\User();
-$user->id = $jwt->checkRefreshToken();
+$token = $jwt->validateRefreshToken();
 
-if ($user->id) {
+if ($token && $token['id']) {
+
+    $jwt->disableOldToken($token);
 
     // read the details of user to be edited
+    $user->id = $token['id'];
     $user->readOne();
-
     if (empty($user->username) ) {
         http_response_code(422);   
         echo json_encode(
@@ -17,16 +19,11 @@ if ($user->id) {
         );
         exit(1);
     }
+    
 
-    $accessToken = $jwt->getAccessToken($user->id,$user->username,$user->role);
+    $user_with_token = $jwt->getAccessToken($user);    
 
-    $user_with_token=array(
-        "username" => $user->username,
-        "id" => $user->id,
-        "role" => $user->role, 
-        "fullname" => $user->fullname,
-        "accessToken" => (string)$accessToken
-    );
+    $jwt->setRefreshTokenCookieFor($user_with_token, $token['expiry']);
 
     echo json_encode($user_with_token);
 }

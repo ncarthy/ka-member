@@ -170,7 +170,7 @@ class JWTWrapper{
     }
 
         
-        public function checkRefreshToken(){
+        public function validateRefreshToken(){
             $token = $this->getRefreshTokenFromCookies(); // get token from Auth header
 
             // If no token just exit
@@ -191,14 +191,19 @@ class JWTWrapper{
             // the '...' means to pass an array as function arguments
             try {
                 if($this->config->validator()->validate($token, ...$constraints)){
-                    $id = $claims->get('sub');
-                    $hash = $claims->get('jti');
+                    $simplified_token=array(
+                        "id" => $claims->get('sub'),
+                        "hash" => $claims->get('jti'),
+                        "expiry" => $claims->get('exp')
+                    );
         
-                    // Check database for existance of the JWT for the given user
-                    if ($this->usertoken->getRefreshTokenStatus($id, $hash)) {
-                        return $id;
+                    // Check database for existance of the JWT for the given user, and that it is not suspeded
+                    if ($this->usertoken->getRefreshTokenStatus($simplified_token['id'], $simplified_token['hash'])) {
+                        return $simplified_token;
                     } else {
-                        return NULL;
+                        // Someone has used a valid RefreshToken that has already been used (status = 0)
+                        // Disable all tokens and force user to log in again
+                        disableAllTokens($simplified_token['id']);                        
                     }
                 }
                 else {
@@ -210,31 +215,55 @@ class JWTWrapper{
             }
         }
 
-        public function getAccessToken($userid, $username = '', $role = ''){
-
-            $builder = $this->config->builder();
-
-            // time limit on JWT session tokens
+        public function getAccessToken(User $user){
+            
             $now = new DateTimeImmutable();
-            $accessTokenExpiry = $now->modify(\Core\Config::read('token.accessExpiry'));
-            $refreshTokenExpiry = $now->modify(\Core\Config::read('token.refreshExpiry'));
 
+            $accessTokenExpiry = $now->modify(\Core\Config::read('token.accessExpiry')); // time limit on JWT session tokens
             $accessHash = $this->GUIDv4();
-            $accessToken = $this->getToken($userid, $accessHash, $now, 
-                                            $accessTokenExpiry, $username, $role);
+            $accessToken = $this->getToken($user->id, $accessHash, $now, 
+                                            $accessTokenExpiry, $user->username, $user->role);  
 
-            $refreshHash = $this->GUIDv4();
-            $refreshToken = $this->getToken($userid, $refreshHash, $now, $refreshTokenExpiry);
+            $user_with_token=array(
+                "username" => $user->username,
+                "id" => $user->id,
+                "role" => $user->role, 
+                "fullname" => $user->fullname,
+                "accessToken" => (string)$accessToken,
+                "accessHash" => $accessHash
+            );
+            return $user_with_token;
+        }
 
-            setcookie($this->cookiename, $refreshToken, $refreshTokenExpiry->getTimestamp()
-            , $this->cookiepath, '', $this->cookiesecure, true); // 'true' = HttpOnly
+        // Disable any tokens created from the old Refresh Token and the Refresh Token itself
+        public function disableOldToken($token){            
+            $this->usertoken->updateStatus($token['id'], $token['hash'], false);
+        }
 
-            $this->usertoken->store($userid, $accessHash, $refreshHash, 
-                            true, $refreshTokenExpiry->format("Y-m-d H:i:s"));
+        // Disable any tokens created from the old Refresh Token and the Refresh Token itself
+        public function disableAllTokens($userid){            
+            $this->usertoken->deleteAll($userid);
+            setcookie(\Core\Config::read('token.cookiename'), '', time() - 3600);
+        }
 
-            return $accessToken;
+        public function setRefreshTokenCookieFor($user_with_token, $tokenExpiry = '') {
+
+            // Create New Token
+            $now = new DateTimeImmutable();
+            if (empty($tokenExpiry)) {                
+                $tokenExpiry = $now->modify(\Core\Config::read('token.refreshExpiry'));
+            }
+            $hash = $this->GUIDv4();
+            $token = $this->getToken($user_with_token['id'], $hash, $now, $tokenExpiry);
+
+            setcookie($this->cookiename, $token, $tokenExpiry->getTimestamp()
+                , $this->cookiepath, '', $this->cookiesecure, true); // 'true' = HttpOnly
+
+            $this->usertoken->store($user_with_token['id'], $user_with_token['accessHash'], $hash, 
+                        true, $tokenExpiry->format("Y-m-d H:i:s")); // 'true' = isValid
 
         }
+
 
     // Get a string representation of a new JWT
     private function getToken($userid, $hash, $issuedAt, $expiresAt, $username = '', $role = ''){

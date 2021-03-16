@@ -44,20 +44,17 @@ if($num>0){
         );
     }
     else if (password_verify($pass, $password)){
+
+        $user->id = $id;
+        $user->username = $username;
+        $user->role = $role;
+        $user->fullname = $name;
         
         // Create a new access and refresh JWT pair, with claims of username and isAdmin  
         // Suspended is not a claim because you can't get to this point if user is suspended
         $jwt = new \Models\JWTWrapper();
-        $accessToken = $jwt->getAccessToken($id,$username,$isAdmin ? 'Admin' : 'User');
-
-        $user_with_token=array(
-            "username" => $username,
-            "id" => $id,
-            "role" => $isAdmin ? 'Admin' : 'User', 
-            "fullname" => $name,
-            //"expiry" => $accessTokenExpiry->format("Y-m-d H:i:s"), // For debugging purposes
-            "accessToken" => (string)$accessToken
-        );
+        $user_with_token = $jwt->getAccessToken($user);
+        $jwt->setRefreshTokenCookieFor($user_with_token);
 
         $user->updateFailedAttempts($id, 0, false);
 

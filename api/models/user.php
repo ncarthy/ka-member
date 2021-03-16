@@ -114,7 +114,8 @@ class User{
         //select all data
         $query = "SELECT
                     u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`
+                    u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`,
+                    CASE WHEN u.isAdmin THEN 'Admin' ELSE 'User' END as `role`
                     FROM
                     " . $this->table_name . " u
                     WHERE username = ?

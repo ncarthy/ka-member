@@ -43,20 +43,24 @@ class UserToken{
         return false;
     }
 
-    function updateStatus($iduser, $status){
+    function updateStatus($iduser, $hash, $isValid){
         $query = "UPDATE
                     " . $this->table_name . "
                     SET 
                     status=:status
                  WHERE
-                    iduser=:id";
+                    iduser=:id AND 
+                        (primaryKey=:hash1 OR secondaryKey=:hash2)";
         
         // prepare query
         $stmt = $this->conn->prepare($query);
 
         // bind values
+        $status = $isValid?1:0;
         $stmt->bindParam(":status", $status, PDO::PARAM_INT);    
         $stmt->bindParam(":id", $iduser, PDO::PARAM_INT);    
+        $stmt->bindParam(":hash1", $hash, PDO::PARAM_STR);
+        $stmt->bindParam(":hash2", $hash, PDO::PARAM_STR);
 
         // execute query
         if($stmt->execute()){

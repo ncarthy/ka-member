@@ -2,13 +2,17 @@
 
 $jwt = new \Models\JWTWrapper();
 
-if(!$jwt->loggedIn){      
+if(!$jwt->loggedIn){    
+    http_response_code(401);  
+    echo json_encode(
+        array("message" => "Not logged in.")
+    );  
     exit(0);
 } else if ($jwt->id) {
-    $usertoken = new \Models\UserToken();
-    $usertoken->deleteAll($jwt->id);
-
-    setcookie(\Core\Config::read('token.cookiename'), '', time() - 3600);
+    $jwt->disableAllTokens($jwt->id);
+    echo json_encode(
+        array("message" => "Logged out.")
+    ); 
 }
 
 ?>
