@@ -8,7 +8,7 @@ $user = new \Models\User($db);
 $usertoken = new \Models\UserToken($db);
 $usernm = '';
 $pass = '';
-$numberPasswordAttempts = 5;
+$numberPasswordAttempts = \Core\Config::read('password_attempts');
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
