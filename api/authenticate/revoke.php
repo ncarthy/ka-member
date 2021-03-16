@@ -3,7 +3,7 @@
 $jwt = new \Models\JWTWrapper();
 
 if(!$jwt->loggedIn){    
-    http_response_code(401);  
+    // Keep status 200
     echo json_encode(
         array("message" => "Not logged in.")
     );  
