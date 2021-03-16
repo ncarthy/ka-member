@@ -43,8 +43,8 @@ export class AddressSearchService {
     const addresses$:Observable<Address[]> = this.http.get(queryUrl).pipe(
       map((response : any) => {
         return <Address[]>response['addresses'].map((item : string[]) => {
-          
-          console.log("raw item", item); // uncomment if you want to debug
+
+          //console.log("raw item", item); // uncomment if you want to debug
 
           // From https://stackoverflow.com/a/37682352/6941165
           return new Address({
@@ -53,7 +53,7 @@ export class AddressSearchService {
             line3: item[2],
             town: item[3],
             county: item[4],
-            postcode: trimmed_postcode.toUpperCase(),
+            postcode: postcode.toUpperCase(),
             country: {id: 186, name: "United Kingdom"}
           });
         });
