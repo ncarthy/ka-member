@@ -186,6 +186,7 @@ export class AddEditComponent implements OnInit {
             .add(() => this.loading = false);
     }
 
+    // TODO: Remove?
     compareCountries(val1: Country, val2: Country) {
         return val1 && val2 && val1 === val2;
       }
