@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { User } from '@app/_models';
+import { Role, User } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -28,6 +28,7 @@ export class AuthenticationService {
         return this.http.post<any>(`${environment.apiUrl}/auth`,
                      { username, password }, { withCredentials: true })
             .pipe(map(user => {
+                user.isAdmin = user && user.role && user.role === Role.Admin; // Add extra property
                 this.userSubject.next(user);
                 this.startRefreshTokenTimer();
                 return user;
@@ -35,7 +36,20 @@ export class AuthenticationService {
     }
 
     logout() {
-        this.http.delete<any>(`${environment.apiUrl}/auth/revoke`, { withCredentials: true }).subscribe();
+        this.http.delete<any>(`${environment.apiUrl}/auth/revoke`, { withCredentials: true }).subscribe(
+            result => {
+                // Handle result
+                console.log(result)
+              },
+              error => {
+                console.log(error)
+              },
+              () => {
+                // 'onCompleted' callback.
+                // No errors, route to new page here
+                console.log('Completed.');
+              }
+        );
         this.stopRefreshTokenTimer();
         this.userSubject.next(new User());
         this.router.navigate(['/login']);

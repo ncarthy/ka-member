@@ -127,11 +127,6 @@ export class AddEditComponent implements OnInit {
     get f() { return this.form.controls; }
 
     // public protperty to simplify controls If status
-    get isAdmin() {
-        return this.apiUser && this.apiUser.role &&  this.apiUser.role === Role.Admin;
-    }
-
-    // public protperty to simplify controls If status
     get isCorporateMember() {
         return this.form && this.form.controls && this.statuses &&
             this.statuses.filter(x => x.name==='Corporate' || x.name==='Former Member')

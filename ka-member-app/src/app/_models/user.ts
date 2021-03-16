@@ -10,6 +10,7 @@ export class User {
     accessToken?: string;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
+    isAdmin: boolean = false;
 
     constructor(obj?: any) {
 
@@ -20,5 +21,6 @@ export class User {
         this.fullname = obj && obj.fullname || null;
         this.password = obj && obj.password || null;
         this.accessToken = obj && obj.accessToken || null;
+        this.isAdmin = obj && obj.role && obj.role === Role.Admin;
     }
 }

@@ -1,15 +1,19 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first, take } from 'rxjs/operators';
-import { MemberService, MemberSearchService } from '@app/_services';
-import { Member,MemberSearchResult } from '@app/_models';
+import { MemberService, MemberSearchService,AuthenticationService } from '@app/_services';
+import { Member,MemberSearchResult, User } from '@app/_models';
 import { MemberSearchComponent } from '@app/member-search';
 
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit {
     members!: MemberSearchResult[];
+    user!: User;
 
     constructor(private memberService: MemberService,
-        private memberSearchService: MemberSearchService) {}
+        private memberSearchService: MemberSearchService,
+        private authenticationService: AuthenticationService) {
+            this.user = authenticationService.userValue;
+        }
 
     ngOnInit() {
         this.memberSearchService.search('')

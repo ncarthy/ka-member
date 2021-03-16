@@ -28,10 +28,10 @@
                 <li [ngbNavItem]="1">
                     <a class="nav-item nav-link" routerLink="/">Home</a>
                 </li>
-                <li [ngbNavItem]="2" *ngIf="isAdmin">
+                <li [ngbNavItem]="2" *ngIf="user.isAdmin">
                     <a class="nav-item nav-link" routerLink="/admin" >Admin</a>
                 </li>
-                <li [ngbNavItem]="3" *ngIf="isAdmin">
+                <li [ngbNavItem]="3" *ngIf="user.isAdmin">
                     <a class="nav-item nav-link" routerLink="/users">Users</a>
                 </li>
                 <li [ngbNavItem]="4">
