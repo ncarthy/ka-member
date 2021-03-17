@@ -112,18 +112,6 @@ class MemberCtl{
     $model->id = $id;
     MemberCtl::transferParameters($data, $model);
 
-    if (isset($data->password)) {
-      $model->password = password_hash($data->password, PASSWORD_DEFAULT);
-      $model->checkPassword($data->password, $errors);
-      if ($errors) {
-          http_response_code(422);  
-          echo json_encode(
-            array("message" => implode(" & ",$errors))
-          );
-      } 
-      exit(1);
-    }
-
     if( $model->update()) {
       echo json_encode(
         array(

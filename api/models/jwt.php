@@ -203,7 +203,10 @@ class JWTWrapper{
                     } else {
                         // Someone has used a valid RefreshToken that has already been used (status = 0)
                         // Disable all tokens and force user to log in again
-                        disableAllTokens($simplified_token['id']);                        
+
+                        // TODO: This is being called too often
+                        //$this->disableAllTokens($simplified_token['id']);                        
+                        return NULL;
                     }
                 }
                 else {
