@@ -10,11 +10,12 @@
     </div>
 </div>
 
-<address-search (address)="onUpddatedAddress($event)"></address-search>
 
 <form #myForm="ngForm"
 (ngSubmit)="onSubmit(myForm.value)"
 class="ui form">
+
+<address-form></address-form>
 
 <div class="field">
 <label for="productNameInput">Product Name</label>

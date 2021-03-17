@@ -18,7 +18,7 @@ import { ToastContainerComponent } from './toast-container/toast-container.compo
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersModule } from './members/members.module';
 import { MemberSearchModule } from './member-search/member-search.module';
-import { AddressSearchModule } from './address-search/address-search.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 @NgModule({
     imports: [
@@ -30,7 +30,7 @@ import { AddressSearchModule } from './address-search/address-search.module';
         NgbModule,
         MembersModule,
         MemberSearchModule,
-        AddressSearchModule
+        SharedModule
     ],
     declarations: [
         AppComponent,

@@ -53,14 +53,6 @@
     <div class="card col-sm m-2 p-4">
       <h4>Primary Address</h4>
       <label class="form-label">Postcode *</label>
-      <address-search
-        (address)="onUpddatedAddress($event)"
-        (manualEntry)="onManualEntry($event)"
-        type="text"
-        formControlName="postcode"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.postcode.errors }"
-      ></address-search>
       <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
         <div *ngIf="f.postcode.errors.required">Postcode is required</div>
       </div>
