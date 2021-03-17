@@ -9,3 +9,6 @@ export const numberOnlyRegex = /^[0-9]*$/;
 
 // From https://stackoverflow.com/a/51885364/6941165
 export const postcodeRegex = /^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$/
+
+// From https://stackoverflow.com/a/65589987/6941165
+export const phoneNumberRegex = /[- +()0-9]+/

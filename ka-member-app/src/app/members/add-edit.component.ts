@@ -18,6 +18,7 @@ import {
     User, 
     UserFormMode 
 } from '@app/_models';
+import { phoneNumberRegex } from '@app/shared/regexes.const';
 
 @Component({ templateUrl: 'add-edit.component.html' ,
                 styleUrls: ['./add-edit.component.css']})
@@ -76,7 +77,7 @@ export class AddEditComponent implements OnInit {
             postcode: ['', [Validators.required]],
             countryID: [null, Validators.required],
             email1: ['', [Validators.email]],
-            phone1: ['', [Validators.pattern('[- +()0-9]+')]], // From https://stackoverflow.com/a/65589987/6941165
+            phone1: ['', [Validators.pattern(phoneNumberRegex)]],
 
             expirydate: [''],
             joindate: [''],
