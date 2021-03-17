@@ -1,13 +1,20 @@
 <div>
-  <label class="form-label">Find address by postcode:</label>
-  <address-search-box
-    (loading)="loading = $event"
-    (results)="updateAddresses($event)"
-    [disable]="false"
-  >
-  </address-search-box>
+  <div class="mb-3">
+    <a class="text-primary" (click)="showFormFields = !showFormFields"
+      >Enter address manually</a
+    >
+  </div>
+  <div class="mb-3">
+    <label *ngIf="false" class="form-label">Find address by postcode:</label>
+    <address-search-box
+      (loading)="loading = $event"
+      (results)="updateAddresses($event)"
+      [disable]="false"
+    >
+    </address-search-box>
+  </div>
   <select
-    class="col mt-3"
+    class="col mb-2"
     *ngIf="addresses"
     [(ngModel)]="selectedAddress"
     (ngModelChange)="onAddressChange($event)"
@@ -18,44 +25,53 @@
       {{ address.line1 }}
     </option>
   </select>
-  <a *ngIf="!showFormFields" class="text-primary" (click)="showFormFields=true">Enter address manually</a>
 </div>
 <form [formGroup]="addressForm">
   <div *ngIf="showFormFields">
-    <label for="inputAddressLine1" class="form-label">Line 1 *</label>
-    <input
-      type="text"
-      formControlName="addressLine1"
-      class="form-control"
-      id="inputAddressLine1"
-      [ngClass]="{ 'is-invalid': submitted && f.addressLine1.errors }"
-    />
-    <div *ngIf="submitted && f.addressLine1.errors" class="invalid-feedback">
-      <div *ngIf="f.addressLine1.errors.required">Line 1 is required</div>
+    <div class="mb-2">
+      <label for="inputAddressLine1" class="form-label">Line 1 *</label>
+      <input
+        type="text"
+        formControlName="addressLine1"
+        class="form-control"
+        id="inputAddressLine1"
+        [ngClass]="{ 'is-invalid': submitted && f.addressLine1.errors }"
+      />
+      <div *ngIf="submitted && f.addressLine1.errors" class="invalid-feedback">
+        <div *ngIf="f.addressLine1.errors.required">Line 1 is required</div>
+      </div>
     </div>
-    <label>Line 2</label>
-    <input type="text" formControlName="addressLine2" class="form-control" />
-    <label>City *</label>
-    <input
-      type="text"
-      formControlName="city"
-      class="form-control"
-      [ngClass]="{ 'is-invalid': submitted && f.city.errors }"
-    />
-    <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
-      <div *ngIf="f.city.errors.required">City is required</div>
+    <div class="mb-2">
+      <label>Line 2</label>
+      <input type="text" formControlName="addressLine2" class="form-control" />
     </div>
-    <label>County</label>
-    <input type="text" formControlName="county" class="form-control" />
-    <label>Postcode *</label>
-    <input
-      type="text"
-      formControlName="postcode"
-      class="form-control"
-      [ngClass]="{ 'is-invalid': submitted && f.postcode.errors }"
-    />
-    <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
-      <div *ngIf="f.postcode.errors.required">Postcode is required</div>
+    <div class="mb-2">
+      <label>City *</label>
+      <input
+        type="text"
+        formControlName="city"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.city.errors }"
+      />
+      <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+        <div *ngIf="f.city.errors.required">City is required</div>
+      </div>
+    </div>
+    <div class="mb-2">
+      <label>County</label>
+      <input type="text" formControlName="county" class="form-control" />
+    </div>
+    <div class="mb-2">
+      <label>Postcode *</label>
+      <input
+        type="text"
+        formControlName="postcode"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.postcode.errors }"
+      />
+      <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
+        <div *ngIf="f.postcode.errors.required">Postcode is required</div>
+      </div>
     </div>
     <label>Country *</label>
     <select

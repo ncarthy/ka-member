@@ -20,12 +20,17 @@ import { Address } from '@app/_models';
 @Component({
   selector: 'address-search-box',
   template: `
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+    </div>
     <input
       type="text"
       class="form-control"
-      placeholder="Postcode"
+      placeholder="Search By Postcode"
       autofocus
     />
+  </div>
   `,
 })
 export class SearchBoxComponent implements OnInit {

@@ -35,6 +35,7 @@ import { Address, Country } from '@app/_models';
 export class AddressFormComponent
   implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
   @Input() touched: boolean = false;
+  @Input() address?: AddressFormValue;
 
   addresses!: Address[];
   countries!: Country[];
@@ -73,7 +74,17 @@ export class AddressFormComponent
       .subscribe((countryArray) => {
         this.countries = countryArray;
         this.uk = countryArray.filter((c: Country) => c.name === 'United Kingdom')[0];
-        this.addressForm.controls['country'].setValue(this.uk.id);
+        if (this.address) {
+          this.addressForm.controls['addressLine1'].setValue(this.address.addressLine1);
+          this.addressForm.controls['addressLine2'].setValue(this.address.addressLine2);
+          this.addressForm.controls['city'].setValue(this.address.city);
+          this.addressForm.controls['county'].setValue(this.address.county);
+          this.addressForm.controls['country'].setValue(this.address.country.id);
+          this.addressForm.controls['postcode'].setValue(this.address.postcode);
+          this.showFormFields = true;
+        } else {
+          this.addressForm.controls['country'].setValue(this.uk.id);
+        }
       });
 
     this.subscription.add(

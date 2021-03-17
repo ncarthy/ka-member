@@ -59,7 +59,7 @@
         <input
           type="checkbox"
           formControlName="showSecondaryAdress"
-          class="form-check-input"
+          class="form-check-input"          
         />
         <label class="form-check-label" for="flexCheckChecked">
           Show Secondary Address
@@ -75,13 +75,14 @@
           <address-form
             formControlName="primaryAddress"
             [touched]="f.primaryAddress.touched"
+            [address] = "primaryAddress"
           ></address-form>
         </div>
       </div>
     </div>
     <div class="col-sm-6 mb-1">
       <div class="input-group" *ngIf="f.showSecondaryAdress.value">
-        <span class="input-group-text col-4" id="pAddress-label"
+        <span class="input-group-text col-4" id="sAddress-label"
           >Secondary</span
         >
         <div class="card p-3 col-8">
@@ -166,7 +167,7 @@
       formControlName="note"
     ></textarea>
   </div>
-  <div class="input-group mb-3">
+  <div class="input-group mb-1">
     <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
     <input
       type="text"
@@ -175,106 +176,82 @@
       aria-label="BankPayerRef"
       aria-describedby="basic-addon1"
       placement="bottom"
-      ngbTooltip="The payment reference found on printed bank statement. May be left blank."
+      ngbTooltip="The payment reference found on a bank statement. May be left blank."
     />
   </div>
-  <div class="form-row p-2">
-    <div class="card col-6" *ngIf="!isCorporateMember">
-      <h2 class="card-header">GDPR</h2>
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-2">
-            <div class="row justify-content-center"><label>Email</label></div>
+  <div class="row">
+    <div class="col-sm-6 mb-1">
+      <div class="input-group">
+        <span class="input-group-text col-4" id="GDPR-label">GDPR</span>
+        <div class="card p-3 col-8">
+          <div class="form-check">
             <input
               type="checkbox"
               formControlName="gdpr_email"
-              class="form-control"
+              class="form-check-input"          
             />
+            <label class="form-check-label" for="flexCheckChecked">
+              Email
+            </label>
           </div>
-          <div class="form-group col-3">
-            <div class="row justify-content-center"><label>Address</label></div>
-            <input
-              type="checkbox"
-              formControlName="gdpr_address"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group col-3">
-            <div class="row justify-content-center">
-              <label>Telephone</label>
-            </div>
+          <div class="form-check">
             <input
               type="checkbox"
               formControlName="gdpr_tel"
-              class="form-control"
+              class="form-check-input"          
             />
+            <label class="form-check-label" for="flexCheckChecked">
+              Telephone
+            </label>
           </div>
-          <div class="form-group col-3">
-            <div class="row justify-content-center">
-              <label>Social Media</label>
-            </div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              formControlName="gdpr_address"
+              class="form-check-input"          
+            />
+            <label class="form-check-label" for="flexCheckChecked">
+              Address
+            </label>
+          </div>
+          <div class="form-check">
             <input
               type="checkbox"
               formControlName="gdpr_sm"
-              class="form-control"
+              class="form-check-input"          
             />
+            <label class="form-check-label" for="flexCheckChecked">
+              Social Media
+            </label>
           </div>
         </div>
       </div>
     </div>
-    <div class="card col-5">
-      <div class="card-body">
-        <div class="form-row">
-          <div class="form-group col-5">
-            <div class="form-row">
-              <label>Join Date:</label>
-              <div class="input-group">
-                <input
-                  class="form-control"
-                  placeholder="yyyy-mm-dd"
-                  name="dp"
-                  ngbDatepicker
-                  #d="ngbDatepicker"
-                  formControlName="expirydate"
-                />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-outline-secondary"
-                    (click)="d.toggle()"
-                    type="button"
-                  >
-                    <i class="bi-calendar-date" style="color: blue"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-5">
-            <div class="form-row">
-              <label>Join Date:</label>
-              <div class="input-group">
-                <input
-                  class="form-control"
-                  placeholder="yyyy-mm-dd"
-                  name="dp"
-                  ngbDatepicker
-                  #d="ngbDatepicker"
-                  formControlName="expirydate"
-                />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-outline-secondary"
-                    (click)="d.toggle()"
-                    type="button"
-                  >
-                    <!--<i
-                      class="bi-alarm"
-                      style="font-size: 2rem; color: cornflowerblue"
-                    ></i>-->
-                    <i class="far fa-calendar-alt"></i>
-                  </button>
-                </div>
-              </div>
+    <div class="col-sm-6 mb-1">
+      <div class="input-group">
+        <span class="input-group-text col-4" id="dates-label">Dates</span>
+        <div class="card p-3 col-8">
+          <label  for="inputExpiryDate" class="form-label">
+            Expiry Date
+          </label>
+          <div class="input-group mb-1">
+            <input
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              name="dp"
+              ngbDatepicker
+              #d="ngbDatepicker"
+              formControlName="expirydate"
+              id="inputExpiryDate"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                (click)="d.toggle()"
+                type="button"
+              >
+              <i class="far fa-calendar-alt"></i>
+              </button>
             </div>
           </div>
         </div>
