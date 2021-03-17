@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersRoutingModule } from './members-routing.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
@@ -16,7 +17,8 @@ import { RowComponent } from './row.component';
       CommonModule,
       ReactiveFormsModule,
       MembersRoutingModule,
-      NgbModule
+      NgbModule,
+      SharedModule
   ],
   declarations: [
       LayoutComponent,

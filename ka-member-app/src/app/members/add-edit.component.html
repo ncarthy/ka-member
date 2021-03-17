@@ -21,6 +21,7 @@
       </div>
     </div>
     <div class="col-sm"></div>
+    <div class="col-sm"></div>
   </div>
   <div class="card col" *ngIf="isCorporateMember">
     <h4>Business</h4>
@@ -49,75 +50,84 @@
       </div>
     </div>
   </div>
-  <div class="form-row">
-    <div class="card col-sm m-2 p-4">
-      <h4>Primary Address</h4>
-      <label class="form-label">Postcode *</label>
-      <div *ngIf="submitted && f.postcode.errors" class="invalid-feedback">
-        <div *ngIf="f.postcode.errors.required">Postcode is required</div>
-      </div>
-      <div *ngIf="!manualPrimaryAddress">
-        <label for="unputAddressLine1" class="form-label">Line 1 *</label>
-        <input
-          type="text"
-          formControlName="addressfirstline"
-          class="form-control"
-          id="unputAddressLine1"
-          [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }"
-        />
-        <div
-          *ngIf="submitted && f.addressfirstline.errors"
-          class="invalid-feedback"
-        >
-          <div *ngIf="f.addressfirstline.errors.required">
-            Line 1 is required
-          </div>
-        </div>
-        <label>Line 2</label>
-        <input
-          type="text"
-          formControlName="addresssecondline"
-          class="form-control"
-        />
-        <label>City *</label>
-        <input
-          type="text"
-          formControlName="city"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.city.errors }"
-        />
-        <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
-          <div *ngIf="f.city.errors.required">City is required</div>
-        </div>
-        <label>County</label>
-        <input type="text" formControlName="county" class="form-control" />
 
-        <label>Country *</label>
-        <select
-          formControlName="countryID"
-          [compareWith]="compareCountries"
-          id="countrySelect"
-          name="countrySelect"
-          class="form-control"
+  <div class="row">
+    <div class="col-sm-6 mb-1"></div>
+
+    <div class="col-sm-6 mb-1">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          formControlName="showSecondaryAdress"
+          class="form-check-input"
+        />
+        <label class="form-check-label" for="flexCheckChecked">
+          Show Secondary Address
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 mb-1">
+      <div class="input-group">
+        <span class="input-group-text col-4" id="pAddress-label">Primary</span>
+        <div class="card p-3 col-8">
+          <address-form
+            formControlName="primaryAddress"
+            [touched]="f.primaryAddress.touched"
+          ></address-form>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 mb-1">
+      <div class="input-group" *ngIf="f.showSecondaryAdress.value">
+        <span class="input-group-text col-4" id="pAddress-label"
+          >Secondary</span
         >
-          <option [ngValue]="null">Select</option>
-          <option *ngFor="let country of countries" [ngValue]="country.id">
-            {{ country.name }}
-          </option>
-        </select>
+        <div class="card p-3 col-8">
+          <address-form
+            formControlName="secondaryAddress"
+            [touched]="f.secondaryAddress.touched"
+          ></address-form>
+        </div>
       </div>
-      <label>Email</label>
-      <input
-        type="email"
-        formControlName="email1"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
-      />
-      <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
-        <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 mb-1">
+      <div class="input-group">
+        <span class="input-group-text col-4" id="email1-label">Email 1</span>
+        <input
+          type="email"
+          formControlName="email1"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
+        />
+        <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
+          <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
+        </div>
       </div>
-      <label>Telephone</label>
-      <input
+    </div>
+    <div class="col-sm-6 mb-1">
+      <div class="input-group">
+        <span class="input-group-text col-4" id="email2-label">Email 2</span>
+        <input
+          type="email"
+          formControlName="email2"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
+        />
+        <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
+          <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 mb-1">
+      <div class="input-group">
+        <span class="input-group-text col-4" id="phone1-label">Phone 1</span>
+        <input
         type="text"
         formControlName="phone1"
         class="form-control"
@@ -128,79 +138,12 @@
           Only 0-9 and +/- or () allowed
         </div>
       </div>
+      </div>
     </div>
-    <div class="card col-sm m-2 p-4"></div>
-    <div class="card col-sm m-2 p-4">
-      <h4>Secondary Address</h4>
-      <a>Show</a>
-      <label>Line 1</label>
-      <input
-        type="text"
-        formControlName="addressfirstline2"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.addressfirstline2.errors }"
-      />
-      <div
-        *ngIf="submitted && f.addressfirstline2.errors"
-        class="invalid-feedback"
-      >
-        <div *ngIf="f.addressfirstline2.errors.required">
-          Line 1 is required
-        </div>
-      </div>
-      <label>Line 2</label>
-      <input
-        type="text"
-        formControlName="addresssecondline2"
-        class="form-control"
-      />
-      <label>City</label>
-      <input
-        type="text"
-        formControlName="city2"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.city2.errors }"
-      />
-      <div *ngIf="submitted && f.city2.errors" class="invalid-feedback">
-        <div *ngIf="f.city2.errors.required">City is required</div>
-      </div>
-      <label>County</label>
-      <input type="text" formControlName="county2" class="form-control" />
-      <label>Postcode</label>
-      <input
-        type="text"
-        formControlName="postcode2"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.postcode2.errors }"
-      />
-      <div *ngIf="submitted && f.postcode2.errors" class="invalid-feedback">
-        <div *ngIf="f.postcode2.errors.required">Postcode is required</div>
-      </div>
-      <label>Country</label>
-      <select
-        formControlName="countryID2"
-        [compareWith]="compareCountries"
-        id="country2Select"
-        name="countrySelect"
-        class="form-control"
-      >
-        <option [ngValue]="null">Select</option>
-        <option *ngFor="let country of countries" [ngValue]="country.id">
-          {{ country.name }}
-        </option>
-      </select>
-      <label>Email</label>
-      <input
-        type="email"
-        formControlName="email2"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
-      />
-      <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
-        <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
-      </div>
-      <label>Telephone</label>
-      <input
+    <div class="col-sm-6 mb-1">
+      <div class="input-group">
+        <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
+        <input
         type="text"
         formControlName="phone2"
         class="form-control"
@@ -211,8 +154,10 @@
           Only 0-9 and +/- or () allowed
         </div>
       </div>
+      </div>
     </div>
   </div>
+  
   <div class="input-group mb-1">
     <span class="input-group-text col-2">Note</span>
     <textarea
@@ -229,13 +174,12 @@
       formControlName="bankpayerref"
       aria-label="BankPayerRef"
       aria-describedby="basic-addon1"
+      placement="bottom"
+      ngbTooltip="The payment reference found on printed bank statement. May be left blank."
     />
-    <div id="bankPayerRefHelpBlock" class="form-text small">
-      The payment reference found on printed bank statement. May be left blank.
-    </div>
   </div>
   <div class="form-row p-2">
-    <div class="card col-5" *ngIf="!isCorporateMember">
+    <div class="card col-6" *ngIf="!isCorporateMember">
       <h2 class="card-header">GDPR</h2>
       <div class="card-body">
         <div class="form-row">
@@ -323,10 +267,11 @@
                     (click)="d.toggle()"
                     type="button"
                   >
-                    <i
+                    <!--<i
                       class="bi-alarm"
                       style="font-size: 2rem; color: cornflowerblue"
-                    ></i>
+                    ></i>-->
+                    <i class="far fa-calendar-alt"></i>
                   </button>
                 </div>
               </div>

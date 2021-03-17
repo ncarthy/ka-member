@@ -58,34 +58,33 @@ export class AddEditComponent implements OnInit {
         }
 
         this.form = this.formBuilder.group({
-            //name: ['', Validators.required],
 
             // Checkboxes
-            gdpr_email: [''],
-            gdpr_tel: [''],
-            gdpr_address: [''],
-            gdpr_sm: [''],
-            postonhold: [''],
+            gdpr_email: [false],
+            gdpr_tel: [false],
+            gdpr_address: [false],
+            gdpr_sm: [false],
+            postonhold: [false],
+            showSecondaryAdress: [false],
 
             // Individual / Corporate/ Lifetime etc.
             statusID: [null, Validators.required],
 
-            addressfirstline: ['', [Validators.required]],
-            addresssecondline: [''],
-            city: ['', [Validators.required]],
-            county: [''],
-            postcode: ['', [Validators.required]],
-            countryID: [null, Validators.required],
-            email1: ['', [Validators.email]],
-            phone1: ['', [Validators.pattern(phoneNumberRegex)]],
+            primaryAddress: [null, [Validators.required]],
+            secondaryAddress: [null],
+            
+            email1: [null, [Validators.email]],
+            phone1: [null, [Validators.pattern(phoneNumberRegex)]],
+            email2: [null, [Validators.email]],
+            phone2: [null, [Validators.pattern(phoneNumberRegex)]],
 
-            expirydate: [''],
-            joindate: [''],
-            reminderdate: [''],
-            deletedate: [''],
+            expirydate: [null],
+            joindate: [null],
+            reminderdate: [null],
+            deletedate: [null],
 
             username: [{value: '', disabled: true}],
-            updatedate: [''],
+            updatedate: [{value: null, disabled: true}],
 
             businessname: [''],
             title: [''],
@@ -93,14 +92,8 @@ export class AddEditComponent implements OnInit {
             bankpayerref: [''],
             note: [''],
 
-            addressfirstline2: ['', [Validators.nullValidator]],
-            addresssecondline2: [''],
-            city2: ['', [Validators.nullValidator]],
-            county2: [''],
-            postcode2: ['', [Validators.nullValidator]],
-            countryID2: ['', Validators.nullValidator],
-            email2: ['', [Validators.email]],
-            phone2: ['', [Validators.pattern('[- +()0-9]+')]],
+            multiplier: [''],
+            membershipfee: ['']
             
         });
 
@@ -111,6 +104,9 @@ export class AddEditComponent implements OnInit {
         this.membershipStatusService.getAll().pipe(first())
         .subscribe(x => {
             this.statuses = x;
+            if (this.formMode === UserFormMode.Add) {
+                this.loading = false;
+            }
         }); 
 
         if (this.formMode != UserFormMode.Add) {
