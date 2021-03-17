@@ -4,8 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import {
   NgbModule,
-  NgbDateAdapter,
-  NgbDateNativeAdapter,
+  NgbDateAdapter  
 } from '@ng-bootstrap/ng-bootstrap';
 import { MembersRoutingModule } from './members-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
@@ -30,6 +29,6 @@ import { RowComponent } from './row.component';
     AddEditComponent,
     RowComponent,
   ],
-  providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }],
+  providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }], // From https://stackoverflow.com/a/47945155/6941165
 })
 export class MembersModule {}

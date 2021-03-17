@@ -59,7 +59,7 @@
         <input
           type="checkbox"
           formControlName="showSecondaryAdress"
-          class="form-check-input"          
+          class="form-check-input"
         />
         <label class="form-check-label" for="flexCheckChecked">
           Show Secondary Address
@@ -75,7 +75,7 @@
           <address-form
             formControlName="primaryAddress"
             [touched]="f.primaryAddress.touched"
-            [address] = "primaryAddress"
+            [address]="primaryAddress"
           ></address-form>
         </div>
       </div>
@@ -129,36 +129,36 @@
       <div class="input-group">
         <span class="input-group-text col-4" id="phone1-label">Phone 1</span>
         <input
-        type="text"
-        formControlName="phone1"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
-      />
-      <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
-        <div *ngIf="f.phone1.errors.pattern">
-          Only 0-9 and +/- or () allowed
+          type="text"
+          formControlName="phone1"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
+        />
+        <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
+          <div *ngIf="f.phone1.errors.pattern">
+            Only 0-9 and +/- or () allowed
+          </div>
         </div>
-      </div>
       </div>
     </div>
     <div class="col-sm-6 mb-1">
       <div class="input-group">
         <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
         <input
-        type="text"
-        formControlName="phone2"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
-      />
-      <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
-        <div *ngIf="f.phone2.errors.pattern">
-          Only 0-9 and +/- or () allowed
+          type="text"
+          formControlName="phone2"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
+        />
+        <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
+          <div *ngIf="f.phone2.errors.pattern">
+            Only 0-9 and +/- or () allowed
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
-  
+
   <div class="input-group mb-1">
     <span class="input-group-text col-2">Note</span>
     <textarea
@@ -188,7 +188,7 @@
             <input
               type="checkbox"
               formControlName="gdpr_email"
-              class="form-check-input"          
+              class="form-check-input"
             />
             <label class="form-check-label" for="flexCheckChecked">
               Email
@@ -198,7 +198,7 @@
             <input
               type="checkbox"
               formControlName="gdpr_tel"
-              class="form-check-input"          
+              class="form-check-input"
             />
             <label class="form-check-label" for="flexCheckChecked">
               Telephone
@@ -208,7 +208,7 @@
             <input
               type="checkbox"
               formControlName="gdpr_address"
-              class="form-check-input"          
+              class="form-check-input"
             />
             <label class="form-check-label" for="flexCheckChecked">
               Address
@@ -218,7 +218,7 @@
             <input
               type="checkbox"
               formControlName="gdpr_sm"
-              class="form-check-input"          
+              class="form-check-input"
             />
             <label class="form-check-label" for="flexCheckChecked">
               Social Media
@@ -230,14 +230,12 @@
     <div class="col-sm-6 mb-1">
       <div class="input-group">
         <span class="input-group-text col-4" id="dates-label">Dates</span>
-        <div class="card p-3 col-8">
-          <label  for="inputExpiryDate" class="form-label">
-            Expiry Date
-          </label>
+        <div class="card p-2 col-8">
+          <label for="inputExpiryDate" class="form-label"> Expiry Date </label>
           <div class="input-group mb-1">
             <input
               class="form-control"
-              placeholder="yyyy-mm-dd"
+              placeholder="*not-set*"
               name="dp"
               ngbDatepicker
               #d="ngbDatepicker"
@@ -250,7 +248,51 @@
                 (click)="d.toggle()"
                 type="button"
               >
-              <i class="far fa-calendar-alt"></i>
+                <i class="far fa-calendar-alt"></i>
+              </button>
+            </div>
+          </div>
+          <label for="inputJoinDate" class="form-label"> Join Date </label>
+          <div class="input-group mb-1">
+            <input
+              class="form-control"
+              placeholder="*not-set*"
+              name="dp"
+              ngbDatepicker
+              #d1="ngbDatepicker"
+              formControlName="joindate"
+              id="inputJoinDate"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                (click)="d1.toggle()"
+                type="button"
+              >
+                <i class="far fa-calendar-alt"></i>
+              </button>
+            </div>
+          </div>
+          <label for="inputJoinDate" class="form-label"> Delete Date </label>
+          <div class="input-group mb-1">
+            <input
+              class="form-control"
+              placeholder=""
+              name="dp"
+              ngbDatepicker
+              #d2="ngbDatepicker"
+              formControlName="deletedate"
+              id="inputJoinDate"
+              disabled
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                (click)="d2.toggle()"
+                type="button"
+                disabled
+              >
+                <i class="far fa-calendar-alt"></i>
               </button>
             </div>
           </div>
