@@ -38,8 +38,18 @@ export class Address {
     country: Country = new Country();
     postcode: string = '';
 
+    // Allow initialization of object even if not all properties are present
     // From https://stackoverflow.com/a/37682352/6941165
     public constructor(init?:Partial<Address>) {
         Object.assign(this, init);
+
+        // Squash line 1 & 2 together and move line 3 to line2
+        // Have to do this to fit database model
+        if (this.line3) {
+            this.line1+=', ';
+            this.line1!+=this.line2;
+            this.line2 = this.line3!
+            this.line3='';
+        }
     }
 }
