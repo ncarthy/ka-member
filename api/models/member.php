@@ -469,6 +469,7 @@ class Member{
                     SET `membership_idmembership` = 
                         (SELECT idmembership FROM `membershipstatus` WHERE name LIKE 'former%'),
                         updatedate= NULL, 
+                        deletedate=CURDATE(),
                         username=:username  
                     WHERE idmember=:id; ";
         
