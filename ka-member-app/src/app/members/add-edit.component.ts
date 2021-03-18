@@ -222,6 +222,19 @@ export class AddEditComponent implements OnInit {
     }
   }
 
+  onReset() {
+    this.submitted = false;
+
+    // reset alerts on submit
+    this.alertService.clear();
+
+    this.form.reset({
+      primaryAddress: {},
+      secondaryAddress: {},
+      showSecondaryAdress: false
+    });
+  }
+
   get isMemberAdd() {
     return this.formMode == FormMode.Add;
   }
