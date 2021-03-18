@@ -1,4 +1,4 @@
-<td>{{member.name}}</td>
+<th scope="row">{{member.name}}</th>
 <td>{{member.membershiptype}}</td>
 <td>{{member.businessname}}</td>
 <td>{{member.email}}</td>
@@ -7,7 +7,7 @@
         <span *ngIf="member.isUpdating" class="spinner-border spinner-border-sm"></span>
         <span *ngIf="!member.isUpdating">Edit</span>
     </button>
-    <button (click)="deleteMember(member.id)" class="btn btn-sm btn-danger btn-delete-member" [disabled]="member.isDeleting">
+    <button (click)="deleteMember($event)" class="btn btn-sm btn-danger btn-delete-member" [disabled]="member.isDeleting">
         <span *ngIf="member.isDeleting" class="spinner-border spinner-border-sm"></span>
         <span *ngIf="!member.isDeleting">Delete</span>
     </button>

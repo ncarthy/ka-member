@@ -11,7 +11,7 @@ import {
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Observable, from } from 'rxjs';
+import { from } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import {
