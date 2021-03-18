@@ -21,10 +21,11 @@ import {
 import {
   Address,
   Country,
+  FormMode,
   MembershipStatus,
   Role,
-  User,
-  UserFormMode,
+  SuccessResponse,
+  User
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
 import { AddressFormValue } from '@app/shared/address-form/address-form-value.interface';
@@ -36,7 +37,7 @@ import { AddressFormValue } from '@app/shared/address-form/address-form-value.in
 export class AddEditComponent implements OnInit {
   form!: FormGroup;
   id!: number;
-  formMode!: UserFormMode;
+  formMode!: FormMode;
   loading = false;
   submitted = false;
   apiUser!: User;
@@ -64,9 +65,9 @@ export class AddEditComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
 
     if (!this.id) {
-      this.formMode = UserFormMode.Add;
+      this.formMode = FormMode.Add;
     } else {
-      this.formMode = UserFormMode.Edit;
+      this.formMode = FormMode.Edit;
     }
 
     this.form = this.formBuilder.group({
@@ -92,7 +93,7 @@ export class AddEditComponent implements OnInit {
       expirydate: [null],
       joindate: [null],
       reminderdate: [null],
-      deletedate: [null],
+      deletedate: [{ value: null, disabled: true }],
 
       username: [{ value: '', disabled: true }],
       updatedate: [{ value: null, disabled: true }],
@@ -109,7 +110,6 @@ export class AddEditComponent implements OnInit {
       area: [''],
       repeatpayment: [0],
       recurringpayment: [0],
-
     });
 
     this.countryService
@@ -123,13 +123,13 @@ export class AddEditComponent implements OnInit {
       .pipe(first())
       .subscribe((x) => {
         this.statuses = x;
-        if (this.formMode === UserFormMode.Add) {
+        if (this.formMode === FormMode.Add) {
           this.loading = false;
         }
       });
 
     this.form.valueChanges.subscribe((x: any) => {
-      console.log(x);
+      //console.log(x);
 
       if (x.primaryAddress) {
         x.addressfirstline = x.primaryAddress.addressLine1 || null;
@@ -137,16 +137,16 @@ export class AddEditComponent implements OnInit {
         x.city = x.primaryAddress.city || null;
         x.county = x.primaryAddress.county || null;
         x.postcode = x.primaryAddress.postcode || null;
-        x.countryID = x.primaryAddress.country  || null;
+        x.countryID = x.primaryAddress.country || null;
       }
 
-      if (x.secondaryAddress && x.secondaryAddress.addressLine1 ) {
+      if (x.secondaryAddress && x.secondaryAddress.addressLine1) {
         x.addressfirstline2 = x.secondaryAddress.addressLine1 || null;
         x.addresssecondline2 = x.secondaryAddress.addressLine2 || null;
         x.city2 = x.secondaryAddress.city || null;
         x.county2 = x.secondaryAddress.county || null;
         x.postcode2 = x.secondaryAddress.postcode || null;
-        x.country2ID = x.secondaryAddress.country  || null;
+        x.country2ID = x.secondaryAddress.country || null;
       } else {
         x.addressfirstline2 = '';
         x.addresssecondline2 = '';
@@ -155,9 +155,16 @@ export class AddEditComponent implements OnInit {
         x.postcode2 = '';
         x.country2ID = null;
       }
+
+      // Handle disabled controls
+      if (this.form.controls['deletedate'].value) {
+        x.deletedate = this.form.controls['deletedate'].value;
+      } else {
+        x.deletedate = null;
+      }
     });
 
-    if (this.formMode != UserFormMode.Add) {
+    if (this.formMode !== FormMode.Add) {
       this.memberService
         .getById(this.id)
         .pipe(first())
@@ -204,12 +211,11 @@ export class AddEditComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
-      const list = this.findInvalidControlsRecursive(this.form);
       return;
     }
 
     this.loading = true;
-    if (this.formMode == UserFormMode.Add) {
+    if (this.formMode === FormMode.Add) {
       this.createMember();
     } else {
       this.updateMember();
@@ -217,10 +223,10 @@ export class AddEditComponent implements OnInit {
   }
 
   get isMemberAdd() {
-    return this.formMode == UserFormMode.Add;
+    return this.formMode == FormMode.Add;
   }
   get isMemberEdit() {
-    return this.formMode == UserFormMode.Edit;
+    return this.formMode == FormMode.Edit;
   }
 
   private createMember() {
@@ -228,22 +234,30 @@ export class AddEditComponent implements OnInit {
       .create(this.form.value)
       .pipe(first())
       .subscribe(
-        result => {
-            // Handle result
-            console.log(result)
-          },
-          error => {
-            console.log(error);
-            this.alertService.error('Unable to add new member.', {
-                keepAfterRouteChange: true,
-              });
-          },  
+        (result: any) => {
+          const resp = result as SuccessResponse;
+
+          // Use of non-null assertion operator
+          // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
+          this.id = resp.id!;
+          this.alertService.success(resp.message, {
+            keepAfterRouteChange: true,
+          });
+
+        },
+        (error) => {
+          console.log(error);
+          this.alertService.error('Unable to add new member.', {
+            keepAfterRouteChange: true,
+          });
+        },
         () => {
-        this.alertService.success('Member added', {
-          keepAfterRouteChange: true,
-        });
-        this.router.navigate(['../'], { relativeTo: this.route });
-      })
+          this.alertService.success('Member added', {
+            keepAfterRouteChange: true,
+          });
+          this.router.navigate(['../'], { relativeTo: this.route });
+        }
+      )
       .add(() => (this.loading = false));
   }
 
@@ -251,45 +265,24 @@ export class AddEditComponent implements OnInit {
     this.memberService
       .update(this.id, this.form.value)
       .pipe(first())
-      .subscribe(() => {
-        this.alertService.success('Member updated', {
-          keepAfterRouteChange: true,
-        });
-
-        if (this.formMode == UserFormMode.Edit) {
-          this.router.navigate(['../../'], { relativeTo: this.route });
-        } else {
-          this.router.navigate(['/'], { relativeTo: this.route });
-        }
-      },
-      () => {
-        this.alertService.error('Member not updated', {
+      .subscribe(
+        () => {
+          this.alertService.success('Member updated', {
             keepAfterRouteChange: true,
           });
-      })
-      .add(() => (this.loading = false));
-  }
 
-  /* 
-   Returns an array of invalid control/group names, or a zero-length array if 
-   no invalid controls/groups where found. Uses recursive JS function.
-*/
-  private findInvalidControlsRecursive(
-    formToInvestigate: FormGroup | FormArray
-  ): string[] {
-    var invalidControls: string[] = [];
-    let recursiveFunc = (form: FormGroup | FormArray) => {
-      Object.keys(form.controls).forEach((field) => {
-        const control = form.get(field);
-        if (control && control.invalid) invalidControls.push(field);
-        if (control instanceof FormGroup) {
-          recursiveFunc(control);
-        } else if (control instanceof FormArray) {
-          recursiveFunc(control);
+          if (this.formMode === FormMode.Edit) {
+            this.router.navigate(['../../'], { relativeTo: this.route });
+          } else {
+            this.router.navigate(['/'], { relativeTo: this.route });
+          }
+        },
+        () => {
+          this.alertService.error('Member not updated', {
+            keepAfterRouteChange: true,
+          });
         }
-      });
-    };
-    recursiveFunc(formToInvestigate);
-    return invalidControls;
+      )
+      .add(() => (this.loading = false));
   }
 }

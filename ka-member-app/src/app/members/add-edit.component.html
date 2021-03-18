@@ -4,26 +4,22 @@
   <span class="spinner-border spinner-border-lg align-center"></span>
 </div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
-
-
-
-
-
+  <small *ngIf="f.username.value">Last edited by: {{f.username.value}} at {{f.updatedate.value}}</small>
   <div class="row">
     <div class="col-sm-6 mb-1">
-      <div class="input-group">
+      <div class="input-group mb-1">
         <span class="input-group-text col-4" id="dates-label">Status</span>
         <div class="card p-2 col-8">
           <select
-          formControlName="statusID"
-          id="statusSelect"
-          name="statusSelect"
-          class="form-control"
-        >
-          <option *ngFor="let status of statuses" [ngValue]="status.id">
-            {{ status.name }}
-          </option>
-        </select>
+            formControlName="statusID"
+            id="statusSelect"
+            name="statusSelect"
+            class="form-control"
+          >
+            <option *ngFor="let status of statuses" [ngValue]="status.id">
+              {{ status.name }}
+            </option>
+          </select>
         </div>
       </div>
       <div class="input-group">
@@ -81,7 +77,6 @@
               #d2="ngbDatepicker"
               formControlName="deletedate"
               id="inputJoinDate"
-              disabled
             />
             <div class="input-group-append">
               <button
@@ -98,7 +93,7 @@
       </div>
     </div>
     <div class="col-sm-6 mb-1">
-      <div class="input-group">
+      <div class="input-group mb-1">
         <span class="input-group-text col-4" id="GDPR-label">Business</span>
         <div class="card p-3 col-8">
           <label for="inputBusinessName">Business Name</label>
@@ -163,12 +158,9 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="row">
-    <div class="col-sm-6 mb-1"></div>
-
     <div class="col-sm-6 mb-1">
       <div class="form-check">
         <input
@@ -181,6 +173,7 @@
         </label>
       </div>
     </div>
+    <div class="col-sm-6 mb-1"></div>
   </div>
 
   <div class="row">
@@ -209,94 +202,170 @@
           ></address-form>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4" id="email1-label">Email 1</span>
-        <input
-          type="email"
-          formControlName="email1"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
-        />
-        <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
-          <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6 mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4" id="email2-label">Email 2</span>
-        <input
-          type="email"
-          formControlName="email2"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
-        />
-        <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
-          <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4" id="phone1-label">Phone 1</span>
-        <input
-          type="text"
-          formControlName="phone1"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
-        />
-        <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
-          <div *ngIf="f.phone1.errors.pattern">
-            Only 0-9 and +/- or () allowed
+      <div class="input-group" *ngIf="!f.showSecondaryAdress.value">
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="email1-label">Email 1</span>
+          <input
+            type="email"
+            formControlName="email1"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
+          />
+          <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
+            <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6 mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
-        <input
-          type="text"
-          formControlName="phone2"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
-        />
-        <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
-          <div *ngIf="f.phone2.errors.pattern">
-            Only 0-9 and +/- or () allowed
+        <div class="input-group mb-2">
+          <span class="input-group-text col-4" id="email2-label">Email 2</span>
+          <input
+            type="email"
+            formControlName="email2"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
+          />
+          <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
+            <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
           </div>
+        </div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="phone1-label">Phone 1</span>
+          <input
+            type="text"
+            formControlName="phone1"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
+          />
+          <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
+            <div *ngIf="f.phone1.errors.pattern">
+              Only 0-9 and +/- or () allowed
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-2">
+          <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
+          <input
+            type="text"
+            formControlName="phone2"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
+          />
+          <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
+            <div *ngIf="f.phone2.errors.pattern">
+              Only 0-9 and +/- or () allowed
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-2">Note</span>
+          <textarea
+            class="form-control"
+            aria-label="With textarea"
+            formControlName="note"
+          ></textarea>
+        </div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="bankpayerref"
+            aria-label="BankPayerRef"
+            aria-describedby="basic-addon1"
+            placement="bottom"
+            ngbTooltip="The payment reference found on a bank statement. May be left blank."
+          />
         </div>
       </div>
     </div>
   </div>
 
-  <div class="input-group mb-1">
-    <span class="input-group-text col-2">Note</span>
-    <textarea
-      class="form-control"
-      aria-label="With textarea"
-      formControlName="note"
-    ></textarea>
-  </div>
-  <div class="input-group mb-1">
-    <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
-    <input
-      type="text"
-      class="form-control"
-      formControlName="bankpayerref"
-      aria-label="BankPayerRef"
-      aria-describedby="basic-addon1"
-      placement="bottom"
-      ngbTooltip="The payment reference found on a bank statement. May be left blank."
-    />
-  </div>
+  <div *ngIf="f.showSecondaryAdress.value">
+    <div class="row">
+      <div class="col-sm-6 mb-1">
+        <div class="input-group">
+          <span class="input-group-text col-4" id="email1-label">Email 1</span>
+          <input
+            type="email"
+            formControlName="email1"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
+          />
+          <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
+            <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 mb-1">
+        <div class="input-group">
+          <span class="input-group-text col-4" id="email2-label">Email 2</span>
+          <input
+            type="email"
+            formControlName="email2"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
+          />
+          <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
+            <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="f.showSecondaryAdress.value">
+      <div class="col-sm-6 mb-1">
+        <div class="input-group">
+          <span class="input-group-text col-4" id="phone1-label">Phone 1</span>
+          <input
+            type="text"
+            formControlName="phone1"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
+          />
+          <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
+            <div *ngIf="f.phone1.errors.pattern">
+              Only 0-9 and +/- or () allowed
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 mb-1">
+        <div class="input-group">
+          <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
+          <input
+            type="text"
+            formControlName="phone2"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
+          />
+          <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
+            <div *ngIf="f.phone2.errors.pattern">
+              Only 0-9 and +/- or () allowed
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="input-group mb-1">
+      <span class="input-group-text col-2">Note</span>
+      <textarea
+        class="form-control"
+        aria-label="With textarea"
+        formControlName="note"
+      ></textarea>
+    </div>
+    <div class="input-group mb-1">
+      <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="bankpayerref"
+        aria-label="BankPayerRef"
+        aria-describedby="basic-addon1"
+        placement="bottom"
+        ngbTooltip="The payment reference found on a bank statement. May be left blank."
+      />
+    </div>
+  </div>
   <div class="form-group">
     <button [disabled]="loading" class="btn btn-primary">
       <span
@@ -309,6 +378,7 @@
     <a routerLink="/members" class="btn btn-link">Cancel</a>
   </div>
   <hr />
+  <p>Form Raw Value: {{ form.getRawValue() | json }}</p>
   <p>Form Value: {{ form.value | json }}</p>
   <p>Form Status: {{ form.status | json }}</p>
 </form>
