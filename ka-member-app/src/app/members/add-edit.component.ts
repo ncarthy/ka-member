@@ -9,6 +9,9 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { Observable, from } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import {
@@ -18,6 +21,7 @@ import {
   CountryService,
   MembershipStatusService,
 } from '@app/_services';
+
 import {
   Address,
   Country,
@@ -29,6 +33,7 @@ import {
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
 import { AddressFormValue } from '@app/shared/address-form/address-form-value.interface';
+import { MemberAnonymizeConfirmModalComponent } from './modal/member-anonymize-confirm.component';
 
 @Component({
   templateUrl: 'add-edit.component.html',
@@ -54,7 +59,8 @@ export class AddEditComponent implements OnInit {
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private countryService: CountryService,
-    private membershipStatusService: MembershipStatusService
+    private membershipStatusService: MembershipStatusService,
+    public modalService: NgbModal
   ) {
     this.apiUser = authenticationService.userValue;
   }
@@ -160,6 +166,11 @@ export class AddEditComponent implements OnInit {
         x.deletedate = this.form.controls['deletedate'].value;
       } else {
         x.deletedate = null;
+      }
+      if (this.formMode === FormMode.Add && !this.form.controls['joindate'].value) {
+        // Initialize the 'Join Date' field with today's date for New Members
+        // From https://stackoverflow.com/a/35922073/6941165
+        this.form.controls['joindate'].setValue((new Date()).toISOString().slice(0, 10));
       }
     });
 
@@ -304,15 +315,56 @@ export class AddEditComponent implements OnInit {
   }
 
   onAddName() {
-    this.n.push(this.formBuilder.group({
-      honorific: [''],
-      firstname: [''],
-      surname: ['', Validators.required]
-    }))
+    this.n.push(
+      this.formBuilder.group({
+        honorific: [''],
+        firstname: [''],
+        surname: ['', Validators.required],
+      })
+    );
   }
 
   onAnonymize() {
-    console.log('Anonymizing now...');
+    from(
+      this.modalService.open(MemberAnonymizeConfirmModalComponent).result
+    ).subscribe(
+      (success) => {
+        this.memberService
+          .anonymize(this.id)
+          .pipe(first())
+          .subscribe(
+            (result: any) => {
+              this.alertService.success('Member anonymized', {
+                keepAfterRouteChange: true,
+              });
+              this.router.navigate(['/members'], { relativeTo: this.route });
+            },
+            (error) =>
+              this.alertService.error('Unable to anonymize member.', {
+                keepAfterRouteChange: true,
+              })
+          );
+      },
+      (error) => {}
+    ); // If user dismisses the modal just ignore it
+  }
+
+  onSetToFormer() {
+    this.memberService
+      .setToFormer(this.id)
+      .pipe(first())
+      .subscribe(
+        (result: any) => {
+          this.alertService.success('Set to "former member" succeeded.', {
+            keepAfterRouteChange: true,
+          });
+          this.router.navigate(['/members'], { relativeTo: this.route });
+        },
+        (error) =>
+          this.alertService.error('Unable to set member to "former member".', {
+            keepAfterRouteChange: true,
+          })
+      );
   }
 
   onDelete() {

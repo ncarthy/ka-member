@@ -32,4 +32,12 @@ export class MemberService {
     delete(id: number) {
         return this.http.delete(`${baseUrl}/${id}`);
     }
+
+    anonymize(id: number) {
+        return this.http.patch(`${baseUrl}/${id}`, `{"method": "Anonymize"}`);
+    }
+
+    setToFormer(id: number) {
+        return this.http.patch(`${baseUrl}/${id}`, `{"method": "setToFormer"}`);
+    }
 }
