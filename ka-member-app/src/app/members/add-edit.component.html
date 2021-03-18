@@ -370,7 +370,7 @@
   </div>
   <div class="d-flex justify-content-between">
     <div class="form-group">
-      <button [disabled]="loading" class="btn btn-primary">
+      <button type="submit" [disabled]="loading" class="btn btn-primary">
         <span
           *ngIf="loading"
           class="spinner-border spinner-border-sm mr-1"
@@ -380,9 +380,12 @@
       <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
       <a routerLink="/members" class="btn btn-link">Cancel</a>
     </div>
-    <div  *ngIf="isMemberEdit">
-      <a class="btn btn-link" (click)="onMakeFormer()">Set to 'Former'</a>
+    <div *ngIf="isMemberEdit">
+      <a class="btn btn-link" (click)="f.statusID.setValue(9)"
+        >Set to 'Former'</a
+      >
       <button
+      type="button"
         [disabled]="loading"
         class="btn btn-warning mr-1"
         (click)="onAnonymize()"
@@ -393,17 +396,13 @@
         ></span>
         Anonymize
       </button>
-      <button
-      [disabled]="loading"
-      class="btn btn-danger"
-      (click)="onAnonymize()"
-    >
-      <span
-        *ngIf="loading"
-        class="spinner-border spinner-border-sm mr-1"
-      ></span>
-      Delete
-    </button>
+      <button type="button" [disabled]="loading" class="btn btn-danger" (click)="onDelete()">
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        Delete
+      </button>
     </div>
   </div>
   <hr />

@@ -302,4 +302,20 @@ export class AddEditComponent implements OnInit {
       )
       .add(() => (this.loading = false));
   }
+
+  onAddName() {
+    this.n.push(this.formBuilder.group({
+      honorific: [''],
+      firstname: [''],
+      surname: ['', Validators.required]
+    }))
+  }
+
+  onAnonymize() {
+    console.log('Anonymizing now...');
+  }
+
+  onDelete() {
+    console.log('Deleting now...');
+  }
 }
