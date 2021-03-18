@@ -25,7 +25,7 @@ import {
   MembershipStatus,
   Role,
   SuccessResponse,
-  User
+  User,
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
 import { AddressFormValue } from '@app/shared/address-form/address-form-value.interface';
@@ -71,6 +71,7 @@ export class AddEditComponent implements OnInit {
     }
 
     this.form = this.formBuilder.group({
+      names: new FormArray([]),
       // Checkboxes
       gdpr_email: [false],
       gdpr_tel: [false],
@@ -129,8 +130,6 @@ export class AddEditComponent implements OnInit {
       });
 
     this.form.valueChanges.subscribe((x: any) => {
-      //console.log(x);
-
       if (x.primaryAddress) {
         x.addressfirstline = x.primaryAddress.addressLine1 || null;
         x.addresssecondline = x.primaryAddress.addressLine2 || null;
@@ -198,9 +197,15 @@ export class AddEditComponent implements OnInit {
     }
   }
 
-  // convenience getter for easy access to form fields
+  // convenience getters for easy access to form fields
   get f() {
     return this.form.controls;
+  }
+  get n() {
+    return this.f.names as FormArray;
+  }
+  get namesFormGroups() {
+    return this.n.controls as FormGroup[];
   }
 
   onSubmit() {
@@ -231,7 +236,7 @@ export class AddEditComponent implements OnInit {
     this.form.reset({
       primaryAddress: {},
       secondaryAddress: {},
-      showSecondaryAdress: false
+      showSecondaryAdress: false,
     });
   }
 
@@ -256,7 +261,6 @@ export class AddEditComponent implements OnInit {
           this.alertService.success(resp.message, {
             keepAfterRouteChange: true,
           });
-
         },
         (error) => {
           console.log(error);
