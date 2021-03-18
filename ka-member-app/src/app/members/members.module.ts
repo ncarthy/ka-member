@@ -14,6 +14,8 @@ import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
 import { RowComponent } from './row.component';
+import { MemberModalContentComponent } from './modal/member-modal-content.component';
+import { MemberModalContainerComponent } from './modal/member-modal-container.component';
 
 @NgModule({
   imports: [
@@ -28,6 +30,8 @@ import { RowComponent } from './row.component';
     ListComponent,
     AddEditComponent,
     RowComponent,
+    MemberModalContentComponent,
+    MemberModalContainerComponent,
   ],
   providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }], // From https://stackoverflow.com/a/47945155/6941165
 })
