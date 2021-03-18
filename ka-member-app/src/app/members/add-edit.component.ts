@@ -105,6 +105,11 @@ export class AddEditComponent implements OnInit {
 
       multiplier: [''],
       membershipfee: [''],
+
+      area: [''],
+      repeatpayment: [0],
+      recurringpayment: [0],
+
     });
 
     this.countryService
@@ -122,6 +127,35 @@ export class AddEditComponent implements OnInit {
           this.loading = false;
         }
       });
+
+    this.form.valueChanges.subscribe((x: any) => {
+      console.log(x);
+
+      if (x.primaryAddress) {
+        x.addressfirstline = x.primaryAddress.addressLine1 || null;
+        x.addresssecondline = x.primaryAddress.addressLine2 || null;
+        x.city = x.primaryAddress.city || null;
+        x.county = x.primaryAddress.county || null;
+        x.postcode = x.primaryAddress.postcode || null;
+        x.countryID = x.primaryAddress.country  || null;
+      }
+
+      if (x.secondaryAddress && x.secondaryAddress.addressLine1 ) {
+        x.addressfirstline2 = x.secondaryAddress.addressLine1 || null;
+        x.addresssecondline2 = x.secondaryAddress.addressLine2 || null;
+        x.city2 = x.secondaryAddress.city || null;
+        x.county2 = x.secondaryAddress.county || null;
+        x.postcode2 = x.secondaryAddress.postcode || null;
+        x.country2ID = x.secondaryAddress.country  || null;
+      } else {
+        x.addressfirstline2 = '';
+        x.addresssecondline2 = '';
+        x.city2 = '';
+        x.county2 = '';
+        x.postcode2 = '';
+        x.country2ID = null;
+      }
+    });
 
     if (this.formMode != UserFormMode.Add) {
       this.memberService
@@ -162,18 +196,6 @@ export class AddEditComponent implements OnInit {
     return this.form.controls;
   }
 
-  // retrun boolean
-  get isCorporateMember() {
-    return (
-      this.form &&
-      this.form.controls &&
-      this.statuses &&
-      this.statuses
-        .filter((x) => x.name === 'Corporate' || x.name === 'Former Member')
-        .some((el) => el.id === this.form.controls['statusID'].value)
-    );
-  }
-
   onSubmit() {
     this.submitted = true;
 
@@ -182,7 +204,7 @@ export class AddEditComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
-        const list = this.findInvalidControlsRecursive(this.form);
+      const list = this.findInvalidControlsRecursive(this.form);
       return;
     }
 
@@ -205,7 +227,18 @@ export class AddEditComponent implements OnInit {
     this.memberService
       .create(this.form.value)
       .pipe(first())
-      .subscribe(() => {
+      .subscribe(
+        result => {
+            // Handle result
+            console.log(result)
+          },
+          error => {
+            console.log(error);
+            this.alertService.error('Unable to add new member.', {
+                keepAfterRouteChange: true,
+              });
+          },  
+        () => {
         this.alertService.success('Member added', {
           keepAfterRouteChange: true,
         });
@@ -228,6 +261,11 @@ export class AddEditComponent implements OnInit {
         } else {
           this.router.navigate(['/'], { relativeTo: this.route });
         }
+      },
+      () => {
+        this.alertService.error('Member not updated', {
+            keepAfterRouteChange: true,
+          });
       })
       .add(() => (this.loading = false));
   }
