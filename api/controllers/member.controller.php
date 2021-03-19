@@ -44,21 +44,9 @@ class MemberCtl{
         "businessname" => $model->businessname,
         "bankpayerref" => $model->bankpayerref,
         "note" => $model->note,
-        "addressfirstline" => $model->addressfirstline,
-        "addresssecondline" => $model->addresssecondline,
-        "city" => $model->city,
-        "county" => $model->county,
-        "postcode" => $model->postcode,
-        "countryID" => $model->countryID,
         "area" => $model->area,
         "email1" => $model->email1,
         "phone1" => 'xn#'.$model->phone1,// Substitution trick to preserve phone numbers as strings
-        "addressfirstline2" => $model->addressfirstline2,
-        "addresssecondline2" => $model->addresssecondline2,
-        "city2" => $model->city2,
-        "county2" => $model->county2,
-        "postcode2" => $model->postcode2,
-        "country2ID" => $model->country2ID,
         "email2" => $model->email2,
         "phone2" => 'xn#'.$model->phone2, // Substitution trick to preserve phone numbers as strings
         "statusID" => $model->statusID,
@@ -74,7 +62,23 @@ class MemberCtl{
         "gdpr_tel" => $model->gdpr_tel,
         "gdpr_address" => $model->gdpr_address,
         "gdpr_sm" => $model->gdpr_sm,    
-        "postonhold" => $model->postonhold
+        "postonhold" => $model->postonhold,
+        "primaryAddress" => array(
+          "addressfirstline" => $model->addressfirstline,
+          "addresssecondline" => $model->addresssecondline,
+          "city" => $model->city,
+          "county" => $model->county,
+          "postcode" => $model->postcode,
+          "country" => $model->countryID
+        ),
+        "secondaryAddress" => array(
+          "addressfirstline" => $model->addressfirstline2,
+          "addresssecondline" => $model->addresssecondline2,
+          "city" => $model->city2,
+          "county" => $model->county2,
+          "postcode" => $model->postcode2,
+          "country" => $model->country2ID
+        )
     );
 
     // Substitution trick to preserve phone numbers as strings
@@ -184,41 +188,78 @@ class MemberCtl{
 
   private static function transferParameters($data, $model)
   {
+    // Flatten addresses
+    if (empty($data->primaryAddress)) {
+      $model->addressfirstline = empty($data->addressfirstline)?null:$data->addressfirstline;
+      $model->addresssecondline = empty($data->addresssecondline)?null:$data->addresssecondline;
+      $model->city = empty($data->city)?null:$data->city;
+      $model->county = empty($data->county)?null:$data->county;
+      $model->postcode = empty($data->postcode)?null:$data->postcode;
+      $model->countryID = empty($data->countryID)?null:$data->countryID;
+    } else {
+      $model->addressfirstline = $data->primaryAddress->addressfirstline;
+      $model->addresssecondline = $data->primaryAddress->addresssecondline;
+      $model->city = $data->primaryAddress->city;
+      $model->county = $data->primaryAddress->county;
+      $model->postcode = $data->primaryAddress->postcode;
+      $model->countryID = $data->primaryAddress->country;
+    }
+    if (empty($data->secondaryAddress)) {
+      $model->addressfirstline2 = empty($data->addressfirstline)?null:$data->addressfirstline;
+      $model->addresssecondline2 = empty($data->addresssecondline)?null:$data->addresssecondline;
+      $model->city2 = empty($data->city)?null:$data->city;
+      $model->county2 = empty($data->county)?null:$data->county;
+      $model->postcode2 = empty($data->postcode)?null:$data->postcode;
+      $model->country2ID = empty($data->countryID)?null:$data->countryID;
+    } else {
+      $model->addressfirstline2 = $data->secondaryAddress->addressfirstline;
+      $model->addresssecondline2 = $data->secondaryAddress->addresssecondline;
+      $model->city2 = $data->secondaryAddress->city;
+      $model->county2 = $data->secondaryAddress->county;
+      $model->postcode2 = $data->secondaryAddress->postcode;
+      $model->country2ID = $data->secondaryAddress->country;
+    }
+
+    // flatten emails & telephone numbers
+    if (empty($data->emails)) {
+      $model->email1 = $data->email1;
+      $model->email2 = $data->email2;
+    } else {
+      $model->email1 = empty($data->emails->email1)?null:$data->emails->email1;
+      $model->email2 = empty($data->emails->email2)?null:$data->emails->email2;
+    }
+    if (empty($data->phones)) {
+      $model->phone1 = $data->phone1;
+      $model->phone2 = $data->phone2;
+    } else {
+      $model->phone1 = empty($data->phones->phone1)?null:$data->phones->phone1;
+      $model->phone2 = empty($data->phones->phone2)?null:$data->phones->emaiphone2l2;
+    }
+
+    // Do other parameters
     $model->title = $data->title;
     $model->businessname = $data->businessname;
     $model->bankpayerref = $data->bankpayerref;
     $model->note = $data->note;
-    $model->addressfirstline = $data->addressfirstline;
-    $model->addresssecondline = $data->addresssecondline;
-    $model->city = $data->city;
-    $model->county = $data->county;
-    $model->postcode = $data->postcode;
-    $model->countryID = $data->countryID;
-    $model->area = $data->area;
-    $model->email1 = $data->email1;
-    $model->phone1 = $data->phone1;
-    $model->addressfirstline2 = $data->addressfirstline2;
-    $model->addresssecondline2 = $data->addresssecondline2;
-    $model->city2 = $data->city2;
-    $model->county2 = $data->county2;
-    $model->postcode2 = $data->postcode2;
-    $model->country2ID = $data->country2ID;
-    $model->email2 = $data->email2;
-    $model->phone2 = $data->phone2;
-    $model->statusID = $data->statusID;
-    $model->expirydate = $data->expirydate;
-    $model->joindate = $data->joindate;
-    $model->updatedate = null; // will insert current_timestamp
-    $model->reminderdate = $data->reminderdate;
-    $model->deletedate = $data->deletedate;
-    $model->repeatpayment = $data->repeatpayment;
-    $model->recurringpayment = $data->recurringpayment;
-    $model->username = MemberCtl::username();
     $model->gdpr_email = $data->gdpr_email;
     $model->gdpr_tel = $data->gdpr_tel;
     $model->gdpr_address = $data->gdpr_address;
     $model->gdpr_sm = $data->gdpr_sm;
     $model->postonhold = $data->postonhold;
+    $model->statusID = $data->statusID;
+    $model->expirydate = $data->expirydate;
+    $model->joindate = $data->joindate;
+    $model->reminderdate = $data->reminderdate;
+
+    // Audit parameters
+    $model->updatedate = null; // will insert current_timestamp
+    $model->username = MemberCtl::username();   
+
+    // Optional parameters
+    $model->area = empty($data->area)?'':$data->area;
+    $model->deletedate = empty($data->deletedate)?null:$data->deletedate;
+    $model->repeatpayment = empty($data->repeatpayment)?0:$data->repeatpayment;
+    $model->recurringpayment =  empty($data->recurringpayment)?0:$data->recurringpayment;
   }
 
   private static function username(){

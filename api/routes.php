@@ -118,11 +118,14 @@ $router->mount('/name', function () use ($router) {
     // will result in '/name/idmember/id'
     $router->get('/idmember/(\d+)', 'MemberNameCtl@read_by_idmember');
 
-    // delete all a single membername
+    // delete a single membername
     $router->delete('/(\d+)', 'MemberNameCtl@delete_by_id');
 
     // delete all names for a member
     $router->delete('/idmember/(\d+)', 'MemberNameCtl@delete_by_idmember');
+
+    // update all names for a member
+    $router->put('/idmember/(\d+)', 'MemberNameCtl@update_by_idmember');
 
     // new member name
     $router->post('/', 'MemberNameCtl@create');

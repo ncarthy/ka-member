@@ -15,7 +15,7 @@ import { map, filter, debounceTime, tap, switchMap } from 'rxjs/operators';
 import { postcodeRegex } from '../regexes.const';
 
 import { AddressSearchService } from '@app/_services';
-import { Address } from '@app/_models';
+import { Address, GetAddressAddress } from '@app/_models';
 
 @Component({
   selector: 'address-search-box',
@@ -35,7 +35,7 @@ import { Address } from '@app/_models';
 })
 export class SearchBoxComponent implements OnInit {
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() results: EventEmitter<Address[]> = new EventEmitter<Address[]>();
+  @Output() results: EventEmitter<GetAddressAddress[]> = new EventEmitter<GetAddressAddress[]>();
   @Input() disable: boolean = false;
 
   constructor(
@@ -70,7 +70,7 @@ export class SearchBoxComponent implements OnInit {
       )
       // act on the return of the search
       .subscribe(
-        (results: Address[]) => {
+        (results: GetAddressAddress[]) => {
           // on sucesss
           this.loading.emit(false);
           this.results.emit(results);

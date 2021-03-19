@@ -87,21 +87,9 @@ class Member{
                         "businessname" => html_entity_decode($businessname),
                         "bankpayerref" => html_entity_decode($bankpayerref),
                         "note" => html_entity_decode($note),
-                        "addressfirstline" => html_entity_decode($addressfirstline),
-                        "addresssecondline" => html_entity_decode($addresssecondline),
-                        "city" => html_entity_decode($city),
-                        "county" => html_entity_decode($county),
-                        "postcode" => html_entity_decode($postcode),
-                        "countryID" => $countryID,
                         "area" => html_entity_decode($area),
                         "email1" => html_entity_decode($email1),
                         "phone1" => html_entity_decode('xn#'.$phone1),// Substitution trick to preserve phone numbers as strings
-                        "addressfirstline2" => html_entity_decode($addressfirstline2),
-                        "addresssecondline2" => html_entity_decode($addresssecondline2),
-                        "city2" => html_entity_decode($city2),
-                        "county2" => html_entity_decode($county2),
-                        "postcode2" => html_entity_decode($postcode2),
-                        "country2ID" => $country2ID,
                         "email2" => html_entity_decode($email2),
                         "phone2" => html_entity_decode('xn#'.$phone2),// Substitution trick to preserve phone numbers as strings
                         "statusID" => $statusID,
@@ -117,7 +105,23 @@ class Member{
                         "gdpr_tel" => $gdpr_tel?true:false,
                         "gdpr_address" => $gdpr_address?true:false,
                         "gdpr_sm" => $gdpr_sm?true:false,
-                        "postonhold" => $postonhold?true:false
+                        "postonhold" => $postonhold?true:false,
+                        "primaryAddress" => array(
+                            "addressfirstline" => html_entity_decode($addressfirstline),
+                            "addresssecondline" => html_entity_decode($addresssecondline),
+                            "city" => html_entity_decode($city),
+                            "county" => html_entity_decode($county),
+                            "postcode" => html_entity_decode($postcode),
+                            "country" => $countryID
+                        ),
+                        "secondaryAddress" => array(
+                            "addressfirstline" => html_entity_decode($addressfirstline2),
+                            "addresssecondline" => html_entity_decode($addresssecondline2),
+                            "city" => html_entity_decode($city2),
+                            "county" => html_entity_decode($county2),
+                            "postcode" => html_entity_decode($postcode2),
+                            "country" => $country2ID
+                        )
                     );
 
                     array_push($member_arr, $member_item);

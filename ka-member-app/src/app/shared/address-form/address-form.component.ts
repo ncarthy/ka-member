@@ -11,15 +11,14 @@ import {
 import {
   ControlValueAccessor,
   FormBuilder,
-  NG_VALUE_ACCESSOR,
+  NG_VALUE_ACCESSOR, // Example: https://github.com/xiongemi/angular-form-ngxs/
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { AddressFormValue } from './address-form-value.interface';
 import { CountryService } from '@app/_services';
-import { Address, Country } from '@app/_models';
+import { Address, Country, GetAddressAddress } from '@app/_models';
 
 @Component({
   selector: 'address-form',
@@ -35,20 +34,20 @@ import { Address, Country } from '@app/_models';
 export class AddressFormComponent
   implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
   @Input() touched: boolean = false;
-  @Input() address?: AddressFormValue;
+  @Input() address?: Address;
 
-  addresses!: Address[];
+  addresses!: GetAddressAddress[]; // from the api
   countries!: Country[];
   uk!: Country;
   loading: boolean = false; // set by 'address-search-box' component
-  onChange: any = (_: AddressFormValue) => {};
+  onChange: any = (_: Address) => {};
   onTouch: any = () => {};
   submitted: boolean = false;
   showFormFields: boolean = false;
 
   addressForm = this.fb.group({
-    addressLine1: [null, Validators.required],
-    addressLine2: [null],
+    addressfirstline: [null, Validators.required],
+    addresssecondline: [null],
     city: [null, Validators.required],
     county: [null],
     country: [null, Validators.required],
@@ -75,11 +74,11 @@ export class AddressFormComponent
         this.countries = countryArray;
         this.uk = countryArray.filter((c: Country) => c.name === 'United Kingdom')[0];
         if (this.address) {
-          this.addressForm.controls['addressLine1'].setValue(this.address.addressLine1);
-          this.addressForm.controls['addressLine2'].setValue(this.address.addressLine2);
+          this.addressForm.controls['addressfirstline'].setValue(this.address.addressfirstline);
+          this.addressForm.controls['addresssecondline'].setValue(this.address.addresssecondline);
           this.addressForm.controls['city'].setValue(this.address.city);
           this.addressForm.controls['county'].setValue(this.address.county);
-          this.addressForm.controls['country'].setValue(this.address.country.id);
+          this.addressForm.controls['country'].setValue(this.address.country);
           this.addressForm.controls['postcode'].setValue(this.address.postcode);
           this.showFormFields = true;
         } else {
@@ -88,7 +87,7 @@ export class AddressFormComponent
       });
 
     this.subscription.add(
-      this.addressForm.valueChanges.subscribe((value: AddressFormValue) => {
+      this.addressForm.valueChanges.subscribe((value: Address) => {
         this.onChange(value);
       })
     );
@@ -103,7 +102,7 @@ export class AddressFormComponent
     }
   }
 
-  writeValue(value: null | AddressFormValue): void {
+  writeValue(value: null | Address): void {
     if (value) {
       this.addressForm.reset(value);
     }
@@ -113,18 +112,18 @@ export class AddressFormComponent
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: (_: AddressFormValue) => {}): void {
+  registerOnTouched(fn: (_: Address) => {}): void {
     this.onTouch = fn;
   }
 
-  updateAddresses(results: Address[]): void {
+  updateAddresses(results: GetAddressAddress[]): void {
     this.addresses = results;    
   }
 
-  onAddressChange(address : Address) : void {
+  onAddressChange(address : GetAddressAddress) : void {
     this.showFormFields = true;
-    this.addressForm.controls['addressLine1'].setValue(address.line1);
-    this.addressForm.controls['addressLine2'].setValue(address.line2);
+    this.addressForm.controls['addressfirstline'].setValue(address.line1);
+    this.addressForm.controls['addresssecondline'].setValue(address.line2);
     this.addressForm.controls['city'].setValue(address.town);
     this.addressForm.controls['county'].setValue(address.county);
     this.addressForm.controls['postcode'].setValue(address.postcode);

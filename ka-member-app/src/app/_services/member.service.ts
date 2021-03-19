@@ -4,9 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Member } from '@app/_models';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 const baseUrl = `${environment.apiUrl}/member`;
 
 @Injectable({ providedIn: 'root' })

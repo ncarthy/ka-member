@@ -1,4 +1,4 @@
-import { Country } from '@app/_models';
+import { Address,Country } from '@app/_models';
 /**
  * Member is a data-structure that holds all the information stored
  * about the member in the database
@@ -10,20 +10,8 @@ export class Member {
     businessname: string;
     bankpayerref: string;
     note: string;
-    addressfirstline: string;
-    addresssecondline: string;
-    city: string;
-    county: string;
-    postcode: string;
-    countryID: number;
     email1: string;
     phone1: string;
-    addressfirstline2: string;
-    addresssecondline2: string;
-    city2: string;
-    county2: string;
-    postcode2: string;
-    country2ID: number;
     email2: string;
     phone2: string; 
     statusID: number;
@@ -40,6 +28,8 @@ export class Member {
     gdpr_address: boolean;
     gdpr_sm: boolean;
     postonhold: boolean;
+    primaryAddress: Address;
+    secondaryAddress: Address;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
     
@@ -50,20 +40,8 @@ export class Member {
         this.businessname = obj && obj.businessname || null;
         this.bankpayerref = obj && obj.bankpayerref || null;
         this.note = obj && obj.note || null;
-        this.addressfirstline = obj && obj.addressfirstline || null;
-        this.addresssecondline = obj && obj.addresssecondline || null;
-        this.county = obj && obj.county || null;
-        this.city = obj && obj.city || null;
-        this.postcode = obj && obj.postcode || null;
-        this.countryID = obj && obj.country || null;
         this.email1 = obj && obj.email1 || null;
         this.phone1 = obj && obj.phone1 || null;
-        this.addressfirstline2 = obj && obj.addressfirstline2 || null;
-        this.addresssecondline2 = obj && obj.addresssecondline2 || null;
-        this.county2 = obj && obj.county2 || null;
-        this.city2 = obj && obj.city2 || null;
-        this.postcode2 = obj && obj.postcode2 || null;
-        this.country2ID = obj && obj.country2 || null;
         this.email2 = obj && obj.email2 || null;
         this.phone2 = obj && obj.phone2 || null;
         this.statusID = obj && obj.statusID || null;
@@ -80,5 +58,7 @@ export class Member {
         this.gdpr_address = obj && obj.gdpr_address;
         this.gdpr_sm = obj && obj.gdpr_sm;
         this.postonhold = obj && obj.postonhold;
+        this.primaryAddress = obj && obj.primaryAddress || null;
+        this.secondaryAddress = obj && obj.secondaryAddress || null;
     }
 }

@@ -40,6 +40,38 @@ class MemberNameCtl{
     }
   }
 
+  public static function update_by_idmember($idmember){  
+
+    $model = new \Models\MemberName();
+    $model->idmember = $idmember;
+
+    $names = json_decode(file_get_contents("php://input"));
+
+    // check data & then remove old names
+    if ($names && is_array($names) && $model->delete_by_idmember()) {   
+        // Add new names     
+        foreach ($names as $name) {
+            $model->honorific = $name->honorific;
+            $model->firstname = $name->firstname;
+            $model->surname = $name->surname;
+            if(!$model->create()) {
+                break; // exit loop if failure
+            }
+        }
+        echo json_encode(
+            array("message" => "All names updated for that member.")
+        );
+        exit(0);        
+    }
+  
+    // ERROR MESSAGE IF REACH HERE
+    http_response_code(422); 
+    echo json_encode(
+        array("message" => "Unable to update member names.")
+    );
+    
+  }
+
   public static function delete_by_id($idmembername){  
 
     $model = new \Models\MemberName();

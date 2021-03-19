@@ -171,8 +171,6 @@ class MemberName{
         $num = $stmt->rowCount();
 
         $items_arr=array();
-        $items_arr["count"]=$num;
-        $items_arr["names"]=array();
 
         // check if more than 0 record found
         if($num>0){
@@ -194,7 +192,7 @@ class MemberName{
                         "idmember" => $idmember
                     );
 
-                array_push ($items_arr["names"], $item);
+                array_push ($items_arr, $item);
             }
         }
 

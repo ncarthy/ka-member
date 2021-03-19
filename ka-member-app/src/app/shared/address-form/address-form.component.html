@@ -32,18 +32,18 @@
       <label for="inputAddressLine1" class="form-label">Line 1 *</label>
       <input
         type="text"
-        formControlName="addressLine1"
+        formControlName="addressfirstline"
         class="form-control"
         id="inputAddressLine1"
-        [ngClass]="{ 'is-invalid': submitted && f.addressLine1.errors }"
+        [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }"
       />
-      <div *ngIf="submitted && f.addressLine1.errors" class="invalid-feedback">
-        <div *ngIf="f.addressLine1.errors.required">Line 1 is required</div>
+      <div *ngIf="submitted && f.addressfirstline.errors" class="invalid-feedback">
+        <div *ngIf="f.addressfirstline.errors.required">Line 1 is required</div>
       </div>
     </div>
     <div class="mb-2">
       <label>Line 2</label>
-      <input type="text" formControlName="addressLine2" class="form-control" />
+      <input type="text" formControlName="addresssecondline" class="form-control" />
     </div>
     <div class="mb-2">
       <label>City *</label>

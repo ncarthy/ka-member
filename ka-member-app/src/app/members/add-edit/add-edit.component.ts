@@ -12,13 +12,14 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { from } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 
 import {
-  MemberService,
   AlertService,
   AuthenticationService,
   CountryService,
+  MemberService,
+  MemberNameService,
   MembershipStatusService,
 } from '@app/_services';
 
@@ -26,17 +27,17 @@ import {
   Address,
   Country,
   FormMode,
+  MemberName,
   MembershipStatus,
-  Role,
   SuccessResponse,
   User,
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
-import { AddressFormValue } from '@app/shared/address-form/address-form-value.interface';
 import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
 
 @Component({
   templateUrl: 'add-edit.component.html',
+  styleUrls: ['add-edit.component.css'],
 })
 export class AddEditComponent implements OnInit {
   form!: FormGroup;
@@ -47,17 +48,18 @@ export class AddEditComponent implements OnInit {
   apiUser!: User;
   countries!: Country[];
   statuses!: MembershipStatus[];
-  primaryAddress!: AddressFormValue;
-  secondaryAddress!: AddressFormValue;
+  primaryAddress!: Address;
+  secondaryAddress!: Address;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private memberService: MemberService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private countryService: CountryService,
+    private memberService: MemberService,
+    private memberNameService: MemberNameService,
     private membershipStatusService: MembershipStatusService,
     public modalService: NgbModal
   ) {
@@ -76,7 +78,7 @@ export class AddEditComponent implements OnInit {
     }
 
     this.form = this.formBuilder.group({
-      names: new FormArray([]),
+      names: new FormArray([]), //https://jasonwatmore.com/post/2020/09/18/angular-10-dynamic-reactive-forms-example
       // Checkboxes
       gdpr_email: [false],
       gdpr_tel: [false],
@@ -110,20 +112,25 @@ export class AddEditComponent implements OnInit {
       bankpayerref: [''],
       note: [''],
 
+      // These fields are updated by the 'manage' component
+      // They are retained here so that the field values are not
+      // lost when the Member is updated.
       multiplier: [''],
       membershipfee: [''],
-
       area: [''],
       repeatpayment: [0],
       recurringpayment: [0],
     });
 
+    // Fill country dropdown
     this.countryService
       .getAll()
       .pipe(first())
       .subscribe((x) => {
         this.countries = x;
       });
+
+    // Fill status dropdown
     this.membershipStatusService
       .getAll()
       .pipe(first())
@@ -134,76 +141,42 @@ export class AddEditComponent implements OnInit {
         }
       });
 
-    this.form.valueChanges.subscribe((x: any) => {
-      if (x.primaryAddress) {
-        x.addressfirstline = x.primaryAddress.addressLine1 || null;
-        x.addresssecondline = x.primaryAddress.addressLine2 || null;
-        x.city = x.primaryAddress.city || null;
-        x.county = x.primaryAddress.county || null;
-        x.postcode = x.primaryAddress.postcode || null;
-        x.countryID = x.primaryAddress.country || null;
-      }
+    // Member names
+    if (this.formMode === FormMode.Add) {
+      this.onAddName(); // Add one blank name
+    } else {
+      this.memberNameService.getAllForMember(this.id).pipe(
+        map((names : MemberName[]) => {
+          for(let name of names) {
+            this.onAddName(name.honorific, name.firstname, name.surname);
+          }
+        })
+      ).subscribe();
+    }
 
-      if (x.secondaryAddress && x.secondaryAddress.addressLine1) {
-        x.addressfirstline2 = x.secondaryAddress.addressLine1 || null;
-        x.addresssecondline2 = x.secondaryAddress.addressLine2 || null;
-        x.city2 = x.secondaryAddress.city || null;
-        x.county2 = x.secondaryAddress.county || null;
-        x.postcode2 = x.secondaryAddress.postcode || null;
-        x.country2ID = x.secondaryAddress.country || null;
-      } else {
-        x.addressfirstline2 = '';
-        x.addresssecondline2 = '';
-        x.city2 = '';
-        x.county2 = '';
-        x.postcode2 = '';
-        x.country2ID = null;
-      }
+    if (
+      this.formMode === FormMode.Add &&
+      !this.form.controls['joindate'].value
+    ) {
+      // Initialize the 'Join Date' field with today's date for New Members
+      // From https://stackoverflow.com/a/35922073/6941165
+      this.form.controls['joindate'].setValue(
+        new Date().toISOString().slice(0, 10)
+      );
+    }
 
-      // Handle disabled controls
-      if (this.form.controls['deletedate'].value) {
-        x.deletedate = this.form.controls['deletedate'].value;
-      } else {
-        x.deletedate = null;
-      }
-      if (
-        this.formMode === FormMode.Add &&
-        !this.form.controls['joindate'].value
-      ) {
-        // Initialize the 'Join Date' field with today's date for New Members
-        // From https://stackoverflow.com/a/35922073/6941165
-        this.form.controls['joindate'].setValue(
-          new Date().toISOString().slice(0, 10)
-        );
-      }
-    });
-
-    if (this.formMode !== FormMode.Add) {
+    // Add
+    if (this.formMode === FormMode.Edit) {
       this.memberService
         .getById(this.id)
         .pipe(first())
         .subscribe((x) => {
           this.form.patchValue(x);
 
-          this.primaryAddress = {
-            addressLine1: x.addressfirstline,
-            addressLine2: x.addresssecondline,
-            city: x.city,
-            county: x.county,
-            postcode: x.postcode,
-            country: { id: x.countryID, name: '' },
-          };
+          this.primaryAddress = x.primaryAddress;
+          this.secondaryAddress = x.secondaryAddress;
 
-          this.secondaryAddress = {
-            addressLine1: x.addressfirstline2,
-            addressLine2: x.addresssecondline2,
-            city: x.city2,
-            county: x.county2,
-            postcode: x.postcode2,
-            country: { id: x.country2ID, name: '' },
-          };
-
-          if (x.addressfirstline2) {
+          if (this.secondaryAddress && this.secondaryAddress.addressfirstline) {
             this.form.controls['showSecondaryAdress'].setValue(true);
           }
 
@@ -211,6 +184,7 @@ export class AddEditComponent implements OnInit {
         });
     }
   }
+
 
   // convenience getters for easy access to form fields
   get f() {
@@ -221,6 +195,22 @@ export class AddEditComponent implements OnInit {
   }
   get namesFormGroups() {
     return this.n.controls as FormGroup[];
+  }
+
+  onAddName(honorific = '', firstname = '', surname = '') {
+    this.n.push(
+      this.formBuilder.group({
+        honorific: [honorific],
+        firstname: [firstname],
+        surname: [surname, [Validators.required]],
+      })
+    );
+  }
+
+  onRemoveName(index: number) {
+    if (this.n.length > 1 && index) {
+      this.n.removeAt(index);
+    }
   }
 
   onSubmit() {
@@ -316,16 +306,6 @@ export class AddEditComponent implements OnInit {
         }
       )
       .add(() => (this.loading = false));
-  }
-
-  onAddName() {
-    this.n.push(
-      this.formBuilder.group({
-        honorific: [''],
-        firstname: [''],
-        surname: ['', Validators.required],
-      })
-    );
   }
 
   onAnonymize() {

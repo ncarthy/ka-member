@@ -5,7 +5,7 @@
 </div>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
-
+  <!-- Buttons -->
   <div class="d-flex justify-content-between">
     <div class="form-group">
       <button type="submit" [disabled]="loading" class="btn btn-primary">
@@ -19,11 +19,9 @@
       <a routerLink="/members" class="btn btn-link">Cancel</a>
     </div>
     <div *ngIf="isMemberEdit">
-      <a class="btn btn-link" (click)="onSetToFormer()"
-        >Set to 'Former'</a
-      >
+      <a class="btn btn-link" (click)="onSetToFormer()">Set to 'Former'</a>
       <button
-      type="button"
+        type="button"
         [disabled]="loading"
         class="btn btn-warning mr-1"
         (click)="onAnonymize()"
@@ -34,7 +32,12 @@
         ></span>
         Anonymize
       </button>
-      <button type="button" [disabled]="loading" class="btn btn-danger" (click)="onDelete()">
+      <button
+        type="button"
+        [disabled]="loading"
+        class="btn btn-danger"
+        (click)="onDelete()"
+      >
         <span
           *ngIf="loading"
           class="spinner-border spinner-border-sm mr-1"
@@ -47,6 +50,73 @@
   <small *ngIf="f.username.value"
     >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
   >
+
+  <!-- Names -->
+  <div class="row mb-1">
+    <div
+      *ngFor="let name of namesFormGroups; let i = index"
+      class="list-group list-group-flush col-6"
+    >
+      <div class="col">
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <h5 class="card-title">Name {{ i + 1 }}</h5>
+            <div class = "mr-1">
+            <button type="button" [disabled]="loading" class = "mr-3" (click)="onAddName()">
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm mr-1"
+              ></span>
+              +
+            </button>
+            <button *ngIf="i!==0" type="button" class="close" (click)="onRemoveName(i)">
+              <span>&times;</span>
+            </button>
+          </div>
+          </div>
+          <div [formGroup]="name" class="form-row">
+            <div class="form-group col">
+              <label>Honorific</label>
+              <input
+                type="text"
+                formControlName="honorific"
+                class="form-control text-right"
+              />
+            </div>
+            <div class="form-group col">
+              <label>First Name</label>
+              <input
+                type="text"
+                formControlName="firstname"
+                class="form-control text-right"
+              />
+            </div>
+            <div class="form-group col">
+              <label>Surname</label>
+              <input
+                type="text"
+                formControlName="surname"
+                class="form-control text-right"
+                [ngClass]="{
+                  'is-invalid': submitted && name.controls.surname.errors
+                }"
+              />
+              <div
+                *ngIf="submitted && name.controls.surname.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="ticket.controls.surname.errors.required">
+                  Surname is required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status, Dates, Business details & GDPR -->
   <div class="row">
     <div class="col-sm-6 mb-1">
       <div class="input-group mb-1">
@@ -202,6 +272,7 @@
     </div>
   </div>
 
+  <!-- Addresses & Other info-->
   <div class="row">
     <div class="col-sm-6 mb-1">
       <div class="form-check">
