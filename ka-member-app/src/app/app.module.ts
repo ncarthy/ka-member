@@ -13,12 +13,12 @@ import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { AdminComponent } from './admin';
-import { ToastContainerComponent } from './toast-container/toast-container.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersModule } from './members/members.module';
 import { MemberSearchModule } from './member-search/member-search.module';
 import { SharedModule } from '@app/shared/shared.module';
+import { ToastContainerComponent } from './shared/toast-container/toast-container.component';
 
 @NgModule({
     imports: [
@@ -37,8 +37,7 @@ import { SharedModule } from '@app/shared/shared.module';
         HomeComponent,
         LoginComponent,
         AdminComponent,
-        ToastContainerComponent,
-        AlertComponent        
+        AlertComponent      
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },
