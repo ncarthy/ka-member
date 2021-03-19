@@ -17,10 +17,20 @@ import {
   @Component({
     selector: 'member-search-box',
     template: `
-      <input type="text" class="form-control" placeholder="Surname or Business Name" autofocus>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Surname or Business Name"
+        autofocus
+      />
+    </div>  
     `
   })
-  export class SearchBoxComponent implements OnInit {
+  export class MemberSearchBoxComponent implements OnInit {
     @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() results: EventEmitter<MemberSearchResult[]> = new EventEmitter<MemberSearchResult[]>();
   
@@ -30,7 +40,7 @@ import {
 
 
     // Create an observalbe from the stream of characters being entered in the search box
-    // and convert those values into an array of MemberSearchredult objects
+    // and convert those values into an array of MemberSearchResult objects
 
     // See https://rxjs-dev.firebaseapp.com/guide/v6/migration for pipe format.
     ngOnInit(): void {

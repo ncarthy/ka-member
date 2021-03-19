@@ -15,6 +15,8 @@ import { ListComponent } from './list.component';
 import { RowComponent } from './row.component';
 import { AddEditComponent } from './add-edit/add-edit.component';
 import { ManageComponent } from './manage/manage.component';
+import { MemberSearchBoxComponent } from './member-search/search-box.component';
+import { MemberSearchService } from '@app/_services';
 
 @NgModule({
   imports: [
@@ -29,8 +31,9 @@ import { ManageComponent } from './manage/manage.component';
     ListComponent,
     AddEditComponent,
     RowComponent,
-    ManageComponent
+    ManageComponent,
+    MemberSearchBoxComponent
   ],
-  providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }], // From https://stackoverflow.com/a/47945155/6941165
+  providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }, MemberSearchService], // From https://stackoverflow.com/a/47945155/6941165
 })
 export class MembersModule {}

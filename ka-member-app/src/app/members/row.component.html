@@ -2,6 +2,7 @@
 <td>{{member.membershiptype}}</td>
 <td>{{member.businessname}}</td>
 <td>{{member.email}}</td>
+<td>{{member.lasttransactiondate}}</td>
 <td style="white-space: nowrap">
     <button routerLink="edit/{{member.id}}" class="btn btn-sm btn-primary mr-1" [disabled]="member.isUpdating">
         <span *ngIf="member.isUpdating" class="spinner-border spinner-border-sm"></span>

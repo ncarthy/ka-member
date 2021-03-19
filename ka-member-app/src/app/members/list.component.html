@@ -1,34 +1,50 @@
 ﻿<h1>Members</h1>
-<a routerLink="add" class="btn btn-sm btn-success mb-2" *ngIf="user.isAdmin">Add Member</a>
+<div class="row justify-content-between">
+  <div class="col-sm-4">
+    <member-search-box
+      (loading)="(loading)"
+      (results)="membersUpdated($event)"
+    ></member-search-box>
+  </div>
+  <div class="mr-3">
+    <a routerLink="add" class="btn btn-sm btn-success mb-2" *ngIf="user.isAdmin"
+      >Add Member</a
+    >
+  </div>
+</div>
 <!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
 <table class="table table-sm table-striped table-hover table-responsive">
-    <caption>List of members</caption>
-    <thead>
-        <tr>
-            <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">Business Name</th>
-            <th scope="col">email</th>
-            <th scope="col">Actions</th>
-            <!--<th style="width: 25%">Name</th>
+  <caption>
+    List of members
+  </caption>
+  <thead>
+    <tr>
+      <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">Business Name</th>
+      <th scope="col">email</th>
+      <th scope="col">Last Pmt</th>
+      <th scope="col">Actions</th>
+      <!--<th style="width: 25%">Name</th>
             <th style="width: 15%">Type</th>
             <th style="width: 15%">Business Name</th>
             <th style="width: 25%">email</th>
             <th style="width: 20%">Actions</th>-->
-        </tr>
-    </thead>
-    <tbody>
-        <tr  *ngFor="let myMember of members"
-            member-row
-            [member]="myMember"
-            (onMemberDeleted)="memberWasDeleted($event)"
-            (click)="memberSelected(myMember)">
-        </tr>
-        <tr *ngIf="!members">
-            <td colspan="4" class="text-center">
-                <span class="spinner-border spinner-border-lg align-center"></span>
-            </td>
-        </tr>
-    </tbody>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let myMember of members"
+      member-row
+      [member]="myMember"
+      (onMemberDeleted)="memberWasDeleted($event)"
+      (click)="memberSelected(myMember)"
+    ></tr>
+    <tr *ngIf="!members">
+      <td colspan="4" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
 </table>

@@ -3,17 +3,16 @@
 import { Router } from '@angular/router';
 
 import { first, take } from 'rxjs/operators';
-import { MemberService, MemberSearchService,AuthenticationService } from '@app/_services';
-import { Member,MemberSearchResult, User } from '@app/_models';
-import { MemberSearchComponent } from '@app/member-search';
+import { MemberSearchService,AuthenticationService } from '@app/_services';
+import { MemberSearchResult, User } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit {
     members!: MemberSearchResult[];
     user!: User;
+    loading: boolean = false;
 
     constructor(private router: Router,
-        private memberService: MemberService,
         private memberSearchService: MemberSearchService,
         private authenticationService: AuthenticationService) {
             this.user = authenticationService.userValue;
@@ -21,7 +20,7 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
         this.memberSearchService.search('')
-            .pipe(first(), take(25)) // TODO: this doesn't work
+            .pipe(first()) // TODO: this doesn't work
             .subscribe(members => this.members = members);
     }
 
@@ -31,5 +30,9 @@ export class ListComponent implements OnInit {
 
     memberSelected(member: MemberSearchResult): void {
         this.router.navigate([`members/edit/${member.id}`]);
+    }
+
+    membersUpdated(members:MemberSearchResult[]) {
+        this.members = members;
     }
 }

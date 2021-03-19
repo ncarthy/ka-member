@@ -16,9 +16,7 @@ import { AdminComponent } from './admin';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersModule } from './members/members.module';
-import { MemberSearchModule } from './member-search/member-search.module';
 import { SharedModule } from '@app/shared/shared.module';
-import { ToastContainerComponent } from './shared/toast-container/toast-container.component';
 
 @NgModule({
     imports: [
@@ -29,7 +27,6 @@ import { ToastContainerComponent } from './shared/toast-container/toast-containe
         AppRoutingModule,
         NgbModule,
         MembersModule,
-        MemberSearchModule,
         SharedModule
     ],
     declarations: [
