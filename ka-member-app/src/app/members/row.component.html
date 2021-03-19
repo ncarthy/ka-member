@@ -7,6 +7,10 @@
         <span *ngIf="member.isUpdating" class="spinner-border spinner-border-sm"></span>
         <span *ngIf="!member.isUpdating">Edit</span>
     </button>
+    <button routerLink="manage/{{member.id}}" class="btn btn-sm btn-info mr-1" [disabled]="member.isUpdating">
+        <span *ngIf="member.isUpdating" class="spinner-border spinner-border-sm"></span>
+        <span *ngIf="!member.isUpdating">Manage</span>
+    </button>
     <button (click)="deleteMember($event)" class="btn btn-sm btn-danger btn-delete-member" [disabled]="member.isDeleting">
         <span *ngIf="member.isDeleting" class="spinner-border spinner-border-sm"></span>
         <span *ngIf="!member.isDeleting">Delete</span>
