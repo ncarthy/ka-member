@@ -21,7 +21,7 @@ export class ListComponent implements OnInit {
 
     ngOnInit() {
         this.memberSearchService.search('')
-            .pipe(first(), take(25))
+            .pipe(first(), take(25)) // TODO: this doesn't work
             .subscribe(members => this.members = members);
     }
 

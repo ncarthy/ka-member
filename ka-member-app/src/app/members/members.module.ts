@@ -12,8 +12,9 @@ import { NgbUTCStringAdapter } from '@app/_helpers';
 
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
-import { AddEditComponent } from './add-edit.component';
 import { RowComponent } from './row.component';
+import { AddEditComponent } from './add-edit/add-edit.component';
+import { ManageComponent } from './manage/manage.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { RowComponent } from './row.component';
     LayoutComponent,
     ListComponent,
     AddEditComponent,
-    RowComponent
+    RowComponent,
+    ManageComponent
   ],
   providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }], // From https://stackoverflow.com/a/47945155/6941165
 })

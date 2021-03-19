@@ -33,11 +33,10 @@ import {
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
 import { AddressFormValue } from '@app/shared/address-form/address-form-value.interface';
-import { MemberAnonymizeConfirmModalComponent } from './modal/member-anonymize-confirm.component';
+import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
 
 @Component({
   templateUrl: 'add-edit.component.html',
-  styleUrls: ['./add-edit.component.css'],
 })
 export class AddEditComponent implements OnInit {
   form!: FormGroup;
@@ -167,10 +166,15 @@ export class AddEditComponent implements OnInit {
       } else {
         x.deletedate = null;
       }
-      if (this.formMode === FormMode.Add && !this.form.controls['joindate'].value) {
+      if (
+        this.formMode === FormMode.Add &&
+        !this.form.controls['joindate'].value
+      ) {
         // Initialize the 'Join Date' field with today's date for New Members
         // From https://stackoverflow.com/a/35922073/6941165
-        this.form.controls['joindate'].setValue((new Date()).toISOString().slice(0, 10));
+        this.form.controls['joindate'].setValue(
+          new Date().toISOString().slice(0, 10)
+        );
       }
     });
 
