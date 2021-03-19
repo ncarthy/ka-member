@@ -11,8 +11,8 @@ import {
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { from } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { from, throwError } from 'rxjs';
+import { first, map, concatMap, catchError } from 'rxjs/operators';
 
 import {
   AlertService,
@@ -145,19 +145,19 @@ export class AddEditComponent implements OnInit {
     if (this.formMode === FormMode.Add) {
       this.onAddName(); // Add one blank name
     } else {
-      this.memberNameService.getAllForMember(this.id).pipe(
-        map((names : MemberName[]) => {
-          for(let name of names) {
-            this.onAddName(name.honorific, name.firstname, name.surname);
-          }
-        })
-      ).subscribe();
+      this.memberNameService
+        .getAllForMember(this.id)
+        .pipe(
+          map((names: MemberName[]) => {
+            for (let name of names) {
+              this.onAddName(name.honorific, name.firstname, name.surname);
+            }
+          })
+        )
+        .subscribe();
     }
 
-    if (
-      this.formMode === FormMode.Add &&
-      !this.form.controls['joindate'].value
-    ) {
+    if (this.formMode === FormMode.Add) {
       // Initialize the 'Join Date' field with today's date for New Members
       // From https://stackoverflow.com/a/35922073/6941165
       this.form.controls['joindate'].setValue(
@@ -165,7 +165,7 @@ export class AddEditComponent implements OnInit {
       );
     }
 
-    // Add
+    // Populate the form
     if (this.formMode === FormMode.Edit) {
       this.memberService
         .getById(this.id)
@@ -179,12 +179,10 @@ export class AddEditComponent implements OnInit {
           if (this.secondaryAddress && this.secondaryAddress.addressfirstline) {
             this.form.controls['showSecondaryAdress'].setValue(true);
           }
-
-          this.loading = false;
-        });
+        })
+        .add(() => (this.loading = false));
     }
   }
-
 
   // convenience getters for easy access to form fields
   get f() {
@@ -255,29 +253,29 @@ export class AddEditComponent implements OnInit {
   private createMember() {
     this.memberService
       .create(this.form.value)
-      .pipe(first())
+      .pipe(
+        concatMap((success: any) => {
+          return this.memberNameService.updateAllForMember(
+            // Use of non-null assertion operator
+            // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
+            success.id!,
+            this.form.value.names
+          );
+        }),
+        catchError((err) => throwError(err))
+      )
       .subscribe(
         (result: any) => {
-          const resp = result as SuccessResponse;
-
-          // Use of non-null assertion operator
-          // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
-          this.id = resp.id!;
-          this.alertService.success(resp.message, {
+          this.alertService.success('Member added', {
             keepAfterRouteChange: true,
           });
+          this.router.navigate(['../'], { relativeTo: this.route });
         },
         (error) => {
           console.log(error);
           this.alertService.error('Unable to add new member.', {
             keepAfterRouteChange: true,
           });
-        },
-        () => {
-          this.alertService.success('Member added', {
-            keepAfterRouteChange: true,
-          });
-          this.router.navigate(['../'], { relativeTo: this.route });
         }
       )
       .add(() => (this.loading = false));
@@ -286,7 +284,17 @@ export class AddEditComponent implements OnInit {
   private updateMember() {
     this.memberService
       .update(this.id, this.form.value)
-      .pipe(first())
+      .pipe(
+        concatMap((success: any) => {
+          return this.memberNameService.updateAllForMember(
+            // Use of non-null assertion operator
+            // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
+            success.id!,
+            this.form.value.names
+          );
+        }),
+        catchError((err) => throwError(err))
+      )
       .subscribe(
         () => {
           this.alertService.success('Member updated', {
