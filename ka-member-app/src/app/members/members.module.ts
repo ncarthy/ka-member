@@ -15,7 +15,7 @@ import { ListComponent } from './list.component';
 import { RowComponent } from './row.component';
 import { AddEditComponent } from './add-edit/add-edit.component';
 import { ManageComponent } from './manage/manage.component';
-import { MemberSearchBoxComponent } from './member-search/search-box.component';
+import { MemberSearchBoxComponent } from './filter/search-box.component';
 import { MemberSearchService } from '@app/_services';
 
 @NgModule({

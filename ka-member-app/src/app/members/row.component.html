@@ -24,12 +24,19 @@
 </td>
 <td>
   <small
-    >{{member.addressfirstline}}<br />
-    {{member.city}}, {{ member.postcode}}</small
+    >{{ member.addressfirstline }}<br />
+    {{ member.city }}, {{ member.postcode }}</small
   >
 </td>
 <td>{{ member.lasttransactiondate }}</td>
 <td>
+  <button class="btn btn-sm btn-success mr-1">
+    <span
+      *ngIf="member.isUpdating"
+      class="spinner-border spinner-border-sm"
+    ></span>
+    <span>Add Tx</span>
+  </button>
   <button
     routerLink="edit/{{ member.id }}"
     class="btn btn-sm btn-primary mr-1"
@@ -61,6 +68,8 @@
       *ngIf="member.isDeleting"
       class="spinner-border spinner-border-sm"
     ></span>
-    <span *ngIf="!member.isDeleting">{{ member.membershiptype === 'Pending' ? 'Delete' : 'Remove'}}</span>
+    <span *ngIf="!member.isDeleting">{{
+      member.membershiptype === "Pending" ? "Delete" : "Remove"
+    }}</span>
   </button>
 </td>
