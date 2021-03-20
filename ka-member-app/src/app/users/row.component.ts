@@ -55,8 +55,14 @@ export class RowComponent {
       });
   }
 
+  // Prevents the click event propagating back up to the table row
+  // which would open the edit user view
+  onClickEvent(e: Event) {
+    e.stopPropagation();
+  }
+
   onRoleChange(value: Role) {
-    if (!this.user) return;
+    if (!this.user || !this.user.id) return;
     this.user.isUpdating = true;
     this.user.role = value;
     this.userService
