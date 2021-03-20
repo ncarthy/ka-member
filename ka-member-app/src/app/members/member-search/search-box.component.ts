@@ -47,7 +47,7 @@ import {
         // convert the `keyup` event into an observable stream
         fromEvent(this.el.nativeElement, 'keyup').pipe(
           map((e: any) => e.target.value),            // extract the value of the input
-          filter((text: string) => text.length > 1),  // filter out if empty
+          //filter((text: string) => text.length > 1),  // filter out if empty 
           debounceTime(250),                          // only once every 250ms
           tap(() => this.loading.emit(true)),         // enable loading
           // search, discarding old events if new input comes in
