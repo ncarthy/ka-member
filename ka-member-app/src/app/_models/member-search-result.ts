@@ -16,9 +16,9 @@ export class MemberSearchResult {
     country: string;
     reminderdate: Date;
     deletedate: Date;
-    lasttransactiondate: Date;
+    lasttransactiondate: string | null;
     paymentmethod: string
-    email: Date;
+    email: string;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
     
