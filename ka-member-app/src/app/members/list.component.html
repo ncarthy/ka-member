@@ -18,14 +18,15 @@
     List of members
   </caption>
   <thead>
-    <tr>
+    <tr class="m-0">
       <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
-      <th scope="col">Name</th>
+      <th scope="col"class="w-10">Name</th> <!-- 'w-10': https://stackoverflow.com/a/37928581' -->
       <th scope="col">Type</th>
       <th scope="col">Business Name</th>
-      <th scope="col">email</th>
+      <th scope="col">Email</th>
+      <th scope="col" class="w-25">Address</th>
       <th scope="col">Last Pmt</th>
-      <th scope="col">Actions</th>
+      <th scope="col" style="width: 20%">Actions</th>
       <!--<th style="width: 25%">Name</th>
             <th style="width: 15%">Type</th>
             <th style="width: 15%">Business Name</th>
@@ -40,6 +41,7 @@
       [member]="myMember"
       (onMemberDeleted)="memberWasDeleted($event)"
       (click)="memberSelected(myMember)"
+      class="m-0"
     ></tr>
     <tr *ngIf="!members">
       <td colspan="4" class="text-center">

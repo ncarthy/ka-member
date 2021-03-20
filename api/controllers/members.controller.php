@@ -201,7 +201,7 @@ class MembersCtl{
         $model->setNotDeleted();    
     }
 
-    echo json_encode($model->execute(), JSON_NUMERIC_CHECK);
+    echo json_encode($model->execute(), JSON_NUMERIC_CHECK); //$model is of type MemberFilter
   }
 
   

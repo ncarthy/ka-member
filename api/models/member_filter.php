@@ -66,9 +66,9 @@ class MemberFilter{
                 $members_item=array(
                     "id" => $idmember,
                     "idmembership" => $idmembership,
-                    "type" => $membershiptype,
+                    "membershiptype" => $membershiptype,
                     "name" => trim($name),
-                    "business" => $businessname,
+                    "businessname" => $businessname,
                     "note" => $note,
                     "addressfirstline" => $addressfirstline,
                     "addresssecondline" => $addresssecondline,
@@ -86,7 +86,7 @@ class MemberFilter{
                     "deletedate" => $deletedate,
                     "paymentmethod" => $paymentmethod,
                     "lasttransactiondate" => $lasttransactiondate,
-                    "email1" => $email1
+                    "email" => $email1
                 );
         
                 // create un-keyed list

@@ -1,11 +1,11 @@
 <div>
-  <div class="mb-3">
+  <div class="mb-3" *ngIf="!address||!address.postcode" >
     <a class="text-primary" (click)="showFormFields = !showFormFields"
       >Enter address manually</a
     >
   </div>
-  <div class="mb-3">
-    <label *ngIf="false" class="form-label">Find address by postcode:</label>
+  <div class="mb-3" *ngIf="!address||!address.postcode">
+    <label class="form-label">Find address by postcode:</label>
     <address-search-box
       (loading)="loading = $event"
       (results)="updateAddresses($event)"

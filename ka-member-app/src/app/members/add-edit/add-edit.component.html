@@ -61,18 +61,32 @@
         <div class="list-group-item">
           <div class="d-flex justify-content-between">
             <h5 class="card-title">Name {{ i + 1 }}</h5>
-            <div class = "mr-1">
-            <button type="button" [disabled]="loading" class = "mr-3" (click)="onAddName()">
-              <span
-                *ngIf="loading"
-                class="spinner-border spinner-border-sm mr-1"
-              ></span>
-              +
-            </button>
-            <button *ngIf="i!==0" type="button" class="close" (click)="onRemoveName(i)">
-              <span>&times;</span>
-            </button>
-          </div>
+            <div class="mr-1">
+              <button
+                type="button"
+                [disabled]="loading"
+                class="mr-3"
+                (click)="onAddName()"
+                placement="bottom"
+                ngbTooltip="Add new name"
+              >
+                <span
+                  *ngIf="loading"
+                  class="spinner-border spinner-border-sm mr-1"
+                ></span>
+                +
+              </button>
+              <button
+                *ngIf="i !== 0"
+                type="button"
+                class="close"
+                (click)="onRemoveName(i)"
+                placement="bottom"
+                ngbTooltip="Remove name"
+              >
+                <span>&times;</span>
+              </button>
+            </div>
           </div>
           <div [formGroup]="name" class="form-row">
             <div class="form-group col">
@@ -484,7 +498,7 @@
     </div>
   </div>
 
-  <hr />
+  <!--<hr />
   <p>Form Value: {{ form.value | json }}</p>
-  <p>Form Status: {{ form.status | json }}</p>
+  <p>Form Status: {{ form.status | json }}</p>-->
 </form>

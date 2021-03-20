@@ -40,7 +40,7 @@ export class MemberSearchService {
         // interested in doing strict type checking.
         return <any>response['records'].map((item: any) => {
           //console.log("raw item", item); // uncomment if you want to debug
-          return new MemberSearchResult({
+          /*return new MemberSearchResult({
             id: item.id,
             membershiptype: item.type,
             name: item.name,
@@ -51,7 +51,8 @@ export class MemberSearchService {
             deletedate: item.deletedate,
             lasttransactiondate: item.lasttransactiondate,
             email: item.email1
-          });
+          });*/
+          return new MemberSearchResult(item);
         });
       }));
   }

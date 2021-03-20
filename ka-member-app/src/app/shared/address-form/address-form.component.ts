@@ -73,7 +73,7 @@ export class AddressFormComponent
       .subscribe((countryArray) => {
         this.countries = countryArray;
         this.uk = countryArray.filter((c: Country) => c.name === 'United Kingdom')[0];
-        if (this.address) {
+        if (this.address && this.address.addressfirstline) {
           this.addressForm.controls['addressfirstline'].setValue(this.address.addressfirstline);
           this.addressForm.controls['addresssecondline'].setValue(this.address.addresssecondline);
           this.addressForm.controls['city'].setValue(this.address.city);
