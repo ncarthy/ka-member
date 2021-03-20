@@ -34,6 +34,7 @@ ALTER TABLE `member` CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 
 UPDATE `member` SET area = '' WHERE area = 'UK';
 UPDATE `member` SET city = 'London', county = '' WHERE county = 'London';
 UPDATE `member` SET country = 'UK' WHERE idmember IN (180,280);
+UPDATE member SET addressfirstline = addresssecondline, addresssecondline='' WHERE addressfirstline = '' AND addresssecondline !='';
 
 ALTER TABLE `membershipstatus` ADD `multiplier` DECIMAL(11,2) NOT NULL DEFAULT '1' AFTER `name`;
 ALTER TABLE `membershipstatus` ADD `membershipfee` DECIMAL(11,2) NOT NULL DEFAULT '0' AFTER `multiplier`;
