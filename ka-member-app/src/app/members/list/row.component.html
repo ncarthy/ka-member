@@ -1,6 +1,6 @@
 <th scope="row">{{ member.name }}</th>
 <td>{{ member.membershiptype }}</td>
-<td>{{ member.businessname }}</td>
+<td *ngIf="false">{{ member.businessname }}</td>
 <td class="text-center">
   <div>
     <div class="form-check" *ngIf="member.email">
