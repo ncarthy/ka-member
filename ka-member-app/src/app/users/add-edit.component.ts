@@ -58,7 +58,8 @@ export class AddEditComponent implements OnInit {
         if (this.formMode != UserFormMode.Add) {
             this.userService.getById(this.id)
                 .pipe(first())
-                .subscribe(x => this.form.patchValue(x));
+                .subscribe(x => this.form.patchValue(x))
+                .add(() => this.loading = false);
         }
     }
 

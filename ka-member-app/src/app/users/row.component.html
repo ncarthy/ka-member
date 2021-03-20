@@ -20,7 +20,7 @@
         <span *ngIf="user.isUpdating" class="spinner-border spinner-border-sm"></span>
         <span *ngIf="!user.isUpdating">Edit</span>
     </button>
-    <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
+    <button (click)="deleteUser($event)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
         <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
         <span *ngIf="!user.isDeleting">Delete</span>
     </button>

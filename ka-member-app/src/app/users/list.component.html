@@ -14,7 +14,8 @@
         <tr  *ngFor="let myUser of users"
             user-row
             [user]="myUser"
-            (onUserDeleted)="userWasDeleted($event)">
+            (onUserDeleted)="userWasDeleted($event)"
+            routerLink="edit/{{myUser.id}}">
         </tr>
         <tr *ngIf="!users">
             <td colspan="4" class="text-center">

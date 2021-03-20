@@ -1,6 +1,9 @@
 ﻿<h1 *ngIf="isUserAdd">Add User</h1>
 <h1 *ngIf="isUserEdit">Edit User</h1>
 <h1 *ngIf="isUserProfile">Profile</h1>
+<div *ngIf="loading">
+<span class="spinner-border spinner-border-lg align-center"></span>
+</div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-row">
         <div class="form-group col-7">
