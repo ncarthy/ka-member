@@ -1,7 +1,7 @@
 <th scope="row">{{ member.name }}</th>
 <td>{{ member.membershiptype }}</td>
-<td *ngIf="false">{{ member.businessname }}</td>
-<td class="text-center">
+<td class="d-none d-sm-table-cell">{{ member.businessname }}</td>
+<td class="text-center" class="d-none d-sm-table-cell">
   <div>
     <div class="form-check" *ngIf="member.email">
       <input
@@ -22,14 +22,15 @@
     </div>
   </div>
 </td>
-<td>
+<td class="d-none d-sm-table-cell w-25">
   <small
     >{{ member.addressfirstline }}<br />
+    {{ member.addresssecondline===''?'':member.addresssecondline }}<br *ngIf="member.addresssecondline"/>
     {{ member.city }}, {{ member.postcode }}</small
   >
 </td>
-<td>{{ member.lasttransactiondate }}</td>
-<td>
+<td class="w-15 d-none d-sm-table-cell"><small>{{ member.lasttransactiondate }}<br />{{member.paymentmethod}}</small></td>
+<td class="w-25">
   <button class="btn btn-sm btn-success mr-1">
     <span
       *ngIf="member.isUpdating"

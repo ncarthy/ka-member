@@ -17,6 +17,7 @@ export class MemberSearchResult {
     reminderdate: Date;
     deletedate: Date;
     lasttransactiondate: Date;
+    paymentmethod: string
     email: Date;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
@@ -39,8 +40,16 @@ export class MemberSearchResult {
         this.country = obj && obj.country || null;
         this.reminderdate = obj && obj.reminderdate || null;
         this.deletedate = obj && obj.deletedate || null;
-        this.lasttransactiondate = obj && obj.lasttransactiondate || null;
+        this.lasttransactiondate = obj && obj.lasttransactiondate && this.mysqlDateConvert(obj.lasttransactiondate) || null;
         this.email = obj && obj.email || null;
+        this.paymentmethod = obj && obj.paymentmethod || null;
+    }
+
+    mysqlDateConvert(m: string) : string{
+
+        const t:string[] = m.split(/[- :]/);
+        const d = new Date(Date.UTC(+t[0], +t[1]-1, +t[2]));
+        return d.toLocaleDateString("en-GB"); 
     }
 
     get addressToHTML(): string {

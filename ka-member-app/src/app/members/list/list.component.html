@@ -23,14 +23,14 @@
   <thead>
     <tr class="m-0">
       <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
-      <th scope="col" class="w-20">Name</th>
+      <th scope="col" class="w-25">Name</th>
       <!-- 'w-10': https://stackoverflow.com/a/37928581' -->
-      <th scope="col" *ngIf="isScreenLarge$ | async">Type</th>
-      <th scope="col" *ngIf="isScreenLarge$ | async">Business Name</th>
-      <th scope="col" *ngIf="isScreenLarge$ | async">Email</th>
-      <th scope="col" *ngIf="isScreenLarge$ | async" class="w-20">Address</th>
-      <th scope="col"*ngIf="isScreenLarge$ | async" >Last Pmt</th>
-      <th scope="col">Actions</th>
+      <th scope="col">Type</th>
+      <th scope="col" class="d-none d-sm-table-cell">Business Name</th>
+      <th scope="col" class="d-none d-sm-table-cell">@</th>
+      <th scope="col" class="d-none d-sm-table-cell w-25">Address</th>
+      <th scope="col" class="d-none d-sm-table-cell">Last Pmt</th>
+      <th scope="col" class="w-25">Actions</th>
       <!--<th style="width: 25%">Name</th>
             <th style="width: 15%">Type</th>
             <th style="width: 15%">Business Name</th>
