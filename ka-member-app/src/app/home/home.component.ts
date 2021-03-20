@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit{
     membersByType!: MemberCount[];
     total!: number;                         // Estimated number of members, adjusted by contribution
     count!: number;                         // Actual number of members
-    showCalculations: boolean = true;
 
     constructor(
         private userService: UserService,
