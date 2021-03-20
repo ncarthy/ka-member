@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MemberSearchResult } from '../_models';
+import { MemberSearchResult } from '@app/_models';
 import { MemberService, AlertService } from '@app/_services';
-import { MemberDeleteConfirmModalComponent } from './modal/member-delete-confirm.component';
+import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confirm.component';
 
 import { from } from 'rxjs';
 import { first } from 'rxjs/operators';

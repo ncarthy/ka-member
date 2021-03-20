@@ -11,12 +11,13 @@ import { SharedModule } from '@app/shared/shared.module';
 import { NgbUTCStringAdapter } from '@app/_helpers';
 
 import { LayoutComponent } from './layout.component';
-import { ListComponent } from './list.component';
-import { RowComponent } from './row.component';
+import { ListComponent } from './list/list.component';
+import { RowComponent } from './list/row.component';
 import { AddEditComponent } from './add-edit/add-edit.component';
 import { ManageComponent } from './manage/manage.component';
 import { MemberSearchBoxComponent } from './filter/search-box.component';
 import { MemberSearchService } from '@app/_services';
+import { FilterComponent } from './filter/filter.component';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { MemberSearchService } from '@app/_services';
     AddEditComponent,
     RowComponent,
     ManageComponent,
-    MemberSearchBoxComponent
+    MemberSearchBoxComponent,
+    FilterComponent
   ],
   providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }, MemberSearchService], // From https://stackoverflow.com/a/47945155/6941165
 })

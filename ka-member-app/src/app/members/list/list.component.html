@@ -1,17 +1,18 @@
 ﻿<h1>Members</h1>
 <div class="row justify-content-between">
-  <div class="col-sm-4">
+  <div class="col-4 mb-2">
     <member-search-box
       (loading)="(loading)"
       (results)="membersUpdated($event)"
     ></member-search-box>
   </div>
-  <div class="mr-3">
-    <a routerLink="add" class="btn btn-sm btn-success mb-2" *ngIf="user.isAdmin"
+  <div class="col justify-content-end mb-2 mr-2">
+    <a routerLink="add" class="btn btn-sm btn-success" *ngIf="user.isAdmin"
       >Add Member</a
     >
   </div>
 </div>
+<member-filter></member-filter>
 <!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
@@ -20,13 +21,14 @@
   <thead>
     <tr class="m-0">
       <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
-      <th scope="col"class="w-10">Name</th> <!-- 'w-10': https://stackoverflow.com/a/37928581' -->
+      <th scope="col" class="w-20">Name</th>
+      <!-- 'w-10': https://stackoverflow.com/a/37928581' -->
       <th scope="col">Type</th>
       <th scope="col">Business Name</th>
       <th scope="col">Email</th>
-      <th scope="col" class="w-25">Address</th>
+      <th scope="col" class="w-20">Address</th>
       <th scope="col">Last Pmt</th>
-      <th scope="col" style="width: 20%">Actions</th>
+      <th scope="col">Actions</th>
       <!--<th style="width: 25%">Name</th>
             <th style="width: 15%">Type</th>
             <th style="width: 15%">Business Name</th>

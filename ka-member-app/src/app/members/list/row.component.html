@@ -1,4 +1,4 @@
-<th scope="row" class="w-20">{{ member.name }}</th>
+<th scope="row">{{ member.name }}</th>
 <td>{{ member.membershiptype }}</td>
 <td>{{ member.businessname }}</td>
 <td class="text-center">
@@ -69,7 +69,7 @@
       class="spinner-border spinner-border-sm"
     ></span>
     <span *ngIf="!member.isDeleting">{{
-      member.membershiptype === "Pending" ? "Delete" : "Remove"
+      member.membershiptype === "Pending" ? "Delete" : "Set To Former"
     }}</span>
   </button>
 </td>
