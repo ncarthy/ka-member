@@ -6,7 +6,7 @@
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
   <!-- Buttons -->
-  <div class="d-flex justify-content-between">
+  <div class="col-sm-6 d-flex justify-content-between">
     <div class="form-group">
       <button type="submit" [disabled]="loading" class="btn btn-primary">
         <span
@@ -19,8 +19,9 @@
       <a routerLink="/members" class="btn btn-link">Cancel</a>
     </div>
     <div *ngIf="isMemberEdit">
-      <a class="btn btn-link" (click)="onSetToFormer()">Set to 'Former'</a>
+      <a *ngIf="f['statusID'].value!==9" class="btn btn-link" (click)="onSetToFormer()">Set to 'Former'</a>
       <button
+        *ngIf="f['statusID'].value===9 && namesFormGroups && namesFormGroups[0].value.surname!=='Anonymized'"
         type="button"
         [disabled]="loading"
         class="btn btn-warning mr-1"
@@ -33,6 +34,7 @@
         Anonymize
       </button>
       <button
+        *ngIf="f['statusID'].value===9"
         type="button"
         [disabled]="loading"
         class="btn btn-danger"
@@ -55,9 +57,8 @@
   <div class="row mb-1">
     <div
       *ngFor="let name of namesFormGroups; let i = index"
-      class="list-group list-group-flush col-sm-6"
-    >
-      <div class="col">
+      class="list-group list-group-flush col-sm-6 mb-1"
+    >      
         <div class="list-group-item">
           <div class="d-flex justify-content-between">
             <h5 class="card-title">Name {{ i + 1 }}</h5>
@@ -125,7 +126,6 @@
               </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -498,7 +498,7 @@
     </div>
   </div>
 
-  <!--<hr />
+  <hr />
   <p>Form Value: {{ form.value | json }}</p>
-  <p>Form Status: {{ form.status | json }}</p>-->
+  <p>Form Status: {{ form.status | json }}</p>
 </form>

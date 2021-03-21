@@ -7,7 +7,7 @@ import {
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'; // Need to import map https://stackoverflow.com/a/50218001/6941165
-import { MemberSearchResult } from '@app/_models';
+import { MemberSearchResult, YesNoAny } from '@app/_models';
 
 import { environment } from '@environments/environment';
 
@@ -23,11 +23,11 @@ export class MemberSearchService {
   /**
   * search
   */
-  search(query: string): Observable<MemberSearchResult[]> {
+  search(query: string, removed: YesNoAny = YesNoAny.NO): Observable<MemberSearchResult[]> {
 
     const params: string = [
       `businessorsurname=${query}`,
-      `removed=no`
+      `removed=${removed}`
     ].join('&');
 
     const queryUrl = `${environment.apiUrl}/members/filter?${params}`;
@@ -39,21 +39,12 @@ export class MemberSearchService {
         // The <any>response means we are telling TypeScript that we’re not 
         // interested in doing strict type checking.
         return <any>response['records'].map((item: any) => {
-          //console.log("raw item", item); // uncomment if you want to debug
-          /*return new MemberSearchResult({
-            id: item.id,
-            membershiptype: item.type,
-            name: item.name,
-            businessname: item.business,
-            note: item.note,
-            postcode: item.postcode,
-            reminderdate: item.reminderdate,
-            deletedate: item.deletedate,
-            lasttransactiondate: item.lasttransactiondate,
-            email: item.email1
-          });*/
           return new MemberSearchResult(item);
         });
       }));
+  }
+
+  getAll(): Observable<MemberSearchResult[]> {
+    return this.search('', YesNoAny.ANY);
   }
 }

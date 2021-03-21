@@ -1,3 +1,23 @@
+<div class="row justify-content-start">
+  <div class="col-sm-6 mb-2">
+    <div class="row">
+      <div class="col">
+        <member-search-box
+          (loading)="(loading)"
+        ></member-search-box>
+      </div>
+      <div class="col-4 mt-2">
+        <input
+          type="checkbox"
+          class="form-check-input"
+        />
+        <label class="form-check-label" for="flexCheckChecked">
+          Show Inactive
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
 <ngb-accordion #acc="ngbAccordion">
   <ngb-panel title="Filter">
     <ng-template ngbPanelHeader let-opened="opened">

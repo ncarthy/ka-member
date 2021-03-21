@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { first } from 'rxjs/operators';
 import { MemberSearchService, AuthenticationService } from '@app/_services';
-import { MemberSearchResult, User } from '@app/_models';
+import { MemberSearchResult, User, YesNoAny } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit {
@@ -22,7 +22,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     this.memberSearchService
-      .search('')
+      .search('', YesNoAny.ANY)
       .pipe(first())
       .subscribe((members) => (this.members = members));
 
