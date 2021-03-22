@@ -39,6 +39,7 @@
       member-row
       [member]="myMember"
       (onMemberDeleted)="memberWasDeleted($event)"
+      (onMemberUpdated)="memberWasUpdated($event)"
       (click)="memberSelected(myMember)"
       class="m-0"
     ></tr>

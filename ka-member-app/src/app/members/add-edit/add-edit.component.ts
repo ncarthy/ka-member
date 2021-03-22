@@ -34,6 +34,7 @@ import {
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
 import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
+import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confirm.component';
 
 @Component({
   templateUrl: 'add-edit.component.html',
@@ -360,6 +361,27 @@ export class AddEditComponent implements OnInit {
   }
 
   onDelete() {
-    console.log('Deleting now...');
+    from(
+      this.modalService.open(MemberDeleteConfirmModalComponent).result
+    ).subscribe(
+      (success) => {
+        this.memberService
+          .delete(this.id)
+          .pipe(first())
+          .subscribe(
+            (result: any) => {
+              this.alertService.success('Member deleted', {
+                keepAfterRouteChange: true,
+              });
+              this.router.navigate(['/members'], { relativeTo: this.route });
+            },
+            (error) =>
+              this.alertService.error('Unable to delete member.', {
+                keepAfterRouteChange: true,
+              })
+          );
+      },
+      (error) => {}
+    ); // If user dismisses the modal just ignore it
   }
 }

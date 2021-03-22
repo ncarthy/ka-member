@@ -37,6 +37,13 @@ export class ListComponent implements OnInit {
     this.members = this.members.filter((x) => x.id !== member.id);
   }
 
+  memberWasUpdated(member: MemberSearchResult): void {
+    var index = this.members.indexOf(member);
+    if (index !== -1) {
+      this.members[index] = member;
+  }
+  }
+
   memberSelected(member: MemberSearchResult): void {
     this.router.navigate([`members/edit/${member.id}`]);
   }

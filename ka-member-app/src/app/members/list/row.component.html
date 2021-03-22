@@ -31,11 +31,7 @@
   >
 </td>
 <td class="w-25">
-  <button class="btn btn-sm btn-success mr-1">
-    <span
-      *ngIf="member.isUpdating"
-      class="spinner-border spinner-border-sm"
-    ></span>
+  <button class="btn btn-sm btn-success mr-1" *ngIf="showButton(ButtonName.ADDTX)">
     <span>Add Tx</span>
   </button>
   <button
@@ -43,10 +39,6 @@
     class="btn btn-sm btn-primary mr-1"
     [disabled]="member.isUpdating"
   >
-    <span
-      *ngIf="member.isUpdating"
-      class="spinner-border spinner-border-sm"
-    ></span>
     <span *ngIf="!member.isUpdating">Edit</span>
   </button>
   <button
@@ -54,23 +46,32 @@
     class="btn btn-sm btn-info mr-1"
     [disabled]="member.isUpdating"
   >
-    <span
-      *ngIf="member.isUpdating"
-      class="spinner-border spinner-border-sm"
-    ></span>
-    <span *ngIf="!member.isUpdating">Manage</span>
+    <span>Manage</span>
   </button>
+  <button
+  (click)="anonymizeMember($event)"
+  class="btn btn-sm btn-warning"
+  [disabled]="member.isUpdating"
+  *ngIf="showButton(ButtonName.ANONYMIZE)"
+>
+  <span
+    *ngIf="member.isUpdating"
+    class="spinner-border spinner-border-sm"
+  ></span>
+  <span *ngIf="!member.isUpdating">Anonymize</span>
+</button>
   <button
     (click)="deleteMember($event)"
     class="btn btn-sm btn-danger btn-delete-member"
     [disabled]="member.isDeleting"
+    *ngIf="showButton(ButtonName.DELETE)"
   >
     <span
       *ngIf="member.isDeleting"
       class="spinner-border spinner-border-sm"
     ></span>
     <span *ngIf="!member.isDeleting">{{
-      member.membershiptype === "Pending" ? "Delete" : "Set To Former"
+      deleteButtonLabel()
     }}</span>
   </button>
 </td>
