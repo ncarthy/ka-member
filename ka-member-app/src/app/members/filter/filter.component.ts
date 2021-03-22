@@ -92,10 +92,9 @@ export class FilterComponent implements OnInit {
         })
       )
       .subscribe((results: MemberSearchResult[]) => {
-        // on sucesss
-        this.loading.emit(false);
+        // on sucess        
         this.filteredMembers.emit(results);
-      });
+      }).add(this.loading.emit(false));
   }
 
   /* Add a new date range to the template */

@@ -54,7 +54,7 @@ import {YesNoAny} from '@app/_models/yes-no.enum';
         if (this.countryid) {
             str = str.concat('&','countryid=',this.countryid.toString())
         }
-        if (this.email1) {
+        if (this.email1  && this.email1 !== YesNoAny.ANY) {
             str = str.concat('&','email1=',this.email1)
         }
         if (this.postonhold && this.postonhold !== YesNoAny.ANY) {
