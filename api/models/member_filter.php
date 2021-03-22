@@ -150,6 +150,16 @@ class MemberFilter{
         $this->conn->query($query);        
     }
 
+    public function setCountryID($countryID){      
+        $query = " DELETE M
+                    FROM " . $this->tablename . " M
+                    JOIN member M2 ON M.idmember = M2.idmember
+                    WHERE (M2.countryID IS NULL OR M2.countryID != ".$countryID.") AND 
+                        (M2.country2ID IS NULL OR M2.country2ID != ".$countryID.")
+                    ;";
+        $this->conn->query($query);        
+    }
+
     public function setAddressLineOne($addressfirstline){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M

@@ -103,6 +103,9 @@ class MembersCtl{
     if (isset($_GET['membertypeid']) && !empty($_GET['membertypeid'])) {
       $model->setMemberTypeID($_GET['membertypeid']);
     }
+    if (isset($_GET['countryid']) && !empty($_GET['countryid'])) {
+      $model->setCountryID($_GET['countryid']);
+    }
     if (isset($_GET['email1']) && !empty($_GET['email1'])) {
       $model->setEmail1($_GET['email1']);
     }

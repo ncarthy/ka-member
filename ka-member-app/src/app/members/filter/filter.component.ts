@@ -13,7 +13,8 @@ import {
   Country,
   MemberFilter,
   MemberSearchResult,
-  MembershipStatus
+  MembershipStatus,
+  YesNoAny,
 } from '@app/_models';
 
 @Component({
@@ -29,6 +30,7 @@ export class FilterComponent implements OnInit {
   form!: FormGroup;
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
+  filter!: MemberFilter;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -80,11 +82,14 @@ export class FilterComponent implements OnInit {
         tap(() => this.loading.emit(true)),
         // search, discarding old events if new input comes in
         switchMap(() => {
-          const filter = new MemberFilter();
-          filter.businessorsurname = this.f['bizOrSurname'].value;
-          filter.membertypeid = this.f['statusID'].value;
-          console.log(filter.toString());
-          return this.memberSearchService.filter(filter);})
+          this.filter = new MemberFilter();
+          this.filter.businessorsurname = this.f['bizOrSurname'].value;
+          this.filter.membertypeid = this.f['statusID'].value;
+          this.filter.countryid = this.f['countryID'].value;
+          this.filter.postonhold = this.f['postOnHold'].value;
+          this.filter.email1 = this.f['hasEmail'].value;
+          return this.memberSearchService.filter(this.filter);
+        })
       )
       .subscribe((results: MemberSearchResult[]) => {
         // on sucesss
@@ -109,5 +114,11 @@ export class FilterComponent implements OnInit {
     if (this.d.length > 1 && index) {
       this.d.removeAt(index);
     }
+  }
+
+  // Required so that the template can access the Enum
+  // From https://stackoverflow.com/a/59289208
+  public get YesNoAny() {
+    return YesNoAny;
   }
 }

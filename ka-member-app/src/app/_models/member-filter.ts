@@ -5,14 +5,15 @@ import {YesNoAny} from '@app/_models/yes-no.enum';
  */
  export class MemberFilter {
 
-    removed: YesNoAny = YesNoAny.NO;
+    removed: YesNoAny = YesNoAny.ANY;
 
     surname?: string;
     notsurname?: string;
     businessname?: string;
     businessorsurname?: string;
     membertypeid?: number;
-    email1?: string;
+    countryid?: number;
+    email1?: YesNoAny;
     postonhold?: YesNoAny;
     addressfirstline?: string;
     paymentmethod?: any;
@@ -50,10 +51,13 @@ import {YesNoAny} from '@app/_models/yes-no.enum';
         if (this.membertypeid) {
             str = str.concat('&','membertypeid=',this.membertypeid.toString())
         }
+        if (this.countryid) {
+            str = str.concat('&','countryid=',this.countryid.toString())
+        }
         if (this.email1) {
             str = str.concat('&','email1=',this.email1)
         }
-        if (this.postonhold) {
+        if (this.postonhold && this.postonhold !== YesNoAny.ANY) {
             str = str.concat('&','postonhold=',this.postonhold.toString())
         }
         if (this.addressfirstline) {

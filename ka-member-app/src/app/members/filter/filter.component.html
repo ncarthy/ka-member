@@ -1,15 +1,9 @@
-<form [formGroup]="form">
+<form [formGroup]="form"><!--This is a Reactive property-->
   <div class="row justify-content-start">
     <div class="col-sm-6 mb-2">
       <div class="row">
-        <div class="col">
+        <div class="col-sm-8">
           <member-search-box (loading)="(loading)"></member-search-box>
-        </div>
-        <div class="col-4 mt-2">
-          <input type="checkbox" class="form-check-input" />
-          <label class="form-check-label" for="flexCheckChecked">
-            Show Inactive
-          </label>
         </div>
       </div>
     </div>
@@ -53,7 +47,52 @@
             </div>
           </div>
           <div class="col-sm-4">Payment Method</div>
-          <div class="col-sm-4">Email 1 or 2</div>
+          <div class="col-sm-4 mb-1">
+            <div class="input-group mb-1">
+              <span class="input-group-text col-5" id="email-label"
+                >Have Email?</span
+              >
+              <div class="card p-2 col-7">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="email_yes"
+                    formControlName="hasEmail"
+                    [value]='YesNoAny.YES'
+                  />
+                  <label class="form-check-label" for="email_yes">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="email_no"
+                    formControlName="hasEmail"
+                    [value]='YesNoAny.NO'
+                  />
+                  <label class="form-check-label" for="email_no">
+                    No
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="email_any"
+                    formControlName="hasEmail"
+                    [value]='YesNoAny.ANY'
+                    checked
+                  />
+                  <label class="form-check-label" for="email_any">
+                    Any
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="w-100"><hr /></div>
           <div class="col-sm">Date Range Component</div>
           <div class="w-100"><hr /></div>
@@ -80,12 +119,58 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-4">Post On Hold</div>
+          <div class="col-sm-4 mb-1">
+            <div class="input-group mb-1">
+              <span class="input-group-text col-5" id="postonhold-label"
+                >Post On Hold</span
+              >
+              <div class="card p-2 col-7">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="postonholdyes"
+                    formControlName="postOnHold"
+                    [value]='YesNoAny.YES'
+                  />
+                  <label class="form-check-label" for="postonholdyes">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="postonholdno"
+                    formControlName="postOnHold"
+                    [value]='YesNoAny.NO'
+                  />
+                  <label class="form-check-label" for="postonholdno">
+                    No
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="postonholdany"
+                    formControlName="postOnHold"
+                    [value]='YesNoAny.ANY'
+                    checked
+                  />
+                  <label class="form-check-label" for="postonholdany">
+                    Any
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
           <hr />
         </div>
+        <!-- End of Row-->
       </ng-template>
     </ngb-panel>
   </ngb-accordion>
   <p>Form Value: {{ form.value | json }}</p>
-  <p>Form Status: {{ form.status | json }}</p>
+  <p>Filter: {{ filter }}</p>
 </form>
