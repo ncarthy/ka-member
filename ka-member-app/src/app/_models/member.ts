@@ -1,4 +1,4 @@
-import { Address,Country } from '@app/_models';
+import { Address } from '@app/_models';
 /**
  * Member is a data-structure that holds all the information stored
  * about the member in the database

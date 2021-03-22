@@ -6,7 +6,7 @@
       </button>
   </div>
 </div>
-<member-filter></member-filter>
+<member-filter (filteredMembers)="membersUpdated($event)"></member-filter>
 <!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>

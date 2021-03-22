@@ -17,13 +17,13 @@ export class ListComponent implements OnInit {
     private memberSearchService: MemberSearchService,
     private authenticationService: AuthenticationService
   ) {
-    this.user = authenticationService.userValue;
+    this.user = this.authenticationService.userValue;
   }
 
   ngOnInit() {
     this.memberSearchService
       .search('', YesNoAny.ANY)
-      .pipe(first())
+    //  .pipe(first())
       .subscribe((members) => (this.members = members));
 
     // Checks if screen size is less than 1024 pixels

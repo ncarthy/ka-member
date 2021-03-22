@@ -1,7 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   FormArray,
@@ -64,7 +63,7 @@ export class AddEditComponent implements OnInit {
     private membershipStatusService: MembershipStatusService,
     public modalService: NgbModal
   ) {
-    this.apiUser = authenticationService.userValue;
+    this.apiUser = this.authenticationService.userValue;
   }
 
   ngOnInit() {

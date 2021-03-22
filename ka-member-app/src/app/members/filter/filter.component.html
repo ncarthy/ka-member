@@ -1,50 +1,91 @@
-<div class="row justify-content-start">
-  <div class="col-sm-6 mb-2">
-    <div class="row">
-      <div class="col">
-        <member-search-box
-          (loading)="(loading)"
-        ></member-search-box>
-      </div>
-      <div class="col-4 mt-2">
-        <input
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="flexCheckChecked">
-          Show Inactive
-        </label>
+<form [formGroup]="form">
+  <div class="row justify-content-start">
+    <div class="col-sm-6 mb-2">
+      <div class="row">
+        <div class="col">
+          <member-search-box (loading)="(loading)"></member-search-box>
+        </div>
+        <div class="col-4 mt-2">
+          <input type="checkbox" class="form-check-input" />
+          <label class="form-check-label" for="flexCheckChecked">
+            Show Inactive
+          </label>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<ngb-accordion #acc="ngbAccordion">
-  <ngb-panel title="Filter">
-    <ng-template ngbPanelHeader let-opened="opened">
-      <div class="d-flex align-items-center justify-content-between">
-        <button ngbPanelToggle class="btn btn-link p-0">Filter</button>
-        <!--<div class="row justify-content-end mb-2 mr-2">
+  <ngb-accordion #acc="ngbAccordion">
+    <ngb-panel title="Filter">
+      <ng-template ngbPanelHeader let-opened="opened">
+        <div class="d-flex align-items-center justify-content-between">
+          <button ngbPanelToggle class="btn btn-link p-0">Filter</button>
+          <!--<div class="row justify-content-end mb-2 mr-2">
             <div class="col">
               <a class="btn btn-sm btn-success" 
                 >Add Member</a
               >
             </div>
           </div>-->
-      </div>
-    </ng-template>
-    <ng-template ngbPanelContent>
-      <div class="row">
-        <div class="col-sm-4">Membership Type</div>
-        <div class="col-sm-4">Payment Method</div>
-        <div class="col-sm-4">Email 1 or 2</div>
-        <div class="w-100"><hr /></div>
-        <div class="col-sm">Date Range Component</div>
-        <div class="w-100"><hr /></div>        
-        <div class="col-sm-4">Address</div>
-        <div class="col-sm-4">Country</div>
-        <div class="col-sm-4">Post On Hold</div>
-        <hr />
-      </div>
-    </ng-template>
-  </ngb-panel>
-</ngb-accordion>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <div class="row">
+          <div class="col-sm-4 mb-1">
+            <div class="input-group mb-1">
+              <span class="input-group-text col-4" id="status-label"
+                >Status</span
+              >
+              <div class="card p-2 col-8">
+                <select
+                  formControlName="statusID"
+                  id="statusSelect"
+                  name="statusSelect"
+                  class="form-control"
+                >
+                  <option
+                    *ngFor="let status of membershipStatuses$ | async"
+                    [ngValue]="status.id"
+                  >
+                    {{ status.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">Payment Method</div>
+          <div class="col-sm-4">Email 1 or 2</div>
+          <div class="w-100"><hr /></div>
+          <div class="col-sm">Date Range Component</div>
+          <div class="w-100"><hr /></div>
+          <div class="col-sm-4">Address</div>
+          <div class="col-sm-4 mb-1">
+            <div class="input-group mb-1">
+              <span class="input-group-text col-4" id="country-label"
+                >Country</span
+              >
+              <div class="card p-2 col-8">
+                <select
+                  formControlName="countryID"
+                  id="countrySelect"
+                  name="countrySelect"
+                  class="form-control"
+                >
+                  <option
+                    *ngFor="let country of countries$ | async"
+                    [ngValue]="country.id"
+                  >
+                    {{ country.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">Post On Hold</div>
+          <hr />
+        </div>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+  <p>Form Value: {{ form.value | json }}</p>
+  <p>Form Status: {{ form.status | json }}</p>
+</form>
