@@ -106,6 +106,9 @@ class MembersCtl{
     if (isset($_GET['email1']) && !empty($_GET['email1'])) {
       $model->setEmail1($_GET['email1']);
     }
+    if (isset($_GET['postonhold']) && !empty($_GET['postonhold'])) {
+      $model->setPostOnHold($_GET['postonhold']);
+    }
     if (isset($_GET['addressfirstline']) && !empty($_GET['addressfirstline'])) {
       $model->setAddressLineOne($_GET['addressfirstline']);
     }

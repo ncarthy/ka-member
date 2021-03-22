@@ -186,6 +186,31 @@ class MemberFilter{
         $this->conn->query($query);        
     }
 
+    public function setPostOnHold($postonhold){    
+        switch ($postonhold) {
+            case 'n':
+            case 'no':
+                $query = " DELETE 
+                    FROM " . $this->tablename . "
+                    WHERE postonhold IS NOT NULL AND postonhold != 0                    
+                    ;";
+                $this->conn->query($query);
+                break;
+
+            case 'y':
+            case 'yes':
+                $query = " DELETE 
+                    FROM " . $this->tablename . "
+                    WHERE postonhold IS NULL OR postonhold = 0
+                    ;";
+                $this->conn->query($query);
+                break;
+
+            default:
+                break;
+        }
+    }
+
     public function setExpiryRange($start, $end){      
         $this->setDateRange('expirydate',$start,$end);
     }
@@ -253,7 +278,7 @@ class MemberFilter{
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
-                        '                     ' as paymentmethod
+                        '                     ' as paymentmethod, m.postonhold
                         FROM member m
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
                         GROUP BY m.idmember
