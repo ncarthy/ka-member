@@ -56,7 +56,8 @@
         Delete
       </button>
     </div>
-  </div><!-- End of Buttons -->
+  </div>
+  <!-- End of Buttons -->
 
   <small *ngIf="f.username.value"
     >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
@@ -157,26 +158,28 @@
         </div>
       </div>
       <div class="input-group mb-1">
-        <span class="input-group-text col-2">Note</span>
+        <span class="input-group-text col-4" id="note-addon1">Note</span>
         <textarea
           class="form-control"
-          aria-label="With textarea"
           formControlName="note"
+          aria-label="Note"
+          aria-describedby="note-addon1"
           placement="bottom"
           ngbTooltip="1000 character limit."
         ></textarea>
       </div>
       <div class="input-group mb-1">
-        <span class="input-group-text col-2" id="basic-addon1">Bank Ref</span>
-        <input
-          type="text"
+        <span class="input-group-text col-4" id="bankpayerref-addon1"
+          >Bank Ref
+        </span>
+        <textarea
           class="form-control"
           formControlName="bankpayerref"
           aria-label="BankPayerRef"
-          aria-describedby="basic-addon1"
+          aria-describedby="bankpayerref-addon1"
           placement="bottom"
           ngbTooltip="The payment reference found on a bank statement. May be left blank."
-        />
+        ></textarea>
       </div>
     </div>
     <!--End of Status, Note & Bank Refo-->
@@ -425,9 +428,8 @@
         </div>
       </div>
     </div>
-
-
-  </div><!-- End of Row-->
+  </div>
+  <!-- End of Row-->
 
   <!--Debug Information for Testing -->
   <hr />
