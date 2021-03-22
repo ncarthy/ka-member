@@ -9,6 +9,16 @@ import { Role, User } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+
+    /* This pattern (private BehaviorSubject<object> & public 
+       Observable<object>) is likely being used because:
+        1. BehaviourSubject guarantees there is always a valid User
+        2. Using the asObservable() user public property exposes the
+           data from the subject, but at the same time prevents
+           having data inadvertently pushed into the subject
+
+    Further reading: https://medium.com/@benlesh/on-the-subject-of-subjects-in-rxjs-2b08b7198b93
+    */
     private userSubject: BehaviorSubject<User>;
     public user: Observable<User>;
 
