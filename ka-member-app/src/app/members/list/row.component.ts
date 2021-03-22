@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MemberSearchResult } from '@app/_models';
-import { MemberService, AlertService } from '@app/_services';
+import { MemberSearchResult, User } from '@app/_models';
+import { MemberService, AlertService, AuthenticationService } from '@app/_services';
 import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
 import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confirm.component';
 import { ButtonName } from './button-name.enum';
@@ -20,14 +20,17 @@ export class RowComponent {
   @Input() member!: MemberSearchResult;
   @Output() onMemberDeleted: EventEmitter<MemberSearchResult>;
   @Output() onMemberUpdated: EventEmitter<MemberSearchResult>;
+  user!: User;
 
   constructor(
     private memberService: MemberService,
     private alertService: AlertService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private authenticationService: AuthenticationService
   ) {
     this.onMemberDeleted = new EventEmitter();
     this.onMemberUpdated = new EventEmitter();
+    this.user = this.authenticationService.userValue;
   }
 
   deleteMember(e: Event) {

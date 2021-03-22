@@ -30,7 +30,7 @@
     {{ member.city }}, {{ member.postcode }}</small
   >
 </td>
-<td class="w-25">
+<td class="w-25" *ngIf="user.isAdmin">
   <button class="btn btn-sm btn-success mr-1" *ngIf="showButton(ButtonName.ADDTX)">
     <span>Add Tx</span>
   </button>

@@ -17,6 +17,7 @@ import { AdminComponent } from './admin';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersModule } from './members/members.module';
 import { SharedModule } from '@app/shared/shared.module';
+import { ReportsComponent } from './reports/reports.component';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { SharedModule } from '@app/shared/shared.module';
         HomeComponent,
         LoginComponent,
         AdminComponent,
-        AlertComponent      
+        AlertComponent,
+        ReportsComponent      
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

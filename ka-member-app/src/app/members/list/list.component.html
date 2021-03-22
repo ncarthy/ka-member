@@ -1,7 +1,7 @@
 ﻿<div class="row justify-content-between">
   <div class="col-sm-6"><h1>Member List</h1></div>
   <div class="col-sm-2">
-      <button routerLink="add" class="btn btn-sm btn-success m-1">
+      <button routerLink="add" class="btn btn-sm btn-success m-1" *ngIf="user.isAdmin">
         Add New Member
       </button>
   </div>
@@ -25,12 +25,7 @@
       <th scope="col" class="d-none d-sm-table-cell">Em</th>
       <th scope="col" class="d-none d-sm-table-cell">Last Pmt</th>
       <th scope="col" class="d-none d-sm-table-cell w-25">Address</th>
-      <th scope="col" class="w-25">Actions</th>
-      <!--<th style="width: 25%">Name</th>
-            <th style="width: 15%">Type</th>
-            <th style="width: 15%">Business Name</th>
-            <th style="width: 25%">email</th>
-            <th style="width: 20%">Actions</th>-->
+      <th scope="col" class="w-25" *ngIf="user.isAdmin">Actions</th>
     </tr>
   </thead>
   <tbody>

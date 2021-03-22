@@ -6,6 +6,7 @@ import { LoginComponent } from './login';
 import { AdminComponent } from './admin';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
+import { ReportsComponent } from './reports/reports.component';
 
 const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
 const membersModule = () => import('./members/members.module').then(x => x.MembersModule);
@@ -25,6 +26,11 @@ const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'reports',
+        component: ReportsComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'users',
