@@ -50,4 +50,8 @@ export class ListComponent implements OnInit {
   membersUpdated(members: MemberSearchResult[]) {
     this.members = members;
   }
+
+  filterIsLoading(value: boolean) {
+    console.log(`Filter is loading value: ${value}`)
+  }
 }

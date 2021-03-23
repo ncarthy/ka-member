@@ -16,6 +16,7 @@ import {
   MembershipStatus,
   YesNoAny,
 } from '@app/_models';
+import { BinaryOperatorToken } from 'typescript';
 
 @Component({
   selector: 'member-filter',
@@ -27,9 +28,11 @@ export class FilterComponent implements OnInit {
     MemberSearchResult[]
   > = new EventEmitter<MemberSearchResult[]>();
 
+  loadingValue: boolean = false;
   form!: FormGroup;
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
+  
   filter!: MemberFilter;
   filterSubject: Subject<MemberFilter> = new BehaviorSubject<MemberFilter>(new MemberFilter());
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
@@ -42,6 +45,8 @@ export class FilterComponent implements OnInit {
   ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
+
+    this.loading.subscribe((value:boolean) => this.loadingValue = value);
   }
 
   // convenience getters for easy access to form fields

@@ -1,5 +1,6 @@
 <!--'[formGroup]' is a Reactive forms property-->
-<form [formGroup]="form">
+<!--The *ngIf is in place to stop errors of 'Expression has changed after it was checked.'-->
+<form [formGroup]="form"  *ngIf="!loadingValue">
   <div class="row justify-content-start">
     <div class="col-sm-6 mb-2">
       <div class="row">

@@ -4,6 +4,8 @@
   <span class="spinner-border spinner-border-lg align-center"></span>
 </div>
 
+<!--'[formGroup]' is a Reactive forms property-->
+<!--The *ngIf is in place to stop errors of 'Expression has changed after it was checked.'-->
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
   <!-- Buttons -->
   <div class="col-sm-6 d-flex justify-content-between">
