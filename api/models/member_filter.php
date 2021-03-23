@@ -150,21 +150,22 @@ class MemberFilter{
         $this->conn->query($query);        
     }
 
-    public function setCountryID($countryID){      
+    public function setPrimaryCountryID($countryID){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member M2 ON M.idmember = M2.idmember
-                    WHERE (M2.countryID IS NULL OR M2.countryID != ".$countryID.") AND 
-                        (M2.country2ID IS NULL OR M2.country2ID != ".$countryID.")
+                    WHERE M2.countryID IS NULL OR M2.countryID != ".$countryID."
                     ;";
         $this->conn->query($query);        
     }
 
-    public function setAddressLineOne($addressfirstline){      
+    public function setPrimaryAddress($address){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member M2 ON M.idmember = M2.idmember
-                    WHERE M2.`addressfirstline` IS NULL OR M2.`addressfirstline` NOT LIKE '%".$addressfirstline."%'
+                    WHERE (M2.`addressfirstline` IS NULL OR M2.`addressfirstline` NOT LIKE '%".$address."%') AND (
+                        M2.`addresssecondline` IS NULL OR M2.`addresssecondline` NOT LIKE '%".$address."%') AND (
+                        M2.`city` IS NULL OR M2.`city` NOT LIKE '%".$address."%')
                     ;";
         $this->conn->query($query);        
     }
@@ -177,6 +178,10 @@ class MemberFilter{
                             paymentmethod NOT LIKE '".$paymentmethod."%'
                         ;";
         $this->conn->query($query);        
+    }
+
+    public function setBankAccount($bankaccountID){      
+            // not implemented
     }
 
     public function setEmail1($email1){      

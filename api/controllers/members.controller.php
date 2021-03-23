@@ -104,7 +104,7 @@ class MembersCtl{
       $model->setMemberTypeID($_GET['membertypeid']);
     }
     if (isset($_GET['countryid']) && !empty($_GET['countryid'])) {
-      $model->setCountryID($_GET['countryid']);
+      $model->setPrimaryCountryID($_GET['countryid']);
     }
     if (isset($_GET['email1']) && !empty($_GET['email1'])) {
       $model->setEmail1($_GET['email1']);
@@ -112,11 +112,14 @@ class MembersCtl{
     if (isset($_GET['postonhold']) && !empty($_GET['postonhold'])) {
       $model->setPostOnHold($_GET['postonhold']);
     }
-    if (isset($_GET['addressfirstline']) && !empty($_GET['addressfirstline'])) {
-      $model->setAddressLineOne($_GET['addressfirstline']);
+    if (isset($_GET['address']) && !empty($_GET['address'])) {
+      $model->setPrimaryAddress($_GET['address']);
     }
-    if (isset($_GET['paymentmethod']) && !empty($_GET['paymentmethod'])) {
-      $model->setPaymentMethod($_GET['paymentmethod']);
+    if (isset($_GET['paymentmethodid']) && !empty($_GET['paymentmethodid'])) {
+      $model->setPaymentMethod($_GET['paymentmethodid']);
+    }
+    if (isset($_GET['bankaccountid']) && !empty($_GET['bankaccountid'])) {
+      $model->setBankAccount($_GET['bankaccountid']);
     }
     if(isset($_GET['expirydatestart']) || isset($_GET['expirydateend'])) {
       $start='';

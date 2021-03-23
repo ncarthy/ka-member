@@ -60,14 +60,15 @@ export class FilterComponent implements OnInit {
       address: [null],
 
       // checkboxes
-      includeInactive: [false],
-      postOnHold: [false],
-      hasEmail: [false],
+      includeInactive: ['any'],
+      postOnHold: ['any'],
+      hasEmail: ['any'],
 
       // selects (drop downs)
       statusID: [null],
       countryID: [null],
-      paymentMethod: [null],
+      paymentMethodID: [null],
+      bankAccountID: [null],
 
       // date pickers
       dateRanges: new FormArray([]),
@@ -86,10 +87,16 @@ export class FilterComponent implements OnInit {
         switchMap(() => {
           this.filter = new MemberFilter();
           this.filter.businessorsurname = this.f['bizOrSurname'].value;
+          this.filter.address = this.f['address'].value;
+          this.filter.removed = this.f['includeInactive'].value;
+          this.filter.postonhold = this.f['postOnHold'].value;
+          this.filter.email1 = this.f['hasEmail'].value;          
           this.filter.membertypeid = this.f['statusID'].value;
           this.filter.countryid = this.f['countryID'].value;
-          this.filter.postonhold = this.f['postOnHold'].value;
-          this.filter.email1 = this.f['hasEmail'].value;
+          this.filter.paymentmethodID = this.f['paymentMethodID'].value;
+          this.filter.bankaccountID = this.f['bankAccountID'].value;
+
+          this.filter.maxresults = this.f['maxResults'].value;
           return this.memberSearchService.filter(this.filter);
         })
       )

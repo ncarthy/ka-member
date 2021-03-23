@@ -15,8 +15,9 @@ import {YesNoAny} from '@app/_models/yes-no.enum';
     countryid?: number;
     email1?: YesNoAny;
     postonhold?: YesNoAny;
-    addressfirstline?: string;
-    paymentmethod?: any;
+    address?: string;
+    paymentmethodID?: number;
+    bankaccountID?: number;
     joindatestart?: Date;
     joindateend?: Date;
     expirydatestart?: Date;
@@ -29,6 +30,7 @@ import {YesNoAny} from '@app/_models/yes-no.enum';
     lasttransactiondateend?: Date;
     deletedatestart?: Date;
     deletedateend?: Date;
+    maxresults?: number;
 
     /* overload toString */
     /* From https://stackoverflow.com/a/35361695/6941165 */
@@ -60,11 +62,17 @@ import {YesNoAny} from '@app/_models/yes-no.enum';
         if (this.postonhold && this.postonhold !== YesNoAny.ANY) {
             str = str.concat('&','postonhold=',this.postonhold.toString())
         }
-        if (this.addressfirstline) {
-            str = str.concat('&','addressfirstline=',this.addressfirstline)
+        if (this.address) {
+            str = str.concat('&','address=',this.address)
         }
-        if (this.paymentmethod) {
-            str = str.concat('&','paymentmethod=',this.paymentmethod)
+        if (this.paymentmethodID) {
+            str = str.concat('&','paymentmethod=',this.paymentmethodID.toString())
+        }
+        if (this.bankaccountID) {
+            str = str.concat('&','paymentmethod=',this.bankaccountID.toString())
+        }
+        if (this.maxresults) {
+            str = str.concat('&','maxresults=',this.maxresults.toString())
         }
 
         return str;
