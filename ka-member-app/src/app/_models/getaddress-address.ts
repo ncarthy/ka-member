@@ -44,7 +44,7 @@ export class GetAddressAddress {
         Object.assign(this, init);
 
         // Squash line 1 & 2 together and move line 3 to line2
-        // Have to do this to fit database model
+        // I do this to fit database model
         if (this.line3) {
             this.line1+=', ';
             this.line1!+=this.line2;
