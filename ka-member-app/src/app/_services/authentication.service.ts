@@ -16,6 +16,9 @@ export class AuthenticationService {
         2. Using the asObservable() user public property exposes the
            data from the subject, but at the same time prevents
            having data inadvertently pushed into the subject
+        3. By having the userValue a public property of an injectable
+           service, the details of the logged-in user are available
+           throughout the app.
 
     Further reading: https://medium.com/@benlesh/on-the-subject-of-subjects-in-rxjs-2b08b7198b93
     */
