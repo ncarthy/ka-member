@@ -35,7 +35,7 @@ Config::write('api.path', '/api/');
 // db
 Config::write('db.host', '192.168.1.22');
 Config::write('db.port', '3306');
-Config::write('db.name', 'knightsb_membership');
+Config::write('db.name', 'knightsb_membership2');
 Config::write('db.user', 'knightsb_member');
 Config::write('db.password', 'SsP4qIm4omu4M');
 
