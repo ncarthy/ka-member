@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
-import { Observable } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
 
 import {
@@ -31,6 +31,8 @@ export class FilterComponent implements OnInit {
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
   filter!: MemberFilter;
+  filterSubject: Subject<MemberFilter> = new BehaviorSubject<MemberFilter>(new MemberFilter());
+  filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,11 +48,11 @@ export class FilterComponent implements OnInit {
   get f() {
     return this.form.controls;
   }
-  get d() {
+  get dr() {
     return this.f.dateRanges as FormArray;
   }
   get dateRangesFormGroups() {
-    return this.d.controls as FormGroup[];
+    return this.dr.controls as FormGroup[];
   }
 
   ngOnInit(): void {
@@ -97,6 +99,10 @@ export class FilterComponent implements OnInit {
           this.filter.bankaccountID = this.f['bankAccountID'].value;
 
           this.filter.maxresults = this.f['maxResults'].value;
+          this.filterSubject.next(this.filter);
+          return this.filter$;
+        }),
+        switchMap((filter: MemberFilter) => {
           return this.memberSearchService.filter(this.filter);
         })
       )
@@ -108,23 +114,25 @@ export class FilterComponent implements OnInit {
 
   /* Add a new date range to the template */
   onAddDateRange(startDate = '', endDate = '', dateType = '') {
-    this.d.push(
+    console.log(this.dr.length);
+    this.dr.push(
       this.formBuilder.group({
         startDate: [startDate],
         endDate: [endDate],
         dateType: [dateType],
       })
     );
+    console.log(this.dr.length);
   }
 
   /* remove the selected date range object */
   onRemoveDateRange(index: number) {
-    if (this.d.length > 1 && index) {
-      this.d.removeAt(index);
+    if (this.dr.length > 1 && index) {
+      this.dr.removeAt(index);
     }
   }
 
-  // Required so that the template can access the Enum
+  // Required so that the template can access the EnumS
   // From https://stackoverflow.com/a/59289208
   public get YesNoAny() {
     return YesNoAny;

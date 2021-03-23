@@ -22,8 +22,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     this.memberSearchService
-      .search('', YesNoAny.ANY)
-    //  .pipe(first())
+      .search('', YesNoAny.NO)
       .subscribe((members) => (this.members = members));
 
     // Checks if screen size is less than 1024 pixels
