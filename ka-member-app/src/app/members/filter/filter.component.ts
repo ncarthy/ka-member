@@ -1,12 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  tap,
+  map,
+} from 'rxjs/operators';
 
 import {
   CountryService,
-  MemberSearchService,
+  MemberFilterService,
   MembershipStatusService,
 } from '@app/_services';
 import {
@@ -28,25 +34,27 @@ export class FilterComponent implements OnInit {
     MemberSearchResult[]
   > = new EventEmitter<MemberSearchResult[]>();
 
-  loadingValue: boolean = false;
+  initFinished: boolean = false;
   form!: FormGroup;
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
-  
-  filter!: MemberFilter;
-  filterSubject: Subject<MemberFilter> = new BehaviorSubject<MemberFilter>(new MemberFilter());
+
+  //filter!: MemberFilter;
+  filterSubject: Subject<MemberFilter> = new BehaviorSubject<MemberFilter>(
+    new MemberFilter({removed: YesNoAny.NO}) 
+  );
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
 
   constructor(
     private formBuilder: FormBuilder,
     private countryService: CountryService,
-    private memberSearchService: MemberSearchService,
+    private MemberFilterService: MemberFilterService,
     private membershipStatusService: MembershipStatusService
   ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
 
-    this.loading.subscribe((value:boolean) => this.loadingValue = value);
+    //this.loading.subscribe((value: boolean) => (this.loadingValue = value));
   }
 
   // convenience getters for easy access to form fields
@@ -54,7 +62,7 @@ export class FilterComponent implements OnInit {
     return this.form.controls;
   }
   get dr() {
-    return this.f.dateRanges as FormArray;
+    return this.f.dateranges as FormArray;
   }
   get dateRangesFormGroups() {
     return this.dr.controls as FormGroup[];
@@ -72,21 +80,46 @@ export class FilterComponent implements OnInit {
       email1: ['any'],
 
       // selects (drop downs)
-      statusID: [null],
-      countryID: [null],
-      paymentmethodID: [null],
-      bankaccountID: [null],
+      membertypeid: [null],
+      countryid: [null],
+      paymentmethodid: [null],
+      bankaccountid: [null],
 
       // date pickers
-      dateRanges: new FormArray([]),
+      dateranges: new FormArray([]),
 
-      maxresults:[null]
+      maxresults: [null],
+
+      ignore: [null, Validators.required],
     });
 
     // Add one date range
     this.onAddDateRange();
 
     this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        map(() => new MemberFilter(this.form.value))
+      )
+      .subscribe((filter: MemberFilter) => this.filterSubject.next(filter));
+
+    this.filter$
+      .pipe(
+        distinctUntilChanged(),
+        tap(() => this.loading.emit(true)),
+        switchMap((filter: MemberFilter) =>
+          this.MemberFilterService.filter(filter)
+        )
+      )
+      .subscribe((results: MemberSearchResult[]) => {
+        this.filteredMembers.emit(results);
+      })
+      .add(this.loading.emit(false));
+
+    this.initFinished = true;
+
+    /*
+          this.form.valueChanges
       .pipe(
         debounceTime(500),
         tap(() => this.loading.emit(true)),
@@ -116,6 +149,7 @@ export class FilterComponent implements OnInit {
         // on sucess        
         this.filteredMembers.emit(results);
       }).add(this.loading.emit(false));
+      */
   }
 
   /* Add a new date range to the template */
@@ -147,9 +181,8 @@ export class FilterComponent implements OnInit {
   }
 
   onReset() {
-  
     this.form.reset({
-      dateRanges: {}
+      dateRanges: {},
     });
   }
 }

@@ -62,16 +62,5 @@ export class AddressSearchService {
     );
 
     return  addresses$;
-
-/*
-    return this.http.get(queryUrl).pipe(
-      map((response : any) => {
-        return <Address[]>response['addresses'].map((item : string[]) => {
-          console.log("raw item", item); // uncomment if you want to debug
-          return new Address(item);
-      });
-    }));
-
-    */
   }
 }

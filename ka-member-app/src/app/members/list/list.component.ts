@@ -2,8 +2,7 @@
 
 import { Router } from '@angular/router';
 
-import { first } from 'rxjs/operators';
-import { MemberSearchService, AuthenticationService } from '@app/_services';
+import { AuthenticationService } from '@app/_services';
 import { MemberSearchResult, User, YesNoAny } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
@@ -14,20 +13,16 @@ export class ListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private memberSearchService: MemberSearchService,
     private authenticationService: AuthenticationService
   ) {
     this.user = this.authenticationService.userValue;
   }
 
   ngOnInit() {
-    this.memberSearchService
-      .search('', YesNoAny.NO)
-      .subscribe((members) => (this.members = members));
 
-    // Checks if screen size is less than 1024 pixels
+    // Checks if screen size is less than 768 pixels
+    // Is used to show/hide table columns
     const checkScreenSize = () => {
-      console.log(document.body.offsetWidth);
       return document.body.offsetWidth <= 768;
     };
   }
@@ -52,6 +47,6 @@ export class ListComponent implements OnInit {
   }
 
   filterIsLoading(value: boolean) {
-    console.log(`Filter is loading value: ${value}`)
+    this.loading = value;
   }
 }
