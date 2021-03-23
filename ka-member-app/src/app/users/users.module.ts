@@ -3,6 +3,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { UsersRoutingModule } from './users-routing.module';
+import { SharedModule } from '@app/shared/shared.module';
+
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
@@ -12,7 +14,8 @@ import { RowComponent } from './row.component';
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        UsersRoutingModule
+        UsersRoutingModule,
+        SharedModule
     ],
     declarations: [
         LayoutComponent,

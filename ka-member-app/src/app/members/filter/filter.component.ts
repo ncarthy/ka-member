@@ -71,6 +71,8 @@ export class FilterComponent implements OnInit {
 
       // date pickers
       dateRanges: new FormArray([]),
+
+      maxResults:[null]
     });
 
     // Add one date range
@@ -119,5 +121,12 @@ export class FilterComponent implements OnInit {
   // From https://stackoverflow.com/a/59289208
   public get YesNoAny() {
     return YesNoAny;
+  }
+
+  onReset() {
+  
+    this.form.reset({
+      dateRanges: {}
+    });
   }
 }

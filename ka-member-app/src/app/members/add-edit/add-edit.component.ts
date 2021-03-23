@@ -285,7 +285,7 @@ export class AddEditComponent implements OnInit {
     this.memberService
       .update(this.id, this.form.value)
       .pipe(
-        concatMap((success: any) => {
+        concatMap((success: any) => { // subscribe to this Observable after the other completes
           return this.memberNameService.updateAllForMember(
             // Use of non-null assertion operator
             // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator

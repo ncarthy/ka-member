@@ -14,37 +14,34 @@
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="d-flex align-items-center justify-content-between">
           <button ngbPanelToggle class="btn btn-link p-0">Filter</button>
-          <!--<div class="row justify-content-end mb-2 mr-2">
+          <div class="row justify-content-end mb-2 mr-2">
             <div class="col">
-              <a class="btn btn-sm btn-success" 
-                >Add Member</a
-              >
+              <a class="btn btn-link" (click)="onReset()">Reset</a>
             </div>
-          </div>-->
+            <div class="col">
+              <a class="btn btn-link"><i class="fas fa-cog"></i></a>
+            </div>
+          </div>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
         <div class="row">
           <div class="col-sm-4 mb-1">
             <div class="input-group mb-1">
-              <span class="input-group-text col-4" id="status-label"
-                >Type</span
+              <span class="input-group-text col-4" id="status-label">Type</span>
+              <select
+                formControlName="statusID"
+                id="statusSelect"
+                name="statusSelect"
+                class="form-control"
               >
-              <div class="card p-2 col-8">
-                <select
-                  formControlName="statusID"
-                  id="statusSelect"
-                  name="statusSelect"
-                  class="form-control"
+                <option
+                  *ngFor="let status of membershipStatuses$ | async"
+                  [ngValue]="status.id"
                 >
-                  <option
-                    *ngFor="let status of membershipStatuses$ | async"
-                    [ngValue]="status.id"
-                  >
-                    {{ status.name }}
-                  </option>
-                </select>
-              </div>
+                  {{ status.name }}
+                </option>
+              </select>
             </div>
           </div>
           <div class="col-sm-4">Payment Method</div>
@@ -53,21 +50,19 @@
               <span class="input-group-text col-4" id="country-label"
                 >Country</span
               >
-              <div class="card p-2 col-8">
-                <select
-                  formControlName="countryID"
-                  id="countrySelect"
-                  name="countrySelect"
-                  class="form-control"
+              <select
+                formControlName="countryID"
+                id="countrySelect"
+                name="countrySelect"
+                class="form-control"
+              >
+                <option
+                  *ngFor="let country of countries$ | async"
+                  [ngValue]="country.id"
                 >
-                  <option
-                    *ngFor="let country of countries$ | async"
-                    [ngValue]="country.id"
-                  >
-                    {{ country.name }}
-                  </option>
-                </select>
-              </div>
+                  {{ country.name }}
+                </option>
+              </select>
             </div>
           </div>
 

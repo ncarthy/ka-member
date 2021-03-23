@@ -28,14 +28,14 @@
                 <li [ngbNavItem]="1">
                     <a class="nav-item nav-link" routerLink="/">Home</a>
                 </li>
+                <li [ngbNavItem]="4">
+                    <a class="nav-item nav-link" routerLink="/members">Members</a>
+                </li>
                 <li [ngbNavItem]="2">
                     <a class="nav-item nav-link" routerLink="/reports" >Reports</a>
                 </li>
                 <li [ngbNavItem]="3" *ngIf="user.isAdmin">
                     <a class="nav-item nav-link" routerLink="/users">Users</a>
-                </li>
-                <li [ngbNavItem]="4">
-                    <a class="nav-item nav-link" routerLink="/members">Members</a>
                 </li>
                 <li [ngbNavItem]="5" ngbDropdown class="nav-item">                                       
                     <a href (click)="false" class="nav-link" ngbDropdownToggle>

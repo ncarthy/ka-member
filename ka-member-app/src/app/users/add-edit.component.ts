@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -23,9 +24,10 @@ export class AddEditComponent implements OnInit {
         private router: Router,
         private userService: UserService,
         private alertService: AlertService,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private location: Location
     ) {
-        this.apiUser = authenticationService.userValue;
+        this.apiUser = this.authenticationService.userValue;
     }
 
     ngOnInit() {
@@ -48,7 +50,7 @@ export class AddEditComponent implements OnInit {
         const formOptions: AbstractControlOptions = { validators: MustMatch('password', 'confirmPassword') };
         this.form = this.formBuilder.group({
             fullname: ['', Validators.required],
-            suspended: [{value: '', disabled: true}],
+            suspended: [false],
             username: ['', [Validators.required]],
             role: ['', Validators.required],
             password: ['', [Validators.minLength(8), (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]],
@@ -110,13 +112,14 @@ export class AddEditComponent implements OnInit {
             .subscribe(() => {
                 this.alertService.success('User updated', { keepAfterRouteChange: true });
 
-                if (this.formMode == UserFormMode.Edit) {
-                    this.router.navigate(['../../'], { relativeTo: this.route });    
-                } else {
-                    this.router.navigate(['/'], { relativeTo: this.route });
-                }
-                
+                this.location.back();                
             })
             .add(() => this.loading = false);
+    }
+
+    onCancel()
+    {
+        // use of location object taken from https://stackoverflow.com/a/41953992/6941165
+        this.location.back(); // <-- go back to previous location on cancel
     }
 }
