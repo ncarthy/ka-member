@@ -60,6 +60,18 @@
   ></span>
   <span *ngIf="!member.isUpdating">Anonymize</span>
 </button>
+<button
+(click)="setToFormer($event)"
+class="btn btn-sm btn-warning"
+[disabled]="member.isUpdating"
+*ngIf="showButton(ButtonName.SETTOFORMER)"
+>
+<span
+  *ngIf="member.isUpdating"
+  class="spinner-border spinner-border-sm"
+></span>
+<span *ngIf="!member.isUpdating">Set To Former</span>
+</button>
   <button
     (click)="deleteMember($event)"
     class="btn btn-sm btn-danger btn-delete-member"

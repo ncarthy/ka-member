@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MemberSearchResult, User } from '@app/_models';
-import { MemberService, AlertService, AuthenticationService } from '@app/_services';
+import {
+  MemberService,
+  AlertService,
+  AuthenticationService,
+} from '@app/_services';
 import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
 import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confirm.component';
 import { ButtonName } from './button-name.enum';
@@ -92,6 +96,31 @@ export class RowComponent {
               })
           );
       })
+      .add(() => (this.member.isUpdating = false));
+  }
+
+  setToFormer(e: Event) {
+    e.stopPropagation(); // If click propagates it will open the edit member page
+
+    if (!this.member || !this.member.id) return;
+
+    this.member.isUpdating = true;
+
+    this.memberService
+      .setToFormer(this.member.id)
+      .subscribe(
+        (result: any) => {
+          this.alertService.success("Member set to 'Former Member'", {
+            keepAfterRouteChange: true,
+          });
+          this.member.membershiptype = 'Former Member';
+          this.onMemberUpdated.emit(this.member);
+        },
+        (error) =>
+          this.alertService.error('Unable to anonymize member.', {
+            keepAfterRouteChange: true,
+          })
+      )
       .add(() => (this.member.isUpdating = false));
   }
 
