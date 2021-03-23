@@ -1,15 +1,27 @@
+<!--'[formGroup]' is a Reactive forms property-->
 <form [formGroup]="form">
-  <!--This is a Reactive property-->
   <div class="row justify-content-start">
     <div class="col-sm-6 mb-2">
       <div class="row">
         <div class="col-sm-8">
-          <member-search-box (loading)="(loading)"></member-search-box>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="member-search-addon1"
+                ><i class="fas fa-search"></i
+              ></span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Surname or Business Name"
+              formControlName="businessorsurname"
+            />
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <ngb-accordion #acc="ngbAccordion">
+  <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
     <ngb-panel title="Filter">
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="d-flex align-items-center justify-content-between">
@@ -26,8 +38,8 @@
       </ng-template>
       <ng-template ngbPanelContent>
         <div class="row">
-          <div class="col-sm-4 mb-1">
-            <div class="input-group mb-1">
+          <div class="col-sm-4">
+            <div class="input-group">
               <span class="input-group-text col-4" id="status-label">Type</span>
               <select
                 formControlName="statusID"
@@ -87,97 +99,110 @@
         </div>
 
         <!-- Line Break -->
-        <div class="w-100"><hr /></div> <!-- Divider -->
+        <div class="w-100"><hr /></div>
+        <!-- Divider -->
 
         <!-- array of Date range filters -->
-        <div class="row">
+        <!--<div class="row">-->
           <div
             *ngFor="let date of dateRangesFormGroups; let i = index"
-            class="list-group list-group-flush col-sm-6 mb-1"
+            class="list-group list-group-flush col"
           >
-            <div class="">
-              <div class="d-flex justify-content-between">
-                <div>
+            <div [formGroup]="date" class="form-row">
+              <div class="row">
+                <div class="col-sm-auto ml-4 p-2">Members</div>
+                <div class="col-sm-auto">
+                  <div class="input-group col p-0 mb-1">
                   <select formControlName="dateType" class="form-control">
                     <option value="Date Type"></option>
-                    <option value="joinDate">Join</option>
-                    <option value="expiryDate">Expiry</option>
-                    <option value="updateDate">Update</option>
-                    <option value="reminderDate">Reminder</option>
-                    <option value="lastTransactionDate">Last Tx</option>
-                    <option value="deleteDate">Delete</option>
+                    <option value="joinDate">Joining</option>
+                    <option value="expiryDate">Expiring</option>
+                    <option value="updateDate">Updated</option>
+                    <option value="reminderDate">Reminder send</option>
+                    <option value="lastTransactionDate">
+                      With Last Transaction
+                    </option>
+                    <option value="deleteDate">Deleted</option>
                   </select>
-                  <div [formGroup]="date" class="form-row">
-                    <div class="input-group mb-1">
-                      <input
-                        class="form-control"
-                        placeholder="Start"
-                        name="dp1"
-                        ngbDatepicker
-                        #d1="ngbDatepicker"
-                        formControlName="startDate"
-                        id="inputStartDate"
-                      />
-                      <div class="input-group-append">
-                        <button
-                          class="btn btn-outline-secondary"
-                          (click)="d1.toggle()"
-                          type="button"
-                        >
-                          <i class="far fa-calendar-alt"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="input-group mb-1">
-                      <input
-                        class="form-control"
-                        placeholder="End"
-                        name="dp2"
-                        ngbDatepicker
-                        #d2="ngbDatepicker"
-                        formControlName="endDate"
-                        id="inputStartDate"
-                      />
-                      <div class="input-group-append">
-                        <button
-                          class="btn btn-outline-secondary"
-                          (click)="d2.toggle()"
-                          type="button"
-                        >
-                          <i class="far fa-calendar-alt"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="mr-1">
-                  <button
-                    type="button"
-                    class="mr-3"
-                    (click)="onAddDateRange()"
-                    placement="bottom"
-                    ngbTooltip="Add new date filer"
-                  >
-                    +
-                  </button>
-                  <button
-                    *ngIf="i !== 0"
-                    type="button"
-                    class="close"
-                    (click)="onRemoveDateRange(i)"
-                    placement="bottom"
-                    ngbTooltip="Remove date filter"
-                  >
-                    <span>&times;</span>
-                  </button>
                 </div>
               </div>
+              </div>
+              <div class="col-sm-auto pl-2 pt-2">between</div>
+              <div class="col-sm-auto">
+                <div class="input-group col p-0 mb-1">
+                  <input
+                    class="form-control"
+                    placeholder="Start"
+                    name="dp1"
+                    ngbDatepicker
+                    #d1="ngbDatepicker"
+                    formControlName="startDate"
+                    id="inputStartDate"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary"
+                      (click)="d1.toggle()"
+                      type="button"
+                    >
+                      <i class="far fa-calendar-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-auto pl-2 pt-2">and</div>
+              <div class="col-sm-auto">
+                <div class="input-group col p-0 mb-1">
+                  <input
+                    class="form-control"
+                    placeholder="End"
+                    name="dp2"
+                    ngbDatepicker
+                    #d2="ngbDatepicker"
+                    formControlName="endDate"
+                    id="inputStartDate"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-secondary"
+                      (click)="d2.toggle()"
+                      type="button"
+                    >
+                      <i class="far fa-calendar-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Dates buttons -->
+              <div class="col-sm-1 mt-1 mr-1">
+                <button
+                  type="button"
+                  class="mr-3"
+                  (click)="onAddDateRange()"
+                  placement="bottom"
+                  ngbTooltip="Add new date filter"
+                >
+                  +
+                </button>
+                <button
+                  *ngIf="i !== 0"
+                  type="button"
+                  class="close"
+                  (click)="onRemoveDateRange(i)"
+                  placement="bottom"
+                  ngbTooltip="Remove date filter"
+                >
+                  <span>&times;</span>
+                </button>
+              </div>
+              <!-- End of Dates buttons -->
             </div>
-          </div>
-          <!-- End of Names-->
-        </div>
 
-        <div class="w-100"><hr /></div> <!-- Divider -->
+
+          </div>
+        <!--</div>-->
+        <div class="w-100"><hr /></div>
+        <!-- Divider -->
 
         <div class="row">
           <div class="col-sm-4">Payment Method</div>
@@ -192,7 +217,7 @@
                     class="form-check-input"
                     type="radio"
                     id="email_yes"
-                    formControlName="hasEmail"
+                    formControlName="email1"
                     [value]="YesNoAny.YES"
                   />
                   <label class="form-check-label" for="email_yes"> Yes </label>
@@ -202,7 +227,7 @@
                     class="form-check-input"
                     type="radio"
                     id="email_no"
-                    formControlName="hasEmail"
+                    formControlName="email1"
                     [value]="YesNoAny.NO"
                   />
                   <label class="form-check-label" for="email_no"> No </label>
@@ -212,7 +237,7 @@
                     class="form-check-input"
                     type="radio"
                     id="email_any"
-                    formControlName="hasEmail"
+                    formControlName="email1"
                     [value]="YesNoAny.ANY"
                     checked
                   />
@@ -233,7 +258,7 @@
                     class="form-check-input"
                     type="radio"
                     id="postonholdyes"
-                    formControlName="postOnHold"
+                    formControlName="postonhold"
                     [value]="YesNoAny.YES"
                   />
                   <label class="form-check-label" for="postonholdyes">
@@ -245,7 +270,7 @@
                     class="form-check-input"
                     type="radio"
                     id="postonholdno"
-                    formControlName="postOnHold"
+                    formControlName="postonhold"
                     [value]="YesNoAny.NO"
                   />
                   <label class="form-check-label" for="postonholdno">
@@ -257,7 +282,7 @@
                     class="form-check-input"
                     type="radio"
                     id="postonholdany"
-                    formControlName="postOnHold"
+                    formControlName="postonhold"
                     [value]="YesNoAny.ANY"
                     checked
                   />
@@ -268,9 +293,8 @@
               </div>
             </div>
           </div>
-          <hr />
+          <!-- End of Row-->
         </div>
-        <!-- End of Row-->
       </ng-template>
     </ngb-panel>
   </ngb-accordion>

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { debounceTime, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
 import {
   CountryService,
@@ -58,24 +58,24 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       // Text
-      bizOrSurname: [null],
+      businessorsurname: [null],
       address: [null],
 
       // checkboxes
-      includeInactive: ['any'],
-      postOnHold: ['any'],
-      hasEmail: ['any'],
+      removed: ['any'],
+      postonhold: ['any'],
+      email1: ['any'],
 
       // selects (drop downs)
       statusID: [null],
       countryID: [null],
-      paymentMethodID: [null],
-      bankAccountID: [null],
+      paymentmethodID: [null],
+      bankaccountID: [null],
 
       // date pickers
       dateRanges: new FormArray([]),
 
-      maxResults:[null]
+      maxresults:[null]
     });
 
     // Add one date range
@@ -88,20 +88,21 @@ export class FilterComponent implements OnInit {
         // search, discarding old events if new input comes in
         switchMap(() => {
           this.filter = new MemberFilter();
-          this.filter.businessorsurname = this.f['bizOrSurname'].value;
+          this.filter.businessorsurname = this.f['businessorsurname'].value;
           this.filter.address = this.f['address'].value;
-          this.filter.removed = this.f['includeInactive'].value;
-          this.filter.postonhold = this.f['postOnHold'].value;
-          this.filter.email1 = this.f['hasEmail'].value;          
+          this.filter.removed = this.f['removed'].value;
+          this.filter.postonhold = this.f['postonhold'].value;
+          this.filter.email1 = this.f['email1'].value;          
           this.filter.membertypeid = this.f['statusID'].value;
           this.filter.countryid = this.f['countryID'].value;
-          this.filter.paymentmethodID = this.f['paymentMethodID'].value;
-          this.filter.bankaccountID = this.f['bankAccountID'].value;
+          this.filter.paymentmethodID = this.f['paymentmethodID'].value;
+          this.filter.bankaccountID = this.f['bankaccountID'].value;
 
-          this.filter.maxresults = this.f['maxResults'].value;
+          this.filter.maxresults = this.f['maxresults'].value;
           this.filterSubject.next(this.filter);
           return this.filter$;
         }),
+        distinctUntilChanged(),
         switchMap((filter: MemberFilter) => {
           return this.memberSearchService.filter(this.filter);
         })
@@ -114,7 +115,6 @@ export class FilterComponent implements OnInit {
 
   /* Add a new date range to the template */
   onAddDateRange(startDate = '', endDate = '', dateType = '') {
-    console.log(this.dr.length);
     this.dr.push(
       this.formBuilder.group({
         startDate: [startDate],
@@ -122,7 +122,8 @@ export class FilterComponent implements OnInit {
         dateType: [dateType],
       })
     );
-    console.log(this.dr.length);
+
+    return false; // Must return false from click event to stop it reloading the page
   }
 
   /* remove the selected date range object */
@@ -130,6 +131,8 @@ export class FilterComponent implements OnInit {
     if (this.dr.length > 1 && index) {
       this.dr.removeAt(index);
     }
+
+    return false; // Must return false from click event to stop it reloading the page
   }
 
   // Required so that the template can access the EnumS
