@@ -1,14 +1,23 @@
-USE `knightsb_membership`;
+USE `knightsb_membership2`;
 START TRANSACTION;
 
-CREATE TABLE IF NOT EXISTS `knightsb_membership`.`bankaccount`  ( 
+CREATE TABLE IF NOT EXISTS `paymenttype`  ( 
+	`paymenttypeID` INT NOT NULL AUTO_INCREMENT , 
+	`name` VARCHAR(255) NOT NULL , 
+	PRIMARY KEY (`paymenttypeID`)
+) ENGINE = InnoDB COMMENT = 'List of payment types for transactions';
+
+INSERT INTO `paymenttype` (`paymenttypeID`, `name`) VALUES ('1', 'SO'), ('2', 'BO'), ('3', 'One Off'), ('4', 'Cash');
+INSERT INTO `paymenttype` (`paymenttypeID`, `name`) VALUES ('5', 'Recurring'), ('6', 'Direct Debit');
+
+CREATE TABLE IF NOT EXISTS `bankaccount`  ( 
 	`bankID` INT NOT NULL AUTO_INCREMENT , 
 	`name` VARCHAR(255) NOT NULL , 
 	PRIMARY KEY (`bankID`)
 ) ENGINE = InnoDB COMMENT = 'List of Bank accounts for transactions';
 
 INSERT INTO `bankaccount` (`bankID`, `name`) VALUES ('1', 'Cash'), ('2', 'Natwest');
-INSERT INTO `bankaccount` (`bankID`, `name`) VALUES ('3', 'HSBC'), ('4', 'PayPal');
+INSERT INTO `bankaccount` (`bankID`, `name`) VALUES ('3', 'HSBC'), ('4', 'PayPal'); /* GoCardless is not a bank account */
 
 ALTER TABLE `transaction` DROP `status`;
 ALTER TABLE `transaction` ADD `bankID` INT NULL AFTER `member_idmember`;
@@ -98,7 +107,6 @@ UPDATE membername SET firstname = TRIM(firstname) WHERE firstname LIKE '% ';
 UPDATE membername SET surname = TRIM(surname) WHERE surname LIKE '% ';
 UPDATE membername SET honorific = TRIM(honorific) WHERE honorific LIKE '% ';
 
-#ALTER TABLE `knightsb_membership`.`membername` ADD UNIQUE `Unique_Name_IdMember` (`honorific`, `firstname`, `surname`, `member_idmember`);
 ALTER TABLE `member` CHANGE `updatedate` `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 ALTER TABLE `user` ADD `failedloginattempts` INT NOT NULL DEFAULT '0' COMMENT 'The number of failed logins. Resets to zero after success.' AFTER `name`;
@@ -142,7 +150,7 @@ UPDATE member SET reminderdate='2020-06-10' WHERE idmember =845;
 
 /**********************************************************************************************/
 /**********************************************************************************************/
-CREATE TABLE `knightsb_membership`.`country` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB COMMENT = 'List of countries for member table';
+CREATE TABLE `country` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB COMMENT = 'List of countries for member table';
 INSERT INTO country(id,name)VALUES(1,"Afghanistan"),
 (2,"Albania"),
 (3,"Algeria"),
@@ -564,10 +572,10 @@ CREATE VIEW IF NOT EXISTS `vwUKActiveMemberAddress` AS
         `m`.`countryID` = 186
             AND `m`.`deletedate` IS NULL AND `m`.`postonhold` = 0;
 
-ALTER TABLE `knightsb_membership`.`transaction` ADD INDEX (`member_idmember`);
+ALTER TABLE `transaction` ADD INDEX (`member_idmember`);
 UPDATE transaction SET paymentmethod = 'BO' WHERE paymentmethod LIKE 'B/O%' OR paymentmethod = '' OR paymentmethod LIKE 'BO%';
 UPDATE transaction SET paymentmethod = 'Recurring' WHERE paymentmethod LIKE 'Paypal%' OR paymentmethod ='Recurring' OR paymentmethod ='Online';
-UPDATE transaction SET paymentmethod = 'Cheque' WHERE paymentmethod LIKE 'BACs%' OR paymentmethod LIKE 'Cheque%' OR paymentmethod LIKE 'Life%' OR paymentmethod LIKE 'Bank%' OR paymentmethod = 'See 2011';
+UPDATE transaction SET paymentmethod = 'One Off' WHERE paymentmethod LIKE 'BACs%' OR paymentmethod LIKE 'Cheque%' OR paymentmethod LIKE 'Life%' OR paymentmethod LIKE 'Bank%' OR paymentmethod = 'See 2011';
 UPDATE transaction SET paymentmethod = 'SO' WHERE paymentmethod LIKE 'SO%';
 UPDATE transaction SET paymentmethod = 'Cash' WHERE paymentmethod LIKE 'Cash%';
 
@@ -640,7 +648,7 @@ SET username='admin', isAdmin='1', name='Admin User', suspended='0', failedlogin
 
 ALTER TABLE `user` DROP `password`;
 
-CREATE TABLE `knightsb_membership`.`usertoken` ( 
+CREATE TABLE `usertoken` ( 
 `iduser` INT NOT NULL ,
 `primaryKey` VARCHAR(36) NOT NULL , 
 `secondaryKey` VARCHAR(36) NOT NULL , 

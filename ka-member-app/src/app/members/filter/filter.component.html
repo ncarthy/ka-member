@@ -28,7 +28,7 @@
           <div class="col-sm-4 mb-1">
             <div class="input-group mb-1">
               <span class="input-group-text col-4" id="status-label"
-                >Status</span
+                >Type</span
               >
               <div class="card p-2 col-8">
                 <select
@@ -70,7 +70,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="w-100"><hr /></div>
           <div class="col-sm">Date Range Component</div>
           <div class="w-100"><hr /></div>
@@ -129,7 +129,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="col-sm-4 mb-1">
             <div class="input-group mb-1">
               <span class="input-group-text col-5" id="postonhold-label"
@@ -182,6 +182,8 @@
       </ng-template>
     </ngb-panel>
   </ngb-accordion>
-  <p>Form Value: {{ form.value | json }}</p>
-  <p>Filter: {{ filter }}</p>
+  <div>
+    <p>Form Value: {{ form.value | json }}</p>
+    <p>Filter: {{ filter }}</p>
+  </div>
 </form>
