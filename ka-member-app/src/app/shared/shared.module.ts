@@ -11,7 +11,6 @@ import {
 import { AddressFormComponent } from './address-form/address-form.component';
 import { SearchBoxComponent } from './address-form/search-box.component';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
-import { ListHeaderComponent } from './list-header/list-header.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
@@ -19,7 +18,6 @@ import { ListHeaderComponent } from './list-header/list-header.component';
     AddressFormComponent,
     SearchBoxComponent,
     ToastContainerComponent,
-    ListHeaderComponent,
   ],
   exports: [
     AddressFormComponent,
@@ -28,7 +26,6 @@ import { ListHeaderComponent } from './list-header/list-header.component';
     ReactiveFormsModule,
     SearchBoxComponent,
     ToastContainerComponent,
-    ListHeaderComponent,
   ],
   providers: [
     AddressSearchService,

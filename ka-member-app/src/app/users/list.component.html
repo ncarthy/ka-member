@@ -1,11 +1,18 @@
-﻿<list-header [type]="'User'"></list-header>
+﻿<div class="row">
+    <div class="col-sm-6"><h1>Users</h1></div>
+    <div class="col-sm-2">
+        <button routerLink="add" class="btn btn-sm btn-success m-1 mt-1" *ngIf="user.isAdmin">
+          Add New User
+        </button>
+    </div>
+  </div>
 <table class="table table-striped table-responsive">
     <thead>
         <tr>
             <th style="width: 25%">Name</th>
             <th style="width: 25%">Username</th>
-            <th style="width: 15%">Role</th> <!-- Hide on screens smaller than Lg ' class="d-none d-lg-block"  ' -->
-            <th style="width: 15%">Suspended</th> <!-- From https://getbootstrap.com/docs/4.1/utilities/display/#hiding-elements -->
+            <th style="width: 15%">Role</th> 
+            <th style="width: 15%">Suspended</th>
             <th style="width: 20%">Actions</th>
         </tr>
     </thead>
