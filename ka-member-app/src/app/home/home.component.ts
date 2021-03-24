@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { DateRange, User, MemberCount } from '@app/_models';
+import { DateRangeEnum, User, MemberCount } from '@app/_models';
 import { UserService, 
     AuthenticationService, 
     ToastService, 

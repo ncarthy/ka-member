@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { KeyValue } from '@angular/common';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 import {
@@ -18,12 +19,13 @@ import {
 } from '@app/_services';
 import {
   Country,
-  DateRange,
+  DateRangeEnum,
   MemberFilter,
   MemberSearchResult,
   MembershipStatus,
   YesNoAny,
 } from '@app/_models';
+import { DateRangeAdapter } from '@app/_helpers';
 
 @Component({
   selector: 'member-filter',
@@ -51,7 +53,8 @@ export class MemberFilterComponent implements OnInit {
     private MemberFilterService: MemberFilterService,
     private membershipStatusService: MembershipStatusService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dateRangeAdapter: DateRangeAdapter
   ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
@@ -118,14 +121,12 @@ export class MemberFilterComponent implements OnInit {
       })
       .add(this.loading.emit(false));
 
-    const snapshot = this.route.snapshot;
-    let membertypeid: string | null = null;
+    // Depending on route, set inital state
     if (this.router.url.substring(0, 15) === '/members/status') {
-      const membertypeid = this.route.snapshot.params['id'];
       this.filterSubject.next(
         new MemberFilter({
           removed: YesNoAny.NO,
-          membertypeid: membertypeid
+          membertypeid: this.route.snapshot.params['id'],
         })
       );
     }
@@ -159,12 +160,30 @@ export class MemberFilterComponent implements OnInit {
     return YesNoAny;
   }
   public get DateRange() {
-    return DateRange;
+    return DateRangeEnum;
   }
 
   onReset() {
     this.form.reset({
       dateRanges: {},
     });
+  }
+
+  originalOrder = (
+    a: KeyValue<number, string>,
+    b: KeyValue<number, string>
+  ): number => {
+    return 0;
+  };
+
+  /* Set the date range control values according to the select value */
+  /* Index is supplied because it is a FormArray */
+  onDateRangeChanged(index: number, value: DateRangeEnum) {
+    
+    const dtRng = this.dateRangeAdapter.enumToDateRange(value);
+
+    const fg: FormGroup = this.dateRangesFormGroups[index];
+    fg.controls['startDate'].setValue(dtRng.startDate);
+    fg.controls['endDate'].setValue(dtRng.endDate);
   }
 }
