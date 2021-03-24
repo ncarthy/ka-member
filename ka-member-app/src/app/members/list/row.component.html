@@ -30,7 +30,7 @@
     {{ member.city }}, {{ member.postcode }}</small
   >
 </td>
-<td class="w-25" *ngIf="user.isAdmin">
+<td class="w-25">
   <button class="btn btn-sm btn-success mr-1" *ngIf="showButton(ButtonName.ADDTX)">
     <span>Add Tx</span>
   </button>
@@ -39,14 +39,14 @@
     class="btn btn-sm btn-primary mr-1"
     [disabled]="member.isUpdating"
   >
-    <span *ngIf="!member.isUpdating">Edit</span>
+    <span *ngIf="!member.isUpdating">Details</span>
   </button>
   <button
     routerLink="/members/manage/{{ member.id }}"
     class="btn btn-sm btn-info mr-1"
     [disabled]="member.isUpdating"
   >
-    <span>Manage</span>
+    <span>Subscription</span>
   </button>
   <button
   (click)="anonymizeMember($event)"

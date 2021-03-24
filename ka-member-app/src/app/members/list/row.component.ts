@@ -48,20 +48,18 @@ export class MemberRowComponent {
       this.modalService.open(MemberDeleteConfirmModalComponent).result
     ).subscribe(
       (success) => {
-        this.memberService
-          .delete(this.member.id)
-          .subscribe(
-            (result: any) => {
-              this.alertService.success('Member deleted', {
-                keepAfterRouteChange: true,
-              });
-              this.onMemberDeleted.emit(this.member);
-            },
-            (error) =>
-              this.alertService.error('Unable to delete member.', {
-                keepAfterRouteChange: true,
-              })
-          );
+        this.memberService.delete(this.member.id).subscribe(
+          (result: any) => {
+            this.alertService.success('Member deleted', {
+              keepAfterRouteChange: true,
+            });
+            this.onMemberDeleted.emit(this.member);
+          },
+          (error) =>
+            this.alertService.error('Unable to delete member.', {
+              keepAfterRouteChange: true,
+            })
+        );
       },
       (error) => {
         this.member.isDeleting = false;
@@ -78,21 +76,19 @@ export class MemberRowComponent {
 
     from(this.modalService.open(MemberAnonymizeConfirmModalComponent).result)
       .subscribe((success) => {
-        this.memberService
-          .anonymize(this.member.id)
-          .subscribe(
-            (result: any) => {
-              this.alertService.success('Member anonymized', {
-                keepAfterRouteChange: true,
-              });
-              this.member.name = 'Anonymized';
-              this.onMemberUpdated.emit(this.member);
-            },
-            (error) =>
-              this.alertService.error('Unable to anonymize member.', {
-                keepAfterRouteChange: true,
-              })
-          );
+        this.memberService.anonymize(this.member.id).subscribe(
+          (result: any) => {
+            this.alertService.success('Member anonymized', {
+              keepAfterRouteChange: true,
+            });
+            this.member.name = 'Anonymized';
+            this.onMemberUpdated.emit(this.member);
+          },
+          (error) =>
+            this.alertService.error('Unable to anonymize member.', {
+              keepAfterRouteChange: true,
+            })
+        );
       })
       .add(() => (this.member.isUpdating = false));
   }
@@ -116,7 +112,7 @@ export class MemberRowComponent {
             this.onMemberDeleted.emit(this.member); // Will remove from list
           } else {
             this.onMemberUpdated.emit(this.member); // Keep in list but update
-        }
+          }
         },
         (error) =>
           this.alertService.error(`Unable to set to 'Former Member'`, {
@@ -139,22 +135,32 @@ export class MemberRowComponent {
   showButton(btn: ButtonName): boolean {
     switch (btn) {
       case ButtonName.ADDTX:
-        return this.member && this.member.membershiptype !== 'Former Member';
+        return (
+          this.member &&
+          this.user.isAdmin &&
+          this.member.membershiptype !== 'Former Member'
+        );
       case ButtonName.ANONYMIZE:
         return (
           this.member &&
+          this.user.isAdmin &&
           this.member.membershiptype === 'Former Member' &&
           this.member.name !== 'Anonymized'
         );
       case ButtonName.DELETE:
         return (
           this.member &&
+          this.user.isAdmin &&
           ((this.member.membershiptype === 'Former Member' &&
             this.member.name === 'Anonymized') ||
             this.member.membershiptype === 'Pending')
         );
       case ButtonName.SETTOFORMER:
-        return this.member && this.member.membershiptype !== 'Former Member';
+        return (
+          this.member &&
+          this.user.isAdmin &&
+          this.member.membershiptype !== 'Former Member'
+        );
       default:
         return true;
     }
