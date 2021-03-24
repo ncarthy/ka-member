@@ -1,5 +1,6 @@
 ﻿export * from './address';
 export * from './alert';
+export * from './bank-account';
 export * from './country';
 export * from './date-range-filter';
 export * from './date-filter.enum';
@@ -11,6 +12,7 @@ export * from './member-filter';
 export * from './member-name';
 export * from './member-search-result';
 export * from './membership-status';
+export * from './payment-method';
 export * from './role';
 export * from './success-response.interface';
 export * from './user';

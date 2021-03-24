@@ -14,8 +14,4 @@ export class CountryService {
         return this.http.get<Country[]>(baseUrl);
     }
 
-    getById(id: number) {
-        return this.http.get<Country>(`${baseUrl}/${id}`);
-    }
-
 }

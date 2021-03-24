@@ -1,0 +1,48 @@
+﻿<div class="row justify-content-between">
+  <div class="col-sm-6"><h1>Members</h1></div>
+  <div class="col-sm-2">
+      <button routerLink="add" class="btn btn-sm btn-success m-1 mt-1" *ngIf="user.isAdmin">
+        Add New Member
+      </button>
+  </div>
+</div>
+<member-filter (filteredMembers)="membersUpdated($event)" (loading)="filterIsLoading($event)" (filter)="membersFilterUpdated($event)"></member-filter>
+<!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
+<table class="table table-sm table-striped table-hover table-responsive">
+  <caption>
+    {{
+      members && members.length
+    }}
+    members found
+  </caption>
+  <thead>
+    <tr class="m-0">
+      <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
+      <th scope="col" class="w-25">Name</th>
+      <!-- 'w-10': https://stackoverflow.com/a/37928581' -->
+      <th scope="col">Type</th>
+      <th scope="col" class="d-none d-sm-table-cell">Business Name</th>
+      <th scope="col" class="d-none d-sm-table-cell">Em</th>
+      <th scope="col" class="d-none d-sm-table-cell">Last Pmt</th>
+      <th scope="col" class="d-none d-sm-table-cell w-25">Address</th>
+      <th scope="col" class="w-25" *ngIf="user.isAdmin">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let myMember of members"
+      member-row
+      [member]="myMember"
+      [filter]="filter"
+      (onMemberDeleted)="memberWasDeleted($event)"
+      (onMemberUpdated)="memberWasUpdated($event)"
+      (click)="memberSelected(myMember)"
+      class="m-0"
+    ></tr>
+    <tr *ngIf="!members">
+      <td colspan="4" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>
