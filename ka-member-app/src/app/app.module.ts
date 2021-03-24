@@ -12,12 +12,11 @@ import { AlertComponent } from './_components';
 
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
-import { AdminComponent } from './admin';
+import { ReportsComponent } from './reports';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersModule } from './members/members.module';
 import { SharedModule } from '@app/shared/shared.module';
-import { ReportsComponent } from './reports/reports.component';
 
 @NgModule({
     imports: [
@@ -34,7 +33,6 @@ import { ReportsComponent } from './reports/reports.component';
         AppComponent,
         HomeComponent,
         LoginComponent,
-        AdminComponent,
         AlertComponent,
         ReportsComponent      
     ],
