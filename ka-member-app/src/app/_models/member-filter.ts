@@ -18,7 +18,7 @@ import {DateFilterType} from './date-filter.enum';
     email1?: YesNoAny;
     postonhold?: YesNoAny;
     address?: string;
-    paymentmethodid?: number;
+    paymenttypeid?: number;
     bankaccountid?: number;
     maxresults?: number;
     dateranges?: DateRangeFilter[];
@@ -35,7 +35,7 @@ import {DateFilterType} from './date-filter.enum';
         this.email1 = obj && obj.email1 || null;
         this.postonhold = obj && obj.postonhold || null;
         this.address = obj && obj.address || null;
-        this.paymentmethodid = obj && obj.paymentmethodid || null;
+        this.paymenttypeid = obj && obj.paymenttypeid || null;
         this.bankaccountid = obj && obj.bankaccountid || null;
         this.maxresults = obj && obj.maxresults || null;
         this.dateranges = obj && obj.dateranges || null;
@@ -74,11 +74,11 @@ import {DateFilterType} from './date-filter.enum';
         if (this.address) {
             str = str.concat('&','address=',this.address)
         }
-        if (this.paymentmethodid) {
-            str = str.concat('&','paymentmethod=',this.paymentmethodid.toString());
+        if (this.paymenttypeid) {
+            str = str.concat('&','paymenttypeid=',this.paymenttypeid.toString());
         }
         if (this.bankaccountid) {
-            str = str.concat('&','paymentmethod=',this.bankaccountid.toString());
+            str = str.concat('&','bankid=',this.bankaccountid.toString());
         }
         if (this.maxresults) {
             str = str.concat('&','maxresults=',this.maxresults.toString());

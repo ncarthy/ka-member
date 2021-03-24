@@ -17,7 +17,8 @@ export class MemberSearchResult {
     reminderdate: Date;
     deletedate: Date;
     lasttransactiondate: string | null;
-    paymentmethod: string
+    paymenttype: string
+    bankaccount: string
     email: string;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
@@ -42,7 +43,8 @@ export class MemberSearchResult {
         this.deletedate = obj && obj.deletedate || null;
         this.lasttransactiondate = obj && obj.lasttransactiondate && this.mysqlDateConvert(obj.lasttransactiondate) || null;
         this.email = obj && obj.email || null;
-        this.paymentmethod = obj && obj.paymentmethod || null;
+        this.paymenttype = obj && obj.paymenttype || null;
+        this.bankaccount = obj && obj.bankaccount || null;
     }
 
     mysqlDateConvert(m: string) : string{

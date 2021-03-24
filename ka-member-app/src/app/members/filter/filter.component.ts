@@ -77,7 +77,7 @@ export class MemberFilterComponent implements OnInit {
       // selects (drop downs)
       membertypeid: [null],
       countryid: [null],
-      paymentmethodid: [null],
+      paymenttypeid: [null],
       bankaccountid: [null],
 
       // date pickers

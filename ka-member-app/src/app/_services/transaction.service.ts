@@ -19,7 +19,7 @@ export class TransactionService {
     }
 
     getByMember(idmember: number) {
-        return this.http.get<Transaction>(`${baseUrl}/idmember/${idmember}`);
+        return this.http.get<Transaction[]>(`${baseUrl}/idmember/${idmember}`);
     }
 
     create(params: any) {
