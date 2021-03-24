@@ -11,7 +11,8 @@
 CURL="/usr/bin/curl -s"
 COOKIE="/root/ka/cookies.txt"
 SITE_URI="https://uk1.cp.netnerd.com:2083"
-DB_MEMBER=knightsb_membership
+DB_MEMBER_OLD=knightsb_membership
+DB_MEMBER=knightsb_membership2
 OUTPUT_DIR=/var/spool/ka_backup/
 
 MYSQL=/usr/bin/mysql
@@ -22,12 +23,19 @@ MEM_USER=knightsb_member
 MEM_PWORD=SsP4qIm4omu4M
 MEM_TMP=$(mktemp /tmp/MEMBER.XXXXXXXXX)
 SKIP=NO
+APPLY=YES
+
+AMEND_FILE=/root/ka/ka-member/sql/amendments.sql
 
 for i in "$@"
 do
 case $i in
-    -s=*|--skip*)
+    -s*|--skip*)
     SKIP=YES
+    shift # past argument=value
+    ;;
+    -n*|--dont-apply*)
+    APPLY=NO
     shift # past argument=value
     ;;
    -v*|--debug*)
@@ -44,27 +52,27 @@ case $i in
 esac
 done
 
-echo "SKIP = ${SKIP}"
+echo "Skip downloading from NetNerd = ${SKIP}, Apply amendments.sql to new DB = ${APPLY}"
 
 TOKEN=$(php /root/ka/login.php)
 
 if [[ $SKIP = "NO" ]]
 then
-	# Download database file
-	echo "Downloading Member DB SQL file"
-	echo "from " ${SITE_URI}${TOKEN}/getsqlbackup/${DB_MEMBER}.sql.gz
-	echo "to " ${OUTPUT_DIR}${DB_MEMBER}
-	${CURL} -o ${OUTPUT_DIR}${DB_MEMBER}.sql.gz -b ${COOKIE} ${SITE_URI}${TOKEN}/getsqlbackup/${DB_MEMBER}.sql.gz
+        # Download database file
+        echo "Downloading Member DB SQL file"
+        echo "from " ${SITE_URI}${TOKEN}/getsqlbackup/${DB_MEMBER_OLD}.sql.gz
+        echo "to " ${OUTPUT_DIR}${DB_MEMBER}
+        ${CURL} -o ${OUTPUT_DIR}${DB_MEMBER}.sql.gz -b ${COOKIE} ${SITE_URI}${TOKEN}/getsqlbackup/${DB_MEMBER_OLD}.sql.gz
 
-	if [ ! -f ${OUTPUT_DIR}${DB_MEMBER}.sql.gz  ]
-	then
-	    echo There was a problem downloading the SQL file for Member DB
-	    return 1
-	else
-	    echo SQL file is downloaded for Member dB
-	fi
+        if [ ! -f ${OUTPUT_DIR}${DB_MEMBER}.sql.gz  ]
+        then
+            echo There was a problem downloading the SQL file for Member DB
+            return 1
+        else
+            echo SQL file is downloaded for Member dB
+        fi
 else
-	echo "Not downloading SQL file"
+        echo "Not downloading SQL file"
 fi
 
 # MySQL database for  Member DB
@@ -88,6 +96,11 @@ mysql -u ${ROOT_USER} --password=${ROOT_PWORD} -D ${DB_MEMBER} < ${OUTPUT_DIR}${
 # replace old files
 gzip ${OUTPUT_DIR}${DB_MEMBER}.sql
 
-echo `date`
-
-
+echo "Update amendments.sql file from git"
+# 'source' from https://stackoverflow.com/a/8352939/6941165
+source /root/ka/update_repo.sh
+if [[ $APPLY = "YES" ]]
+then
+        echo "Applying SQL file"
+        mysql -u ${MEM_USER} --password=${MEM_PWORD} -D ${DB_MEMBER} < ${AMEND_FILE} >> /dev/null
+fi
