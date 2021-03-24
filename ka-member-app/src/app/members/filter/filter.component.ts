@@ -18,6 +18,7 @@ import {
 } from '@app/_services';
 import {
   Country,
+  DateRange,
   MemberFilter,
   MemberSearchResult,
   MembershipStatus,
@@ -156,6 +157,9 @@ export class MemberFilterComponent implements OnInit {
   // From https://stackoverflow.com/a/59289208
   public get YesNoAny() {
     return YesNoAny;
+  }
+  public get DateRange() {
+    return DateRange;
   }
 
   onReset() {

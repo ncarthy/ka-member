@@ -6,7 +6,7 @@ import { first } from 'rxjs/operators';
 
 import { UserService, AlertService, AuthenticationService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
-import { Role, User, UserFormMode } from '@app/_models';
+import { User, UserFormMode } from '@app/_models';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class UserAddEditComponent implements OnInit {

@@ -32,7 +32,8 @@
             <div class="col">
               <a class="btn btn-link" (click)="onReset()">Reset</a>
             </div>
-            <div class="col" *ngIf="false"><!-- Hide it for now -->
+            <div class="col" *ngIf="false">
+              <!-- Hide it for now -->
               <div ngbDropdown container="body">
                 <a class="btn btn-link" id="filterSettings" ngbDropdownToggle
                   ><i class="fas fa-cog"></i
@@ -259,7 +260,6 @@
         >
           <div [formGroup]="date" class="form-row">
             <div class="row">
-              <div class="col-sm-auto ml-4 p-2">Members</div>
               <div class="col-sm-auto">
                 <div class="input-group col p-0 mb-1">
                   <select formControlName="dateType" class="form-control">
@@ -269,12 +269,23 @@
                     <option value="updatedate">Updated</option>
                     <option value="reminderdate">Reminder send</option>
                     <option value="lasttransactiondate">
-                      With Last Transaction
+                      Last Transaction
                     </option>
                     <option value="deletedate">Deleted</option>
                   </select>
                 </div>
               </div>
+            </div>
+            <div class="col-sm-auto pl-2">
+              <select class="form-control">
+                <option disabled selected [ngValue]="null">-- select --</option>
+                <option
+                  *ngFor="let item of DateRange | keyvalue"
+                  [ngValue]="item.key"
+                >
+                  {{ item.value }}
+                </option>
+              </select>
             </div>
             <div class="col-sm-auto pl-2 pt-2">between</div>
             <div class="col-sm-auto">

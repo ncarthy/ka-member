@@ -1,0 +1,16 @@
+export enum DateRange {
+    CUSTOM = 'Custom',
+    NEXT_YEAR = 'Next Year',
+    NEXT_QUARTER = 'Next Quarter',
+    NEXT_MONTH = 'Next Month',
+    NEXT_WEEK = 'Next Week',
+    LAST_YEAR = 'Last Year',
+    LAST_QUARTER = 'Last Quarter',
+    LAST_MONTH = 'Last Month',
+    LAST_WEEK = 'Last Week',
+    THIS_YEAR = 'This Year',
+    THIS_QUARTER = 'This Quarter',
+    THIS_MONTH = 'This Month',
+    THIS_WEEK = 'This Week',
+    TODAY = 'Today',
+}
