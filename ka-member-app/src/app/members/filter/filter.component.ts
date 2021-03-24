@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -28,7 +29,8 @@ import {
   templateUrl: './filter.component.html',
 })
 export class MemberFilterComponent implements OnInit {
-  @Output() filter: EventEmitter<MemberFilter> = new EventEmitter<MemberFilter>();
+  @Output()
+  filter: EventEmitter<MemberFilter> = new EventEmitter<MemberFilter>();
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() filteredMembers: EventEmitter<
     MemberSearchResult[]
@@ -38,7 +40,7 @@ export class MemberFilterComponent implements OnInit {
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
   filterSubject: BehaviorSubject<MemberFilter> = new BehaviorSubject<MemberFilter>(
-    new MemberFilter({removed: YesNoAny.NO}) 
+    new MemberFilter({ removed: YesNoAny.NO })
   );
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
 
@@ -46,7 +48,9 @@ export class MemberFilterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private countryService: CountryService,
     private MemberFilterService: MemberFilterService,
-    private membershipStatusService: MembershipStatusService
+    private membershipStatusService: MembershipStatusService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
@@ -112,6 +116,18 @@ export class MemberFilterComponent implements OnInit {
         this.filter.emit(this.filterSubject.value);
       })
       .add(this.loading.emit(false));
+
+    const snapshot = this.route.snapshot;
+    let membertypeid: string | null = null;
+    if (this.router.url.substring(0, 15) === '/members/status') {
+      const membertypeid = this.route.snapshot.params['id'];
+      this.filterSubject.next(
+        new MemberFilter({
+          removed: YesNoAny.NO,
+          membertypeid: membertypeid
+        })
+      );
+    }
   }
 
   /* Add a new date range to the template */
