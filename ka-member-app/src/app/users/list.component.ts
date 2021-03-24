@@ -4,7 +4,7 @@ import { AuthenticationService, UserService } from '@app/_services';
 import { User } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
-export class ListComponent implements OnInit {
+export class UserListComponent implements OnInit {
     users!: User[];
     user!: User;
 

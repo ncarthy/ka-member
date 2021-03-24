@@ -9,7 +9,7 @@ import { first } from 'rxjs/operators';
   selector: 'tr[user-row]',
   templateUrl: './row.component.html',
 })
-export class RowComponent {
+export class UserRowComponent {
   roles = Object.keys(Role).map((key: string) => Role[key as Role]);
   roles2 = Role;
 

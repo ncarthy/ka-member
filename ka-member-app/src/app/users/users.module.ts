@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
 import { UsersRoutingModule } from './users-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { LayoutComponent } from './layout.component';
-import { ListComponent } from './list.component';
-import { AddEditComponent } from './add-edit.component';
-import { RowComponent } from './row.component';
+import { UserLayoutComponent } from './layout.component';
+import { UserListComponent } from './list.component';
+import { UserAddEditComponent } from './add-edit.component';
+import { UserRowComponent } from './row.component';
 
 @NgModule({
     imports: [
@@ -18,10 +18,10 @@ import { RowComponent } from './row.component';
         SharedModule
     ],
     declarations: [
-        LayoutComponent,
-        ListComponent,
-        AddEditComponent,
-        RowComponent
+        UserLayoutComponent,
+        UserListComponent,
+        UserAddEditComponent,
+        UserRowComponent
     ]
 })
 export class UsersModule { }

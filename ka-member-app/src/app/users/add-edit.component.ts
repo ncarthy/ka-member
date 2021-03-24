@@ -9,7 +9,7 @@ import { MustMatch } from '@app/_helpers';
 import { Role, User, UserFormMode } from '@app/_models';
 
 @Component({ templateUrl: 'add-edit.component.html' })
-export class AddEditComponent implements OnInit {
+export class UserAddEditComponent implements OnInit {
     form!: FormGroup;
     id!: number;
     //isAddMode!: boolean;
