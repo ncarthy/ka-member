@@ -115,11 +115,11 @@ class MembersCtl{
     if (isset($_GET['address']) && !empty($_GET['address'])) {
       $model->setPrimaryAddress($_GET['address']);
     }
-    if (isset($_GET['paymentmethodid']) && !empty($_GET['paymentmethodid'])) {
-      $model->setPaymentMethod($_GET['paymentmethodid']);
+    if (isset($_GET['paymenttypeid']) && !empty($_GET['paymenttypeid'])) {
+      $model->setPaymentTypeID($_GET['paymenttypeid']);
     }
     if (isset($_GET['bankaccountid']) && !empty($_GET['bankaccountid'])) {
-      $model->setBankAccount($_GET['bankaccountid']);
+      $model->setBankAccountID($_GET['bankaccountid']);
     }
     if(isset($_GET['expirydatestart']) || isset($_GET['expirydateend'])) {
       $start='';

@@ -237,7 +237,7 @@ class Transaction{
                         "amount" => $amount,
                         "idmember" => $idmember,
                         "bankID" => $bankID,
-                        "paymenttypeID" => $this->paymenttypeID
+                        "paymenttypeID" => $paymenttypeID
                     );
 
                     array_push ($items_arr, $item);

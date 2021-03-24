@@ -43,12 +43,12 @@ class MemberFilter{
                         addressfirstline,addresssecondline,city,postcode,country,
                         gdpr_email,gdpr_tel,gdpr_address,gdpr_sm,
                         m.idmembership, m.membershiptype,
-                        t.paymentmethod, 
+                        pt.name as paymenttype, b.name as bankaccount,
                         m.email1, m.email2
                         FROM " . $this->tablename . " temp
                         JOIN vwMember m ON temp.idmember = m.idmember
-                        LEFT JOIN `transaction` t ON temp.idmember = t.member_idmember
-                            AND temp.lasttransactionid = t.`idtransaction`;";      
+                        LEFT JOIN `paymenttype` pt ON temp.paymenttypeID = pt.paymenttypeID
+                        LEFT JOIN `bankaccount` b ON temp.bankaccountID = b.bankID;";      
         $stmt = $this->conn->prepare( $query );  
 
         // Show member attributes for the members in the temp table     
@@ -84,7 +84,8 @@ class MemberFilter{
                     "reminderdate" => $reminderdate,
                     "updatedate" => $updatedate,
                     "deletedate" => $deletedate,
-                    "paymentmethod" => $paymentmethod,
+                    "paymenttype" => $paymenttype,
+                    "bankaccount" => $bankaccount,
                     "lasttransactiondate" => $lasttransactiondate,
                     "email" => $email1
                 );
@@ -170,18 +171,20 @@ class MemberFilter{
         $this->conn->query($query);        
     }
 
-    public function setPaymentMethod($paymentmethod){      
+    public function setPaymentTypeID($paymenttypeid){      
         $query = " DELETE 
                         FROM " . $this->tablename . "
-                        WHERE paymentmethod IS NULL OR 
-                            paymentmethod = '                     ' OR 
-                            paymentmethod NOT LIKE '".$paymentmethod."%'
+                        WHERE paymenttypeID IS NULL OR paymenttypeID != ".$paymenttypeid."
                         ;";
         $this->conn->query($query);        
     }
 
-    public function setBankAccount($bankaccountID){      
-            // not implemented
+    public function setBankAccountID($bankaccountid){      
+        $query = " DELETE 
+                        FROM " . $this->tablename . "
+                        WHERE bankaccountid IS NULL OR bankaccountid != ".$bankaccountid."
+                        ;";
+        $this->conn->query($query);        
     }
 
     public function setEmail1($email1){      
@@ -293,7 +296,7 @@ class MemberFilter{
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
-                        '                     ' as paymentmethod, m.postonhold
+                        0 as paymenttypeID, 0 as bankaccountID, m.postonhold
                         FROM member m
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
                         GROUP BY m.idmember
@@ -302,7 +305,8 @@ class MemberFilter{
 
         $query = "UPDATE `".$tablename."` M, transaction T
                         SET M.lasttransactionid = T.idtransaction,
-                            M.paymentmethod = LEFT(T.paymentmethod,20)
+                            M.paymenttypeID = T.paymenttypeID,
+                            M.bankaccountID = T.bankID
                         WHERE M.idmember = T.member_idmember AND M.lasttransactiondate = T.`date`;";
 
         $this->conn->query($query);
