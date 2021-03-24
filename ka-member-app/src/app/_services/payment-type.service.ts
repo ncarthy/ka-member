@@ -2,16 +2,16 @@
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
-import { PaymentMethod } from '@app/_models';
+import { PaymentType } from '@app/_models';
 
 const baseUrl = `${environment.apiUrl}/country`;
 
 @Injectable({ providedIn: 'root' })
-export class PaymentMethodService {
+export class PaymentTypeService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get<PaymentMethod[]>(baseUrl);
+        return this.http.get<PaymentType[]>(baseUrl);
     }
 
 }
