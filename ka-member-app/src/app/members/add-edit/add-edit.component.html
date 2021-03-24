@@ -433,8 +433,10 @@
   </div>
   <!-- End of Row-->
 
-  <!--Debug Information for Testing -->
-  <hr />
-  <p>Form Value: {{ form.value | json }}</p>
-  <p>Form Status: {{ form.status | json }}</p>
+  <div *ngIf="false">
+    <!--Debug Information for Testing -->
+    <hr />
+    <p>Form Value: {{ form.value | json }}</p>
+    <p>Form Status: {{ form.status | json }}</p>
+  </div>
 </form>

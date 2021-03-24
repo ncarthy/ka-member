@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MemberSearchResult, User } from '@app/_models';
+import { MemberSearchResult, MemberFilter, User, YesNoAny } from '@app/_models';
 import {
   MemberService,
   AlertService,
@@ -11,8 +11,7 @@ import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confir
 import { ButtonName } from './button-name.enum';
 
 import { from } from 'rxjs';
-import { first } from 'rxjs/operators';
-import { Button } from 'selenium-webdriver';
+
 /**
  * @UserRow: A component for the view of single Member
  */
@@ -22,6 +21,7 @@ import { Button } from 'selenium-webdriver';
 })
 export class RowComponent {
   @Input() member!: MemberSearchResult;
+  @Input() filter!: MemberFilter;
   @Output() onMemberDeleted: EventEmitter<MemberSearchResult>;
   @Output() onMemberUpdated: EventEmitter<MemberSearchResult>;
   user!: User;
@@ -50,7 +50,6 @@ export class RowComponent {
       (success) => {
         this.memberService
           .delete(this.member.id)
-          .pipe(first())
           .subscribe(
             (result: any) => {
               this.alertService.success('Member deleted', {
@@ -81,7 +80,6 @@ export class RowComponent {
       .subscribe((success) => {
         this.memberService
           .anonymize(this.member.id)
-          .pipe(first())
           .subscribe(
             (result: any) => {
               this.alertService.success('Member anonymized', {
@@ -114,10 +112,14 @@ export class RowComponent {
             keepAfterRouteChange: true,
           });
           this.member.membershiptype = 'Former Member';
-          this.onMemberUpdated.emit(this.member);
+          if (this.filter && this.filter.removed === YesNoAny.NO) {
+            this.onMemberDeleted.emit(this.member); // Will remove from list
+          } else {
+            this.onMemberUpdated.emit(this.member); // Keep in list but update
+        }
         },
         (error) =>
-          this.alertService.error('Unable to anonymize member.', {
+          this.alertService.error(`Unable to set to 'Former Member'`, {
             keepAfterRouteChange: true,
           })
       )

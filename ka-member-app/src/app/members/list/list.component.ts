@@ -3,13 +3,14 @@
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '@app/_services';
-import { MemberSearchResult, User, YesNoAny } from '@app/_models';
+import { MemberFilter, MemberSearchResult, User, YesNoAny } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit {
   members!: MemberSearchResult[];
   user!: User;
   loading: boolean = false;
+  filter!: MemberFilter;
 
   constructor(
     private router: Router,
@@ -45,6 +46,10 @@ export class ListComponent implements OnInit {
 
   membersUpdated(members: MemberSearchResult[]) {
     this.members = members;
+  }
+
+  membersFilterUpdated(filter: MemberFilter[]) {
+    this.filter = filter;
   }
 
   filterIsLoading(value: boolean) {

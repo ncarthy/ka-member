@@ -13,11 +13,8 @@ export class MemberFilterService {
 
   filter(urlParameters: string): Observable<MemberSearchResult[]> {
 
-    console.log(urlParameters);
-
     const queryUrl = `${environment.apiUrl}/members/filter?${urlParameters}`;
     
-
     return this.http.get(queryUrl).pipe(
       map((response: any) => {
         return <any>response['records'].map((item: any) => {

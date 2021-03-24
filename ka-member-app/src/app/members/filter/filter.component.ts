@@ -28,6 +28,7 @@ import {
   templateUrl: './filter.component.html',
 })
 export class FilterComponent implements OnInit {
+  @Output() filter: EventEmitter<MemberFilter> = new EventEmitter<MemberFilter>();
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() filteredMembers: EventEmitter<
     MemberSearchResult[]
@@ -36,9 +37,7 @@ export class FilterComponent implements OnInit {
   form!: FormGroup;
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
-
-  //filter!: MemberFilter;
-  filterSubject: Subject<MemberFilter> = new BehaviorSubject<MemberFilter>(
+  filterSubject: BehaviorSubject<MemberFilter> = new BehaviorSubject<MemberFilter>(
     new MemberFilter({removed: YesNoAny.NO}) 
   );
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
@@ -110,6 +109,7 @@ export class FilterComponent implements OnInit {
       )
       .subscribe((results: MemberSearchResult[]) => {
         this.filteredMembers.emit(results);
+        this.filter.emit(this.filterSubject.value);
       })
       .add(this.loading.emit(false));
   }
