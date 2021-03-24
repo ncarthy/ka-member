@@ -86,12 +86,12 @@ import {DateFilterType} from './date-filter.enum';
         
         if (this.dateranges) {            
             this.dateranges.forEach( (element : DateRangeFilter) => {
-                if (element.type) {
-                    if (element.start) {
-                        str = str.concat('&',element.type,'start=',element.start);
+                if (element.dateType) {
+                    if (element.startDate) {
+                        str = str.concat('&',element.dateType,'start=',element.startDate);
                     }
-                    if (element.end) {
-                        str = str.concat('&',element.type,'end=',element.end);
+                    if (element.endDate) {
+                        str = str.concat('&',element.dateType,'end=',element.endDate);
                     }
                 }
             });

@@ -27,6 +27,7 @@ export class ListComponent implements OnInit {
     };
   }
 
+  /* remove member from visible list */
   memberWasDeleted(member: MemberSearchResult): void {
     this.members = this.members.filter((x) => x.id !== member.id);
   }

@@ -11,9 +11,12 @@ import { environment } from '@environments/environment';
 export class MemberFilterService {
   constructor(private http: HttpClient) {}
 
-  filter(filter: MemberFilter): Observable<MemberSearchResult[]> {
+  filter(urlParameters: string): Observable<MemberSearchResult[]> {
 
-    const queryUrl = `${environment.apiUrl}/members/filter?${filter.toString()}`;
+    console.log(urlParameters);
+
+    const queryUrl = `${environment.apiUrl}/members/filter?${urlParameters}`;
+    
 
     return this.http.get(queryUrl).pipe(
       map((response: any) => {

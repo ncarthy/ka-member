@@ -1,14 +1,14 @@
 import {DateFilterType} from './date-filter.enum';
 
 export class DateRangeFilter {
-    start: string;
-    end: string;
-    type: DateFilterType;
+    startDate: string;
+    endDate: string;
+    dateType: DateFilterType;
 
     constructor(obj?: any) {
 
-        this.start = obj && obj.start || null;
-        this.end = obj && obj.end || null;
-        this.type = obj && obj.type || null;
+        this.startDate = obj && obj.startDate || null;
+        this.endDate = obj && obj.endDate || null;
+        this.dateType = obj && obj.dateType || null;
     }
 }

@@ -3,6 +3,6 @@ export enum DateFilterType {
     EXPIRY = 'expirydate',
     UPDATE = 'updatedate',
     REMINDER = 'reminderdate',
-    LASTTRANSACTION = 'lastTransactiondate',
+    LASTTRANSACTION = 'lasttransactiondate',
     DELETE = 'deletedate',
 }

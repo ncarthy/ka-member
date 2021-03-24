@@ -22,7 +22,6 @@ import {
   MembershipStatus,
   YesNoAny,
 } from '@app/_models';
-import { BinaryOperatorToken } from 'typescript';
 
 @Component({
   selector: 'member-filter',
@@ -34,7 +33,6 @@ export class FilterComponent implements OnInit {
     MemberSearchResult[]
   > = new EventEmitter<MemberSearchResult[]>();
 
-  initFinished: boolean = false;
   form!: FormGroup;
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
@@ -53,8 +51,6 @@ export class FilterComponent implements OnInit {
   ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
-
-    //this.loading.subscribe((value: boolean) => (this.loadingValue = value));
   }
 
   // convenience getters for easy access to form fields
@@ -75,7 +71,7 @@ export class FilterComponent implements OnInit {
       address: [null],
 
       // checkboxes
-      removed: ['any'],
+      removed: ['no'],
       postonhold: ['any'],
       email1: ['any'],
 
@@ -105,51 +101,17 @@ export class FilterComponent implements OnInit {
 
     this.filter$
       .pipe(
+        map((filter: MemberFilter) => filter.toString()),
         distinctUntilChanged(),
         tap(() => this.loading.emit(true)),
-        switchMap((filter: MemberFilter) =>
-          this.MemberFilterService.filter(filter)
+        switchMap((urlParameters: string) =>
+          this.MemberFilterService.filter(urlParameters)
         )
       )
       .subscribe((results: MemberSearchResult[]) => {
         this.filteredMembers.emit(results);
       })
       .add(this.loading.emit(false));
-
-    this.initFinished = true;
-
-    /*
-          this.form.valueChanges
-      .pipe(
-        debounceTime(500),
-        tap(() => this.loading.emit(true)),
-        // search, discarding old events if new input comes in
-        switchMap(() => {
-          this.filter = new MemberFilter();
-          this.filter.businessorsurname = this.f['businessorsurname'].value;
-          this.filter.address = this.f['address'].value;
-          this.filter.removed = this.f['removed'].value;
-          this.filter.postonhold = this.f['postonhold'].value;
-          this.filter.email1 = this.f['email1'].value;          
-          this.filter.membertypeid = this.f['statusID'].value;
-          this.filter.countryid = this.f['countryID'].value;
-          this.filter.paymentmethodID = this.f['paymentmethodID'].value;
-          this.filter.bankaccountID = this.f['bankaccountID'].value;
-
-          this.filter.maxresults = this.f['maxresults'].value;
-          this.filterSubject.next(this.filter);
-          return this.filter$;
-        }),
-        distinctUntilChanged(),
-        switchMap((filter: MemberFilter) => {
-          return this.memberSearchService.filter(this.filter);
-        })
-      )
-      .subscribe((results: MemberSearchResult[]) => {
-        // on sucess        
-        this.filteredMembers.emit(results);
-      }).add(this.loading.emit(false));
-      */
   }
 
   /* Add a new date range to the template */
