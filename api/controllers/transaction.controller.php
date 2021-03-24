@@ -127,9 +127,10 @@ class TransactionCtl{
   {
     $model->date = $data->date;
     $model->amount = $data->amount;
-    $model->paymentmethod = $data->paymentmethod;
+    $model->note = $data->note;
     $model->idmember = $data->idmember;
     $model->bankID = $data->bankID;
+    $model->paymenttypeID = $data->paymenttypeID;
   }
 
 }

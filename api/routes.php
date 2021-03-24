@@ -43,16 +43,9 @@ $router->mount('/auth', function() use ($router) {
 /* Bank Routes */
 /***************/
 $router->mount('/bank_account', function () use ($router) {
-
-    // will result in '/memberstatus'
     $router->get('/', 'BankAccountCtl@read_all');
-
-    // will result in '/memberstatus/id'
     $router->get('/(\d+)', 'BankAccountCtl@read_one');
-
-    // will result in '/memberstatus/name'
     $router->get('/(\D+)', 'BankAccountCtl@read_one_name');
-
 });
 /***************/
 /* Country Routes */
@@ -132,6 +125,14 @@ $router->mount('/name', function () use ($router) {
 
     // update member name
     $router->put('/(\d+)', 'MemberNameCtl@update');
+});
+/***********************/
+/* Payment Type Routes */
+/***********************/
+$router->mount('/payment_type', function () use ($router) {
+    $router->get('/', 'PaymentTypeCtl@read_all');
+    $router->get('/(\d+)', 'PaymentTypeCtl@read_one');
+    $router->get('/(\D+)', 'PaymentTypeCtl@read_one_name');
 });
 /*****************/
 /* Status Routes */

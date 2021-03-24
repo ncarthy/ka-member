@@ -18,9 +18,10 @@ class Transaction{
     public $id;
     public $date;
     public $amount;
-    public $paymentmethod;
+    public $paymenttypeID;
     public $idmember;
     public $bankID;
+    public $note;
     
     function create(){
         $query = "INSERT INTO
@@ -28,9 +29,10 @@ class Transaction{
                     SET 
                     date=:date,
                     amount=:amount, 
-                    paymentmethod=:paymentmethod,
+                    paymenttypeID=:paymenttypeID,
                     member_idmember=:idmember,
-                    bankID=:bankID
+                    bankID=:bankID,
+                    note=:note
                     ";
         
         // prepare query
@@ -40,18 +42,18 @@ class Transaction{
         $this->date=htmlspecialchars(strip_tags($this->date));
         $this->amount=filter_var($this->amount, FILTER_SANITIZE_NUMBER_FLOAT,
                                                             FILTER_FLAG_ALLOW_FRACTION);        
-        $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
+        $this->note=htmlspecialchars(strip_tags($this->note));
         $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
         $this->bankID=filter_var($this->bankID, FILTER_SANITIZE_NUMBER_INT);
-
-        $this->bankID = !empty($this->bankID) ? $this->bankID : NULL;
+        $this->paymenttypeID=filter_var($this->paymenttypeID, FILTER_SANITIZE_NUMBER_INT);
 
         // bind values
         $stmt->bindParam(":date", $this->date);
         $stmt->bindParam(":amount", $this->amount);
-        $stmt->bindParam(":paymentmethod", $this->paymentmethod);
+        $stmt->bindParam(":note", $this->note);
         $stmt->bindParam(":idmember", $this->idmember, PDO::PARAM_INT);
         $stmt->bindParam(":bankID", $this->bankID, PDO::PARAM_INT);
+        $stmt->bindParam(":paymenttypeID", $this->paymenttypeID, PDO::PARAM_INT);
         
         // execute query
         if($stmt->execute()){
@@ -72,9 +74,10 @@ class Transaction{
                     SET 
                     date=:date,
                     amount=:amount, 
-                    paymentmethod=:paymentmethod,
+                    note=:note,
                     member_idmember=:idmember,
-                    bankID=:bankID
+                    bankID=:bankID,
+                    paymenttypeID=:paymenttypeID
                  WHERE
                     idtransaction=:id";
         
@@ -85,19 +88,19 @@ class Transaction{
         $this->date=htmlspecialchars(strip_tags($this->date));
         $this->amount=filter_var($this->amount, FILTER_SANITIZE_NUMBER_FLOAT,
                                                             FILTER_FLAG_ALLOW_FRACTION);        
-        $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
+        $this->note=htmlspecialchars(strip_tags($this->note));
         $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
         $this->bankID=filter_var($this->bankID, FILTER_SANITIZE_NUMBER_INT);
-
-        $this->bankID = !empty($this->bankID) ? $this->bankID : NULL;
+        $this->paymenttypeID=filter_var($this->paymenttypeID, FILTER_SANITIZE_NUMBER_INT);
         
         // bind values
-        $stmt->bindParam(":id", $this->id);
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
         $stmt->bindParam(":date", $this->date);
         $stmt->bindParam(":amount", $this->amount);
-        $stmt->bindParam(":paymentmethod", $this->paymentmethod);
-        $stmt->bindParam(":idmember", $this->idmember);
-        $stmt->bindParam(":bankID", $this->bankID);       
+        $stmt->bindParam(":note", $this->note);
+        $stmt->bindParam(":idmember", $this->idmember, PDO::PARAM_INT);
+        $stmt->bindParam(":bankID", $this->bankID, PDO::PARAM_INT);
+        $stmt->bindParam(":paymenttypeID", $this->paymenttypeID, PDO::PARAM_INT);      
 
         // execute query
         if($stmt->execute()){
@@ -112,8 +115,8 @@ class Transaction{
 
         //select all data
         $query = "SELECT
-                    t.idtransaction as `id`, t.`date`, t.`amount`,
-                    t.paymentmethod, t.member_idmember as idmember, t.`bankID`
+                    t.idtransaction as `id`, t.`date`, t.`amount`, t.`note`,
+                    t.paymenttypeID, t.member_idmember as idmember, t.`bankID`
                 FROM
                     " . $this->table_name . " t
                 ORDER BY t.idtransaction; ";
@@ -123,8 +126,6 @@ class Transaction{
         $num = $stmt->rowCount();
 
         $items_arr=array();
-        $items_arr["count"]=$num;
-        $items_arr["records"]=array();
 
         if($num>0){       
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -135,25 +136,28 @@ class Transaction{
                     "idtransaction" => $id,
                     "date" => $date,
                     "amount" => $amount,
-                    "paymentmethod" => html_entity_decode($paymentmethod),
+                    "paymenttypeID" => $paymenttypeID,
                     "idmember" => $idmember,
-                    "bankID" => $bankID
+                    "bankID" => $bankID,
+                    "note" => html_entity_decode($note)
                 );
     
-                array_push($items_arr["records"], $item_item);
+                array_push($items_arr, $item_item);
             }
         }
 
         return $items_arr;
     }
 
-    // find the details of one user using $id
+    /**
+     * Return a single transaction
+     */
     public function readone(){
 
         //select all data
         $query = "SELECT
-                    t.idtransaction as `id`, t.`date`, t.`amount`,
-                    t.paymentmethod, t.member_idmember as idmember, t.`bankID`
+                    t.idtransaction as `id`, t.`date`, t.`amount`, t.`note`,
+                    t.paymenttypeID, t.member_idmember as idmember, t.`bankID`
                     FROM
                     " . $this->table_name . " t
                     WHERE t.idtransaction = ?
@@ -176,18 +180,20 @@ class Transaction{
             $this->id = $row['id'];
             $this->date = $row['date'];
             $this->amount = $row['amount'];
-            $this->paymentmethod = $row['paymentmethod'];
+            $this->note = $row['note'];
             $this->idmember = $row['idmember'];
             $this->bankID = $row['bankID'];
+            $this->paymenttypeID = $row['paymenttypeID'];
         }
 
         $item = array(
             "id" => $this->id,
             "date" => $this->date,
-            "paymentmethod" => html_entity_decode($this->paymentmethod),
+            "note" => html_entity_decode($this->note),
             "amount" => $this->amount,
             "idmember" => $this->idmember,
-            "bankID" => $this->bankID
+            "bankID" => $this->bankID,
+            "paymenttypeID" => $this->paymenttypeID
         );
 
         return $item;
@@ -198,8 +204,8 @@ class Transaction{
 
             //select all data
             $query = "SELECT
-                    t.idtransaction as `id`, t.`date`, t.`amount`,
-                    t.paymentmethod, t.member_idmember as idmember, t.`bankID`
+                    t.idtransaction as `id`, t.`date`, t.`amount`, t.`note`,
+                    t.paymenttypeID, t.member_idmember as idmember, t.`bankID`
                     FROM
                     " . $this->table_name . " t
                     WHERE t.member_idmember = ?
@@ -211,8 +217,6 @@ class Transaction{
             $num = $stmt->rowCount();
 
             $items_arr=array();
-            $items_arr["count"]=$num;
-            $items_arr["transactions"]=array();
 
             // check if more than 0 record found
             if($num>0){
@@ -229,13 +233,14 @@ class Transaction{
                     $item = array(
                         "id" => $id,
                         "date" => $date,
-                        "paymentmethod" => html_entity_decode($paymentmethod),
+                        "note" => html_entity_decode($note),
                         "amount" => $amount,
                         "idmember" => $idmember,
-                        "bankID" => $bankID
+                        "bankID" => $bankID,
+                        "paymenttypeID" => $this->paymenttypeID
                     );
 
-                    array_push ($items_arr["transactions"], $item);
+                    array_push ($items_arr, $item);
                 }
             }
 
