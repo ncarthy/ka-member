@@ -7,7 +7,7 @@ import { PaymentMethod } from '@app/_models';
 const baseUrl = `${environment.apiUrl}/country`;
 
 @Injectable({ providedIn: 'root' })
-export class bankAccountService {
+export class PaymentMethodService {
     constructor(private http: HttpClient) { }
 
     getAll() {

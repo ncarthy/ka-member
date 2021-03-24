@@ -1,5 +1,6 @@
 ﻿export * from './address-search.service';
 export * from './alert.service';
+export * from './bank-account.service';
 export * from './authentication.service';
 export * from './country.service';
 export * from './members-filter.service';
@@ -7,5 +8,6 @@ export * from './member.service';
 export * from './member-name.service';
 export * from './members.service';
 export * from './membership-status.service';
+export * from './payment-method.service';
 export * from './toast.service';
 export * from './user.service';

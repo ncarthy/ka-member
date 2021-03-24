@@ -7,7 +7,7 @@ import { BankAccount } from '@app/_models';
 const baseUrl = `${environment.apiUrl}/country`;
 
 @Injectable({ providedIn: 'root' })
-export class bankAccountService {
+export class BankAccountService {
     constructor(private http: HttpClient) { }
 
     getAll() {
