@@ -15,6 +15,7 @@ export * from './membership-status';
 export * from './payment-type';
 export * from './role';
 export * from './success-response.interface';
+export * from './transaction';
 export * from './user';
 export * from './user-form-mode.enum';
 export * from './yes-no.enum';
