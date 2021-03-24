@@ -15,7 +15,6 @@ export class ReportsComponent implements OnInit {
 
   goBack() {
     this.location.back();
-
-    return false;
+    return false; // don't propagate event
   }
 }
