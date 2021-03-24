@@ -2,4 +2,4 @@
 
 
 @Component({ templateUrl: 'layout.component.html' })
-export class LayoutComponent {}
+export class MemberLayoutComponent {}

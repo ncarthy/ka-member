@@ -39,7 +39,7 @@ import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confir
   templateUrl: 'add-edit.component.html',
   styleUrls: ['add-edit.component.css'],
 })
-export class AddEditComponent implements OnInit {
+export class MemberAddEditComponent implements OnInit {
   form!: FormGroup;
   id!: number;
   formMode!: FormMode;

@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.css']
 })
-export class ManageComponent implements OnInit {
+export class MemberManageComponent implements OnInit {
 
   constructor() { }
 

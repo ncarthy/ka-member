@@ -6,7 +6,7 @@ import { AuthenticationService } from '@app/_services';
 import { MemberFilter, MemberSearchResult, User, YesNoAny } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
-export class ListComponent implements OnInit {
+export class MemberListComponent implements OnInit {
   members!: MemberSearchResult[];
   user!: User;
   loading: boolean = false;

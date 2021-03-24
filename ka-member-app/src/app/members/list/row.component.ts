@@ -19,7 +19,7 @@ import { from } from 'rxjs';
   selector: 'tr[member-row]',
   templateUrl: './row.component.html',
 })
-export class RowComponent {
+export class MemberRowComponent {
   @Input() member!: MemberSearchResult;
   @Input() filter!: MemberFilter;
   @Output() onMemberDeleted: EventEmitter<MemberSearchResult>;

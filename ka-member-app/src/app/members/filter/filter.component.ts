@@ -27,7 +27,7 @@ import {
   selector: 'member-filter',
   templateUrl: './filter.component.html',
 })
-export class FilterComponent implements OnInit {
+export class MemberFilterComponent implements OnInit {
   @Output() filter: EventEmitter<MemberFilter> = new EventEmitter<MemberFilter>();
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() filteredMembers: EventEmitter<

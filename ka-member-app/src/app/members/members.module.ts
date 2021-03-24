@@ -9,14 +9,14 @@ import {
 import { MembersRoutingModule } from './members-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { NgbUTCStringAdapter } from '@app/_helpers';
-
-import { LayoutComponent } from './layout.component';
-import { ListComponent } from './list/list.component';
-import { RowComponent } from './list/row.component';
-import { AddEditComponent } from './add-edit/add-edit.component';
-import { ManageComponent } from './manage/manage.component';
 import { MemberFilterService } from '@app/_services';
-import { FilterComponent } from './filter/filter.component';
+
+import { MemberLayoutComponent } from './layout.component';
+import { MemberListComponent } from './list/list.component';
+import { MemberRowComponent } from './list/row.component';
+import { MemberAddEditComponent } from './add-edit/add-edit.component';
+import { MemberManageComponent } from './manage/manage.component';
+import { MemberFilterComponent } from './filter/filter.component';
 
 @NgModule({
   imports: [
@@ -27,12 +27,12 @@ import { FilterComponent } from './filter/filter.component';
     SharedModule,
   ],
   declarations: [
-    LayoutComponent,
-    ListComponent,
-    AddEditComponent,
-    RowComponent,
-    ManageComponent,
-    FilterComponent
+    MemberLayoutComponent,
+    MemberListComponent,
+    MemberRowComponent,
+    MemberFilterComponent,
+    MemberAddEditComponent,    
+    MemberManageComponent,    
   ],
   providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }, MemberFilterService], 
   // NgbDateAdapter to handle MySQL date format (From https://stackoverflow.com/a/47945155/6941165 )

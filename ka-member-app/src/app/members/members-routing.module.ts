@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LayoutComponent } from './layout.component';
-import { ListComponent } from './list/list.component';
-import { AddEditComponent } from './add-edit/add-edit.component';
-import { ManageComponent } from './manage/manage.component';
+import { MemberLayoutComponent } from './layout.component';
+import { MemberListComponent } from './list/list.component';
+import { MemberAddEditComponent } from './add-edit/add-edit.component';
+import { MemberManageComponent } from './manage/manage.component';
 
 const routes: Routes = [
     {
-        path: '', component: LayoutComponent,
+        path: '', component: MemberLayoutComponent,
         children: [
-            { path: '', component: ListComponent },
-            { path: 'add', component: AddEditComponent },
-            { path: 'edit/:id', component: AddEditComponent },
-            { path: 'manage/:id', component: ManageComponent },
-            { path: 'status/:id', component: ListComponent }
+            { path: '', component: MemberListComponent },
+            { path: 'add', component: MemberAddEditComponent },
+            { path: 'edit/:id', component: MemberAddEditComponent },
+            { path: 'manage/:id', component: MemberManageComponent },
+            { path: 'status/:id', component: MemberListComponent }
         ]
     }
 ];
