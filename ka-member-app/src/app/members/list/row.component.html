@@ -35,14 +35,14 @@
     <span>Add Tx</span>
   </button>
   <button
-    routerLink="edit/{{ member.id }}"
+    routerLink="/members/edit/{{ member.id }}"
     class="btn btn-sm btn-primary mr-1"
     [disabled]="member.isUpdating"
   >
     <span *ngIf="!member.isUpdating">Edit</span>
   </button>
   <button
-    routerLink="manage/{{ member.id }}"
+    routerLink="/members/manage/{{ member.id }}"
     class="btn btn-sm btn-info mr-1"
     [disabled]="member.isUpdating"
   >
