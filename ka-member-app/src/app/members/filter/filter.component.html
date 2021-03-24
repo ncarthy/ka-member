@@ -23,7 +23,7 @@
   </div>
 
   <!--<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">-->
-  <ngb-accordion #acc="ngbAccordion" >
+  <ngb-accordion #acc="ngbAccordion">
     <ngb-panel title="Filter">
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="d-flex align-items-center justify-content-between">
@@ -32,8 +32,19 @@
             <div class="col">
               <a class="btn btn-link" (click)="onReset()">Reset</a>
             </div>
-            <div class="col">
-              <a class="btn btn-link"><i class="fas fa-cog"></i></a>
+            <div class="col" *ngIf="false"><!-- Hide it for now -->
+              <div ngbDropdown container="body">
+                <a class="btn btn-link" id="filterSettings" ngbDropdownToggle
+                  ><i class="fas fa-cog"></i
+                ></a>
+                <div ngbDropdownMenu>
+                  <button ngbDropdownItem>Edit</button>
+                  <button ngbDropdownItem>Duplicate</button>
+                  <button ngbDropdownItem>Move</button>
+                  <div class="dropdown-divider"></div>
+                  <button ngbDropdownItem>Delete</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -118,7 +129,9 @@
                     formControlName="removed"
                     [value]="YesNoAny.YES"
                   />
-                  <label class="form-check-label" for="removed_yes"> Yes </label>
+                  <label class="form-check-label" for="removed_yes">
+                    Yes
+                  </label>
                 </div>
                 <div class="form-check">
                   <input
@@ -139,7 +152,9 @@
                     [value]="YesNoAny.ANY"
                     checked
                   />
-                  <label class="form-check-label" for="removed_any"> Either </label>
+                  <label class="form-check-label" for="removed_any">
+                    Either
+                  </label>
                 </div>
               </div>
             </div>
