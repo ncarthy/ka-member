@@ -581,6 +581,16 @@ UPDATE transaction SET paymentmethod = 'Cash' WHERE paymentmethod LIKE 'Cash%';
 
 ALTER TABLE `transaction` CHANGE `paymentmethod` `paymentmethod` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE `transaction` CHANGE `amount` `amount` DECIMAL(10,2) NOT NULL DEFAULT '0';
+ALTER TABLE `transaction` ADD `paymenttypeID` INT NULL AFTER `amount`;
+ALTER TABLE `transaction` ADD `note` VARCHAR(255) NULL;
+UPDATE `transaction` T, paymenttype P SET T.paymenttypeID = P.paymenttypeID WHERE T.paymentmethod = P.name;
+ALTER TABLE `transaction` DROP `paymentmethod`;
+UPDATE `transaction` SET bankID = 3  WHERE paymenttypeID = 1;  # SO
+UPDATE `transaction` SET bankID = 2  WHERE paymenttypeID = 2;  # BO
+UPDATE `transaction` SET bankID = 3  WHERE paymenttypeID = 3;  # One Off
+UPDATE `transaction` SET bankID = 1 WHERE paymenttypeID = 4;  # Cash
+UPDATE `transaction` SET bankID = 4  WHERE paymenttypeID = 5; # Recurring
+UPDATE `transaction` SET bankID = 4  WHERE paymenttypeID = 6; # DD
 
 /* Anonymize members who are deleted but whose last transaction was more than 3 years ago */
 	DROP TEMPORARY TABLE IF EXISTS `_RemovedWithTrans`;
