@@ -45,7 +45,7 @@ export class MemberAddEditComponent implements OnInit {
   formMode!: FormMode;
   loading = false;
   submitted = false;
-  apiUser!: User;
+  user!: User;
   countries!: Country[];
   statuses!: MembershipStatus[];
   primaryAddress!: Address;
@@ -63,7 +63,7 @@ export class MemberAddEditComponent implements OnInit {
     private membershipStatusService: MembershipStatusService,
     public modalService: NgbModal
   ) {
-    this.apiUser = this.authenticationService.userValue;
+    this.user = this.authenticationService.userValue;
   }
 
   ngOnInit() {

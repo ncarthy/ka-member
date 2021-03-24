@@ -10,7 +10,12 @@
   <!-- Buttons -->
   <div class="col-sm-6 d-flex justify-content-between">
     <div class="form-group">
-      <button type="submit" [disabled]="loading" class="btn btn-primary">
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="btn btn-primary"
+        *ngIf="user.isAdmin"
+      >
         <span
           *ngIf="loading"
           class="spinner-border spinner-border-sm mr-1"
@@ -20,7 +25,7 @@
       <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
       <a routerLink="/members" class="btn btn-link">Cancel</a>
     </div>
-    <div *ngIf="isMemberEdit">
+    <div *ngIf="isMemberEdit && user.isAdmin">
       <a
         *ngIf="f['statusID'].value !== 9"
         class="btn btn-link"
