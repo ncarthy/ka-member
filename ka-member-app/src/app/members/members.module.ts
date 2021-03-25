@@ -17,6 +17,7 @@ import { MemberRowComponent } from './list/row.component';
 import { MemberAddEditComponent } from './add-edit/add-edit.component';
 import { MemberManageComponent } from './manage/manage.component';
 import { MemberFilterComponent } from './filter/filter.component';
+import { TransactionListComponent, TransactionRowComponent} from './transactions';
 
 @NgModule({
   imports: [
@@ -32,7 +33,9 @@ import { MemberFilterComponent } from './filter/filter.component';
     MemberRowComponent,
     MemberFilterComponent,
     MemberAddEditComponent,    
-    MemberManageComponent,    
+    MemberManageComponent, 
+    TransactionListComponent,
+    TransactionRowComponent
   ],
   providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }, MemberFilterService], 
   // NgbDateAdapter to handle MySQL date format (From https://stackoverflow.com/a/47945155/6941165 )

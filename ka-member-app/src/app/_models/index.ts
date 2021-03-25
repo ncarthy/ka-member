@@ -1,6 +1,7 @@
 ﻿export * from './address';
 export * from './alert';
 export * from './bank-account';
+export * from './button-name.enum';
 export * from './country';
 export * from './date-range-filter';
 export * from './date-filter.enum';

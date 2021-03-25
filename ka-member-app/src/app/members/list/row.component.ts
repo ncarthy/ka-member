@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MemberSearchResult, MemberFilter, User, YesNoAny } from '@app/_models';
+import { ButtonName, MemberSearchResult, MemberFilter, User, YesNoAny } from '@app/_models';
 import {
   MemberService,
   AlertService,
@@ -8,7 +8,6 @@ import {
 } from '@app/_services';
 import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
 import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confirm.component';
-import { ButtonName } from './button-name.enum';
 
 import { from } from 'rxjs';
 

@@ -169,6 +169,8 @@ export class MemberFilterComponent implements OnInit {
     });
   }
 
+  /* Used to stop the keyvalues pipe re-arranging the order of the Enum */
+  /* From https://stackoverflow.com/a/52794221/6941165 */
   originalOrder = (
     a: KeyValue<number, string>,
     b: KeyValue<number, string>
