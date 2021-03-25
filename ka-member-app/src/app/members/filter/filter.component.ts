@@ -46,6 +46,7 @@ export class MemberFilterComponent implements OnInit {
     new MemberFilter({ removed: YesNoAny.NO })
   );
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
+  working:boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -110,7 +111,7 @@ export class MemberFilterComponent implements OnInit {
       .pipe(
         map((filter: MemberFilter) => filter.toString()),
         distinctUntilChanged(),
-        tap(() => this.loading.emit(true)),
+        tap(() => {this.loading.emit(true);this.working=true;}),
         switchMap((urlParameters: string) =>
           this.MemberFilterService.filter(urlParameters)
         )
@@ -118,6 +119,7 @@ export class MemberFilterComponent implements OnInit {
       .subscribe((results: MemberSearchResult[]) => {
         this.filteredMembers.emit(results);
         this.filter.emit(this.filterSubject.value);
+        this.working=false;
       })
       .add(this.loading.emit(false));
 
