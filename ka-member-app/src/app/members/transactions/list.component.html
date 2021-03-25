@@ -37,8 +37,8 @@
       [transaction]="transaction"
       [banks]="bankAccounts"
       [paymentTypes]="paymentTypes"
-      (onTransactionDeleted)="transactionrWasDeleted($event)"
-      (onTransactionUpdated)="transactionWasUpdated($event)"
+      (onTransactionDeleted)="transactionDeleted($event)"
+      (onTransactionUpdated)="transactionUpdated($event)"
       (editRequested)="transactionEditRequested($event)"
       class="m-0"
     ></tr>

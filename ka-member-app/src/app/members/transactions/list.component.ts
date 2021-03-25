@@ -71,7 +71,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
   }
 
   /* remove member from visible list */
-  transactionrDeleted(transaction: Transaction): void {
+  transactionDeleted(transaction: Transaction): void {
     if (!this.transactions) {
       return;
     }
