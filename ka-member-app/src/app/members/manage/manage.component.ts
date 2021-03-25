@@ -21,8 +21,8 @@ import { switchMap } from 'rxjs/operators';
 })
 export class MemberManageComponent implements OnInit {
   loading: boolean = false;
-  member$!: Observable<Member>;
-  transactions$!: Observable<Transaction>;
+  member?: Member;
+  transactions?: Transaction[];
 
   constructor(
     private location: Location,
@@ -35,10 +35,18 @@ export class MemberManageComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.member$ = this.memberService
-      .getById(this.route.snapshot.params['id']);
-    
-    //this.member$.pipe(switchMap((m:Member) => this.transactions$ = this.transactionService.getByMember(m.id));
+    this.memberService
+      .getById(this.route.snapshot.params['id'])
+      .pipe(
+        switchMap((m: Member) => {
+          this.member = m;
+          return this.transactionService.getByMember(m.id);
+        })
+      )
+      .subscribe((txs: Transaction[]) => {
+        this.transactions = txs;
+        this.loading = false;
+      });
   }
 
   goBack() {

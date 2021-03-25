@@ -1,4 +1,5 @@
-﻿<table class="table table-sm table-striped table-hover table-responsive">
+﻿<h4>Transactions</h4>
+<table class="table table-sm table-striped table-hover table-responsive">
   <thead>
     <tr class="m-0">
       <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
@@ -6,18 +7,20 @@
       <th scope="col">Amount</th>
       <th scope="col">Type</th>
       <th scope="col">Bank</th>
-      <th scope="col">Note</th>
+      <th scope="col" class="w-25">Note</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr
-      *ngFor="let transaction of transactions$ | async"
+      *ngFor="let transaction of transactions"
       transaction-row
       [transaction]="transaction"
+      [banks]="bankAccounts"
+      [paymentTypes]="paymentTypes"
       class="m-0"
     ></tr>
-    <tr *ngIf="!transactions$">
+    <tr *ngIf="loading">
       <td colspan="4" class="text-center">
         <span class="spinner-border spinner-border-lg align-center"></span>
       </td>

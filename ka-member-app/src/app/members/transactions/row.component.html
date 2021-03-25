@@ -1,14 +1,19 @@
 <th scope="row">{{ transaction.date }}</th>
 <td>{{ transaction.amount }}</td>
-<td>{{ transaction.paymenttypeID }}</td>
-<td>{{ transaction.bankID }}</td>
+<td>{{ getArrayMemberFromID(transaction.paymenttypeID,paymentTypes) }}</td>
+<td>{{ getArrayMemberFromID(transaction.bankID,banks) }}</td>
 <td>{{ transaction.note }}</td>
 <td class="w-25">
   <button
-  (click)="editTransaction($event)"
+    (click)="editTransaction($event)"
     class="btn btn-sm btn-primary mr-1"
     [disabled]="transaction.isUpdating"
+    *ngIf="showButton(ButtonName.EDIT)"
   >
+    <span
+      *ngIf="transaction.isUpdating"
+      class="spinner-border spinner-border-sm"
+    ></span>
     <span *ngIf="!transaction.isUpdating">Edit</span>
   </button>
   <button

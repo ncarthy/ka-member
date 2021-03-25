@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonName,Transaction, User } from '@app/_models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { BankAccount,ButtonName,PaymentType,Transaction, User } from '@app/_models';
 import {
   MemberService,
   AuthenticationService,
@@ -10,8 +10,10 @@ import {
   selector: 'tr[transaction-row]',
   templateUrl: './row.component.html',
 })
-export class TransactionRowComponent {
+export class TransactionRowComponent implements OnInit {
   @Input() transaction!: Transaction;
+  @Input() banks!: BankAccount[];
+  @Input() paymentTypes!: PaymentType[];
   @Output() onTransactionDeleted: EventEmitter<Transaction>;
   @Output() onTransactionUpdated: EventEmitter<Transaction>;
   user!: User;
@@ -24,6 +26,9 @@ export class TransactionRowComponent {
     this.onTransactionDeleted = new EventEmitter();
     this.onTransactionUpdated = new EventEmitter();
     this.user = this.authenticationService.userValue;
+  }
+
+  ngOnInit(): void {
   }
 
   deleteTransaction(e: Event) {
@@ -53,8 +58,7 @@ export class TransactionRowComponent {
 
   showButton(btn: ButtonName): boolean {
     switch (btn) {
-      case ButtonName.EDIT:
-        return this.transaction && this.user.isAdmin;
+      case ButtonName.EDIT:;
       case ButtonName.DELETE:
         return this.transaction && this.user.isAdmin;
       default:
@@ -65,5 +69,15 @@ export class TransactionRowComponent {
   // From https://stackoverflow.com/a/59289208
   public get ButtonName() {
     return ButtonName;
+  }
+
+  getArrayMemberFromID(id: number | undefined, array: any[]) : string {
+    if (id) {
+      return array.find(x => x.id == id).name;  
+    } else {
+      return '';
+    }
+    
+    
   }
 }
