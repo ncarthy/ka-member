@@ -1,5 +1,115 @@
-<h1 *ngIf="formMode===FormMode.Add">Add Member</h1>
-<h1 *ngIf="formMode===FormMode.Edit">Edit Member</h1>
-<div *ngIf="loading">
-  <span class="spinner-border spinner-border-lg align-center"></span>
+<div class="m-2">
+  <h5 *ngIf="formMode === FormMode.Add">Add New Transaction</h5>
+  <h5 *ngIf="formMode === FormMode.Edit">Edit Transaction</h5>
+  <div *ngIf="loading">
+    <span class="spinner-border spinner-border-lg align-center"></span>
+  </div>
+  <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="input-group col p-0 mb-1">
+      <span class="input-group-text col-4" id="date-label">Date</span>
+      <input
+        formControlName="date"
+        class="form-control"
+        ngbDatepicker
+        #d1="ngbDatepicker"
+        placement="bottom"
+        [ngClass]="{ 'is-invalid': submitted && f.date.errors }"
+      />
+      <div class="input-group-append">
+        <button
+          class="btn btn-outline-secondary"
+          (click)="d1.toggle()"
+          type="button"
+        >
+          <i class="far fa-calendar-alt"></i>
+        </button>
+      </div>
+      <div *ngIf="submitted && f.date.errors" class="invalid-feedback">
+        <div *ngIf="f.date.errors.required">Date is required</div>
+      </div>
+    </div>
+    <div class="input-group mb-1">
+      <span class="input-group-text col-4" id="paymenttypes-label"
+        >Pmt Type</span
+      >
+      <select
+        id="paymentTypeSelect"
+        name="paymentTypeSelect"
+        class="form-control"
+        formControlName="paymenttypeID"
+      >
+        <option disabled selected [ngValue]="null">---- select ----</option>
+        <option *ngFor="let pType of paymentTypes" [ngValue]="pType.id">
+          {{ pType.name }}
+        </option>
+      </select>
+    </div>
+    <div class="input-group mb-1">
+      <span class="input-group-text col-4" id="bankaccounts-label"
+        >Pmt Type</span
+      >
+      <select
+        id="bankSelect"
+        name="bankSelect"
+        class="form-control"
+        formControlName="bankID"
+      >
+        <option disabled selected [ngValue]="null">-- select --</option>
+        <option *ngFor="let bank of banks" [ngValue]="bank.id">
+          {{ bank.name }}
+        </option>
+      </select>
+    </div>
+    <div class="input-group col p-0 mb-1">
+      <span class="input-group-text col-4" id="amount-label">Amount</span>
+      <input
+        type="number"
+        class="form-control text-left"
+        formControlName="amount"
+        [ngClass]="{ 'is-invalid': submitted && f.amount.errors }"
+      />
+      <div *ngIf="submitted && f.amount.errors" class="invalid-feedback">
+        <div *ngIf="f.amount.errors.required">Amount is equired</div>
+      </div>
+    </div>
+    <div class="input-group mb-1">
+      <span class="input-group-text col-4" id="note-addon1">Note</span>
+      <textarea class="form-control" formControlName="note"></textarea>
+    </div>
+    <div class="form-group" *ngIf="user.isAdmin">
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="btn btn-primary"
+        *ngIf="user.isAdmin"
+      >
+        <span
+          *ngIf="saving"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        <div *ngIf="!saving">
+          <span *ngIf="formMode === FormMode.Add">Create New</span
+          ><span *ngIf="formMode === FormMode.Edit">Save</span>
+        </div>
+      </button>
+      <a
+        class="btn btn-link"
+        *ngIf="formMode === FormMode.Add"
+        (click)="onReset()"
+        >Reset</a
+      >
+      <a
+        class="btn btn-link"
+        *ngIf="formMode === FormMode.Edit"
+        (click)="onReset()"
+        >Clear</a
+      >
+    </div>
+    <div *ngIf="true">
+      <!--Debug Information for Testing -->
+      <hr />
+      <p>Form Value: {{ transactionForm.value | json }}</p>
+      <p>Form Status: {{ transactionForm.status | json }}</p>
+    </div>
+  </form>
 </div>

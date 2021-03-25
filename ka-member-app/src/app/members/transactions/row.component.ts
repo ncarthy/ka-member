@@ -28,6 +28,7 @@ export class TransactionRowComponent implements OnInit {
   @Input() paymentTypes!: PaymentType[];
   @Output() onTransactionDeleted: EventEmitter<Transaction>;
   @Output() onTransactionUpdated: EventEmitter<Transaction>;
+  @Output() editRequested: EventEmitter<Transaction>;
   user!: User;
   showSaveButton: boolean = false;
   amount$: Subject<string> = new Subject<string>();
@@ -41,6 +42,7 @@ export class TransactionRowComponent implements OnInit {
   ) {
     this.onTransactionDeleted = new EventEmitter();
     this.onTransactionUpdated = new EventEmitter();
+    this.editRequested = new EventEmitter();
     this.user = this.authenticationService.userValue;
   }
 
@@ -61,9 +63,7 @@ export class TransactionRowComponent implements OnInit {
 
     if (!this.transaction || !this.transaction.id || !this.user.isAdmin) return;
 
-    this.transaction.isUpdating = true;
-
-    // TODO
+    this.editRequested.emit(this.transaction);
   }
 
   // Required so that the template can access the Enum

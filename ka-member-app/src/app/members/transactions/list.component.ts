@@ -27,6 +27,7 @@ import {
 @Component({ selector: 'transaction-list', templateUrl: 'list.component.html' })
 export class TransactionListComponent implements OnInit, OnChanges {
   @Output() reloadRequested: EventEmitter<any>;
+  @Output() editRequested: EventEmitter<Transaction>;
   @Input() transactions?: Transaction[];
   @Input() loading: boolean = false;
   user!: User;
@@ -40,6 +41,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
     private paymentTypeService: PaymentTypeService
   ) {
     this.reloadRequested = new EventEmitter();
+    this.editRequested = new EventEmitter();
     this.user = this.authenticationService.userValue;
   }
 
@@ -69,7 +71,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
   }
 
   /* remove member from visible list */
-  transactionrWasDeleted(transaction: Transaction): void {
+  transactionrDeleted(transaction: Transaction): void {
     if (!this.transactions) {
       return;
     }
@@ -78,11 +80,18 @@ export class TransactionListComponent implements OnInit, OnChanges {
     );
   }
 
-  transactionWasUpdated(transaction: Transaction): void {
+  transactionUpdated(transaction: Transaction): void {
     if (!this.transactions) {
       return;
     }
     this.reloadRequested.emit(transaction);
+  }
+
+  transactionEditRequested(transaction: Transaction): void {
+    if (!this.transactions) {
+      return;
+    }
+    this.editRequested.emit(transaction);
   }
 
   onReloadClick() {

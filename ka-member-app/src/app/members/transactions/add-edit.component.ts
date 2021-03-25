@@ -1,10 +1,12 @@
 import {
   Component,
+  EventEmitter,
   forwardRef,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -22,9 +24,11 @@ import {
   PaymentType,
   BankAccount,
   User,
+  Member,
 } from '@app/_models';
 
 import {
+  AlertService,
   AuthenticationService,
   BankAccountService,
   PaymentTypeService,
@@ -43,28 +47,34 @@ import { Subscription } from 'rxjs';
     },
   ],
 })
-export class TransactionAddEditComponent implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
+export class TransactionAddEditComponent
+  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
   @Input() touched: boolean = false;
   @Input() transaction?: Transaction;
+  @Input() mostRecentTransaction?: Transaction;
+  @Output() reloadRequested: EventEmitter<any>;
 
-  id!: number;
   formMode!: FormMode;
-  loading = false;
-  onChange: any = (_: Transaction) => {};
-  onTouch: any = () => {};
+
+  loading: boolean = false;
+  saving: boolean = false;
   submitted: boolean = false;
+
+  onChange: any = (_: Transaction) => {};
+  onTouch: any = () => {};  
   user!: User;
-  bankAccounts?: BankAccount[];
+  banks?: BankAccount[];
   paymentTypes?: PaymentType[];
 
   private subscription = new Subscription();
 
   transactionForm = this.fb.group({
     date: [null, Validators.required],
-    amount: [null, Validators.required],
+    amount: [null, [Validators.required]],
     paymenttypeID: [null],
     bankID: [null],
     note: [null],
+    idmember: [null, Validators.required],
   });
 
   constructor(
@@ -72,26 +82,29 @@ export class TransactionAddEditComponent implements ControlValueAccessor, OnInit
     private authenticationService: AuthenticationService,
     private transactionService: TransactionService,
     private bankAccountService: BankAccountService,
-    private paymentTypeService: PaymentTypeService
+    private paymentTypeService: PaymentTypeService,
+    private alertService: AlertService
   ) {
     this.user = this.authenticationService.userValue;
+    this.reloadRequested = new EventEmitter();
   }
 
   ngOnInit(): void {
     this.loading = true;
+    this.formMode = FormMode.Add;
 
     this.bankAccountService
-    .getAll()
-    .pipe(
-      switchMap((banks: BankAccount[]) => {
-        this.bankAccounts = banks;
-        return this.paymentTypeService.getAll();
-      })
-    )
-    .subscribe((types: PaymentType[]) => {
-      this.paymentTypes = types;
-      this.loading = false;
-    });
+      .getAll()
+      .pipe(
+        switchMap((banks: BankAccount[]) => {
+          this.banks = banks;
+          return this.paymentTypeService.getAll();
+        })
+      )
+      .subscribe((types: PaymentType[]) => {
+        this.paymentTypes = types;
+        this.loading = false;
+      });
 
     this.subscription.add(
       this.transactionForm.valueChanges.subscribe((value: Transaction) => {
@@ -107,6 +120,26 @@ export class TransactionAddEditComponent implements ControlValueAccessor, OnInit
   ngOnChanges(simpleChanges: SimpleChanges) {
     if (simpleChanges['touched'] && simpleChanges['touched'].currentValue) {
       this.transactionForm.markAllAsTouched();
+    }
+    if (simpleChanges.transaction && this.transaction && this.transaction.id) {
+      this.formMode = FormMode.Edit;
+      this.transactionForm.patchValue(this.transaction);
+    } else {
+      this.onReset();
+    }
+    if (
+      this.formMode === FormMode.Add &&
+      simpleChanges.mostRecentTransaction &&
+      this.mostRecentTransaction &&
+      this.mostRecentTransaction.id
+    ) {
+      this.transactionForm.patchValue(this.mostRecentTransaction);
+      this.f['date'].setValue(
+        null
+      );
+      this.f['note'].setValue(
+        null
+      );
     }
   }
 
@@ -133,5 +166,72 @@ export class TransactionAddEditComponent implements ControlValueAccessor, OnInit
   // From https://stackoverflow.com/a/59289208
   public get FormMode() {
     return FormMode;
+  }
+
+  onSubmit() {
+    this.submitted = true;
+
+    // stop here if form is invalid
+    if (this.transactionForm.invalid) {
+      return;
+    }
+
+    this.saving = true;
+    if (this.formMode == FormMode.Add) {
+      this.createTransaction();
+    } else {
+      this.editTransaction();
+    }
+  }
+
+  onReset() {
+    this.saving = false;
+    this.loading = false;
+    this.submitted = false;
+    this.formMode = FormMode.Add;
+    this.alertService.clear();
+    this.transactionForm.reset();
+  }
+
+  private createTransaction() {
+    this.transactionService
+      .create(this.transactionForm.value)
+      .subscribe(
+        (result: any) => {
+          this.alertService.success('Transaction added', {
+            keepAfterRouteChange: false,
+          });
+        },
+        (error) => {
+          console.log(error);
+          this.alertService.error('Unable to add new transaction', {
+            keepAfterRouteChange: false,
+          });
+        }
+      )
+      .add(() => {this.reloadRequested.emit(null);});
+  }
+
+  private editTransaction() {
+    if (!this.transaction || !this.transaction.id ) {
+      return;
+    }
+
+    this.transactionService
+      .update(this.transaction.id, this.transactionForm.value)
+      .subscribe(
+        (result: any) => {
+          this.alertService.success('Transaction updated', {
+            keepAfterRouteChange: false,
+          });
+        },
+        (error) => {
+          console.log(error);
+          this.alertService.error('Unable to update transaction.', {
+            keepAfterRouteChange: false,
+          });
+        }
+      )
+      .add(() => {this.reloadRequested.emit(null);});
   }
 }

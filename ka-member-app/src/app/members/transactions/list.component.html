@@ -39,6 +39,7 @@
       [paymentTypes]="paymentTypes"
       (onTransactionDeleted)="transactionrWasDeleted($event)"
       (onTransactionUpdated)="transactionWasUpdated($event)"
+      (editRequested)="transactionEditRequested($event)"
       class="m-0"
     ></tr>
     <tr *ngIf="loading">

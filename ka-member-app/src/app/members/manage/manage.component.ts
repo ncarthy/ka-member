@@ -23,6 +23,7 @@ export class MemberManageComponent implements OnInit {
   loading: boolean = false;
   member?: Member;
   transactions?: Transaction[];
+  transactionToEdit?: Transaction;
   user: User;
 
   constructor(
@@ -66,5 +67,9 @@ export class MemberManageComponent implements OnInit {
           this.loading = false;
         });
     }
+  }
+
+  onEditRequested(tx: Transaction) {      
+      this.transactionToEdit=tx;
   }
 }

@@ -1,23 +1,29 @@
 <div class="row justify-content-between align-items-start">
-    <div class="col">
-        <h1>Subscriptions</h1>
-      </div>
-    <div class="col-auto">
-        <button (click)="goBack()" class="btn btn-outline-dark">&times;</button>
-    </div>
-
+  <div class="col">
+    <h1>Subscriptions</h1>
   </div>
+  <div class="col-auto">
+    <button (click)="goBack()" class="btn btn-outline-dark">&times;</button>
+  </div>
+</div>
 <div class="row mb-3">
   <div class="col-sm-7">
-    <div class="card"><transaction-add-edit></transaction-add-edit></div>
+    <div class="card"><h5>Subscription Details</h5></div>
   </div>
   <div class="col-sm-5">
-    <div class="card"><transaction-add-edit></transaction-add-edit></div>
+    <div class="card">
+      <transaction-add-edit
+        [transaction]="transactionToEdit"
+        [mostRecentTransaction]="transactions&&transactions[0]"
+        (reloadRequested)="onReloadRequested($event)"
+      ></transaction-add-edit>
+    </div>
   </div>
 </div>
 
 <transaction-list
   [transactions]="transactions"
   (reloadRequested)="onReloadRequested($event)"
-  (loading)="loading"
+  (loading)="(loading)"
+  (editRequested)="onEditRequested($event)"
 ></transaction-list>
