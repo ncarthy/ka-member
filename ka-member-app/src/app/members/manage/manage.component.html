@@ -1,24 +1,23 @@
-<h1>Subscription Manager</h1>
+<div class="row justify-content-between align-items-start">
+    <div class="col">
+        <h1>Subscriptions</h1>
+      </div>
+    <div class="col-auto">
+        <button (click)="goBack()" class="btn btn-outline-dark">&times;</button>
+    </div>
 
-<transaction-list [transactions]="transactions" (reloadRequested)="onReloadRequested($event)"></transaction-list>
+  </div>
+<div class="row mb-3">
+  <div class="col-sm-7">
+    <div class="card"><transaction-add-edit></transaction-add-edit></div>
+  </div>
+  <div class="col-sm-5">
+    <div class="card"><transaction-add-edit></transaction-add-edit></div>
+  </div>
+</div>
 
-
-
-<h5> TODO </h5>
-
-<p>This page will allow management of each member's subscription information</p>
-<p>You will have the ability to edit the following:</p>
-<ul>
-    <li>Read/add/edit Transactions</li>
-    <li>Set/unset 'post on hold' to retain the physical address on file but only send meterials by email.</li>
-    <li>Edit annual membership fee</li>
-    <li>Edit number of members e.g. for 'Residence' member types</li>  
-    <li>Record date of reminder email</li>  
-    <li>[Eventually] send customised reminder emails to member</li>
-<ul>
-
-<br/>
-
-<button (click)="goBack()" class="btn btn-sm btn-secondary">
-    Go Back
-  </button>
+<transaction-list
+  [transactions]="transactions"
+  (reloadRequested)="onReloadRequested($event)"
+  (loading)="loading"
+></transaction-list>

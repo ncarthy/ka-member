@@ -9,8 +9,8 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { Member, Transaction } from '@app/_models';
-import { MemberService, TransactionService } from '@app/_services';
+import { Member, Transaction, User } from '@app/_models';
+import { AuthenticationService, MemberService, TransactionService } from '@app/_services';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -23,20 +23,22 @@ export class MemberManageComponent implements OnInit {
   loading: boolean = false;
   member?: Member;
   transactions?: Transaction[];
+  user: User;
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private memberService: MemberService,
-    private transactionService: TransactionService
-  ) {}
+    private transactionService: TransactionService,
+    private authenticationService: AuthenticationService
+  ) { this.user = this.authenticationService.userValue; }
 
   ngOnInit(): void {
     this.loading = true;
 
     this.memberService
-      .getById(this.route.snapshot.params['id'])
+      .getById(this.route.snapshot.params['idmember'])
       .pipe(
         switchMap((m: Member) => {
           this.member = m;
@@ -54,11 +56,15 @@ export class MemberManageComponent implements OnInit {
     return false; // don't propagate event
   }
 
-  onReloadRequested(e:any) {
+  onReloadRequested(e: any) {
     if (this.member) {
+      this.loading = true;
       this.transactionService
         .getByMember(this.member.id)
-        .subscribe((txs: Transaction[]) => (this.transactions = txs));
+        .subscribe((txs: Transaction[]) => {
+          this.transactions = txs;
+          this.loading = false;
+        });
     }
   }
 }

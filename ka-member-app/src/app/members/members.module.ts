@@ -14,6 +14,7 @@ import { MemberAddEditComponent } from './add-edit/add-edit.component';
 import { MemberManageComponent } from './manage/manage.component';
 import { MemberFilterComponent } from './filter/filter.component';
 import {
+  TransactionAddEditComponent,
   TransactionListComponent,
   TransactionRowComponent,
 } from './transactions';
@@ -22,7 +23,6 @@ import {
   MemberDeleteConfirmModalComponent,
   TransactionDeleteConfirmModalComponent,
 } from './modals';
-import { AddEdit } from './transactions/add-edit.component/add-edit.component.component';
 
 @NgModule({
   imports: [
@@ -44,7 +44,7 @@ import { AddEdit } from './transactions/add-edit.component/add-edit.component.co
     MemberAnonymizeConfirmModalComponent,
     MemberDeleteConfirmModalComponent,
     TransactionDeleteConfirmModalComponent,
-    AddEdit.ComponentComponent,
+    TransactionAddEditComponent,
   ],
   providers: [
     { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },

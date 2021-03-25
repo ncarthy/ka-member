@@ -28,8 +28,8 @@ import {
 export class TransactionListComponent implements OnInit, OnChanges {
   @Output() reloadRequested: EventEmitter<any>;
   @Input() transactions?: Transaction[];
+  @Input() loading: boolean = false;
   user!: User;
-  loading: boolean = false;
   bankAccounts?: BankAccount[];
   paymentTypes?: PaymentType[];
 

@@ -1,36 +1,33 @@
-﻿<div class="row justify-content-between">
-  <div class="col-sm-6"><h4>Transactions</h4></div>
-  <div class="col-sm-6">
+﻿<div class="row justify-content-center">
+  <div class="col-auto">
     <button
-      class="btn btn-sm btn-secondary m-1 mt-1"
-      *ngIf="user.isAdmin"
+      class="btn btn-sm btn-outline-dark"
       placement="bottom"
       ngbTooltip="Reload Transactions"
       (click)="onReloadClick()"
     >
-      <i class="fas fa-redo"></i>
+      <i *ngIf="!loading" class="fas fa-redo"></i>
+      <span
+        *ngIf="loading"
+        class="spinner-border spinner-border-lg align-center"
+      ></span>
     </button>
-    <button
-      class="btn btn-sm btn-success m-1 mt-1"
-      *ngIf="user.isAdmin"
-      placement="bottom"
-      ngbTooltip="Add New Transaction"
-    >
-      <i class="fas fa-plus"></i>
-    </button>
+  </div>
+  <div class="col p-0">
+    <h4>Transactions</h4>
   </div>
 </div>
 <table class="table table-sm table-striped table-hover table-responsive">
   <thead>
     <tr class="m-0">
       <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
-      <th scope="col" class="d-none d-sm-table-cell w-25">Date</th>      
+      <th scope="col" class="d-none d-sm-table-cell w-25">Date</th>
       <th scope="col" class="d-table-cell d-sm-none">Date</th>
       <th scope="col" class="d-none d-sm-table-cell">Type</th>
       <th scope="col" class="d-none d-sm-table-cell">Bank</th>
       <th scope="col">Amount</th>
       <th scope="col" class="d-none d-sm-table-cell">Note</th>
-      <th scope="col" style="width: 15%;">Actions</th>
+      <th scope="col" style="width: 15%">Actions</th>
     </tr>
   </thead>
   <tbody>
