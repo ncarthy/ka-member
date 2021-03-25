@@ -1,14 +1,106 @@
-<th scope="row">{{ transaction.date }}</th>
-<td>{{ transaction.amount }}</td>
-<td>{{ getArrayMemberFromID(transaction.paymenttypeID,paymentTypes) }}</td>
-<td>{{ getArrayMemberFromID(transaction.bankID,banks) }}</td>
-<td>{{ transaction.note }}</td>
-<td class="w-25">
+<th scope="row" class="d-none d-sm-table-cell w-25">
+  <div class="input-group col p-0 mb-1">
+    <input
+      class="form-control"
+      ngbDatepicker
+      #d1="ngbDatepicker"
+      placement="bottom"
+      [(ngModel)]="transaction.date"
+      (ngModelChange)="onTransactionChange()"
+    />
+    <div class="input-group-append">
+      <button
+        class="btn btn-outline-secondary"
+        (click)="d1.toggle()"
+        type="button"
+      >
+        <i class="far fa-calendar-alt"></i>
+      </button>
+    </div>
+  </div>
+</th>
+<th scope="row" class="d-table-cell d-sm-none">
+  {{transaction.date}}
+</th>
+<td scope="row" class="d-table-cell d-sm-none">
+  {{transaction.amount | number: '1.2-2'}}
+</td>
+<td class="d-none d-sm-table-cell">
+  <select
+    id="paymentTypeSelect"
+    name="paymentTypeSelect"
+    class="form-control"
+    [(ngModel)]="transaction.paymenttypeID"
+    (change)="onTransactionChange()"
+    (click)="onClickEvent($event)"
+  >
+    <option disabled selected [ngValue]="null">---- select ----</option>
+    <option *ngFor="let pType of paymentTypes" [ngValue]="pType.id">
+      {{ pType.name }}
+    </option>
+  </select>
+</td>
+<td class="d-none d-sm-table-cell">
+  <select
+    id="bankSelect"
+    name="bankSelect"
+    class="form-control"
+    [(ngModel)]="transaction.bankID"
+    (change)="onTransactionChange()"
+    (click)="onClickEvent($event)"
+  >
+    <option disabled selected [ngValue]="null">-- select --</option>
+    <option *ngFor="let bank of banks" [ngValue]="bank.id">
+      {{ bank.name }}
+    </option>
+  </select>
+</td>
+<td class="d-none d-sm-table-cell">
+  <input
+    type="text"
+    class="form-control text-right"
+    [ngModel]="transaction.amount | number: '1.2-2'"
+    (ngModelChange)="onTransactionAmountChange($event)"
+  />
+</td>
+<td class="d-none d-sm-table-cell">
+  <textarea
+    [(ngModel)]="transaction.note"
+    (ngModelChange)="onTransactionNoteChange()"
+    (click)="onClickEvent($event)"
+  >
+  </textarea>
+</td>
+<td style="width: 15%;">
+  <button
+    (click)="onTransactionChange()"
+    class="btn btn-sm btn-info mr-1 mb-1"
+    [disabled]="transaction.isUpdating"
+    *ngIf="user.isAdmin && showSaveButton"
+  >
+    <span
+      *ngIf="transaction.isUpdating"
+      class="spinner-border spinner-border-sm"
+    ></span>
+    <span *ngIf="!transaction.isUpdating">Save</span>
+  </button>
+  <button
+    (click)="onTransactionUpdated.emit(this.transaction)"
+    class="btn btn-sm btn-info mr-1  mb-1"
+    [disabled]="transaction.isUpdating"
+    *ngIf="user.isAdmin && showSaveButton"
+  >
+    <span
+      *ngIf="transaction.isUpdating"
+      class="spinner-border spinner-border-sm"
+    ></span>
+    <span *ngIf="!transaction.isUpdating">Undo</span>
+  </button>
   <button
     (click)="editTransaction($event)"
-    class="btn btn-sm btn-primary mr-1"
+    class="btn btn-sm btn-primary mr-1 mb-1"
     [disabled]="transaction.isUpdating"
-    *ngIf="showButton(ButtonName.EDIT)"
+    *ngIf="user.isAdmin"
   >
     <span
       *ngIf="transaction.isUpdating"
@@ -17,10 +109,10 @@
     <span *ngIf="!transaction.isUpdating">Edit</span>
   </button>
   <button
-    (click)="deleteMember($event)"
-    class="btn btn-sm btn-danger btn-delete-transaction"
+    (click)="onTransactionDelete()"
+    class="btn btn-sm btn-danger btn-delete-transaction mb-1"
     [disabled]="transaction.isDeleting"
-    *ngIf="showButton(ButtonName.DELETE)"
+    *ngIf="user.isAdmin"
   >
     <span
       *ngIf="transaction.isDeleting"

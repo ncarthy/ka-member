@@ -32,8 +32,10 @@ import {
   User,
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
-import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
-import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confirm.component';
+import {
+  MemberAnonymizeConfirmModalComponent,
+  MemberDeleteConfirmModalComponent,
+} from '../modals';
 
 @Component({
   templateUrl: 'add-edit.component.html',
@@ -285,7 +287,8 @@ export class MemberAddEditComponent implements OnInit {
     this.memberService
       .update(this.id, this.form.value)
       .pipe(
-        concatMap((success: any) => { // subscribe to this Observable after the other completes
+        concatMap((success: any) => {
+          // subscribe to this Observable after the other completes
           return this.memberNameService.updateAllForMember(
             // Use of non-null assertion operator
             // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
@@ -323,7 +326,6 @@ export class MemberAddEditComponent implements OnInit {
       (success) => {
         this.memberService
           .anonymize(this.id)
-          .pipe(first())
           .subscribe(
             (result: any) => {
               this.alertService.success('Member anonymized', {

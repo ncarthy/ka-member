@@ -1,4 +1,12 @@
-﻿import { Component, Input, OnChanges, OnInit, SimpleChanges  } from '@angular/core';
+﻿import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 import { switchMap } from 'rxjs/operators';
 
@@ -18,6 +26,7 @@ import {
 
 @Component({ selector: 'transaction-list', templateUrl: 'list.component.html' })
 export class TransactionListComponent implements OnInit, OnChanges {
+  @Output() reloadRequested: EventEmitter<any>;
   @Input() transactions?: Transaction[];
   user!: User;
   loading: boolean = false;
@@ -30,11 +39,11 @@ export class TransactionListComponent implements OnInit, OnChanges {
     private bankAccountService: BankAccountService,
     private paymentTypeService: PaymentTypeService
   ) {
+    this.reloadRequested = new EventEmitter();
     this.user = this.authenticationService.userValue;
   }
 
   ngOnInit() {
-    console.log('List init');
     this.loading = true;
 
     this.bankAccountService
@@ -48,15 +57,35 @@ export class TransactionListComponent implements OnInit, OnChanges {
       .subscribe((types: PaymentType[]) => {
         this.paymentTypes = types;
         this.loading = false;
-        console.log('Loading false');        
       });
   }
 
   /* Not needed but left in to demonstrate OnChanges */
   ngOnChanges(changes: SimpleChanges) {
-            // only run when property "data" changed
-            if (changes['transactions']) {
-              //console.log(`OnChanges: Tx length: ${this.transactions?.length}`);
-          }
+    // only run when property "data" changed
+    if (changes['transactions']) {
+      //console.log(`OnChanges: Tx length: ${this.transactions?.length}`);
+    }
+  }
+
+  /* remove member from visible list */
+  transactionrWasDeleted(transaction: Transaction): void {
+    if (!this.transactions) {
+      return;
+    }
+    this.transactions = this.transactions.filter(
+      (x) => x.id !== transaction.id
+    );
+  }
+
+  transactionWasUpdated(transaction: Transaction): void {
+    if (!this.transactions) {
+      return;
+    }
+    this.reloadRequested.emit(transaction);
+  }
+
+  onReloadClick() {
+    this.reloadRequested.emit(null);
   }
 }

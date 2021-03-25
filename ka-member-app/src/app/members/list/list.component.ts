@@ -20,7 +20,6 @@ export class MemberListComponent implements OnInit {
   }
 
   ngOnInit() {
-
     // Checks if screen size is less than 768 pixels
     // Is used to show/hide table columns
     const checkScreenSize = () => {
@@ -37,7 +36,7 @@ export class MemberListComponent implements OnInit {
     var index = this.members.indexOf(member);
     if (index !== -1) {
       this.members[index] = member;
-  }
+    }
   }
 
   memberSelected(member: MemberSearchResult): void {
@@ -55,4 +54,5 @@ export class MemberListComponent implements OnInit {
   filterIsLoading(value: boolean) {
     this.loading = value;
   }
+
 }

@@ -2,22 +2,27 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import {
-  NgbModule,
-  NgbDateAdapter  
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { MembersRoutingModule } from './members-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { NgbUTCStringAdapter } from '@app/_helpers';
 import { MemberFilterService } from '@app/_services';
 
 import { MemberLayoutComponent } from './layout.component';
-import { MemberListComponent } from './list/list.component';
-import { MemberRowComponent } from './list/row.component';
+import { MemberListComponent, MemberRowComponent } from './list';
 import { MemberAddEditComponent } from './add-edit/add-edit.component';
 import { MemberManageComponent } from './manage/manage.component';
 import { MemberFilterComponent } from './filter/filter.component';
-import { TransactionListComponent, TransactionRowComponent} from './transactions';
+import {
+  TransactionListComponent,
+  TransactionRowComponent,
+} from './transactions';
+import {
+  MemberAnonymizeConfirmModalComponent,
+  MemberDeleteConfirmModalComponent,
+  TransactionDeleteConfirmModalComponent,
+} from './modals';
+import { AddEdit } from './transactions/add-edit.component/add-edit.component.component';
 
 @NgModule({
   imports: [
@@ -32,12 +37,19 @@ import { TransactionListComponent, TransactionRowComponent} from './transactions
     MemberListComponent,
     MemberRowComponent,
     MemberFilterComponent,
-    MemberAddEditComponent,    
-    MemberManageComponent, 
+    MemberAddEditComponent,
+    MemberManageComponent,
     TransactionListComponent,
-    TransactionRowComponent
+    TransactionRowComponent,
+    MemberAnonymizeConfirmModalComponent,
+    MemberDeleteConfirmModalComponent,
+    TransactionDeleteConfirmModalComponent,
+    AddEdit.ComponentComponent,
   ],
-  providers: [{ provide: NgbDateAdapter, useClass: NgbUTCStringAdapter }, MemberFilterService], 
+  providers: [
+    { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
+    MemberFilterService,
+  ],
   // NgbDateAdapter to handle MySQL date format (From https://stackoverflow.com/a/47945155/6941165 )
 })
 export class MembersModule {}

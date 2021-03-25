@@ -53,4 +53,12 @@ export class MemberManageComponent implements OnInit {
     this.location.back();
     return false; // don't propagate event
   }
+
+  onReloadRequested(e:any) {
+    if (this.member) {
+      this.transactionService
+        .getByMember(this.member.id)
+        .subscribe((txs: Transaction[]) => (this.transactions = txs));
+    }
+  }
 }

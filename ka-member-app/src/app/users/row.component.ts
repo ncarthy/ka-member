@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User, Role } from '../_models';
 import { UserService, AlertService } from '@app/_services';
-import { first } from 'rxjs/operators';
 /**
  * @UserRow: A component for the view of single User
  */
@@ -31,7 +30,6 @@ export class UserRowComponent {
     this.user.isDeleting = true;
     this.userService
       .delete(this.user.id)
-      .pipe(first())
       .subscribe(() => {
         this.alertService.success('User deleted', {
           keepAfterRouteChange: true,
@@ -46,7 +44,6 @@ export class UserRowComponent {
     this.user.suspended = !this.user.suspended;
     this.userService
       .update(this.user.id, this.user)
-      .pipe(first())
       .subscribe(() => {
         this.alertService.success('User Updated', {
           keepAfterRouteChange: true,
@@ -67,7 +64,6 @@ export class UserRowComponent {
     this.user.role = value;
     this.userService
       .update(this.user.id, this.user)
-      .pipe(first())
       .subscribe(() => {
         this.alertService.success('User Updated', {
           keepAfterRouteChange: true,

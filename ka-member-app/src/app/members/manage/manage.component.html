@@ -1,6 +1,6 @@
 <h1>Subscription Manager</h1>
 
-<transaction-list [transactions]="transactions"></transaction-list>
+<transaction-list [transactions]="transactions" (reloadRequested)="onReloadRequested($event)"></transaction-list>
 
 
 

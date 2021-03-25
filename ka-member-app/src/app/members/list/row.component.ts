@@ -6,8 +6,8 @@ import {
   AlertService,
   AuthenticationService,
 } from '@app/_services';
-import { MemberAnonymizeConfirmModalComponent } from '../modal/member-anonymize-confirm.component';
-import { MemberDeleteConfirmModalComponent } from '../modal/member-delete-confirm.component';
+import { MemberAnonymizeConfirmModalComponent } from '../modals/member-anonymize-confirm.component';
+import { MemberDeleteConfirmModalComponent } from '../modals/member-delete-confirm.component';
 
 import { from } from 'rxjs';
 
