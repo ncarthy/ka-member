@@ -72,6 +72,8 @@ export class MemberManageComponent implements OnInit {
       name: [{ value: null, disabled: true }],
       address: [{ value: null, disabled: true }],
       note: [null],
+      username: [null],
+      updatedate: [null]
     });
 
     this.memberService

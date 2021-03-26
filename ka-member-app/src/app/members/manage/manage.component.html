@@ -275,8 +275,10 @@
     </form>
   </div>
   <div class="col-sm-4">
-    <h5></h5>
-    <div class="card">
+    <small *ngIf="f.username.value"
+    >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
+  >
+    <div class="card">      
       <transaction-add-edit
         [transaction]="transactionToEdit"
         [mostRecentTransaction]="transactions && transactions[0]"

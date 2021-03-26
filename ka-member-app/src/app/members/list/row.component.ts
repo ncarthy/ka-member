@@ -139,6 +139,9 @@ export class MemberRowComponent {
 
     const modalRef = this.modalService.open(TransactionAddModalComponent);
     modalRef.componentInstance.member = this.member;
+    modalRef.componentInstance.passEntry.subscribe((receivedEntry:any) => {
+      console.log(receivedEntry);
+      })
 
     from(modalRef.result)
       .subscribe((success) => {

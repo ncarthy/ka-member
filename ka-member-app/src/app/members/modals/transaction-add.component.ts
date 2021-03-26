@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MemberSearchResult, Transaction } from '@app/_models';
 import { TransactionService } from '@app/_services';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +11,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class TransactionAddModalComponent implements OnInit {
   @Input() member!: MemberSearchResult;
+  @Output() savedTransaction: EventEmitter<Transaction> = new EventEmitter();
   lastTransaction!: Transaction;
 
   constructor(
@@ -32,6 +33,8 @@ export class TransactionAddModalComponent implements OnInit {
   }
 
   onReloadRequested(e: any) {
-    console.log(e);
+    //this.savedTransaction.emit(null);
+    // Transaction has been saved.
+    this.modal.close('Ok click');
   }
 }

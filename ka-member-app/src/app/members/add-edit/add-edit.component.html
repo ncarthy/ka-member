@@ -1,5 +1,12 @@
-﻿<h1 *ngIf="isMemberAdd">Add Member</h1>
-<h1 *ngIf="isMemberEdit">Edit Member</h1>
+﻿<div class="row justify-content-between align-items-start">
+  <div class="col">
+    <h1 *ngIf="isMemberAdd">Add Member</h1>
+    <h1 *ngIf="isMemberEdit">Edit Member</h1>
+  </div>
+  <div class="col-auto">
+    <button (click)="goBack()" class="btn btn-outline-dark">&times;</button>
+  </div>
+</div>
 <div *ngIf="loading">
   <span class="spinner-border spinner-border-lg align-center"></span>
 </div>
@@ -23,7 +30,6 @@
         Save
       </button>
       <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
-      <a (click)="goBack()" class="btn btn-link">Cancel</a>
     </div>
     <div *ngIf="isMemberEdit && user.isAdmin">
       <a
