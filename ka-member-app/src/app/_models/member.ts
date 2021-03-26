@@ -30,6 +30,8 @@ export class Member {
     postonhold: boolean;
     primaryAddress: Address;
     secondaryAddress: Address;
+    multiplier: number;
+    membershipfee: number;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
     
@@ -60,5 +62,7 @@ export class Member {
         this.postonhold = obj && obj.postonhold;
         this.primaryAddress = obj && obj.primaryAddress || null;
         this.secondaryAddress = obj && obj.secondaryAddress || null;
+        this.multiplier = obj && obj.multiplier || null;
+        this.membershipfee = obj && obj.membershipfee || null;
     }
 }

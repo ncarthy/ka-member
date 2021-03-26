@@ -1,6 +1,6 @@
 <div class="row justify-content-between align-items-start">
   <div class="col">
-    <h1>Subscriptions</h1>
+    <h1>Subscription Manager</h1>
   </div>
   <div class="col-auto">
     <button (click)="goBack()" class="btn btn-outline-dark">&times;</button>
@@ -8,45 +8,274 @@
 </div>
 <div class="row mb-3">
   <div class="col-sm-8">
-    <div class="card">
-      <h5>Subscription Details</h5>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div *ngIf="loading">
-          <span class="spinner-border spinner-border-lg align-center"></span>
-        </div>
-        <div class="input-group mb-1">
-          <span class="input-group-text col-4" id="status-label">Name</span>
-          <input
-          id="nameInput"
-          name="nameInput"
-          type="text"
-          class="form-control text-left"
-          formControlName="name"
-        />
-        </div>
-        <div class="input-group mb-1">
-          <span class="input-group-text col-4" id="status-label">Status</span>
-          <select
-            formControlName="statusID"
-            id="statusSelect"
-            name="statusSelect"
-            class="form-control"
-          >
-            <option *ngFor="let status of statuses" [ngValue]="status.id">
-              {{ status.name }}
-            </option>
-          </select>
-        </div>
-        <div *ngIf="true">
-          <!--Debug Information for Testing -->
-          <hr />
-          <p>Form Value: {{ form.value | json }}</p>
-          <p>Form Status: {{ form.status | json }}</p>
-        </div>
-      </form>
+    <div *ngIf="loading">
+      <span class="spinner-border spinner-border-lg align-center"></span>
     </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="btn btn-primary"
+        *ngIf="user.isAdmin"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        Save
+      </button>
+      <a class="btn btn-link" (click)="onReset()">Reset</a>
+      <div class="row">
+        <div class="col-sm-7">
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="status-label">Name</span>
+            <input
+              id="nameInput"
+              name="nameInput"
+              type="text"
+              class="form-control text-left"
+              formControlName="name"
+            />
+          </div>
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="adress-addon1"
+              >Address</span
+            >
+            <div class="card col">
+              <textarea
+                id="addressTextarea"
+                class="form-control"
+                formControlName="address"
+                rows="3"
+              ></textarea>
+              <div class="form-check ml-2">
+                <input
+                  type="checkbox"
+                  formControlName="postonhold"
+                  class="form-check-input"
+                />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Put post on hold?
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5">
+          <div class="col p-0">
+            <div class="input-group mb-1">
+              <span class="input-group-text col-4" id="status-label"
+                >Status</span
+              >
+              <select
+                formControlName="statusID"
+                id="statusSelect"
+                name="statusSelect"
+                class="form-control"
+                (change)="onStatusChange($event.target.value)"
+              >
+                <option *ngFor="let status of statuses" [ngValue]="status.id">
+                  {{ status.name }}
+                </option>
+              </select>
+            </div>
+            <div class="input-group mb-1">
+              <span class="input-group-text col-4" id="note-addon1">Note</span>
+              <textarea
+                id="noteTextarea"
+                class="form-control"
+                formControlName="note"
+                rows="4"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+          <div class="input-group mb-1">
+            <span class="input-group-text col-2" id="dates-label">Dates</span>
+            <div class="card p-3 col">
+              <div class="row">
+                <div class="col">
+                  <label for="inputExpiryDate" class="form-label">
+                    Expiry Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder="*not-set*"
+                      name="dp"
+                      ngbDatepicker
+                      #d="ngbDatepicker"
+                      formControlName="expirydate"
+                      id="inputExpiryDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d.toggle()"
+                        type="button"
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <label for="inputReminderDate" class="form-label">
+                    Reminder Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder="*not-set*"
+                      name="dp"
+                      ngbDatepicker
+                      #d1="ngbDatepicker"
+                      formControlName="reminderdate"
+                      id="inputReminderDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d1.toggle()"
+                        type="button"
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <label for="inputJoinDate" class="form-label">
+                    Join Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder="*not-set*"
+                      name="dp"
+                      ngbDatepicker
+                      #d2="ngbDatepicker"
+                      formControlName="joindate"
+                      id="inputJoinDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d2.toggle()"
+                        type="button"
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <label for="inputDeleteDate" class="form-label">
+                    Delete Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      name="dp"
+                      ngbDatepicker
+                      #d3="ngbDatepicker"
+                      formControlName="deletedate"
+                      id="inputDeleteDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d3.toggle()"
+                        type="button"
+                        disabled
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col p-0">
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="status-label"
+            >No of Persons</span
+          >
+          <div class="card p-2 col">
+            <div class="row">
+              <div class="col">
+                <label for="defaultMultiplierInput" class="form-label">
+                  Default Value
+                </label>
+                <input
+                  id="defaultMultiplierInput"
+                  name="defaultMultiplierInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="defaultMultiplier"
+                />
+              </div>
+              <div class="col">
+                <label for="multiplierInput" class="form-label">
+                  Override
+                </label>
+                <input
+                  id="multiplierInput"
+                  name="multiplierInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="multiplier"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="status-label"
+            >Annual Fee</span
+          >
+          <div class="card p-2 col">
+            <div class="row">
+              <div class="col">
+                <label for="defaultMembershipfeeInput" class="form-label">
+                  Default Value
+                </label>
+                <input
+                  id="defaultMembershipfeeInput"
+                  name="defaultMembershipfeeInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="defaultMembershipfee"
+                />
+              </div>
+              <div class="col">
+                <label for="membershipfeeInput" class="form-label">
+                  Override
+                </label>
+                <input
+                  id="membershipfeeInput"
+                  name="membershipfeeInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="membershipfee"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="false">
+        <!--Debug Information for Testing -->
+        <hr />
+        <p>Form Value: {{ form.value | json }}</p>
+        <p>Form Status: {{ form.status | json }}</p>
+      </div>
+    </form>
   </div>
   <div class="col-sm-4">
+    <h5></h5>
     <div class="card">
       <transaction-add-edit
         [transaction]="transactionToEdit"

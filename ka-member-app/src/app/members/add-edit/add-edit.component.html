@@ -23,7 +23,7 @@
         Save
       </button>
       <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
-      <a routerLink="/members" class="btn btn-link">Cancel</a>
+      <a (click)="goBack()" class="btn btn-link">Cancel</a>
     </div>
     <div *ngIf="isMemberEdit && user.isAdmin">
       <a
@@ -369,7 +369,7 @@
               </button>
             </div>
           </div>
-          <label for="inputJoinDate" class="form-label"> Delete Date </label>
+          <label for="inputDeleteDate" class="form-label"> Delete Date </label>
           <div class="input-group mb-1">
             <input
               class="form-control"
@@ -378,7 +378,7 @@
               ngbDatepicker
               #d2="ngbDatepicker"
               formControlName="deletedate"
-              id="inputJoinDate"
+              id="inputDeleteDate"
             />
             <div class="input-group-append">
               <button

@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,
@@ -57,6 +58,7 @@ export class MemberAddEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private countryService: CountryService,
@@ -244,6 +246,10 @@ export class MemberAddEditComponent implements OnInit {
     });
   }
 
+  goBack() {
+    this.location.back();
+  }
+
   get isMemberAdd() {
     return this.formMode == FormMode.Add;
   }
@@ -270,7 +276,7 @@ export class MemberAddEditComponent implements OnInit {
           this.alertService.success('Member added', {
             keepAfterRouteChange: true,
           });
-          this.router.navigate(['../'], { relativeTo: this.route });
+          this.goBack();
         },
         (error) => {
           console.log(error);
@@ -303,11 +309,7 @@ export class MemberAddEditComponent implements OnInit {
             keepAfterRouteChange: true,
           });
 
-          if (this.formMode === FormMode.Edit) {
-            this.router.navigate(['../../'], { relativeTo: this.route });
-          } else {
-            this.router.navigate(['/'], { relativeTo: this.route });
-          }
+          this.goBack();
         },
         () => {
           this.alertService.error('Member not updated', {
@@ -330,7 +332,7 @@ export class MemberAddEditComponent implements OnInit {
               this.alertService.success('Member anonymized', {
                 keepAfterRouteChange: true,
               });
-              this.router.navigate(['/members'], { relativeTo: this.route });
+              this.goBack();
             },
             (error) =>
               this.alertService.error('Unable to anonymize member.', {
