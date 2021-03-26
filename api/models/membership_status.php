@@ -27,7 +27,7 @@ class MembershipStatus{
         //select all data
         $query = "SELECT
                     " . $this->table_id ." as `id`, `name`
-                    , 1multiplier`, `membershipfee`
+                    , `multiplier`, `membershipfee`
                 FROM
                     " . $this->table_name . "
                 ORDER BY ". $this->table_id;
@@ -70,7 +70,7 @@ class MembershipStatus{
             //select data for one item using PK of table
             $query = "SELECT
                         " . $this->table_id ." as `id`, `name`
-                            , 1multiplier`, `membershipfee`
+                            , `multiplier`, `membershipfee`
                     FROM
                         " . $this->table_name . "
                         WHERE "; 
