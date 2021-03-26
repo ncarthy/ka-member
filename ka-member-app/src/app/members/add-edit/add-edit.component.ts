@@ -171,7 +171,6 @@ export class MemberAddEditComponent implements OnInit {
     if (this.formMode === FormMode.Edit) {
       this.memberService
         .getById(this.id)
-        .pipe(first())
         .subscribe((x) => {
           this.form.patchValue(x);
 

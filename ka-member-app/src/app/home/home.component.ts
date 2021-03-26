@@ -1,37 +1,41 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { DateRangeEnum, User, MemberCount } from '@app/_models';
-import { UserService, 
-    AuthenticationService, 
-    ToastService, 
-    MembersService 
+import { User, MemberCount, MemberName } from '@app/_models';
+import {
+  AuthenticationService,
+  ToastService,
+  MembersService,
+  MemberNameService,
 } from '@app/_services';
 
 @Component({ templateUrl: 'home.component.html' })
-export class HomeComponent implements OnInit{
-    loading = false;
-    user: User;
-    membersByType!: MemberCount[];
-    total!: number;                         // Estimated number of members, adjusted by contribution
-    count!: number;                         // Actual number of members
+export class HomeComponent implements OnInit {
+  loading = false;
+  user: User;
+  membersByType!: MemberCount[];
+  total!: number; // Estimated number of members, adjusted by contribution
+  count!: number; // Actual number of members
+  test?: string;
 
-    constructor(
-        private userService: UserService,
-        private authenticationService: AuthenticationService,
-        private toastService : ToastService,
-        private membersService : MembersService
-    ) {
-        this.user = this.authenticationService.userValue;
-    }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private toastService: ToastService,
+    private membersService: MembersService,
+    private memberNameService: MemberNameService
+  ) {
+    this.user = this.authenticationService.userValue;
+  }
 
-    ngOnInit() {
-        this.loading = true;
-        this.membersService.getSummary().subscribe( response => {
-            this.loading = false;
-            this.total = response.total;
-            this.count = response.count;
-            this.membersByType = response.records;
-        })
-    }
+  ngOnInit() {
+    this.loading = true;
+    this.membersService.getSummary().subscribe((response) => {
+      this.loading = false;
+      this.total = response.total;
+      this.count = response.count;
+      this.membersByType = response.records;
+    });
+
+    //this.memberNameService.concatAllForMember(138).subscribe((x) => {this.test=x;console.log(x);});
+  }
 }

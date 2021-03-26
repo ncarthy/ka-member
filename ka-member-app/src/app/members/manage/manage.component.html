@@ -7,14 +7,50 @@
   </div>
 </div>
 <div class="row mb-3">
-  <div class="col-sm-7">
-    <div class="card"><h5>Subscription Details</h5></div>
+  <div class="col-sm-8">
+    <div class="card">
+      <h5>Subscription Details</h5>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div *ngIf="loading">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="status-label">Name</span>
+          <input
+          id="nameInput"
+          name="nameInput"
+          type="text"
+          class="form-control text-left"
+          formControlName="name"
+        />
+        </div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="status-label">Status</span>
+          <select
+            formControlName="statusID"
+            id="statusSelect"
+            name="statusSelect"
+            class="form-control"
+          >
+            <option *ngFor="let status of statuses" [ngValue]="status.id">
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="true">
+          <!--Debug Information for Testing -->
+          <hr />
+          <p>Form Value: {{ form.value | json }}</p>
+          <p>Form Status: {{ form.status | json }}</p>
+        </div>
+      </form>
+    </div>
   </div>
-  <div class="col-sm-5">
+  <div class="col-sm-4">
     <div class="card">
       <transaction-add-edit
         [transaction]="transactionToEdit"
-        [mostRecentTransaction]="transactions&&transactions[0]"
+        [mostRecentTransaction]="transactions && transactions[0]"
         (reloadRequested)="onReloadRequested($event)"
       ></transaction-add-edit>
     </div>
