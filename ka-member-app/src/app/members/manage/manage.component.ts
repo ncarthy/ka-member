@@ -25,8 +25,7 @@ import {
   MembershipStatusService,
   TransactionService,
 } from '@app/_services';
-import { Observable } from 'rxjs';
-import { switchAll, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-manage',
@@ -132,7 +131,7 @@ export class MemberManageComponent implements OnInit {
   onSubmit() {
     if (this.member) {
       this.loading = true;
-      
+
       this.member.postonhold = this.form.value.postonhold;
       this.member.statusID = this.form.value.statusID;
       this.member.multiplier = this.form.value.multiplier;

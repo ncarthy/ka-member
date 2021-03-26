@@ -1,13 +1,22 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonName, MemberSearchResult, MemberFilter, User, YesNoAny } from '@app/_models';
+import {
+  ButtonName,
+  MemberSearchResult,
+  MemberFilter,
+  User,
+  YesNoAny,
+} from '@app/_models';
 import {
   MemberService,
   AlertService,
   AuthenticationService,
 } from '@app/_services';
-import { MemberAnonymizeConfirmModalComponent } from '../modals/member-anonymize-confirm.component';
-import { MemberDeleteConfirmModalComponent } from '../modals/member-delete-confirm.component';
+import {
+  MemberAnonymizeConfirmModalComponent,
+  MemberDeleteConfirmModalComponent,
+  TransactionAddModalComponent,
+} from '../modals';
 
 import { from } from 'rxjs';
 
@@ -118,6 +127,18 @@ export class MemberRowComponent {
             keepAfterRouteChange: true,
           })
       )
+      .add(() => (this.member.isUpdating = false));
+  }
+
+  addTransaction(e: Event) {
+    e.stopPropagation(); // If click propagates it will open the edit member page
+
+    if (!this.member || !this.member.id) return;
+
+    this.member.isUpdating = true;
+
+    from(this.modalService.open(TransactionAddModalComponent).result)
+  .subscribe((success) => { /* save transaction */ })
       .add(() => (this.member.isUpdating = false));
   }
 

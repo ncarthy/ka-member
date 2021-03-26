@@ -22,17 +22,28 @@
     </div>
   </div>
 </td>
-<td class="w-15 d-none d-sm-table-cell"><small>{{ member.lasttransactiondate }}<br />{{member.paymenttype}}<br />{{member.bankaccount}}</small></td>
+<td class="w-15 d-none d-sm-table-cell">
+  <small
+    >{{ member.lasttransactiondate }}<br />{{ member.paymenttype }}<br />{{
+      member.bankaccount
+    }}</small
+  >
+</td>
 <td class="d-none d-sm-table-cell w-25">
   <small
     >{{ member.addressfirstline }}<br />
-    {{ member.addresssecondline===''?'':member.addresssecondline }}<br *ngIf="member.addresssecondline"/>
+    {{ member.addresssecondline === "" ? "" : member.addresssecondline
+    }}<br *ngIf="member.addresssecondline" />
     {{ member.city }}, {{ member.postcode }}</small
   >
 </td>
 <td class="w-25">
-  <button class="btn btn-sm btn-success mr-1" *ngIf="showButton(ButtonName.ADDTX)">
-    <span>Add Tx</span>
+  <button
+    (click)="addTransaction($event)"
+    class="btn btn-sm btn-success mr-1"
+    *ngIf="showButton(ButtonName.ADDTX)"
+  >
+    <span>Add Pmt</span>
   </button>
   <button
     routerLink="/members/edit/{{ member.id }}"
@@ -49,29 +60,29 @@
     <span>Subscription</span>
   </button>
   <button
-  (click)="anonymizeMember($event)"
-  class="btn btn-sm btn-warning"
-  [disabled]="member.isUpdating"
-  *ngIf="showButton(ButtonName.ANONYMIZE)"
->
-  <span
-    *ngIf="member.isUpdating"
-    class="spinner-border spinner-border-sm"
-  ></span>
-  <span *ngIf="!member.isUpdating">Anonymize</span>
-</button>
-<button
-(click)="setToFormer($event)"
-class="btn btn-sm btn-warning"
-[disabled]="member.isUpdating"
-*ngIf="showButton(ButtonName.SETTOFORMER)"
->
-<span
-  *ngIf="member.isUpdating"
-  class="spinner-border spinner-border-sm"
-></span>
-<span *ngIf="!member.isUpdating">Set To Former</span>
-</button>
+    (click)="anonymizeMember($event)"
+    class="btn btn-sm btn-warning"
+    [disabled]="member.isUpdating"
+    *ngIf="showButton(ButtonName.ANONYMIZE)"
+  >
+    <span
+      *ngIf="member.isUpdating"
+      class="spinner-border spinner-border-sm"
+    ></span>
+    <span *ngIf="!member.isUpdating">Anonymize</span>
+  </button>
+  <button
+    (click)="setToFormer($event)"
+    class="btn btn-sm btn-warning"
+    [disabled]="member.isUpdating"
+    *ngIf="showButton(ButtonName.SETTOFORMER)"
+  >
+    <span
+      *ngIf="member.isUpdating"
+      class="spinner-border spinner-border-sm"
+    ></span>
+    <span *ngIf="!member.isUpdating">Set To Former</span>
+  </button>
   <button
     (click)="deleteMember($event)"
     class="btn btn-sm btn-danger btn-delete-member"
@@ -82,8 +93,6 @@ class="btn btn-sm btn-warning"
       *ngIf="member.isDeleting"
       class="spinner-border spinner-border-sm"
     ></span>
-    <span *ngIf="!member.isDeleting">{{
-      deleteButtonLabel()
-    }}</span>
+    <span *ngIf="!member.isDeleting">{{ deleteButtonLabel() }}</span>
   </button>
 </td>
