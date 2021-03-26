@@ -48,6 +48,8 @@ class Member{
     public $gdpr_address;
     public $gdpr_sm;
     public $postonhold;
+    public $multiplier;
+    public $membershipfee;
 
     public function read(){
         
@@ -60,7 +62,7 @@ class Member{
                     addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold
+                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold,multiplier,membership_fee
                     FROM
                     " . $this->table_name;                    
 
@@ -121,7 +123,9 @@ class Member{
                             "county" => html_entity_decode($county2),
                             "postcode" => html_entity_decode($postcode2),
                             "country" => $country2ID
-                        )
+                        ),
+                        "multiplier" => $multiplier,
+                        "membershipfee" => $membership_fee
                     );
 
                     array_push($member_arr, $member_item);
@@ -146,7 +150,7 @@ class Member{
                         addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
                         phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                         updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                        gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold
+                        gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold,multiplier,membership_fee
                         FROM
                         " . $this->table_name . " 
                         WHERE idmember = ?
@@ -201,7 +205,9 @@ class Member{
                 $this->gdpr_tel = $row['gdpr_tel']?true:false;
                 $this->gdpr_address = $row['gdpr_address']?true:false;
                 $this->gdpr_sm = $row['gdpr_sm']?true:false;            
-                $this->postonhold = $row['postonhold']?true:false;       
+                $this->postonhold = $row['postonhold']?true:false;
+                $this->multiplier = $row['multiplier'];
+                $this->membershipfee = $row['membership_fee'];
             }
         }
 
@@ -243,7 +249,9 @@ class Member{
                     gdpr_tel=:gdpr_tel, 
                     gdpr_address=:gdpr_address, 
                     gdpr_sm=:gdpr_sm,
-                    postonhold=:postonhold
+                    postonhold=:postonhold,
+                    multiplier=:multiplier,
+                    membership_fee=:membershipfee
                     ;";
         
         // prepare query
@@ -293,6 +301,8 @@ class Member{
         $stmt->bindParam(":gdpr_address", $gdpr_address);
         $stmt->bindParam(":gdpr_sm", $gdpr_sm);
         $stmt->bindParam(":postonhold", $postonhold);
+        $stmt->bindParam(":multiplier", $multiplier);
+        $stmt->bindParam(":membershipfee", $membershipfee);
         
         // execute query
         if($stmt->execute()){
@@ -345,7 +355,9 @@ class Member{
                     gdpr_tel=:gdpr_tel, 
                     gdpr_address=:gdpr_address, 
                     gdpr_sm=:gdpr_sm,
-                    postonhold=:postonhold                    
+                    postonhold=:postonhold,
+                    multiplier=:multiplier,
+                    membership_fee=:membershipfee                    
                  WHERE
                     idmember=:id";
         
@@ -396,6 +408,8 @@ class Member{
         $stmt->bindParam(":gdpr_address", $gdpr_address);
         $stmt->bindParam(":gdpr_sm", $gdpr_sm);
         $stmt->bindParam(":postonhold", $postonhold);
+        $stmt->bindParam(":multiplier", $multiplier);
+        $stmt->bindParam(":membershipfee", $membershipfee);
 
         // execute query
         if($stmt->execute()){
@@ -562,6 +576,8 @@ class Member{
         $this->repeatpayment=htmlspecialchars(strip_tags($this->repeatpayment));
         $this->recurringpayment=htmlspecialchars(strip_tags($this->recurringpayment));
         $this->username=htmlspecialchars(strip_tags($this->username));
+        $this->multiplier=filter_var($this->multiplier, FILTER_SANITIZE_NUMBER_INT);
+        $this->membershipfee=filter_var($this->membershipfee, FILTER_SANITIZE_NUMBER_INT);
         
         $this->expirydate = !empty($this->expirydate) ? $this->expirydate : NULL;
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;

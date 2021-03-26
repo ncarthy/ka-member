@@ -78,7 +78,9 @@ class MemberCtl{
           "county" => $model->county2,
           "postcode" => $model->postcode2,
           "country" => $model->country2ID
-        )
+        ),
+        "multiplier" => $model->multiplier,
+        "membershipfee" => $model->membershipfee
     );
 
     // Substitution trick to preserve phone numbers as strings
@@ -260,6 +262,8 @@ class MemberCtl{
     $model->deletedate = empty($data->deletedate)?null:$data->deletedate;
     $model->repeatpayment = empty($data->repeatpayment)?0:$data->repeatpayment;
     $model->recurringpayment =  empty($data->recurringpayment)?0:$data->recurringpayment;
+    $model->multiplier = empty($data->multiplier)?null:$data->multiplier;
+    $model->membershipfee = empty($data->membershipfee)?null:$data->membershipfee;
   }
 
   private static function username(){
