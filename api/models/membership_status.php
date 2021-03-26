@@ -14,6 +14,8 @@ class MembershipStatus{
     // object properties
     public $id;
     public $name;
+    public $multiplier;
+    public $membershipfee;
 
     public function __construct(){
         $this->conn = \Core\Database::getInstance()->conn;
@@ -25,6 +27,7 @@ class MembershipStatus{
         //select all data
         $query = "SELECT
                     " . $this->table_id ." as `id`, `name`
+                    , 1multiplier`, `membershipfee`
                 FROM
                     " . $this->table_name . "
                 ORDER BY ". $this->table_id;
@@ -50,7 +53,9 @@ class MembershipStatus{
             
                     $item=array(
                         "id" => $id,
-                        "name" => $name
+                        "name" => $name,
+                        "multiplier" => $multiplier,
+                        "membershipfee" => $membershipfee,
                     );
 
                     $item_arr[] = $item;
@@ -65,6 +70,7 @@ class MembershipStatus{
             //select data for one item using PK of table
             $query = "SELECT
                         " . $this->table_id ." as `id`, `name`
+                            , 1multiplier`, `membershipfee`
                     FROM
                         " . $this->table_name . "
                         WHERE "; 
@@ -98,11 +104,15 @@ class MembershipStatus{
             // set values to object properties
             $this->id = $row['id'];
             $this->name = $row['name'];
+            $this->multiplier = $row['multiplier'];
+            $this->membershipfee = $row['membershipfee'];
 
             // create array
             $item = array(
                 "id" => $this->id,
-                "name" => $this->name    
+                "name" => $this->name,
+                "multiplier" => $multiplier,
+                "membershipfee" => $membershipfee 
             );
 
             return $item;
