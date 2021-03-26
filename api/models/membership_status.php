@@ -111,8 +111,8 @@ class MembershipStatus{
             $item = array(
                 "id" => $this->id,
                 "name" => $this->name,
-                "multiplier" => $multiplier,
-                "membershipfee" => $membershipfee 
+                "multiplier" => $this->multiplier,
+                "membershipfee" => $this->membershipfee 
             );
 
             return $item;
