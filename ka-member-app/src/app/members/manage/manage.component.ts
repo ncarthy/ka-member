@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
-  FormArray,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -28,7 +27,6 @@ import {
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-manage',
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.css'],
 })

@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import {
   BankAccount,
   ButtonName,
@@ -34,7 +33,6 @@ export class TransactionRowComponent implements OnInit {
   amount$: Subject<string> = new Subject<string>();
 
   constructor(
-    private memberService: MemberService,
     private authenticationService: AuthenticationService,
     private transactionService: TransactionService,
     private alertService: AlertService,

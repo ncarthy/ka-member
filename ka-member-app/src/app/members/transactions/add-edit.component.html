@@ -46,7 +46,7 @@
     </div>
     <div class="input-group mb-1">
       <span class="input-group-text col-4" id="bankaccounts-label"
-        >Pmt Type</span
+        >Bank a/c</span
       >
       <select
         id="bankSelect"
@@ -88,7 +88,7 @@
           class="spinner-border spinner-border-sm mr-1"
         ></span>
         <div *ngIf="!saving">
-          <span *ngIf="formMode === FormMode.Add">Create New</span
+          <span *ngIf="formMode === FormMode.Add">Add New Transaction</span
           ><span *ngIf="formMode === FormMode.Edit">Save</span>
         </div>
       </button>

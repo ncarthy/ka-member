@@ -137,8 +137,13 @@ export class MemberRowComponent {
 
     this.member.isUpdating = true;
 
-    from(this.modalService.open(TransactionAddModalComponent).result)
-  .subscribe((success) => { /* save transaction */ })
+    const modalRef = this.modalService.open(TransactionAddModalComponent);
+    modalRef.componentInstance.member = this.member;
+
+    from(modalRef.result)
+      .subscribe((success) => {
+        /* save transaction */
+      })
       .add(() => (this.member.isUpdating = false));
   }
 

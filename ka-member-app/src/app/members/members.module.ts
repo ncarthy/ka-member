@@ -21,6 +21,7 @@ import {
 import {
   MemberAnonymizeConfirmModalComponent,
   MemberDeleteConfirmModalComponent,
+  TransactionAddModalComponent,
   TransactionDeleteConfirmModalComponent,
 } from './modals';
 
@@ -43,6 +44,7 @@ import {
     TransactionRowComponent,
     MemberAnonymizeConfirmModalComponent,
     MemberDeleteConfirmModalComponent,
+    TransactionAddModalComponent,
     TransactionDeleteConfirmModalComponent,
     TransactionAddEditComponent,
   ],
