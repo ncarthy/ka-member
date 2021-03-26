@@ -150,7 +150,7 @@ class Member{
                         addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
                         phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                         updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                        gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold,multiplier,membership_fee
+                        gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold, multiplier, membership_fee
                         FROM
                         " . $this->table_name . " 
                         WHERE idmember = ?
@@ -301,8 +301,8 @@ class Member{
         $stmt->bindParam(":gdpr_address", $gdpr_address);
         $stmt->bindParam(":gdpr_sm", $gdpr_sm);
         $stmt->bindParam(":postonhold", $postonhold);
-        $stmt->bindParam(":multiplier", $multiplier);
-        $stmt->bindParam(":membershipfee", $membershipfee);
+        $stmt->bindParam(":multiplier", $this->multiplier);
+        $stmt->bindParam(":membershipfee", $this->membershipfee);
         
         // execute query
         if($stmt->execute()){
@@ -408,8 +408,8 @@ class Member{
         $stmt->bindParam(":gdpr_address", $gdpr_address);
         $stmt->bindParam(":gdpr_sm", $gdpr_sm);
         $stmt->bindParam(":postonhold", $postonhold);
-        $stmt->bindParam(":multiplier", $multiplier);
-        $stmt->bindParam(":membershipfee", $membershipfee);
+        $stmt->bindParam(":multiplier", $this->multiplier);
+        $stmt->bindParam(":membershipfee", $this->membershipfee);
 
         // execute query
         if($stmt->execute()){
@@ -579,6 +579,7 @@ class Member{
         $this->multiplier=filter_var($this->multiplier, FILTER_SANITIZE_NUMBER_INT);
         $this->membershipfee=filter_var($this->membershipfee, FILTER_SANITIZE_NUMBER_INT);
         
+        /* Belt and braces for optional parameters that are not VARCHAR */
         $this->expirydate = !empty($this->expirydate) ? $this->expirydate : NULL;
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;
         $this->reminderdate = !empty($this->reminderdate) ? $this->reminderdate : NULL;
@@ -586,6 +587,8 @@ class Member{
         $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;        
         $this->countryID = !empty($this->countryID) ? $this->countryID : NULL;
         $this->country2ID = !empty($this->country2ID) ? $this->country2ID : NULL;
+        $this->multiplier = !empty($this->multiplier) ? $this->multiplier : NULL;
+        $this->membershipfee = !empty($this->membershipfee) ? $this->membershipfee : NULL;
     }
 }
 ?>
