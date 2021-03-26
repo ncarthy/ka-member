@@ -1,5 +1,7 @@
 ﻿<div class="row justify-content-between">
-  <div class="col-sm-6"><h1>Members</h1></div>
+  <div class="col-sm-6"><h1>{{
+    members && members.length
+  }} Members Found</h1></div>
   <div class="col-sm-2">
       <button routerLink="/members/add" class="btn btn-sm btn-success m-1 mt-1" *ngIf="user.isAdmin">
         Add New Member
