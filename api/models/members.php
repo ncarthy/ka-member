@@ -12,60 +12,6 @@ class Members{
         $this->conn = \Core\Database::getInstance()->conn;
     }
 
-    public function lifeAndHonorary(){
-
-        //select all data
-        $query = "SELECT m.idmember,m.idmembership, m.membershiptype,m.Name as `name`, 
-                        IFNULL(m.businessname,'') as businessname, m.note as `note`,
-                                `m`.`addressfirstline` AS `address1`,
-                                `m`.`addresssecondline` AS `address2`,
-                                `m`.`city`,
-                                `m`.`postcode`,
-                                m.country,
-                                m.updatedate, m.expirydate,  
-                                m.reminderdate,
-                                Count(t.idtransaction) as `count`,
-                                MAX(t.`date`) AS `last`
-                        FROM vwMember m
-                        LEFT OUTER JOIN vwTransaction t ON m.idmember = t.idmember 
-                        WHERE m.idmembership IN (5,6) AND m.deletedate IS NULL
-                        GROUP BY m.idmember
-                        ORDER BY membershiptype                                      
-                    ";
-        
-        $stmt = $this->conn->prepare( $query );
-
-        // execute query
-        $stmt->execute();
-        $num = $stmt->rowCount();
-
-        $members_arr=array();
-        $members_arr["count"] = $num; // add the count of lifetime members
-        $members_arr["honorary"] = 0; // add the count of hon members
-        $members_arr["lifetime"] = 0; // add the count of lifetime members  
-        $members_arr["records"]=array();
-
-        $honorary_count =0; // count of hon members
-
-        if($num>0){
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                $member = $this->extractMember($row);
-        
-                if ($row['idmembership'] == 6) {
-                    $honorary_count++;
-                }
-        
-                // create un-keyed list
-                array_push ($members_arr["records"], $member);
-            }
-        }
-
-        $members_arr["honorary"] = $honorary_count; // add the count of hon members
-        $members_arr["lifetime"] = $num - $honorary_count; // add the count of lifetime members  
-        
-        return $members_arr;
-    }
-
     public function lapsedMembers($months){
 
         //select all data

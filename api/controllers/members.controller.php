@@ -20,9 +20,10 @@ class MembersCtl{
 
   public static function lifeAndHonorary(){  
 
-    $model = new Members();
-
-    echo json_encode($model->lifeAndHonorary(), JSON_NUMERIC_CHECK);
+    $model = new MemberFilter();
+    $model->setMemberTypeRange('(5,6)');
+    $model->setNotDeleted();
+    echo json_encode($model->execute(), JSON_NUMERIC_CHECK); //$model is of type MemberFilter
   }
 
   //$months is th enumber of months since last payment
@@ -102,6 +103,9 @@ class MembersCtl{
     }
     if (isset($_GET['membertypeid']) && !empty($_GET['membertypeid'])) {
       $model->setMemberTypeID($_GET['membertypeid']);
+    }
+    if (isset($_GET['membertyperange']) && !empty($_GET['membertyperange'])) {
+      $model->setMemberTypeRange($_GET['membertyperange']);
     }
     if (isset($_GET['countryid']) && !empty($_GET['countryid'])) {
       $model->setPrimaryCountryID($_GET['countryid']);
@@ -200,7 +204,7 @@ class MembersCtl{
           } else if ($deleteDateFilterIsSet) {
               // filter already applied
           } else {
-              $model->setNotDeleted();
+              $model->setNotDeleted(); // only active members
               
           }
       }

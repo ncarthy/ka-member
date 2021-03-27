@@ -5,78 +5,105 @@
     # Run first
     DROP TEMPORARY TABLE IF EXISTS `_Members`;    
     #Run second
-    CREATE TEMPORARY TABLE IF NOT EXISTS `_Members` ENGINE=MEMORY AS ( 
+    CREATE TEMPORARY TABLE IF NOT EXISTS `_Members` AS ( 
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
-                        '                     ' as paymentmethod
+                        0 as paymenttypeID, 0 as bankaccountID, m.postonhold
                         FROM member m
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
                         GROUP BY m.idmember
     );    
     #Run third
-    UPDATE _Members M, transaction T
-		SET M.lasttransactionid = T.idtransaction,
-			M.paymentmethod = LEFT(T.paymentmethod,20)
-		WHERE M.idmember = T.member_idmember AND M.lasttransactiondate = T.`date`;
-        
-    #Apply filter. See `members_to_exclude` below
-	DELETE M
-    FROM _Members M    
-    JOIN member m ON M.idmember = m.idmember
-	LEFT JOIN membername mn ON m.idmember = mn.member_idmember
-	WHERE m.businessname NOT LIKE 'co%' AND (mn.surname NOT LIKE 'co%' OR mn.surname IS NULL);
-      
-SELECT * FROM    _Members M JOIN vwMember V ON M.idmember = V.idmember;     
+	UPDATE _Members M, transaction T
+                        SET M.lasttransactionid = T.idtransaction,
+                            M.paymenttypeID = T.paymenttypeID,
+                            M.bankaccountID = T.bankID
+                        WHERE M.idmember = T.member_idmember AND M.lasttransactiondate = T.`date`;
+    
+
+    #Run Fourth:
+    DELETE M
+                    FROM _Members M
+                    JOIN member m ON M.idmember = m.idmember
+                    LEFT JOIN membername mn ON m.idmember = mn.member_idmember
+                    WHERE m.businessname NOT LIKE 'pa%' AND 
+                        (mn.surname NOT LIKE 'pa%' OR mn.surname IS NULL);
+    
+
+
+    # Test results
+	SELECT temp.idmember, temp.expirydate,temp.joindate,temp.reminderdate,
+                        temp.updatedate,temp.deletedate, temp.lasttransactiondate,
+                        IFNULL(`m`.`membership_fee`,
+                            `ms`.`membershipfee`) AS `membershipfee`,
+                        IFNULL(GROUP_CONCAT( CONCAT(CASE
+                                            WHEN `mn`.`honorific` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`honorific`, ' ')
+                                        END,
+                                        CASE
+                                            WHEN `mn`.`firstname` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`firstname`, ' ')
+                                        END,
+                                        `mn`.`surname`) SEPARATOR ' & '),
+                                '') AS `name`,
+                        `m`.`businessname` AS `businessname`,
+                        CONCAT(`m`.`note`, ' ') AS `note`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`addressfirstline2`
+                            ELSE `m`.`addressfirstline`
+                        END AS `addressfirstline`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`addresssecondline2`
+                            ELSE `m`.`addresssecondline`
+                        END AS `addresssecondline`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`city2`
+                            ELSE `m`.`city`
+                        END AS `city`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`postcode2`
+                            ELSE `m`.`postcode`
+                        END AS `postcode`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `c2`.`name`
+                            ELSE `c1`.`name`
+                        END AS `country`,
+                        m.gdpr_email,m.gdpr_tel,m.gdpr_address,m.gdpr_sm,
+                        `m`.`membership_idmembership` AS `idmembership`,
+                        `ms`.`name` AS `membershiptype`,
+                        IFNULL(pt.name,'') as paymenttype, IFNULL(b.name,'') as bankaccount,
+                        m.email1, m.email2
+                        FROM _Members temp
+                        INNER JOIN `member` `m` ON temp.idmember = m.idmember
+                        INNER JOIN `membershipstatus` `ms` ON (`m`.`membership_idmembership` = `ms`.`idmembership`)
+                        LEFT JOIN `paymenttype` `pt` ON  `temp`.`paymenttypeID` = `pt`.`paymenttypeID`
+                        LEFT JOIN `bankaccount` `b` ON  `temp`.`bankaccountID` = `b`.`bankID`
+                        LEFT JOIN `country` `c1` ON (`m`.`countryID` = `c1`.`id`)
+                        LEFT JOIN `country` `c2` ON (`m`.`country2ID` = `c2`.`id`)
+                        LEFT JOIN membername `mn` ON `m`.`idmember` = mn.member_idmember
+                        GROUP BY temp.idmember;
+    
+     
 
 /* That conculdes the representation of Postman test */
-
-/* The SQL below was used to build and test the critical DELETE query */
-
-        
-# Create a list of members whose surname starts with 'pa' or whose business naem starts with 'pa'
-DROP TEMPORARY TABLE IF EXISTS `_members1`;   
-CREATE TEMPORARY TABLE IF NOT EXISTS `_members1` AS ( 
-SELECT mn.member_idmember as id
-FROM membername mn
-WHERE mn.surname LIKE 'co%'
-GROUP BY mn.member_idmember);
-INSERT INTO `_members1`
-SELECT m.idmember as id FROM member m
-LEFT JOIN `_members1` m1 ON m.idmember = m1.id
-WHERE m.businessname LIKE 'co%' AND m1.id IS NULL 
-GROUP BY m.idmember
-ORDER BY id;
-
-# Create a list of members whose surname DOES NOT start with 'pa' or whose business name DOES NOT starts with 'pa'
-# This will be used in the filter
-DROP TEMPORARY TABLE IF EXISTS `_members_to_exclude`;   
-CREATE TEMPORARY TABLE IF NOT EXISTS `_members_to_exclude` AS ( 
-SELECT m.idmember as id FROM member m
-LEFT JOIN membername mn ON m.idmember = mn.member_idmember
-WHERE m.businessname NOT LIKE 'pa%' AND (mn.surname NOT LIKE 'pa%' OR mn.surname IS NULL)
-GROUP BY m.idmember);
-
-# Check that defintiely not excluded any valid members
-# Should be empty set
-SELECT m1.id as m1,m2.id as m2
-FROM `_members_to_exclude` m2
-LEFT JOIN `_members1` m1 ON m2.id = m1.id
-WHERE m1.id IS NOT NULL;
-
-# Check that did not exclude some invalid members
-# Should be empty set
-SELECT * FROM vwMember m1
-LEFT JOIN `_members_to_exclude` m2 ON m1.idmember = m2.id
-LEFT JOIN `_members1` m3 ON m1.idmember = m3.id
-WHERE m2.id IS NULL AND m3.id IS NULL;
-
-#Check that the set of (all members - excluded members) is equal to `members1`
-# Should be empty set
-SELECT *
-FROM vwMember v
-LEFT JOIN `_members_to_exclude` m2 ON v.idmember = m2.id
-LEFT JOIN `_members1` m3 ON v.idmember = m3.id
-WHERE m2.id IS NULL AND m3.id IS NULL;
-
-SELECT * FROM  `_members1` GROUP BY id;

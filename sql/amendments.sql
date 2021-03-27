@@ -362,124 +362,28 @@ UPDATE `member` SET country2ID = 186 WHERE country2 = 'UK';
 ALTER TABLE `member` DROP `country`;
 ALTER TABLE `member` DROP `country2`;
 
-
+DROP VIEW IF EXISTS `vwNames`;
 DROP VIEW IF EXISTS `vwMember`;
 DROP VIEW IF EXISTS `vwMembers`;
 CREATE VIEW IF NOT EXISTS  `vwMember` AS
-    SELECT
-		`m`.`idmember` AS `idmember`,
+ SELECT 
+        `m`.`idmember` AS `idmember`,
         `m`.`membership_idmembership` AS `idmembership`,
         `ms`.`name` AS `membershiptype`,
-        IFNull(`m`.`membership_fee`,`ms`.`membershipfee`)  AS `membershipfee`,
-        `mn1`.`honorific` AS `honorific`,
-        `mn1`.`firstname` AS `firstname`,
-        `mn1`.`surname` AS `surname`,
-        IFNULL(CONCAT(CASE
-                            WHEN `mn1`.`honorific` = '' THEN ''
-                            ELSE CONCAT(`mn1`.`honorific`, ' ')
+        IFNULL(`m`.`membership_fee`,
+                `ms`.`membershipfee`) AS `membershipfee`,
+        IFNULL(GROUP_CONCAT( CONCAT(CASE
+                            WHEN `mn`.`honorific` = '' THEN ''
+                            ELSE CONCAT(`mn`.`honorific`, ' ')
                         END,
-                        `mn1`.`firstname`,
-                        ' ',
-                        `mn1`.`surname`,
                         CASE
-                            WHEN `mn2`.`firstname` IS NULL THEN ''
-                            ELSE CONCAT(' And ',
-                                    CASE
-                                        WHEN `mn1`.`honorific` = '' THEN ''
-                                        ELSE CONCAT(`mn2`.`honorific`, ' ')
-                                    END,
-                                    `mn2`.`firstname`,
-                                    ' ',
-                                    `mn2`.`surname`)
-                        END),
+                            WHEN `mn`.`firstname` = '' THEN ''
+                            ELSE CONCAT(`mn`.`firstname`, ' ')
+                        END,
+                        `mn`.`surname`) SEPARATOR ' & '),
                 '') AS `Name`,
         `m`.`businessname` AS `businessname`,
-        CONCAT(`m`.`note`, ' ') as `Note`,
-        CASE
-            WHEN
-                `m`.`countryID` != 186
-                    AND `m`.`country2ID` = 186
-            THEN
-                `m`.`addressfirstline2`
-            ELSE `m`.`addressfirstline`
-        END AS `addressfirstline`,
-        CASE
-            WHEN
-                `m`.`countryID` != 186
-                    AND `m`.`country2ID` = 186
-            THEN
-                `m`.`addresssecondline2`
-            ELSE `m`.`addresssecondline`
-        END AS `addresssecondline`,
-        CASE
-            WHEN
-                `m`.`countryID` != 186
-                    AND `m`.`country2ID` = 186
-            THEN
-                `m`.`city2`
-            ELSE `m`.`city`
-        END AS `city`,
-        CASE
-            WHEN
-                `m`.`countryID` != 186
-                    AND `m`.`country2ID` = 186
-            THEN
-                `m`.`postcode2`
-            ELSE `m`.`postcode`
-        END AS `postcode`,
-        CASE
-            WHEN
-                `m`.`countryID` != 186
-                    AND `m`.`country2ID` = 186
-            THEN
-                `c2`.`name`
-            ELSE `c1`.`name`            
-        END AS `country`,
-        m.updatedate, m.expirydate, m.deletedate, m.reminderdate,
-        m.gdpr_email,gdpr_sm,gdpr_tel,gdpr_address,
-        m.email1,m.email2
-    FROM
-        `member` `m`
-        JOIN `membershipstatus` ms ON m.membership_idmembership = ms.idmembership
-        LEFT JOIN `country` `c1` ON m.countryID = c1.id
-        LEFT JOIN `country` `c2` ON m.country2ID = c2.id
-        LEFT JOIN `vwNames` `v` ON `m`.`idmember` = `v`.`member_idmember`
-        LEFT JOIN `membername` `mn1` ON `v`.`FirstName` = `mn1`.`idmembername`
-        LEFT JOIN `membername` `mn2` ON `v`.`SecondName` = `mn2`.`idmembername`;
-        
-DROP VIEW IF EXISTS `vwTransaction`;
-CREATE VIEW IF NOT EXISTS `vwTransaction` AS
-    SELECT 
-        `t`.`idtransaction` AS `idtransaction`,
-        `m`.`idmember` AS `idmember`,
-        `m`.`idmembership` AS `idmembership`,
-        `m`.`membershiptype` AS `membershiptype`,
-        `m`.`Name` AS `name`,
-        IFNULL(`m`.`businessname`, '') AS `businessname`,
-        `m`.`Note` AS `note`,
-        `m`.`addressfirstline` AS `address1`,
-        `m`.`addresssecondline` AS `address2`,
-        `m`.`city` AS `city`,
-        `m`.`postcode` AS `postcode`,
-        `m`.`country` AS `country`,
-        `m`.`updatedate` AS `updatedate`,
-        `m`.`expirydate` AS `expirydate`,
-        `m`.`reminderdate` AS `reminderdate`,
-        `m`.membershipfee,
-        `t`.`date` AS `date`,
-        `t`.`paymentmethod` AS `paymentmethod`,
-        `t`.`amount` AS `amount`
-    FROM
-        (`transaction` `t`
-        JOIN `vwMember` `m` ON (`t`.`member_idmember` = `m`.`idmember`));
-
-DROP VIEW IF EXISTS `vwUKMembers`;
-CREATE VIEW IF NOT EXISTS `vwUKMembers` AS
-    SELECT 
-        `mn1`.`honorific` AS `honorific`,
-        `mn1`.`firstname` AS `firstname`,
-        `mn1`.`surname` AS `surname`,
-        `m`.`businessname` AS `businessname`,
+        CONCAT(`m`.`note`, ' ') AS `Note`,
         CASE
             WHEN
                 `m`.`countryID` <> 186
@@ -519,58 +423,27 @@ CREATE VIEW IF NOT EXISTS `vwUKMembers` AS
             THEN
                 `c2`.`name`
             ELSE `c1`.`name`
-        END AS `country`
+        END AS `country`,
+        `m`.`updatedate` AS `updatedate`,
+        `m`.`expirydate` AS `expirydate`,
+        `m`.`deletedate` AS `deletedate`,
+        `m`.`reminderdate` AS `reminderdate`,
+        `m`.`gdpr_email` AS `gdpr_email`,
+        `m`.`gdpr_sm` AS `gdpr_sm`,
+        `m`.`gdpr_tel` AS `gdpr_tel`,
+        `m`.`gdpr_address` AS `gdpr_address`,
+        `m`.`email1` AS `email1`,
+        `m`.`email2` AS `email2`
     FROM
         `member` `m`
-		LEFT JOIN `country` `c1` ON `m`.`countryID` = `c1`.`id`
-        LEFT JOIN `country` `c2` ON `m`.`country2ID` = `c2`.`id`
-        LEFT JOIN `vwNames` `v` ON `m`.`idmember` = `v`.`member_idmember`
-        LEFT JOIN `membername` `mn1` ON `v`.`FirstName` = `mn1`.`idmembername`
-        LEFT JOIN `membername` `mn2` ON `v`.`SecondName` = `mn2`.`idmembername`
-    WHERE
-        `m`.`deletedate` IS NULL
-            AND (`m`.`addressfirstline` <> ''
-            OR `m`.`addressfirstline2` <> '');
+        JOIN `membershipstatus` `ms` ON (`m`.`membership_idmembership` = `ms`.`idmembership`)
+        LEFT JOIN `country` `c1` ON (`m`.`countryID` = `c1`.`id`)
+        LEFT JOIN `country` `c2` ON (`m`.`country2ID` = `c2`.`id`)
+        LEFT JOIN membername `mn` ON `m`.`idmember` = mn.member_idmember
+        GROUP BY `m`.idmember;        
 
+DROP VIEW IF EXISTS `vwUKMembers`;
 DROP VIEW IF EXISTS `vwUKActiveMemberAddress` ;
-CREATE VIEW IF NOT EXISTS `vwUKActiveMemberAddress` AS
-    SELECT 
-        IFNULL(CONCAT(CASE
-                            WHEN `mn1`.`honorific` = '' THEN ''
-                            ELSE CONCAT(`mn1`.`honorific`, ' ')
-                        END,
-                        `mn1`.`firstname`,
-                        ' ',
-                        `mn1`.`surname`,
-                        CASE
-                            WHEN `mn2`.`firstname` IS NULL THEN ''
-                            ELSE CONCAT(' And ',
-                                    CASE
-                                        WHEN `mn1`.`honorific` = '' THEN ''
-                                        ELSE CONCAT(`mn2`.`honorific`, ' ')
-                                    END,
-                                    `mn2`.`firstname`,
-                                    ' ',
-                                    `mn2`.`surname`)
-                        END),
-                '') AS `Name`,
-        CASE
-            WHEN `m`.`businessname` <> '' THEN `m`.`businessname`
-            ELSE ''
-        END AS `Position`,
-        `m`.`addressfirstline` AS `Address1`,
-        `m`.`addresssecondline` AS `Address2`,
-        '' AS `Address3`,
-        `m`.`city` AS `Address4`,
-        `m`.`postcode` AS `Postcode`
-    FROM
-        (((`member` `m`
-        LEFT JOIN `vwNames` `v` ON (`m`.`idmember` = `v`.`member_idmember`))
-        LEFT JOIN `membername` `mn1` ON (`v`.`FirstName` = `mn1`.`idmembername`))
-        LEFT JOIN `membername` `mn2` ON (`v`.`SecondName` = `mn2`.`idmembername`))
-    WHERE
-        `m`.`countryID` = 186
-            AND `m`.`deletedate` IS NULL AND `m`.`postonhold` = 0;
 
 ALTER TABLE `transaction` ADD INDEX (`member_idmember`);
 UPDATE transaction SET paymentmethod = 'BO' WHERE paymentmethod LIKE 'B/O%' OR paymentmethod = '' OR paymentmethod LIKE 'BO%';
@@ -675,6 +548,32 @@ ALTER TABLE membername
     ADD CONSTRAINT fk_membername_member_idx
     FOREIGN KEY (member_idmember)
     REFERENCES member(idmember);
+
+DROP VIEW IF EXISTS `vwTransaction`;
+CREATE VIEW IF NOT EXISTS `vwTransaction` AS
+    SELECT 
+        `t`.`idtransaction` AS `idtransaction`,
+        `m`.`idmember` AS `idmember`,
+        `m`.`idmembership` AS `idmembership`,
+        `m`.`membershiptype` AS `membershiptype`,
+        `m`.`Name` AS `name`,
+        IFNULL(`m`.`businessname`, '') AS `businessname`,
+        `m`.`Note` AS `note`,
+        `m`.`addressfirstline` AS `address1`,        
+        `m`.`addresssecondline` AS `address2`,
+        `m`.`city` AS `city`,
+        `m`.`postcode` AS `postcode`,
+        `m`.`country` AS `country`,
+        `m`.`updatedate` AS `updatedate`,
+        `m`.`expirydate` AS `expirydate`,
+        `m`.`reminderdate` AS `reminderdate`,
+        `m`.`membershipfee` AS `membershipfee`,
+        `t`.`date` AS `date`,
+        `pt`.`name` AS `paymenttype`,
+        `t`.`amount` AS `amount`
+    FROM `transaction` `t`
+         INNER JOIN `vwMember` `m` ON `t`.`member_idmember` = `m`.`idmember`
+         INNER JOIN `paymenttype` `pt` ON  `t`.`paymenttypeID` = `pt`.`paymenttypeID`;
 
 COMMIT;
 

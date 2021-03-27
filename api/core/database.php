@@ -33,7 +33,7 @@ class Database{
                                             , Config::read('db.user'), Config::read('db.password'));
 
                 // From https://stackoverflow.com/a/60496/6941165
-                $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);    
             }
             else {

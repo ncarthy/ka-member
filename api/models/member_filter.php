@@ -35,20 +35,81 @@ class MemberFilter{
     /* For debugging run 'tail -f /var/log/mysql/mysql.log' ON the database  and review output*/
 
     /* Can also use the Filter.sql file in the config directory that can help to debug SQL */
+
+    /* This is a giant query because I cannot use views with prepared statements */
     public function execute() {
 
         $query = "SELECT temp.idmember, temp.expirydate,temp.joindate,temp.reminderdate,
                         temp.updatedate,temp.deletedate, temp.lasttransactiondate,
-                        m.`Name` as `name`, m.businessname, m.Note as `note`, 
-                        addressfirstline,addresssecondline,city,postcode,country,
-                        gdpr_email,gdpr_tel,gdpr_address,gdpr_sm,
-                        m.idmembership, m.membershiptype,
-                        pt.name as paymenttype, b.name as bankaccount,
+                        IFNULL(`m`.`membership_fee`,
+                            `ms`.`membershipfee`) AS `membershipfee`,
+                        IFNULL(GROUP_CONCAT( CONCAT(CASE
+                                            WHEN `mn`.`honorific` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`honorific`, ' ')
+                                        END,
+                                        CASE
+                                            WHEN `mn`.`firstname` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`firstname`, ' ')
+                                        END,
+                                        `mn`.`surname`) SEPARATOR ' & '),
+                                '') AS `name`,
+                        `m`.`businessname` AS `businessname`,
+                        CONCAT(`m`.`note`, ' ') AS `note`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`addressfirstline2`
+                            ELSE `m`.`addressfirstline`
+                        END AS `addressfirstline`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`addresssecondline2`
+                            ELSE `m`.`addresssecondline`
+                        END AS `addresssecondline`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`city2`
+                            ELSE `m`.`city`
+                        END AS `city`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`postcode2`
+                            ELSE `m`.`postcode`
+                        END AS `postcode`,
+                        CASE
+                            WHEN
+                                `m`.`countryID` <> 186
+                                    AND `m`.`country2ID` = 186
+                            THEN
+                                `c2`.`name`
+                            ELSE `c1`.`name`
+                        END AS `country`,
+                        m.gdpr_email,m.gdpr_tel,m.gdpr_address,m.gdpr_sm,
+                        `m`.`membership_idmembership` AS `idmembership`,
+                        `ms`.`name` AS `membershiptype`,
+                        IFNULL(pt.name,'') as paymenttype, IFNULL(b.name,'') as bankaccount,
                         m.email1, m.email2
                         FROM " . $this->tablename . " temp
-                        JOIN vwMember m ON temp.idmember = m.idmember
-                        LEFT JOIN `paymenttype` pt ON temp.paymenttypeID = pt.paymenttypeID
-                        LEFT JOIN `bankaccount` b ON temp.bankaccountID = b.bankID;";      
+                        INNER JOIN `member` `m` ON temp.idmember = m.idmember
+                        INNER JOIN `membershipstatus` `ms` ON (`m`.`membership_idmembership` = `ms`.`idmembership`)
+                        LEFT JOIN `paymenttype` `pt` ON  `temp`.`paymenttypeID` = `pt`.`paymenttypeID`
+                        LEFT JOIN `bankaccount` `b` ON  `temp`.`bankaccountID` = `b`.`bankID`
+                        LEFT JOIN `country` `c1` ON (`m`.`countryID` = `c1`.`id`)
+                        LEFT JOIN `country` `c2` ON (`m`.`country2ID` = `c2`.`id`)
+                        LEFT JOIN membername `mn` ON `m`.`idmember` = mn.member_idmember
+                        GROUP BY temp.idmember
+                        ;";      
         $stmt = $this->conn->prepare( $query );  
 
         // Show member attributes for the members in the temp table     
@@ -147,6 +208,14 @@ class MemberFilter{
         $query = " DELETE
                     FROM " . $this->tablename . "
                     WHERE idmembership != ".$membertypeID."
+                    ;";
+        $this->conn->query($query);        
+    }
+
+    public function setMemberTypeRange($membertypeRange){      
+        $query = " DELETE
+                    FROM " . $this->tablename . "
+                    WHERE idmembership NOT IN ".$membertypeRange."
                     ;";
         $this->conn->query($query);        
     }
