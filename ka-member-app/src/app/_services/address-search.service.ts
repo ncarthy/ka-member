@@ -10,7 +10,7 @@ import { map, mergeAll } from 'rxjs/operators';
 import { GetAddressAddress } from '@app/_models';
 
 export const ADDRESS_API_KEY =
-  'E4dFXtAdQEamUYm9rcA_4A30597';
+  'SdcqMcX0jkOi4rMBEMNx3Q30597';
 export const ADDRESS_API_URL =
   'https://api.getAddress.io/find/';
 
