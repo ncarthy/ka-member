@@ -28,6 +28,7 @@ export class TransactionRowComponent implements OnInit {
   @Output() onTransactionDeleted: EventEmitter<Transaction>;
   @Output() onTransactionUpdated: EventEmitter<Transaction>;
   @Output() editRequested: EventEmitter<Transaction>;
+
   user!: User;
   showSaveButton: boolean = false;
   amount$: Subject<string> = new Subject<string>();
@@ -112,9 +113,12 @@ export class TransactionRowComponent implements OnInit {
   onTransactionDelete() {
     if (!this.transaction || !this.transaction.id || !this.user.isAdmin) return;
 
-    from(
-      this.modalService.open(TransactionDeleteConfirmModalComponent).result
-    ).subscribe(() =>
+    const modalRef = this.modalService.open(
+      TransactionDeleteConfirmModalComponent
+    );
+    modalRef.componentInstance.transaction = this.transaction;
+
+    from(modalRef.result).subscribe(() =>
       this.transactionService.delete(this.transaction.id).subscribe(
         (result: any) => {
           this.alertService.success('Transaction deleted', {

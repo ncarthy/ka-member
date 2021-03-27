@@ -85,13 +85,13 @@ import {DateFilterType} from './date-filter.enum';
         }     
         
         if (this.dateranges) {            
-            this.dateranges.forEach( (element : DateRangeFilter) => {
-                if (element.dateType) {
-                    if (element.startDate) {
-                        str = str.concat('&',element.dateType,'start=',element.startDate);
+            this.dateranges.forEach( (dateRangeFilter : DateRangeFilter) => {
+                if (dateRangeFilter.dateType) {
+                    if (dateRangeFilter.startDate) {
+                        str = str.concat('&',dateRangeFilter.dateType,'start=',dateRangeFilter.startDate);
                     }
-                    if (element.endDate) {
-                        str = str.concat('&',element.dateType,'end=',element.endDate);
+                    if (dateRangeFilter.endDate) {
+                        str = str.concat('&',dateRangeFilter.dateType,'end=',dateRangeFilter.endDate);
                     }
                 }
             });

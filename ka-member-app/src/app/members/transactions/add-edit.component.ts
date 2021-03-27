@@ -24,7 +24,6 @@ import {
   PaymentType,
   BankAccount,
   User,
-  Member,
 } from '@app/_models';
 
 import {
@@ -52,7 +51,7 @@ export class TransactionAddEditComponent
   @Input() touched: boolean = false;
   @Input() transaction?: Transaction;
   @Input() mostRecentTransaction?: Transaction;
-  @Output() reloadRequested: EventEmitter<any>;
+  @Output() reloadRequested: EventEmitter<Transaction>;
 
   formMode!: FormMode;
 
@@ -61,7 +60,7 @@ export class TransactionAddEditComponent
   submitted: boolean = false;
 
   onChange: any = (_: Transaction) => {};
-  onTouch: any = () => {};  
+  onTouch: any = () => {};
   user!: User;
   banks?: BankAccount[];
   paymentTypes?: PaymentType[];
@@ -124,6 +123,7 @@ export class TransactionAddEditComponent
     if (simpleChanges.transaction && this.transaction && this.transaction.id) {
       this.formMode = FormMode.Edit;
       this.transactionForm.patchValue(this.transaction);
+      this.onSetFocus();
     } else {
       this.onReset();
     }
@@ -134,12 +134,8 @@ export class TransactionAddEditComponent
       this.mostRecentTransaction.id
     ) {
       this.transactionForm.patchValue(this.mostRecentTransaction);
-      this.f['date'].setValue(
-        null
-      );
-      this.f['note'].setValue(
-        null
-      );
+      this.f['date'].setValue(null);
+      this.f['note'].setValue(null);
     }
   }
 
@@ -193,6 +189,16 @@ export class TransactionAddEditComponent
     this.transactionForm.reset();
   }
 
+  onSetFocus() {
+    setTimeout(()=>{ // this will make the execution after the above boolean has changed
+      const el = document.getElementById("transactionDate");
+      if (el) {
+        el.focus();
+      }
+    },200); 
+    
+  }
+
   private createTransaction() {
     this.transactionService
       .create(this.transactionForm.value)
@@ -209,11 +215,13 @@ export class TransactionAddEditComponent
           });
         }
       )
-      .add(() => {this.reloadRequested.emit(null);});
+      .add(() => {
+        this.reloadRequested.emit(this.transactionForm.value);
+      });
   }
 
   private editTransaction() {
-    if (!this.transaction || !this.transaction.id ) {
+    if (!this.transaction || !this.transaction.id) {
       return;
     }
 
@@ -232,6 +240,8 @@ export class TransactionAddEditComponent
           });
         }
       )
-      .add(() => {this.reloadRequested.emit(null);});
+      .add(() => {
+        this.reloadRequested.emit(this.transaction);
+      });
   }
 }

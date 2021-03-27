@@ -4,13 +4,14 @@ import {
   ButtonName,
   MemberSearchResult,
   MemberFilter,
+  Transaction,
   User,
   YesNoAny,
 } from '@app/_models';
 import {
-  MemberService,
   AlertService,
   AuthenticationService,
+  MemberService,
 } from '@app/_services';
 import {
   MemberAnonymizeConfirmModalComponent,
@@ -139,9 +140,12 @@ export class MemberRowComponent {
 
     const modalRef = this.modalService.open(TransactionAddModalComponent);
     modalRef.componentInstance.member = this.member;
-    modalRef.componentInstance.passEntry.subscribe((receivedEntry:any) => {
-      console.log(receivedEntry);
-      })
+    modalRef.componentInstance.savedTransaction.subscribe(
+      (receivedTransaction: Transaction) => {
+        console.log(receivedTransaction);
+        this.member.lasttransactiondate = receivedTransaction.date;
+      }
+    );
 
     from(modalRef.result)
       .subscribe((success) => {

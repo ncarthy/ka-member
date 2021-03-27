@@ -32,8 +32,8 @@ export class TransactionAddModalComponent implements OnInit {
       .subscribe((tx: Transaction) => (this.lastTransaction = tx));
   }
 
-  onReloadRequested(e: any) {
-    //this.savedTransaction.emit(null);
+  onReloadRequested(t: Transaction) {
+    this.savedTransaction.emit(t);
     // Transaction has been saved.
     this.modal.close('Ok click');
   }

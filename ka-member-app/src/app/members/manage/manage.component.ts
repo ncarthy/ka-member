@@ -111,7 +111,7 @@ export class MemberManageComponent implements OnInit {
   }
 
   /** Reload transacitons table and add/edit transaction card */
-  onReloadRequested(e: any) {
+  onReloadRequested(t: Transaction) {
     if (this.member) {
       this.loading = true;
       this.transactionService
