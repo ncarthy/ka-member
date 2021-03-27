@@ -38,12 +38,16 @@
         name="paymentTypeSelect"
         class="form-control"
         formControlName="paymenttypeID"
+        [ngClass]="{ 'is-invalid': submitted && f.paymenttypeID.errors }"
       >
         <option disabled selected [ngValue]="null">---- select ----</option>
         <option *ngFor="let pType of paymentTypes" [ngValue]="pType.id">
           {{ pType.name }}
         </option>
       </select>
+      <div *ngIf="submitted && f.paymenttypeID.errors" class="invalid-feedback">
+        <div *ngIf="f.paymenttypeID.errors.required">Payment type is required</div>
+      </div>
     </div>
     <div class="input-group mb-1">
       <span class="input-group-text col-4" id="bankaccounts-label"
@@ -54,12 +58,16 @@
         name="bankSelect"
         class="form-control"
         formControlName="bankID"
+        [ngClass]="{ 'is-invalid': submitted && f.bankID.errors }"
       >
         <option disabled selected [ngValue]="null">-- select --</option>
         <option *ngFor="let bank of banks" [ngValue]="bank.id">
           {{ bank.name }}
         </option>
       </select>
+      <div *ngIf="submitted && f.bankID.errors" class="invalid-feedback">
+        <div *ngIf="f.bankID.errors.required">Bank is required</div>
+      </div>
     </div>
     <div class="input-group col p-0 mb-1">
       <span class="input-group-text col-4" id="amount-label">Amount</span>
@@ -106,7 +114,7 @@
         >Clear</a
       >
     </div>
-    <div *ngIf="false">
+    <div *ngIf="true">
       <!--Debug Information for Testing -->
       <hr />
       <p>Form Value: {{ transactionForm.value | json }}</p>

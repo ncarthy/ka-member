@@ -142,7 +142,10 @@ export class MemberRowComponent {
     modalRef.componentInstance.member = this.member;
     modalRef.componentInstance.savedTransaction.subscribe(
       (receivedTransaction: Transaction) => {
-        this.member.lasttransactiondate = receivedTransaction.date;
+
+        // Convert date to UK format
+        const d = new Date(receivedTransaction.date);        
+        this.member.lasttransactiondate = d.toLocaleDateString("en-GB"); 
       }
     );
 

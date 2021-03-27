@@ -24,6 +24,7 @@ import {
   PaymentType,
   BankAccount,
   User,
+  Member,
 } from '@app/_models';
 
 import {
@@ -51,6 +52,7 @@ export class TransactionAddEditComponent
   @Input() touched: boolean = false;
   @Input() transaction?: Transaction;
   @Input() mostRecentTransaction?: Transaction;
+  @Input() member?: Member;
   @Output() reloadRequested: EventEmitter<Transaction>;
 
   formMode!: FormMode;
@@ -70,8 +72,8 @@ export class TransactionAddEditComponent
   transactionForm = this.fb.group({
     date: [null, Validators.required],
     amount: [null, [Validators.required]],
-    paymenttypeID: [null],
-    bankID: [null],
+    paymenttypeID: [null, [Validators.required]],
+    bankID: [null, [Validators.required]],
     note: [null],
     idmember: [null, Validators.required],
   });
@@ -187,16 +189,19 @@ export class TransactionAddEditComponent
     this.formMode = FormMode.Add;
     this.alertService.clear();
     this.transactionForm.reset();
+    if (this.member) {
+      this.f['idmember'].setValue(this.member.id);
+    }
   }
 
   onSetFocus() {
-    setTimeout(()=>{ // this will make the execution after the above boolean has changed
-      const el = document.getElementById("transactionDate");
+    setTimeout(() => {
+      // this will make the execution after the above boolean has changed
+      const el = document.getElementById('transactionDate');
       if (el) {
         el.focus();
       }
-    },200); 
-    
+    }, 200);
   }
 
   private createTransaction() {

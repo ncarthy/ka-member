@@ -280,9 +280,10 @@
   >
     <div class="card">      
       <transaction-add-edit
+        [member]="member"
         [transaction]="transactionToEdit"
-        [mostRecentTransaction]="transactions && transactions[0]"
-        (reloadRequested)="onReloadRequested($event)"
+        [mostRecentTransaction]="transactions && transactions[0]"        
+        (reloadRequested)="onReloadRequested($event)"        
       ></transaction-add-edit>
     </div>
   </div>
