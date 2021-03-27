@@ -49,7 +49,6 @@ export class TransactionRowComponent implements OnInit {
     this.amount$
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe((value: string) => {
-        console.log(value);
         if (parseFloat(value)) {
           this.transaction.amount = value;
         }

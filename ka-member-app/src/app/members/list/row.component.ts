@@ -142,7 +142,6 @@ export class MemberRowComponent {
     modalRef.componentInstance.member = this.member;
     modalRef.componentInstance.savedTransaction.subscribe(
       (receivedTransaction: Transaction) => {
-        console.log(receivedTransaction);
         this.member.lasttransactiondate = receivedTransaction.date;
       }
     );

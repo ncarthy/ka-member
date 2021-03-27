@@ -28,7 +28,6 @@ import { Address, GetAddressAddress } from '@app/_models';
       type="text"
       class="form-control"
       placeholder="Search By Postcode"
-      autofocus
     />
   </div>
   `,

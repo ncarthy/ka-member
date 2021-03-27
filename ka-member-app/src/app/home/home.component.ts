@@ -35,7 +35,5 @@ export class HomeComponent implements OnInit {
       this.count = response.count;
       this.membersByType = response.records;
     });
-
-    //this.memberNameService.concatAllForMember(138).subscribe((x) => {this.test=x;console.log(x);});
   }
 }
