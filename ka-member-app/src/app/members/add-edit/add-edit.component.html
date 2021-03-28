@@ -76,6 +76,50 @@
     >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
   >
 
+  <div
+    *ngFor="let name of namesFormGroups; let i = index"
+    class="list-group list-group-flush"
+  >
+    <div class="row">
+      <div class="col-sm">
+        <h5>Name {{ i + 1 }}</h5>
+      </div>
+      <div class="col-sm">
+        <div class="row">
+          <div class="col-sm">H</div>
+          <div class="col-sm">F</div>
+          <div class="col-sm">S</div>
+        </div>
+      </div>
+      <div class="col-sm">
+        <button
+          type="button"
+          [disabled]="loading"
+          class="mr-3"
+          (click)="onAddName()"
+          placement="bottom"
+          ngbTooltip="Add new name"
+        >
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm mr-1"
+          ></span>
+          +
+        </button>
+        <button
+          *ngIf="i !== 0"
+          type="button"
+          class="close"
+          (click)="onRemoveName(i)"
+          placement="bottom"
+          ngbTooltip="Remove name"
+        >
+          <span>&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="row mb-1">
     <!-- Names -->
     <div
