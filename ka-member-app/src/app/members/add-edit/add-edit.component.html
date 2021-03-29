@@ -15,8 +15,8 @@
 <!--The *ngIf is in place to stop errors of 'Expression has changed after it was checked.'-->
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
   <!-- Buttons -->
-  <div class="col-sm d-flex justify-content-between">
-    <div class="form-group">
+  <div class="row d-flex justify-content-between">
+    <div class="col-sm mb-1">
       <button
         type="submit"
         [disabled]="loading"
@@ -31,7 +31,7 @@
       </button>
       <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
     </div>
-    <div *ngIf="isMemberEdit">
+    <div class="col-sm d-flex justify-content-end" *ngIf="isMemberEdit">
       <button
         type="button"
         routerLink="/members/manage/{{ id }}"
@@ -46,16 +46,17 @@
       >
         Payments
       </button>
-    </div>
-    <div *ngIf="isMemberEdit && user.isAdmin">
-      <a
-        *ngIf="f['statusID'].value !== 9"
-        class="btn btn-link"
+      <button
+        type="button"
+        *ngIf="user.isAdmin && f['statusID'].value !== 9"
+        class="btn btn-warning mr-1"
         (click)="onSetToFormer()"
-        >Set to 'Former'</a
       >
+        Set to 'Former'
+      </button>
       <button
         *ngIf="
+          user.isAdmin &&
           f['statusID'].value === 9 &&
           namesFormGroups &&
           namesFormGroups[0].value.surname !== 'Anonymized'
@@ -72,7 +73,7 @@
         Anonymize
       </button>
       <button
-        *ngIf="f['statusID'].value === 9"
+        *ngIf="user.isAdmin && f['statusID'].value === 9"
         type="button"
         [disabled]="loading"
         class="btn btn-danger"
@@ -92,6 +93,7 @@
     >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
   >
 
+  <!-- Names -->
   <div
     *ngFor="let name of namesFormGroups; let i = index"
     class="list-group list-group-flush mb-1"
@@ -171,9 +173,9 @@
       </div>
     </div>
   </div>
+  <!-- End of Names -->
 
   <div class="row mb-1">
-
     <!-- Status/Type (aka Membership type), Note & Bank Ref -->
     <div class="col-sm-6 mb-1">
       <div class="input-group mb-1">
@@ -353,70 +355,84 @@
     <!-- Dates (expiry, join & delete)-->
     <div class="col-sm mb-1">
       <div class="input-group">
-        <span class="input-group-text col-2" id="dates-label">Dates</span>
-        <div class="card p-3 col-10">
-          <label for="inputJoinDate" class="form-label"> Join Date </label>
-          <div class="input-group mb-1">
-            <input
-              class="form-control"
-              placeholder="*not-set*"
-              name="dp"
-              ngbDatepicker
-              #d1="ngbDatepicker"
-              formControlName="joindate"
-              id="inputJoinDate"
-            />
-            <div class="input-group-append">
-              <button
-                class="btn btn-outline-secondary"
-                (click)="d1.toggle()"
-                type="button"
-              >
-                <i class="far fa-calendar-alt"></i>
-              </button>
+        <span class="input-group-text col-4 col-sm-2" id="dates-label"
+          >Dates</span
+        >
+        <div class="card p-3 col-8 col-sm-10">
+          <div class="row">
+            <div class="col-sm">
+              <label for="inputJoinDate" class="form-label"> Join Date </label>
+              <div class="input-group mb-1">
+                <input
+                  class="form-control"
+                  placeholder="*not-set*"
+                  name="dp"
+                  ngbDatepicker
+                  #d1="ngbDatepicker"
+                  formControlName="joindate"
+                  id="inputJoinDate"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    (click)="d1.toggle()"
+                    type="button"
+                  >
+                    <i class="far fa-calendar-alt"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-          <label for="inputExpiryDate" class="form-label"> Expiry Date </label>
-          <div class="input-group mb-1">
-            <input
-              class="form-control"
-              placeholder="*not-set*"
-              name="dp"
-              ngbDatepicker
-              #d="ngbDatepicker"
-              formControlName="expirydate"
-              id="inputExpiryDate"
-            />
-            <div class="input-group-append">
-              <button
-                class="btn btn-outline-secondary"
-                (click)="d.toggle()"
-                type="button"
-              >
-                <i class="far fa-calendar-alt"></i>
-              </button>
+            <div class="col-sm">
+              <label for="inputExpiryDate" class="form-label">
+                Expiry Date
+              </label>
+              <div class="input-group mb-1">
+                <input
+                  class="form-control"
+                  placeholder="*not-set*"
+                  name="dp"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                  formControlName="expirydate"
+                  id="inputExpiryDate"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    (click)="d.toggle()"
+                    type="button"
+                  >
+                    <i class="far fa-calendar-alt"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-          <label for="inputDeleteDate" class="form-label"> Delete Date </label>
-          <div class="input-group mb-1">
-            <input
-              class="form-control"
-              placeholder=""
-              name="dp"
-              ngbDatepicker
-              #d2="ngbDatepicker"
-              formControlName="deletedate"
-              id="inputDeleteDate"
-            />
-            <div class="input-group-append">
-              <button
-                class="btn btn-outline-secondary"
-                (click)="d2.toggle()"
-                type="button"
-                disabled
-              >
-                <i class="far fa-calendar-alt"></i>
-              </button>
+            <div class="col-sm">
+              <label for="inputDeleteDate" class="form-label">
+                Delete Date
+              </label>
+              <div class="input-group mb-1">
+                <input
+                  class="form-control"
+                  placeholder=""
+                  name="dp"
+                  ngbDatepicker
+                  #d2="ngbDatepicker"
+                  formControlName="deletedate"
+                  id="inputDeleteDate"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    (click)="d2.toggle()"
+                    type="button"
+                    disabled
+                  >
+                    <i class="far fa-calendar-alt"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -441,15 +457,29 @@
     </div>
 
     <div class="col-sm-6 mb-1">
-      <div class="form-check">
-        <input
-          type="checkbox"
-          formControlName="showSecondaryAdress"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="flexCheckChecked">
-          Show Secondary Address
-        </label>
+      <div class="row ml-2">
+        <div class="form-check col">
+          <input
+            type="checkbox"
+            formControlName="postonhold"
+            class="form-check-input"
+            id="postonholdInput"
+          />
+          <label class="form-check-label" for="postonholdInput">
+            Post On Hold?
+          </label>
+        </div>
+        <div class="form-check col">
+          <input
+            type="checkbox"
+            formControlName="showSecondaryAdress"
+            class="form-check-input"
+            id="showsecondaryaddressInput"
+          />
+          <label class="form-check-label" for="showsecondaryaddressInput">
+            Show Secondary Address
+          </label>
+        </div>
       </div>
 
       <div class="input-group" *ngIf="f.showSecondaryAdress.value">
