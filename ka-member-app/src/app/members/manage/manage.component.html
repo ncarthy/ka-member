@@ -8,15 +8,15 @@
       routerLink="/members/edit/{{ member && member.id }}"
       class="btn btn-primary mr-1"
     >
-      Member Details
+      <span class="d-none d-sm-inline">Member </span>Details
     </button>
     <button
-    type="button"
-    routerLink="/members/transactions/{{ member && member.id }}"
-    class="btn btn-secondary mr-1"
-  >
-    Payments
-  </button>
+      type="button"
+      routerLink="/members/transactions/{{ member && member.id }}"
+      class="btn btn-secondary mr-1"
+    >
+      Payments
+    </button>
     <button (click)="goBack()" class="btn btn-outline-dark">
       Close &times;
     </button>
@@ -80,9 +80,7 @@
         <div class="col-sm-5">
           <div class="col p-0">
             <div class="input-group mb-1">
-              <span class="input-group-text col-4" id="status-label"
-                >Type</span
-              >
+              <span class="input-group-text col-4" id="status-label">Type</span>
               <select
                 formControlName="statusID"
                 id="statusSelect"
@@ -290,24 +288,4 @@
       </div>
     </form>
   </div>
-  <div class="col-sm-4">
-    <small *ngIf="f.username.value"
-    >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
-  >
-    <div class="card">      
-      <transaction-add-edit
-        [member]="member"
-        [transaction]="transactionToEdit"
-        [mostRecentTransaction]="transactions && transactions[0]"        
-        (reloadRequested)="onReloadRequested($event)"        
-      ></transaction-add-edit>
-    </div>
-  </div>
 </div>
-
-<transaction-list
-  [transactions]="transactions"
-  (reloadRequested)="onReloadRequested($event)"
-  (loading)="(loading)"
-  (editRequested)="onEditRequested($event)"
-></transaction-list>

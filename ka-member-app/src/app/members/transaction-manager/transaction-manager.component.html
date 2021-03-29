@@ -6,17 +6,10 @@
     <button
       type="button"
       routerLink="/members/edit/{{ member && member.id }}"
-      class="btn btn-primary mr-1 d-none d-sm-inline"
+      class="btn btn-primary mr-1"
     >
-      Member Details
+      <span class="d-none d-sm-inline">Member </span>Details
     </button>
-    <button
-    type="button"
-    routerLink="/members/edit/{{ member && member.id }}"
-    class="btn btn-primary mr-1 d-sm-none"
-  >
-    Details
-  </button>    
     <button
       type="button"
       routerLink="/members/manage/{{ member && member.id }}"
@@ -24,7 +17,9 @@
     >
       Subscription
     </button>
-    <button (click)="goBack()" class="btn btn-outline-dark">Close &times;</button>
+    <button (click)="goBack()" class="btn btn-outline-dark">
+      Close &times;
+    </button>
   </div>
 </div>
 <div class="row mb-3">

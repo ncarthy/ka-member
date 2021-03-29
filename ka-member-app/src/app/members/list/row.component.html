@@ -71,7 +71,7 @@
     class="btn btn-sm btn-primary mr-1 mb-1"
     [disabled]="member.isUpdating"
   >
-    <span *ngIf="!member.isUpdating">Member Details</span>
+    <span class="d-none d-sm-inline">Member </span>Details
   </button>
   <button
     routerLink="/members/manage/{{ member.id }}"

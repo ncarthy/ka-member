@@ -152,7 +152,7 @@ export class MemberRowComponent {
     from(modalRef.result)
       .subscribe((success) => {
         /* save transaction */
-      })
+      }, (error:any) => {})
       .add(() => (this.member.isUpdating = false));
   }
 
