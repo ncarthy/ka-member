@@ -1,1 +1,48 @@
-<p>transaction-manager works!</p>
+<div class="row justify-content-between align-items-start">
+  <div class="col">
+    <h1>Transactions</h1>
+  </div>
+  <div class="col-auto">
+    <button
+      type="button"
+      routerLink="/members/edit/{{ member && member.id }}"
+      class="btn btn-primary mr-1 d-none d-sm-inline"
+    >
+      Member Details
+    </button>
+    <button
+    type="button"
+    routerLink="/members/edit/{{ member && member.id }}"
+    class="btn btn-primary mr-1 d-sm-none"
+  >
+    Details
+  </button>    
+    <button
+      type="button"
+      routerLink="/members/manage/{{ member && member.id }}"
+      class="btn btn-info mr-1"
+    >
+      Subscription
+    </button>
+    <button (click)="goBack()" class="btn btn-outline-dark">Close &times;</button>
+  </div>
+</div>
+<div class="row mb-3">
+  <div class="col-sm-4">
+    <div class="card">
+      <transaction-add-edit
+        [member]="member"
+        [transaction]="transactionToEdit"
+        [mostRecentTransaction]="transactions && transactions[0]"
+        (reloadRequested)="onReloadRequested($event)"
+      ></transaction-add-edit>
+    </div>
+  </div>
+</div>
+
+<transaction-list
+  [transactions]="transactions"
+  (reloadRequested)="onReloadRequested($event)"
+  (loading)="(loading)"
+  (editRequested)="onEditRequested($event)"
+></transaction-list>

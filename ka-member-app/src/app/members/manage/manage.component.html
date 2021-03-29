@@ -3,7 +3,23 @@
     <h1>Subscription Manager</h1>
   </div>
   <div class="col-auto">
-    <button (click)="goBack()" class="btn btn-outline-dark">&times;</button>
+    <button
+      type="button"
+      routerLink="/members/edit/{{ member && member.id }}"
+      class="btn btn-primary mr-1"
+    >
+      Member Details
+    </button>
+    <button
+    type="button"
+    routerLink="/members/transactions/{{ member && member.id }}"
+    class="btn btn-secondary mr-1"
+  >
+    Payments
+  </button>
+    <button (click)="goBack()" class="btn btn-outline-dark">
+      Close &times;
+    </button>
   </div>
 </div>
 <div class="row mb-3">

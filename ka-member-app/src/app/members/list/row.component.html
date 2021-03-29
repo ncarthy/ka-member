@@ -61,35 +61,35 @@
 <td class="w-25">
   <button
     (click)="addTransaction($event)"
-    class="btn btn-sm btn-success mr-1"
+    class="btn btn-sm btn-success mr-1 mb-1"
     *ngIf="showButton(ButtonName.ADDTX)"
   >
     <span>Add Pmt</span>
   </button>
   <button
     routerLink="/members/edit/{{ member.id }}"
-    class="btn btn-sm btn-primary mr-1"
+    class="btn btn-sm btn-primary mr-1 mb-1"
     [disabled]="member.isUpdating"
   >
-    <span *ngIf="!member.isUpdating">Details</span>
+    <span *ngIf="!member.isUpdating">Member Details</span>
   </button>
   <button
     routerLink="/members/manage/{{ member.id }}"
-    class="btn btn-sm btn-info mr-1"
+    class="btn btn-sm btn-info mr-1 mb-1"
     [disabled]="member.isUpdating"
   >
     <span>Subscription</span>
   </button>
   <button
   routerLink="/members/transactions/{{ member.id }}"
-  class="btn btn-sm btn-dark mr-1"
+  class="btn btn-sm btn-secondary mr-1 mb-1"
   [disabled]="member.isUpdating"
 >
   <span>Payments</span>
 </button>
   <button
     (click)="anonymizeMember($event)"
-    class="btn btn-sm btn-warning"
+    class="btn btn-sm btn-warning mr-1 mb-1"
     [disabled]="member.isUpdating"
     *ngIf="showButton(ButtonName.ANONYMIZE)"
   >
@@ -101,7 +101,7 @@
   </button>
   <button
     (click)="setToFormer($event)"
-    class="btn btn-sm btn-warning"
+    class="btn btn-sm btn-warning mr-1 mb-1"
     [disabled]="member.isUpdating"
     *ngIf="showButton(ButtonName.SETTOFORMER)"
   >
@@ -113,7 +113,7 @@
   </button>
   <button
     (click)="deleteMember($event)"
-    class="btn btn-sm btn-danger btn-delete-member"
+    class="btn btn-sm btn-danger btn-delete-member mb-1"
     [disabled]="member.isDeleting"
     *ngIf="showButton(ButtonName.DELETE)"
   >

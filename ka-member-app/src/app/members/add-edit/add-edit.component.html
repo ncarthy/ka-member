@@ -4,7 +4,23 @@
     <h1 *ngIf="isMemberEdit">Edit Member</h1>
   </div>
   <div class="col-auto">
-    <button (click)="goBack()" class="btn btn-outline-dark">&times;</button>
+    <button
+      type="button"
+      routerLink="/members/manage/{{ id }}"
+      class="btn btn-info mr-1"
+    >
+      Subscription
+    </button>
+    <button
+    type="button"
+    routerLink="/members/transactions/{{ id }}"
+    class="btn btn-secondary mr-1"
+  >
+    Payments
+  </button>
+    <button (click)="goBack()" class="btn btn-outline-dark">
+      Close &times;
+    </button>
   </div>
 </div>
 <div *ngIf="loading">
@@ -32,20 +48,6 @@
       <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
     </div>
     <div class="col-sm d-flex justify-content-end" *ngIf="isMemberEdit">
-      <button
-        type="button"
-        routerLink="/members/manage/{{ id }}"
-        class="btn btn-info mr-1"
-      >
-        Subscription
-      </button>
-      <button
-        type="button"
-        routerLink="/members/transactions/{{ id }}"
-        class="btn btn-dark mr-1"
-      >
-        Payments
-      </button>
       <button
         type="button"
         *ngIf="user.isAdmin && f['statusID'].value !== 9"
@@ -537,7 +539,7 @@
         <button
           type="button"
           routerLink="/members/transactions/{{ id }}"
-          class="btn btn-dark mr-1"
+          class="btn btn-secondary mr-1"
         >
           Payments
         </button>
