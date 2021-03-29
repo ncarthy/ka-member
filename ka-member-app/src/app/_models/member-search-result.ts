@@ -20,6 +20,7 @@ export class MemberSearchResult {
     paymenttype: string
     bankaccount: string
     email: string;
+    postonhold: boolean;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
     
@@ -45,6 +46,7 @@ export class MemberSearchResult {
         this.email = obj && obj.email || null;
         this.paymenttype = obj && obj.paymenttype || null;
         this.bankaccount = obj && obj.bankaccount || null;
+        this.postonhold = obj && obj.postonhold;
     }
 
     mysqlDateConvert(m: string) : string{
