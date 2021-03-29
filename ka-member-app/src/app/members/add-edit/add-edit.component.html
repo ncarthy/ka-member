@@ -15,7 +15,7 @@
 <!--The *ngIf is in place to stop errors of 'Expression has changed after it was checked.'-->
 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
   <!-- Buttons -->
-  <div class="col-sm-6 d-flex justify-content-between">
+  <div class="col-sm d-flex justify-content-between">
     <div class="form-group">
       <button
         type="submit"
@@ -30,6 +30,22 @@
         Save
       </button>
       <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
+    </div>
+    <div *ngIf="isMemberEdit">
+      <button
+        type="button"
+        routerLink="/members/manage/{{ id }}"
+        class="btn btn-info mr-1"
+      >
+        Subscription
+      </button>
+      <button
+        type="button"
+        routerLink="/members/transactions/{{ id }}"
+        class="btn btn-info mr-1"
+      >
+        Transactions
+      </button>
     </div>
     <div *ngIf="isMemberEdit && user.isAdmin">
       <a
@@ -81,17 +97,28 @@
     class="list-group list-group-flush"
   >
     <div class="row">
-      <div class="col-sm">
-        <h5>Name {{ i + 1 }}</h5>
+      <div class="col-sm-2">
+        <h5>Name-{{ i + 1 }}</h5>
       </div>
       <div class="col-sm">
         <div class="row">
-          <div class="col-sm">H</div>
+          <div class="col-sm">
+            <div class="input-group mb-1">
+              <span class="input-group-text col-4" id="bankpayerref-addon1"
+                >Honorific
+              </span>
+              <input
+                type="text"
+                formControlName="honorific"
+                class="form-control text-right"
+              />
+            </div>
+          </div>
           <div class="col-sm">F</div>
           <div class="col-sm">S</div>
         </div>
       </div>
-      <div class="col-sm">
+      <div class="col-sm-1">
         <button
           type="button"
           [disabled]="loading"
@@ -197,10 +224,10 @@
     </div>
     <!-- End of Names-->
 
-    <!-- Status (aka Membership type), Note & Bank Ref -->
+    <!-- Status/Type (aka Membership type), Note & Bank Ref -->
     <div class="col-sm-6 mb-1">
       <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="dates-label">Status</span>
+        <span class="input-group-text col-4" id="dates-label">Type</span>
         <div class="card p-2 col-8">
           <select
             formControlName="statusID"
@@ -229,14 +256,15 @@
         <span class="input-group-text col-4" id="bankpayerref-addon1"
           >Bank Ref
         </span>
-        <textarea
+        <input
+          type="text"
           class="form-control"
           formControlName="bankpayerref"
           aria-label="BankPayerRef"
           aria-describedby="bankpayerref-addon1"
           placement="bottom"
           ngbTooltip="The payment reference found on a bank statement. May be left blank."
-        ></textarea>
+        />
       </div>
     </div>
     <!--End of Status, Note & Bank Refo-->

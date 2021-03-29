@@ -24,6 +24,7 @@ import {
   TransactionAddModalComponent,
   TransactionDeleteConfirmModalComponent,
 } from './modals';
+import { TransactionManagerComponent } from './transaction-manager/transaction-manager.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import {
     TransactionAddModalComponent,
     TransactionDeleteConfirmModalComponent,
     TransactionAddEditComponent,
+    TransactionManagerComponent,
   ],
   providers: [
     { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
