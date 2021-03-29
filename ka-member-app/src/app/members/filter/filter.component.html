@@ -36,9 +36,15 @@
               <a class="btn btn-link" (click)="onReset()">Reset</a>
             </div>
             <div class="col" *ngIf="false">
-              <!-- Hide it for now -->
+              <!-- 'container="body"'' allows dropdown to overflow parent container into body-->
               <div ngbDropdown container="body">
-                <a class="btn btn-link" id="filterSettings" ngbDropdownToggle
+                <a
+                  class="btn btn-link"
+                  id="filterSettings"
+                  ngbDropdownToggle
+                  placement="bottom"
+                  ngbTooltip="Settings"
+                  container="body"
                   ><i class="fas fa-cog"></i
                 ></a>
                 <div ngbDropdownMenu>
