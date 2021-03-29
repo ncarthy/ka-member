@@ -8,6 +8,7 @@ import {
   ADDRESS_API_URL,
 } from '@app/_services';
 
+import { AlertComponent } from './alert-component/alert.component';
 import { AddressFormComponent } from './address-form/address-form.component';
 import { SearchBoxComponent } from './address-form/search-box.component';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
@@ -15,11 +16,13 @@ import { ToastContainerComponent } from './toast-container/toast-container.compo
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   declarations: [
+    AlertComponent,
     AddressFormComponent,
     SearchBoxComponent,
     ToastContainerComponent,
   ],
   exports: [
+    AlertComponent,
     AddressFormComponent,
     CommonModule,
     FormsModule,

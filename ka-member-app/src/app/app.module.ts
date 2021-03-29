@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AuthenticationService } from './_services';
-import { AlertComponent } from './_components';
 
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
@@ -33,7 +32,6 @@ import { SharedModule } from '@app/shared/shared.module';
         AppComponent,
         HomeComponent,
         LoginComponent,
-        AlertComponent,
         ReportsComponent      
     ],
     providers: [
