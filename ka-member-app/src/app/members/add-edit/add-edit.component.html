@@ -42,9 +42,9 @@
       <button
         type="button"
         routerLink="/members/transactions/{{ id }}"
-        class="btn btn-info mr-1"
+        class="btn btn-dark mr-1"
       >
-        Transactions
+        Payments
       </button>
     </div>
     <div *ngIf="isMemberEdit && user.isAdmin">
@@ -94,118 +94,40 @@
 
   <div
     *ngFor="let name of namesFormGroups; let i = index"
-    class="list-group list-group-flush"
+    class="list-group list-group-flush mb-1"
   >
-    <div class="row">
-      <div class="col-sm-2">
-        <h5>Name-{{ i + 1 }}</h5>
-      </div>
-      <div class="col-sm">
-        <div class="row">
-          <div class="col-sm">
-            <div class="input-group mb-1">
-              <span class="input-group-text col-4" id="bankpayerref-addon1"
-                >Honorific
-              </span>
-              <input
-                type="text"
-                formControlName="honorific"
-                class="form-control text-right"
-              />
-            </div>
-          </div>
-          <div class="col-sm">F</div>
-          <div class="col-sm">S</div>
+    <div class="list-group-item">
+      <div [formGroup]="name" class="form-row">
+        <div class="col-sm-auto">
+          <h5>Name {{ i + 1 }}</h5>
         </div>
-      </div>
-      <div class="col-sm-1">
-        <button
-          type="button"
-          [disabled]="loading"
-          class="mr-3"
-          (click)="onAddName()"
-          placement="bottom"
-          ngbTooltip="Add new name"
-        >
-          <span
-            *ngIf="loading"
-            class="spinner-border spinner-border-sm mr-1"
-          ></span>
-          +
-        </button>
-        <button
-          *ngIf="i !== 0"
-          type="button"
-          class="close"
-          (click)="onRemoveName(i)"
-          placement="bottom"
-          ngbTooltip="Remove name"
-        >
-          <span>&times;</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-1">
-    <!-- Names -->
-    <div
-      *ngFor="let name of namesFormGroups; let i = index"
-      class="list-group list-group-flush col-sm-6 mb-1"
-    >
-      <div class="list-group-item ml-3">
-        <div class="d-flex justify-content-between">
-          <h5 class="card-title">Name {{ i + 1 }}</h5>
-          <div class="mr-1">
-            <button
-              type="button"
-              [disabled]="loading"
-              class="mr-3"
-              (click)="onAddName()"
-              placement="bottom"
-              ngbTooltip="Add new name"
-            >
-              <span
-                *ngIf="loading"
-                class="spinner-border spinner-border-sm mr-1"
-              ></span>
-              +
-            </button>
-            <button
-              *ngIf="i !== 0"
-              type="button"
-              class="close"
-              (click)="onRemoveName(i)"
-              placement="bottom"
-              ngbTooltip="Remove name"
-            >
-              <span>&times;</span>
-            </button>
-          </div>
-        </div>
-        <div [formGroup]="name" class="form-row">
-          <div class="form-group col">
-            <label>Honorific</label>
+        <div class="form-group col-sm">
+          <div class="row m-0">
+            <label class="col-sm-auto">Honorific</label>
             <input
               type="text"
               formControlName="honorific"
-              class="form-control text-right"
+              class="col-sm form-control text-right"
             />
           </div>
-          <div class="form-group col">
-            <label>First Name</label>
+        </div>
+        <div class="form-group col-sm">
+          <div class="row m-0">
+            <label class="col-sm-auto">First Name</label>
             <input
               type="text"
               formControlName="firstname"
-              class="form-control text-right"
+              class="col-sm form-control text-right"
             />
           </div>
-          <div class="form-group col">
-            <label>Surname</label>
+        </div>
+        <div class="form-group col-sm">
+          <div class="row m-0">
+            <label class="col-sm-auto">Surname</label>
             <input
               type="text"
               formControlName="surname"
-              class="form-control text-right"
+              class="col-sm form-control text-right"
               [ngClass]="{
                 'is-invalid': submitted && name.controls.surname.errors
               }"
@@ -215,14 +137,42 @@
               class="invalid-feedback"
             >
               <div *ngIf="ticket.controls.surname.errors.required">
-                Surname is required
+                Surname is required, First Name and Honorific are optional
               </div>
             </div>
           </div>
         </div>
+        <div class="col-sm-1">
+          <button
+            type="button"
+            [disabled]="loading"
+            class="mr-3"
+            (click)="onAddName()"
+            placement="bottom"
+            ngbTooltip="Add new name"
+          >
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm mr-1"
+            ></span>
+            +
+          </button>
+          <button
+            *ngIf="i !== 0"
+            type="button"
+            class="close"
+            (click)="onRemoveName(i)"
+            placement="bottom"
+            ngbTooltip="Remove name"
+          >
+            <span>&times;</span>
+          </button>
+        </div>
       </div>
     </div>
-    <!-- End of Names-->
+  </div>
+
+  <div class="row mb-1">
 
     <!-- Status/Type (aka Membership type), Note & Bank Ref -->
     <div class="col-sm-6 mb-1">
@@ -357,7 +307,7 @@
           <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
         </div>
       </div>
-      <div class="input-group mb-2">
+      <div class="input-group mb-1">
         <span class="input-group-text col-4" id="email2-label">Email 2</span>
         <input
           type="email"
@@ -383,7 +333,7 @@
           </div>
         </div>
       </div>
-      <div class="input-group mb-2">
+      <div class="input-group mb-1">
         <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
         <input
           type="text"
@@ -401,10 +351,10 @@
     <!-- End of Emails & Phones-->
 
     <!-- Dates (expiry, join & delete)-->
-    <div class="col-sm-6 mb-1">
+    <div class="col-sm mb-1">
       <div class="input-group">
-        <span class="input-group-text col-4" id="dates-label">Dates</span>
-        <div class="card p-3 col-8">
+        <span class="input-group-text col-2" id="dates-label">Dates</span>
+        <div class="card p-3 col-10">
           <label for="inputJoinDate" class="form-label"> Join Date </label>
           <div class="input-group mb-1">
             <input
@@ -473,6 +423,8 @@
       </div>
     </div>
     <!-- End of Dates-->
+
+    <div class="w-100"></div>
 
     <!-- Show Primary Address-->
     <div class="col-sm-6 mb-1">
