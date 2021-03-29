@@ -27,11 +27,10 @@
     <ngb-panel title="Filter">
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="d-flex align-items-center justify-content-between">
-          <button ngbPanelToggle class="btn btn-link p-0" *ngIf="!working">Filter</button>
-          <span
-            *ngIf="working"
-            class="spinner-border spinner-border-sm"
-          ></span>
+          <button ngbPanelToggle class="btn btn-link p-0" *ngIf="!working">
+            Filter
+          </button>
+          <span *ngIf="working" class="spinner-border spinner-border-sm"></span>
           <div class="row justify-content-end mb-2 mr-2">
             <div class="col">
               <a class="btn btn-link" (click)="onReset()">Reset</a>
@@ -199,7 +198,9 @@
                     [value]="YesNoAny.ANY"
                     checked
                   />
-                  <label class="form-check-label" for="email_any"> Any </label>
+                  <label class="form-check-label" for="email_any">
+                    Either
+                  </label>
                 </div>
               </div>
             </div>
@@ -245,7 +246,7 @@
                     checked
                   />
                   <label class="form-check-label" for="postonholdany">
-                    Any
+                    Either
                   </label>
                 </div>
               </div>
