@@ -99,7 +99,7 @@ class MemberFilter{
                         `m`.`membership_idmembership` AS `idmembership`,
                         `ms`.`name` AS `membershiptype`,
                         IFNULL(pt.name,'') as paymenttype, IFNULL(b.name,'') as bankaccount,
-                        m.email1, m.email2
+                        m.email1, m.email2, m.postonhold
                         FROM " . $this->tablename . " temp
                         INNER JOIN `member` `m` ON temp.idmember = m.idmember
                         INNER JOIN `membershipstatus` `ms` ON (`m`.`membership_idmembership` = `ms`.`idmembership`)
@@ -148,7 +148,8 @@ class MemberFilter{
                     "paymenttype" => $paymenttype,
                     "bankaccount" => $bankaccount,
                     "lasttransactiondate" => $lasttransactiondate,
-                    "email" => $email1
+                    "email" => $email1,
+                    "postonhold" => $postonhold?true:false,
                 );
         
                 // create un-keyed list
