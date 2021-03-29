@@ -424,13 +424,18 @@ class Member{
         $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
 
         /* Remove name */
-        $query = "DELETE FROM `membername` WHERE member_idmember = " . $this->id . " ;";
-        $this->conn->query($query);
+        $query = "DELETE FROM `membername` WHERE member_idmember = :id ;";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
+        $stmt->execute(); 
+
         /* Insert dummy name */
         $query = "INSERT INTO `membername` 
             ( `honorific`, `firstname`, `surname`, `member_idmember`) 
-            VALUES ('', '', 'Anonymized', " . $this->id . ");";
-        $this->conn->query($query);
+            VALUES ('', '', 'Anonymized', :id );";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
+        $stmt->execute(); 
 
 
         $query = "UPDATE
@@ -516,10 +521,14 @@ class Member{
         $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
 
         /* delete from FK-lined tables first */
-        $query = "DELETE FROM `transaction` WHERE member_idmember = " . $this->id . " ;";
-        $this->conn->query($query);
-        $query = "DELETE FROM `membername` WHERE member_idmember = " . $this->id . " ;";
-        $this->conn->query($query);
+        $query = "DELETE FROM `transaction` WHERE member_idmember = :idmember ;";
+        $stmt = $this->conn->prepare($query); 
+        $stmt->bindParam(":idmember", $this->id, PDO::PARAM_INT); 
+        $stmt->execute();  
+        $query = "DELETE FROM `membername` WHERE member_idmember = :idmember ;";
+        $stmt = $this->conn->prepare($query); 
+        $stmt->bindParam(":idmember", $this->id, PDO::PARAM_INT); 
+        $stmt->execute();  
 
         /* Now delete from member table */
         $query = "DELETE FROM " . $this->table_name . " WHERE idmember = ?";

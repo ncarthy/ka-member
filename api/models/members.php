@@ -196,18 +196,22 @@ class Members{
                             CASE WHEN SUM(amount)>0 AND idmembership IN (5,6) THEN 1 ELSE 0 END as `HonLife`,
                             CASE WHEN SUM(amount) = membershipfee THEN 1 ELSE 0 END as `Correct`
                         FROM vwTransaction t
-                        WHERE `date` >=  '" . $start ."'
-                        AND `date` <= '" . $end . "'
+                        WHERE `date` >=  :start
+                        AND `date` <= :end
                         GROUP BY idmember,membershiptype,Name,businessname
                     );";
-        $this->conn->query($query);
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam (":start", $start);
+        $stmt->bindParam (":end", $end);
+        $stmt->execute();
     }
 
         /* DROP the given temporary table */
       private function dropTemporaryTransactionTable($tablename){
 
         $query = "DROP TEMPORARY TABLE IF EXISTS ".$tablename.";";
-        $this->conn->query($query);
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
     }
 
         /* SELECT INTO a a temporary table a list of all idmembers between the start and end dates for members
@@ -217,12 +221,15 @@ class Members{
         $query = "CREATE TEMPORARY TABLE IF NOT EXISTS ".$tablename." AS (      
                         SELECT `member_idmember` as `idmember`, Min(idtransaction) as first_transaction
                         FROM `transaction` t
-                        WHERE `date` >=  '" . $start ."'
-                        AND `date` <= '" . $end . "'
+                        WHERE `date` >=  :start
+                        AND `date` <= :end
                         GROUP BY `idmember`
                         HAVING Count(*) > 1
                     );";
-        $this->conn->query($query);
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam (":start", $start);
+        $stmt->bindParam (":end", $end);
+        $stmt->execute();
     }
 
     private function extractMember($row) {

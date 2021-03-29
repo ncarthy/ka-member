@@ -146,17 +146,15 @@ class MemberCtl{
       echo json_encode(
         array(
           "message" => "Member with id=$model->id was deleted.",
-          "id" => $model->id
-          , JSON_NUMERIC_CHECK)
-      , JSON_NUMERIC_CHECK);
+          "id" => $model->id)
+          , JSON_NUMERIC_CHECK);
     } else{
         http_response_code(422);  
         echo json_encode(
           array(
             "message" => "Unable to DELETE row.",
-            "id" => $model->id
-            , JSON_NUMERIC_CHECK)
-        );
+            "id" => $model->id)
+            , JSON_NUMERIC_CHECK);
     }
   }
 

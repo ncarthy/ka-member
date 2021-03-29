@@ -299,7 +299,8 @@ class MemberFilter{
                     WHERE email1 IS NOT NULL AND email1 != ''
                     ;";
         }
-        $this->conn->query($query);        
+        $stmt = $this->conn->prepare($query);  
+        $stmt->execute();      
     }
 
     public function setPostOnHold($postonhold){    
@@ -310,7 +311,8 @@ class MemberFilter{
                     FROM " . $this->tablename . "
                     WHERE postonhold IS NOT NULL AND postonhold != 0                    
                     ;";
-                $this->conn->query($query);
+                    $stmt = $this->conn->prepare($query);  
+                    $stmt->execute(); 
                 break;
 
             case 'y':
@@ -319,7 +321,8 @@ class MemberFilter{
                     FROM " . $this->tablename . "
                     WHERE postonhold IS NULL OR postonhold = 0
                     ;";
-                $this->conn->query($query);
+                    $stmt = $this->conn->prepare($query);  
+                    $stmt->execute(); 
                 break;
 
             default:
@@ -363,7 +366,8 @@ class MemberFilter{
                     FROM " . $this->tablename . "
                     WHERE deletedate IS NOT NULL
                     ;"; 
-        $this->conn->query($query);        
+        $stmt = $this->conn->prepare($query);  
+        $stmt->execute();       
     }
 
     /* Update filter to remove members who have not been deleted */
@@ -372,14 +376,16 @@ class MemberFilter{
                     FROM " . $this->tablename . "
                     WHERE deletedate IS NULL
                     ;";
-        $this->conn->query($query);        
+        $stmt = $this->conn->prepare($query);  
+        $stmt->execute();       
     }
 
         /* DROP the given temporary table */
       private function dropTemporaryMemberTable($tablename){
 
         $query = "DROP TEMPORARY TABLE IF EXISTS `".$tablename."`;";
-        $this->conn->query($query);
+        $stmt = $this->conn->prepare($query);  
+        $stmt->execute();  
     }
 
     /* Create a list of ALL members in the database and with following additional columns:
@@ -402,7 +408,8 @@ class MemberFilter{
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
                         GROUP BY m.idmember
                     );";
-        $this->conn->query($query);
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
 
         $query = "UPDATE `".$tablename."` M, transaction T
                         SET M.lasttransactionid = T.idtransaction,
@@ -410,7 +417,8 @@ class MemberFilter{
                             M.bankaccountID = T.bankID
                         WHERE M.idmember = T.member_idmember AND M.lasttransactiondate = T.`date`;";
 
-        $this->conn->query($query);
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
     }
 
     public function anonymize()
@@ -421,13 +429,14 @@ class MemberFilter{
         $query = "DELETE MN
                     FROM membername MN
                     JOIN `".$this->tablename."` M ON MN.member_idmember = M.idmember;";
-        $this->conn->query($query);
+        $stmt = $this->conn->prepare($query);  
+        $stmt->execute();
 
         /* Insert dummy names */
         $query = "INSERT INTO `membername` (`honorific`, `firstname`, `surname`, `member_idmember`) 
         SELECT '','', 'Anonymized',idmember FROM `".$this->tablename."`;";
-        $this->conn->query($query);
-
+        $stmt = $this->conn->prepare($query);  
+        $stmt->execute();
         
         $query = "UPDATE `member` M,
                     `" . $this->tablename . "` FM
