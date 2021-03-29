@@ -172,89 +172,117 @@ class MemberFilter{
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     LEFT JOIN membername MN ON M.idmember = MN.member_idmember
-                    WHERE MN.member_idmember IS NULL OR MN.surname NOT LIKE '".$surname."%'
+                    WHERE MN.member_idmember IS NULL OR MN.surname NOT LIKE :param
                     ;";
-        $this->conn->query($query);        
+        $this->executeDeleteStringParam($surname, $query);        
     }
     public function setNotSurname($surname){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     LEFT JOIN membername MN ON M.idmember = MN.member_idmember
-                    WHERE MN.member_idmember IS NULL OR MN.surname LIKE '".$surname."%'
+                    WHERE MN.member_idmember IS NULL OR MN.surname LIKE :param
                     ;";
-        $this->conn->query($query);        
+        $this->executeDeleteStringParam($surname, $query);      
     }
 
     public function setBusinessname($businessname){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member M2 ON M.idmember = M2.idmember
-                    WHERE M2.businessname NOT LIKE '".$businessname."%'
+                    WHERE M2.businessname NOT LIKE :param
                     ;";
-        $this->conn->query($query);        
+        $this->executeDeleteStringParam($businessname, $query);        
     }
 
-    public function setBusinessOrSurname($name){      
+    public function setBusinessOrSurname($name){    
         $query = " DELETE M
-                    FROM " . $this->tablename . " M
-                    JOIN member m ON M.idmember = m.idmember
-                    LEFT JOIN membername mn ON m.idmember = mn.member_idmember
-                    WHERE m.businessname NOT LIKE '".$name."%' AND 
-                        (mn.surname NOT LIKE '".$name."%' OR mn.surname IS NULL)
-                    ;";
-        $this->conn->query($query);        
+        FROM " . $this->tablename . " M
+        JOIN member m ON M.idmember = m.idmember
+        LEFT JOIN membername mn ON m.idmember = mn.member_idmember
+        WHERE m.businessname NOT LIKE :param AND 
+            (mn.surname NOT LIKE :param OR mn.surname IS NULL);";
+
+        $this->executeDeleteStringParam($name, $query);
     }
 
     public function setMemberTypeID($membertypeID){      
         $query = " DELETE
                     FROM " . $this->tablename . "
-                    WHERE idmembership != ".$membertypeID."
+                    WHERE idmembership != :param
                     ;";
-        $this->conn->query($query);        
+        $this->executeDeleteIntParam($membertypeID, $query);    
     }
 
     public function setMemberTypeRange($membertypeRange){      
         $query = " DELETE
                     FROM " . $this->tablename . "
-                    WHERE idmembership NOT IN ".$membertypeRange."
+                    WHERE idmembership NOT IN (:param1,:param2)
                     ;";
-        $this->conn->query($query);        
+        $stmt = $this->conn->prepare($query);      
+        $param_clean = htmlspecialchars(strip_tags($membertypeRange));
+
+        $array = explode(",",$param_clean);
+        $stmt->bindParam (":param1", $array[0]);
+        $stmt->bindParam (":param2", $array[1]);
+        $stmt->execute();       
     }
 
     public function setPrimaryCountryID($countryID){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member M2 ON M.idmember = M2.idmember
-                    WHERE M2.countryID IS NULL OR M2.countryID != ".$countryID."
+                    WHERE M2.countryID IS NULL OR M2.countryID != :param
                     ;";
-        $this->conn->query($query);        
+        $this->executeDeleteIntParam($countryID, $query);        
     }
 
     public function setPrimaryAddress($address){      
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member M2 ON M.idmember = M2.idmember
-                    WHERE (M2.`addressfirstline` IS NULL OR M2.`addressfirstline` NOT LIKE '%".$address."%') AND (
-                        M2.`addresssecondline` IS NULL OR M2.`addresssecondline` NOT LIKE '%".$address."%') AND (
-                        M2.`city` IS NULL OR M2.`city` NOT LIKE '%".$address."%')
+                    WHERE (M2.`addressfirstline` IS NULL OR M2.`addressfirstline` NOT LIKE :param) AND (
+                        M2.`addresssecondline` IS NULL OR M2.`addresssecondline` NOT LIKE :param) AND (
+                        M2.`city` IS NULL OR M2.`city` NOT LIKE :param)
                     ;";
-        $this->conn->query($query);        
+        $this->executeDeleteStringParam('%'.$address, $query);      
     }
 
     public function setPaymentTypeID($paymenttypeid){      
         $query = " DELETE 
                         FROM " . $this->tablename . "
-                        WHERE paymenttypeID IS NULL OR paymenttypeID != ".$paymenttypeid."
+                        WHERE paymenttypeID IS NULL OR paymenttypeID != :param
                         ;";
-        $this->conn->query($query);        
+        $this->executeDeleteIntParam($paymenttypeid, $query);        
     }
 
     public function setBankAccountID($bankaccountid){      
         $query = " DELETE 
                         FROM " . $this->tablename . "
-                        WHERE bankaccountid IS NULL OR bankaccountid != ".$bankaccountid."
+                        WHERE bankaccountid IS NULL OR bankaccountid != :param
                         ;";
-        $this->conn->query($query);        
+        $this->executeDeleteIntParam($bankaccountid, $query);     
+    }
+
+    
+    
+    /** Perform the query that reduces the number of Members in temp
+     * table. Uses prepared statements to minimize SQL injection.
+     */
+    private function executeDeleteStringParam($param, $query) {
+        $stmt = $this->conn->prepare($query);      
+        $param_clean = htmlspecialchars(strip_tags($param)).'%';
+        $stmt->bindParam (":param", $param_clean, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+        /** Perform the query that reduces the number of Members in temp
+     * table. Uses prepared statements to minimize SQL injection.
+     */
+    private function executeDeleteIntParam($param, $query) {
+        $stmt = $this->conn->prepare($query);      
+        $param_clean = htmlspecialchars(strip_tags($param));
+        $stmt->bindParam (":param", $param_clean, PDO::PARAM_INT);
+        $stmt->execute();
     }
 
     public function setEmail1($email1){      
@@ -321,9 +349,12 @@ class MemberFilter{
     private function setDateRange($columnname, $start, $end){      
         $query = " DELETE
                     FROM " . $this->tablename . "
-                    WHERE `" . $columnname . "` < '".$start."' OR 
-                    `" . $columnname . "` > '".$end."' OR `" . $columnname . "` IS NULL;";
-        $this->conn->query($query);        
+                    WHERE `" . $columnname . "` < :start OR 
+                    `" . $columnname . "` > :end OR `" . $columnname . "` IS NULL;";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam (":start", $start);
+        $stmt->bindParam (":end", $end);
+        $stmt->execute();       
     }
 
     /* Update filter to remove members who have been deleted */
