@@ -504,4 +504,83 @@
     <p>Form Value: {{ form.value | json }}</p>
     <p>Form Status: {{ form.status | json }}</p>
   </div>
+
+  <!-- Second set of buttons for mobile devices-->
+  <!-- Hidden on larger than 'sm' devices -->
+  <div class="d-sm-none">
+    <div class="row d-flex justify-content-between">
+      <div class="col-sm mb-1">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="btn btn-primary"
+          *ngIf="user.isAdmin"
+        >
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm mr-1"
+          ></span>
+          Save
+        </button>
+        <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()"
+          >Reset</a
+        >
+      </div>
+      <div class="col-sm d-flex justify-content-end" *ngIf="isMemberEdit">
+        <button
+          type="button"
+          routerLink="/members/manage/{{ id }}"
+          class="btn btn-info mr-1"
+        >
+          Subscription
+        </button>
+        <button
+          type="button"
+          routerLink="/members/transactions/{{ id }}"
+          class="btn btn-dark mr-1"
+        >
+          Payments
+        </button>
+        <button
+          type="button"
+          *ngIf="user.isAdmin && f['statusID'].value !== 9"
+          class="btn btn-warning mr-1"
+          (click)="onSetToFormer()"
+        >
+          Set to 'Former'
+        </button>
+        <button
+          *ngIf="
+            user.isAdmin &&
+            f['statusID'].value === 9 &&
+            namesFormGroups &&
+            namesFormGroups[0].value.surname !== 'Anonymized'
+          "
+          type="button"
+          [disabled]="loading"
+          class="btn btn-warning mr-1"
+          (click)="onAnonymize()"
+        >
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm mr-1"
+          ></span>
+          Anonymize
+        </button>
+        <button
+          *ngIf="user.isAdmin && f['statusID'].value === 9"
+          type="button"
+          [disabled]="loading"
+          class="btn btn-danger"
+          (click)="onDelete()"
+        >
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm mr-1"
+          ></span>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
 </form>
