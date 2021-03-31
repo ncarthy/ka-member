@@ -1,4 +1,61 @@
-<h5>WORK IN PROGRESS</h5>
+<h2>Reports</h2>
+<div class="row ">
+  <div class="card mb-2 col-sm-10">
+    <h5 class="card-header">Mailing Lists</h5>
+    <div class="card-body">
+      <ul>
+        <li>
+          <a>Excel sheet of addresses for UK Mail</a>
+        </li>
+        <li>
+          <a>Email address list for all active members</a>
+        </li>
+        <li>
+          <a>Email address list chosen by location</a>
+        </li>
+        <li>Members with post on hold</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mb-2  col-sm-10">
+    <h5 class="card-header">Transaction Reports</h5>
+    <div class="card-body">
+      <ul>
+        <li>Summary of payments received</li>
+        <li>List of active members without recent payment (lapsed members)</li>
+        <li>List of members who have paid twice in the last year</li>
+        <li>Recent PayPal payments</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mb-2 col-sm-10">
+    <h5 class="card-header">Database Integrity Checks</h5>
+    <div class="card-body">
+      <ul>
+        <li>
+          Deleted members who are not Contributing Ex-Members or Former Members
+        </li>
+        <li>Contributng Ex-Members who have not paid for 3 years</li>
+        <li>Former Members who have paid in the last year</li>
+        <li>Old former members who are not yet anonymized</li>
+        <li>Members with invalid addresses</li>
+        <li>Members with invalid email addresses</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mb-2 col-sm-10">
+    <h5 class="card-header">Security & Audit</h5>
+    <div class="card-body">
+      <ul>
+        <li>Audit Log</li>
+        <li><a routerLink="/users/suspended/true">List of suspended users</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <p>
   This page will have a list of reports that can be run to interrogate the
@@ -6,9 +63,21 @@
 </p>
 <p>These are some suggested reports</p>
 <ul>
-  <li>Excel sheet of addresses/emails for quarterly mailshot</li>
-  <li>List of contributing ex-members</li>
-  <li>List of Lifetime & Honorary members</li>
+  <li>
+    <a routerLink="/members/country/186" class="text-dark"
+      >Excel sheet of addresses/emails for quarterly mailshot</a
+    >
+  </li>
+  <li>
+    <a routerLink="/members/cem" class="text-dark"
+      >List of contributing ex-members</a
+    >
+  </li>
+  <li>
+    <a routerLink="/members/lifehonorary" class="text-dark"
+      >List of Lifetime & Honorary members</a
+    >
+  </li>
   <li>List of Lapsed members (those who haven't paid in 18mths)</li>
   <li>List of Hon/Life members who still pay annual fees</li>
   <li>List of members who have paid twice in the last 2yrs</li>

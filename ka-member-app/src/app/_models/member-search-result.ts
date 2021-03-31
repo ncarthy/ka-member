@@ -7,6 +7,7 @@ export class MemberSearchResult {
     id: number;
     membershiptype: string;
     name: string;
+    title: string;
     businessname: string;
     note: string;
     addressfirstline: string;
@@ -31,7 +32,7 @@ export class MemberSearchResult {
         this.membershiptype = obj && obj.membershiptype || null;
 
         this.name = obj && obj.name || null;
-
+        this.title = obj && obj.title || null;
         this.businessname = obj && obj.businessname || null;
 
         this.note = obj && obj.note || null;

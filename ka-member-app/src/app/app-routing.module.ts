@@ -5,10 +5,10 @@ import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
-import { ReportsComponent } from './reports/reports.component';
 
 const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
 const membersModule = () => import('./members/members.module').then(x => x.MembersModule);
+const reportsModule = () => import('./reports/reports.module').then(x => x.ReportsModule);
 
 const routes: Routes = [
     {
@@ -28,7 +28,7 @@ const routes: Routes = [
     },
     {
         path: 'reports',
-        component: ReportsComponent,
+        loadChildren: reportsModule,
         canActivate: [AuthGuard]
     },
     {

@@ -315,8 +315,8 @@ class Members{
                     "name" => $name,
                     "title" => $title,
                     "businessname" => $businessname,
-                    "address1" => $addressfirstline,
-                    "address2" => $addresssecondline,
+                    "addressfirstline" => $addressfirstline,
+                    "addresssecondline" => $addresssecondline,
                     "city" => $city,
                     "postcode" => $postcode,
                     "countryID" => $countryID
