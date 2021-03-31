@@ -232,6 +232,138 @@ class Members{
         $stmt->execute();
     }
 
+    public function mailingList(){
+
+        //select all data
+        $query = "SELECT m.idmember, 
+                    IFNULL(GROUP_CONCAT( CONCAT(CASE
+                                        WHEN `mn`.`honorific` = '' THEN ''
+                                        ELSE CONCAT(`mn`.`honorific`, ' ')
+                                    END,
+                                    CASE
+                                        WHEN `mn`.`firstname` = '' THEN ''
+                                        ELSE CONCAT(`mn`.`firstname`, ' ')
+                                    END,
+                                    `mn`.`surname`) SEPARATOR ' & '),
+                            '') AS `name`,
+                    IFNULL(`m`.`title`,'') AS `title`,        
+                    IFNULL(`m`.`businessname`,'') AS `businessname`,
+                    CASE
+                        WHEN
+                            `m`.`countryID` <> 186
+                                AND `m`.`country2ID` = 186
+                        THEN
+                            `m`.`addressfirstline2`
+                        ELSE `m`.`addressfirstline`
+                    END AS `addressfirstline`,
+                    CASE
+                        WHEN
+                            `m`.`countryID` <> 186
+                                AND `m`.`country2ID` = 186
+                        THEN
+                            `m`.`addresssecondline2`
+                        ELSE `m`.`addresssecondline`
+                    END AS `addresssecondline`,
+                    CASE
+                        WHEN
+                            `m`.`countryID` <> 186
+                                AND `m`.`country2ID` = 186
+                        THEN
+                            `m`.`city2`
+                        ELSE `m`.`city`
+                    END AS `city`,
+                    CASE
+                        WHEN
+                            `m`.`countryID` <> 186
+                                AND `m`.`country2ID` = 186
+                        THEN
+                            `m`.`postcode2`
+                        ELSE `m`.`postcode`
+                    END AS `postcode`,
+                    CASE
+                        WHEN
+                            `m`.`countryID` <> 186
+                                AND `m`.`country2ID` = 186
+                        THEN
+                            `m`.`country2ID`
+                        ELSE `m`.`countryID`
+                    END AS `countryID`
+                    FROM `member` `m`
+                    LEFT JOIN membername `mn` ON `m`.`idmember` = mn.member_idmember
+                    WHERE `m`.postonhold = 0 AND 							# Not post on hold
+                        `m`.membership_idmembership NOT IN (7,8,9) AND      # Active member
+                        IFNULL(m.addressfirstline,'') != ''					# Valid Address
+                    GROUP BY m.idmember
+                    HAVING countryID = 186									# UK only
+                    ORDER BY postcode;
+                    ";
+
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num;
+        $members_arr["records"]=array();
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+            
+                $member=array(
+                    "id" => $idmember,
+                    "name" => $name,
+                    "title" => $title,
+                    "businessname" => $businessname,
+                    "address1" => $addressfirstline,
+                    "address2" => $addresssecondline,
+                    "city" => $city,
+                    "postcode" => $postcode,
+                    "countryID" => $countryID
+                );
+                
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
+        }
+        
+        return $members_arr;
+
+    }
+
+    public function emailList(){
+
+        //select all data
+        $query = "SELECT email1 as email
+                    FROM member
+                    WHERE membership_idmembership NOT IN (7,8,9) AND email1 IS NOT NULL AND email1 != ''
+                    UNION
+                    SELECT email2
+                    FROM member
+                    WHERE membership_idmembership NOT IN (7,8,9) AND email2 IS NOT NULL AND email2 != ''
+                    ";
+
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num;
+        $members_arr["records"]=array();
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+                
+                // create un-keyed list
+                array_push ($members_arr["records"], $email);
+            }
+        }
+        
+        return $members_arr;
+
+    }
+
     private function extractMember($row) {
         extract($row);
             

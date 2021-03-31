@@ -14,4 +14,11 @@ export class MembersService {
         return this.http.get<MemberCountResponse>(`${baseUrl}/summary`);
     }
 
+    getMailingList() {
+        return this.http.get<MemberCountResponse>(`${baseUrl}/mailinglist`);
+    }
+
+    getEmailList() {
+        return this.http.get<MemberCountResponse>(`${baseUrl}/emaillist`);
+    }
 }

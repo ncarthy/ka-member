@@ -42,7 +42,8 @@ ALTER TABLE `member` ADD `postonhold` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'W
 ALTER TABLE `member` CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'UK';
 UPDATE `member` SET area = '' WHERE area = 'UK';
 UPDATE `member` SET city = 'London', county = '' WHERE county = 'London';
-UPDATE `member` SET country = 'UK' WHERE idmember IN (180,280);
+UPDATE `member` SET city = 'London', county = '' WHERE city = 'London England';
+UPDATE `member` SET country = 'UK' WHERE idmember IN (180,280,918,920,921);
 UPDATE member SET addressfirstline = addresssecondline, addresssecondline='' WHERE addressfirstline = '' AND addresssecondline !='';
 
 ALTER TABLE `membershipstatus` ADD `multiplier` DECIMAL(11,2) NOT NULL DEFAULT '1' AFTER `name`;
@@ -353,8 +354,12 @@ INSERT INTO country(id,name)VALUES(1,"Afghanistan"),
 ALTER TABLE `member` ADD `countryID` INT NULL AFTER `country`;
 ALTER TABLE `member` ADD `country2ID` INT NULL AFTER `country2`;
 UPDATE `member` SET countryID = 186 WHERE country = 'UK';
-UPDATE `member` SET countryID = 187 WHERE idmember IN (119,139);
+UPDATE `member` SET countryID = 187 WHERE idmember IN (119,139,506);
+UPDATE `member` SET countryID = 9 WHERE idmember IN (617,618);
 UPDATE `member` SET countryID = 180 WHERE idmember = 71;
+UPDATE `member` SET countryID = 117 WHERE idmember = 514;
+UPDATE `member` SET countryID = 31 WHERE idmember = 533;
+UPDATE `member` SET countryID = 157 WHERE idmember = 740;
 UPDATE `member` SET countryID = 36 WHERE idmember = 349;
 UPDATE `member` SET countryID = 77 WHERE idmember = 460;
 UPDATE `member` SET countryID = 65 WHERE idmember = 311;

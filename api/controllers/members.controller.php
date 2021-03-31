@@ -26,11 +26,24 @@ class MembersCtl{
     echo json_encode($model->execute(), JSON_NUMERIC_CHECK); //$model is of type MemberFilter
   }
 
-  //$months is th enumber of months since last payment
+  public static function mailinglist(){  
+
+    $model = new Members();
+
+    echo json_encode($model->mailingList(), JSON_NUMERIC_CHECK);
+  }
+
+  public static function emaillist(){
+    $model = new Members();
+
+    echo json_encode($model->emailList(), JSON_NUMERIC_CHECK);
+  }
+  
   public static function lapsed(){  
 
     $model = new Members();
 
+    //$months is the number of months since last payment
     $months = isset($_GET['months']) ? $_GET['months'] : 18;
 
     echo json_encode($model->lapsedMembers($months), JSON_NUMERIC_CHECK);
