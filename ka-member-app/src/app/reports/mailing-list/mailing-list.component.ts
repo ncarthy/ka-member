@@ -8,7 +8,7 @@ import { MembersService } from '@app/_services';
 })
 export class MailingListComponent implements OnInit {
   members!: any[];
-  simpleMembers: any[] = new Array();
+  csvMembers: any[] = new Array();
   loading: boolean = false;
 
   constructor(private membersService: MembersService) { }
@@ -21,18 +21,22 @@ export class MailingListComponent implements OnInit {
       .subscribe((response) => {
         this.loading = false;
         this.members = response.records;
+
+        // Exclude the id and country properties from what wull be outputted to CSV
         this.members.forEach(element => {
-          const {id,countryID, ...newObj} = element;
-          newObj.country='';
-          this.simpleMembers.push(newObj);
+          const {id,countryID, ...csvMember} = element;
+          csvMember.country=''; // blank country
+          this.csvMembers.push(csvMember);
         });
       });
   }
 
+
   exportToCSV() : void {
+    //From https://www.npmjs.com/package/export-to-csv
     const options = { 
       fieldSeparator: ',',
-      quoteStrings: '"',
+      //quoteStrings: '"',
       decimalSeparator: '.',
       showLabels: false, 
       showTitle: false,
@@ -45,7 +49,7 @@ export class MailingListComponent implements OnInit {
    
   const csvExporter = new ExportToCsv(options);
    
-  csvExporter.generateCsv(this.simpleMembers);
+  csvExporter.generateCsv(this.csvMembers);
   }
 
 }
