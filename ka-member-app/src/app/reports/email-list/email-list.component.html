@@ -1,1 +1,35 @@
-<p>email-list works!</p>
+<div class="row justify-content-between">
+  <div class="col-sm-6">
+    <h1>{{ emails && emails.length }} Email Addresses Found</h1>
+  </div>
+  <div class="col-sm-2">
+    <button routerLink="/reports" class="btn btn-outline-dark">
+      Close &times;
+    </button>
+  </div>
+</div>
+<!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
+<table class="table table-sm table-striped table-hover table-responsive">
+  <caption>
+    {{
+      emails && emails.length
+    }}
+    email addresses found
+  </caption>
+  <thead>
+    <tr class="m-0">
+      <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
+      <th scope="col" class="w-25">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let email of emails" class="m-0">
+      <td>{{ email }}</td>
+    </tr>
+    <tr *ngIf="!emails">
+      <td colspan="1" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>

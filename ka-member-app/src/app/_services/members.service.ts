@@ -15,10 +15,10 @@ export class MembersService {
     }
 
     getMailingList() {
-        return this.http.get<MemberCountResponse>(`${baseUrl}/mailinglist`);
+        return this.http.get<any>(`${baseUrl}/mailinglist`);
     }
 
     getEmailList() {
-        return this.http.get<MemberCountResponse>(`${baseUrl}/emaillist`);
+        return this.http.get<any>(`${baseUrl}/emaillist`);
     }
 }
