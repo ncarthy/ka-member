@@ -1,1 +1,42 @@
-<p>mailing-list works!</p>
+<div class="row justify-content-between">
+    <div class="col-sm-6">
+      <h1>{{ members && members.length }} Active UK Members</h1>
+    </div>
+    <div class="col-sm-2">
+      <button routerLink="/reports" class="btn btn-outline-dark">
+        Close &times;
+      </button>
+    </div>
+  </div>
+  <!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
+  <table class="table table-sm table-striped table-hover table-responsive">
+    <caption>
+      {{
+        members && members.length
+      }}
+      members found
+    </caption>
+    <thead>
+      <tr class="m-0">
+        <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
+        <th scope="col" class="w-25">Name</th>
+        <th scope="col">Title</th>
+        <th scope="col">Business Name</th>
+        <th scope="col">Line 1</th>
+        <th scope="col">Line 2</th>
+        <th scope="col">City</th>
+        <th scope="col">Postcode</th>
+        <th scope="col">Country</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let member of members" class="m-0">
+        <td>{{ member }}</td>
+      </tr>
+      <tr *ngIf="!members">
+        <td colspan="1" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>

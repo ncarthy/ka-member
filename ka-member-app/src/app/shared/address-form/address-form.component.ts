@@ -15,7 +15,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
 
 import { CountryService } from '@app/_services';
 import { Address, Country, GetAddressAddress } from '@app/_models';
@@ -67,23 +66,27 @@ export class AddressFormComponent
   }
 
   ngOnInit(): void {
-    this.countryService
-      .getAll()
-      .subscribe((countryArray) => {
-        this.countries = countryArray;
-        this.uk = countryArray.filter((c: Country) => c.name === 'United Kingdom')[0];
-        if (this.address && this.address.addressfirstline) {
-          this.addressForm.controls['addressfirstline'].setValue(this.address.addressfirstline);
-          this.addressForm.controls['addresssecondline'].setValue(this.address.addresssecondline);
-          this.addressForm.controls['city'].setValue(this.address.city);
-          this.addressForm.controls['county'].setValue(this.address.county);
-          this.addressForm.controls['country'].setValue(this.address.country);
-          this.addressForm.controls['postcode'].setValue(this.address.postcode);
-          this.showFormFields = true;
-        } else {
-          this.addressForm.controls['country'].setValue(this.uk.id);
-        }
-      });
+    this.countryService.getAll().subscribe((countryArray) => {
+      this.countries = countryArray;
+      this.uk = countryArray.filter(
+        (c: Country) => c.name === 'United Kingdom'
+      )[0];
+      if (this.address && this.address.addressfirstline) {
+        this.addressForm.controls['addressfirstline'].setValue(
+          this.address.addressfirstline
+        );
+        this.addressForm.controls['addresssecondline'].setValue(
+          this.address.addresssecondline
+        );
+        this.addressForm.controls['city'].setValue(this.address.city);
+        this.addressForm.controls['county'].setValue(this.address.county);
+        this.addressForm.controls['country'].setValue(this.address.country);
+        this.addressForm.controls['postcode'].setValue(this.address.postcode);
+        this.showFormFields = true;
+      } else {
+        this.addressForm.controls['country'].setValue(this.uk.id);
+      }
+    });
 
     this.subscription.add(
       this.addressForm.valueChanges.subscribe((value: Address) => {
@@ -116,16 +119,16 @@ export class AddressFormComponent
   }
 
   updateAddresses(results: GetAddressAddress[]): void {
-    this.addresses = results;    
+    this.addresses = results;
   }
 
-  onAddressChange(address : GetAddressAddress) : void {
+  onAddressChange(address: GetAddressAddress): void {
     this.showFormFields = true;
     this.addressForm.controls['addressfirstline'].setValue(address.line1);
     this.addressForm.controls['addresssecondline'].setValue(address.line2);
     this.addressForm.controls['city'].setValue(address.town);
     this.addressForm.controls['county'].setValue(address.county);
-    this.addressForm.controls['postcode'].setValue(address.postcode);
     this.addressForm.controls['country'].setValue(address.country.id);
+    this.addressForm.controls['postcode'].setValue(address.postcode);
   }
 }

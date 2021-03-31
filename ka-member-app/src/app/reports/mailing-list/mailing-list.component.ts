@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './mailing-list.component.html'
 })
 export class MailingListComponent implements OnInit {
+  members!: string[];
 
   constructor() { }
 
