@@ -7,8 +7,8 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { ReportsLayoutComponent } from './layout.component';
 import { ReportsComponent } from './reports.component';
-import { MailingListComponent} from './mailing-list/mailing-list.component';
-
+import { MailingListComponent} from './mailing-list';
+import { EmailListComponent} from './email-list';
 
 @NgModule({
     imports: [
@@ -21,6 +21,7 @@ import { MailingListComponent} from './mailing-list/mailing-list.component';
         ReportsComponent,
         ReportsLayoutComponent,
         MailingListComponent,
+        EmailListComponent,
     ]
 })
 export class ReportsModule { }

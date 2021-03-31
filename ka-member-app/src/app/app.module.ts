@@ -11,13 +11,10 @@ import { AuthenticationService } from './_services';
 
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
-import { ReportsComponent } from './reports';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MembersModule } from './members/members.module';
 import { SharedModule } from '@app/shared/shared.module';
-import { MailingListComponent } from './reports/mailing-list/mailing-list.component';
-import { EmailListComponent } from './reports/email-list/email-list.component';
 
 @NgModule({
     imports: [
@@ -33,10 +30,7 @@ import { EmailListComponent } from './reports/email-list/email-list.component';
     declarations: [
         AppComponent,
         HomeComponent,
-        LoginComponent,
-        ReportsComponent,
-        MailingListComponent,
-        EmailListComponent      
+        LoginComponent,    
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

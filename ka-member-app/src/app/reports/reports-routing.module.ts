@@ -3,16 +3,16 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ReportsLayoutComponent } from './layout.component';
 import { ReportsComponent } from './reports.component';
-//import { UserAddEditComponent } from './add-edit.component';
+import { MailingListComponent } from './mailing-list';
+import { EmailListComponent } from './email-list';
 
 const routes: Routes = [
     {
         path: '', component: ReportsLayoutComponent,
         children: [
             { path: '', component: ReportsComponent },
-            /*{ path: 'add', component: UserAddEditComponent },
-            { path: 'edit/:id', component: UserAddEditComponent },
-            { path: 'suspended/:suspended', component: UserListComponent }*/
+            { path: 'mailing-list', component: MailingListComponent },
+            { path: 'email-list', component: EmailListComponent },
         ]
     }
 ];
