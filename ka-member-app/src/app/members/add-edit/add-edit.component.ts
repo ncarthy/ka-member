@@ -129,7 +129,6 @@ export class MemberAddEditComponent implements OnInit {
     // Fill country dropdown
     this.countryService
       .getAll()
-      .pipe(first())
       .subscribe((x) => {
         this.countries = x;
       });
@@ -137,7 +136,6 @@ export class MemberAddEditComponent implements OnInit {
     // Fill status dropdown
     this.membershipStatusService
       .getAll()
-      .pipe(first())
       .subscribe((x) => {
         this.statuses = x;
         if (this.formMode === FormMode.Add) {
@@ -347,7 +345,6 @@ export class MemberAddEditComponent implements OnInit {
   onSetToFormer() {
     this.memberService
       .setToFormer(this.id)
-      .pipe(first())
       .subscribe(
         (result: any) => {
           this.alertService.success('Set to "former member" succeeded.', {
@@ -369,7 +366,6 @@ export class MemberAddEditComponent implements OnInit {
       (success) => {
         this.memberService
           .delete(this.id)
-          .pipe(first())
           .subscribe(
             (result: any) => {
               this.alertService.success('Member deleted', {

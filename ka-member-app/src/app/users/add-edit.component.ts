@@ -59,7 +59,6 @@ export class UserAddEditComponent implements OnInit {
 
         if (this.formMode != UserFormMode.Add) {
             this.userService.getById(this.id)
-                .pipe(first())
                 .subscribe(x => this.form.patchValue(x))
                 .add(() => this.loading = false);
         }
@@ -98,7 +97,6 @@ export class UserAddEditComponent implements OnInit {
 
     private createUser() {
         this.userService.create(this.form.value)
-            .pipe(first())
             .subscribe(() => {
                 this.alertService.success('User added', { keepAfterRouteChange: true });
                 this.router.navigate(['../'], { relativeTo: this.route });
@@ -108,7 +106,6 @@ export class UserAddEditComponent implements OnInit {
 
     private updateUser() {
         this.userService.update(this.id, this.form.value)
-            .pipe(first())
             .subscribe(() => {
                 this.alertService.success('User updated', { keepAfterRouteChange: true });
 

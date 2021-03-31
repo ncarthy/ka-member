@@ -69,7 +69,6 @@ export class AddressFormComponent
   ngOnInit(): void {
     this.countryService
       .getAll()
-      .pipe(first())
       .subscribe((countryArray) => {
         this.countries = countryArray;
         this.uk = countryArray.filter((c: Country) => c.name === 'United Kingdom')[0];
