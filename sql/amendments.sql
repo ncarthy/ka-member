@@ -372,6 +372,8 @@ UPDATE `member` SET postcode = 'SW7 1EW' WHERE idmember = 159;
 UPDATE `member` SET postcode = 'W4 1BZ' WHERE idmember = 882;
 UPDATE `member` SET postcode2 = 'SE11 5HS' WHERE idmember = 16;
 UPDATE `member` SET addressfirstline='8 Stratford Road', addresssecondline= '', postcode = 'W8 6QD' WHERE idmember = 897;
+UPDATE `member` SET addresssecondline= 'Kingstone Winslow', city='Swindon' WHERE idmember = 126;
+UPDATE `member` SET addresssecondline= 'Charlbury Road' WHERE idmember = 507;
 
 DROP VIEW IF EXISTS `vwNames`;
 DROP VIEW IF EXISTS `vwMember`;

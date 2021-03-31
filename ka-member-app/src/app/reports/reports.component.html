@@ -1,4 +1,13 @@
-<h2>Reports</h2>
+<div class="row justify-content-between">
+  <div class="col-sm-6">
+    <h2>Reports</h2>
+  </div>
+  <div class="col-sm-3">
+    <button (click)="goBack()" class="btn btn-outline-dark">
+      Close &times;
+    </button>
+  </div>
+</div>
 <div class="row ">
   <div class="card mb-2 col-sm-10">
     <h5 class="card-header">Mailing Lists</h5>
@@ -22,9 +31,10 @@
     <h5 class="card-header">Transaction Reports</h5>
     <div class="card-body">
       <ul>
-        <li>Summary of payments received</li>
+        <li>Summary of payments received by payment type/ bank account.</li>
         <li>Lapsed Members: active members without a recent payment</li>
-        <li>List of members who have paid twice in the last year</li>
+        <li>List of members who have paid twice</li>
+        <li>Life/Honorary members who are still paying</li>
         <li>Recent PayPal payments</li>
       </ul>
     </div>
@@ -56,35 +66,3 @@
     </div>
   </div>
 </div>
-
-<p>
-  This page will have a list of reports that can be run to interrogate the
-  database
-</p>
-<p>These are some suggested reports</p>
-<ul>
-  <li>
-    <a routerLink="/members/country/186" class="text-dark"
-      >Excel sheet of addresses/emails for quarterly mailshot</a
-    >
-  </li>
-  <li>
-    <a routerLink="/members/cem" class="text-dark"
-      >List of contributing ex-members</a
-    >
-  </li>
-  <li>
-    <a routerLink="/members/lifehonorary" class="text-dark"
-      >List of Lifetime & Honorary members</a
-    >
-  </li>
-  <li>List of Lapsed members (those who haven't paid in 18mths)</li>
-  <li>List of Hon/Life members who still pay annual fees</li>
-  <li>List of members who have paid twice in the last 2yrs</li>
-  <li>Summary of membership fess received by payment type/ bank account.</li>
-  <ul>
-    <br />
-
-    <button (click)="goBack()" class="btn btn-sm btn-secondary">Go Back</button>
-  </ul>
-</ul>
