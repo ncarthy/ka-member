@@ -22,6 +22,7 @@ import {DateFilterType} from './date-filter.enum';
     bankaccountid?: number;
     maxresults?: number;
     dateranges?: DateRangeFilter[];
+    membertyperange?: string;
 
     constructor(obj?: any) {
 
@@ -39,6 +40,7 @@ import {DateFilterType} from './date-filter.enum';
         this.bankaccountid = obj && obj.bankaccountid || null;
         this.maxresults = obj && obj.maxresults || null;
         this.dateranges = obj && obj.dateranges || null;
+        this.membertyperange = obj && obj.membertyperange || null;
     }
 
     /* overload toString */
@@ -96,6 +98,10 @@ import {DateFilterType} from './date-filter.enum';
                 }
             });
         }
+
+        if (this.membertyperange) {
+            str = str.concat('&','membertyperange=',this.membertyperange);
+        }  
 
         return str;
     }
