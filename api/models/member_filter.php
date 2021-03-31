@@ -222,8 +222,8 @@ class MemberFilter{
         $param_clean = htmlspecialchars(strip_tags($membertypeRange));
 
         $array = explode(",",$param_clean);
-        $stmt->bindParam (":param1", $array[0]);
-        $stmt->bindParam (":param2", $array[1]);
+        $stmt->bindParam (":param1", $array[0], PDO::PARAM_INT);
+        $stmt->bindParam (":param2", $array[1], PDO::PARAM_INT);
         $stmt->execute();       
     }
 

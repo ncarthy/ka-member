@@ -21,7 +21,7 @@ class MembersCtl{
   public static function lifeAndHonorary(){  
 
     $model = new MemberFilter();
-    $model->setMemberTypeRange('(5,6)');
+    $model->setMemberTypeRange('5,6');
     $model->setNotDeleted();
     echo json_encode($model->execute(), JSON_NUMERIC_CHECK); //$model is of type MemberFilter
   }
