@@ -54,7 +54,7 @@ export class AddressSearchService {
             line3: item[2],
             town: item[3],
             county: item[4],
-            postcode: postcode.toUpperCase(),
+            postcode: this.restoreSpace(postcode.toUpperCase()),
             country: {id: 186, name: "United Kingdom"}
           });
         });
@@ -62,5 +62,14 @@ export class AddressSearchService {
     );
 
     return  addresses$;
+  }
+
+  private restoreSpace(postcode: string) : string {
+    
+    if (!postcode.includes(' ')) {
+        const index = postcode.length - 3;
+        return postcode.slice(0, index) + " " + postcode.slice(index);
+    }
+    return postcode;
   }
 }
