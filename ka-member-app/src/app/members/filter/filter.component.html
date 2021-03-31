@@ -21,15 +21,26 @@
       </div>
     </div>
   </div>
-
+  
   <!--<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">-->
-  <ngb-accordion #acc="ngbAccordion">
+  <ngb-accordion #acc="ngbAccordion" (panelChange)="beforeChange($event)">
     <ngb-panel title="Filter">
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="d-flex align-items-center justify-content-between">
-          <button ngbPanelToggle class="btn btn-link p-0" *ngIf="!working">
-            Filter
+          <div>
+          <button
+            ngbPanelToggle
+            class="btn btn-link mb-2"
+            *ngIf="!working"
+            placement="bottom"
+            ngbTooltip="Show/Hide Filter Options"
+            container="body"
+          >
+          <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
+          <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
           </button>
+          <span>Member Filter</span>
+        </div>
           <span *ngIf="working" class="spinner-border spinner-border-sm"></span>
           <div class="row justify-content-end mb-2 mr-2">
             <div class="col">
@@ -53,6 +64,22 @@
                   <button ngbDropdownItem>Move</button>
                   <div class="dropdown-divider"></div>
                   <button ngbDropdownItem>Delete</button>
+                </div>
+              </div>
+              <div ngbDropdown container="body">
+                <a
+                  class="btn btn-link"
+                  id="filterShare"
+                  ngbDropdownToggle
+                  placement="bottom"
+                  ngbTooltip="Export"
+                  container="body"
+                  >Export</a
+                >
+                <div ngbDropdownMenu>
+                  <button ngbDropdownItem>CSV</button>
+                  <button ngbDropdownItem>Excel</button>
+                  <button ngbDropdownItem>PDF</button>
                 </div>
               </div>
             </div>

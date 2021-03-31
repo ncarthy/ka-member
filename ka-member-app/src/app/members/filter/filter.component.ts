@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { KeyValue } from '@angular/common';
+import {NgbPanelChangeEvent} from '@ng-bootstrap/ng-bootstrap';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 import {
@@ -46,7 +47,8 @@ export class MemberFilterComponent implements OnInit {
     new MemberFilter({ removed: YesNoAny.NO })
   );
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
-  working:boolean = false;
+  working: boolean = false;
+  panelOpen: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,6 +72,10 @@ export class MemberFilterComponent implements OnInit {
   }
   get dateRangesFormGroups() {
     return this.dr.controls as FormGroup[];
+  }
+
+  beforeChange($event: NgbPanelChangeEvent) {
+    this.panelOpen = $event.nextState;
   }
 
   ngOnInit(): void {
@@ -111,7 +117,10 @@ export class MemberFilterComponent implements OnInit {
       .pipe(
         map((filter: MemberFilter) => filter.toString()),
         distinctUntilChanged(),
-        tap(() => {this.loading.emit(true);this.working=true;}),
+        tap(() => {
+          this.loading.emit(true);
+          this.working = true;
+        }),
         switchMap((urlParameters: string) =>
           this.MemberFilterService.filter(urlParameters)
         )
@@ -119,7 +128,7 @@ export class MemberFilterComponent implements OnInit {
       .subscribe((results: MemberSearchResult[]) => {
         this.filteredMembers.emit(results);
         this.filter.emit(this.filterSubject.value);
-        this.working=false;
+        this.working = false;
       })
       .add(this.loading.emit(false));
 
@@ -129,6 +138,27 @@ export class MemberFilterComponent implements OnInit {
         new MemberFilter({
           removed: YesNoAny.NO,
           membertypeid: this.route.snapshot.params['id'],
+        })
+      );
+    } else if (this.router.url.substring(0, 16) === '/members/country') {
+      this.filterSubject.next(
+        new MemberFilter({
+          removed: YesNoAny.NO,
+          countryid: this.route.snapshot.params['countryid'],
+        })
+      );
+    } else if (this.router.url.substring(0, 12) === '/members/cem') {
+      this.filterSubject.next(
+        new MemberFilter({
+          removed: YesNoAny.YES,
+          membertypeid: 8,
+        })
+      );
+    } else if (this.router.url.substring(0, 22) === '/members/lifehonorary') {
+      this.filterSubject.next(
+        new MemberFilter({
+          removed: YesNoAny.NO,
+          membertyperange: '5,6',
         })
       );
     }
@@ -183,7 +213,6 @@ export class MemberFilterComponent implements OnInit {
   /* Set the date range control values according to the select value */
   /* Index is supplied because it is a FormArray */
   onDateRangeChanged(index: number, value: DateRangeEnum) {
-    
     const dtRng = this.dateRangeAdapter.enumToDateRange(value);
 
     const fg: FormGroup = this.dateRangesFormGroups[index];
