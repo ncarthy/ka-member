@@ -9,6 +9,7 @@ import { ReportsLayoutComponent } from './layout.component';
 import { ReportsComponent } from './reports.component';
 import { MailingListComponent} from './mailing-list';
 import { EmailListComponent} from './email-list';
+import { MemberListComponent } from './member-list/member-list.component';
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { EmailListComponent} from './email-list';
         ReportsLayoutComponent,
         MailingListComponent,
         EmailListComponent,
+        MemberListComponent,
     ]
 })
 export class ReportsModule { }
