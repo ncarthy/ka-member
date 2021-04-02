@@ -499,10 +499,10 @@ class Members{
             "lasttransactiondate" => $lasttransactiondate
         );
 
-        if ($membershipfee) {
+        if (isset($membershipfee)) {
             $member['membershipfee'] = $membershipfee;
         }
-        if ($amount) {
+        if (isset($amount)) {
             $member['amount'] = $amount;
         }
 
