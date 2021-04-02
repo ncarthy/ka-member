@@ -15,9 +15,10 @@ export class MemberSearchResult {
     city:string;    
     postcode: string;
     country: string;
-    reminderdate: Date;
     deletedate: Date;
+    reminderdate: string | null;
     lasttransactiondate: string | null;
+    count: number;
     paymenttype: string
     bankaccount: string
     email: string;
@@ -41,17 +42,17 @@ export class MemberSearchResult {
         this.city = obj && obj.city || null;
         this.postcode = obj && obj.postcode || null;
         this.country = obj && obj.country || null;
-        this.reminderdate = obj && obj.reminderdate || null;
         this.deletedate = obj && obj.deletedate || null;
-        this.lasttransactiondate = obj && obj.lasttransactiondate && this.mysqlDateConvert(obj.lasttransactiondate) || null;
+        this.reminderdate = obj && obj.reminderdate && this.convertDateToUKLocale(obj.reminderdate) || null;
+        this.lasttransactiondate = obj && obj.lasttransactiondate && this.convertDateToUKLocale(obj.lasttransactiondate) || null;
         this.email = obj && obj.email || null;
         this.paymenttype = obj && obj.paymenttype || null;
         this.bankaccount = obj && obj.bankaccount || null;
+        this.count = obj && obj.count || 0;
         this.postonhold = obj && obj.postonhold;
     }
 
-    mysqlDateConvert(m: string) : string{
-
+    convertDateToUKLocale(m: string) : string{
         const t:string[] = m.split(/[- :]/);
         const d = new Date(Date.UTC(+t[0], +t[1]-1, +t[2]));
         return d.toLocaleDateString("en-GB"); 

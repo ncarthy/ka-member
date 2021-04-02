@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
-import { MemberCountResponse } from '@app/_models';
+import { MemberCountResponse, MemberSearchResult } from '@app/_models';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const baseUrl = `${environment.apiUrl}/members`;
 
@@ -21,4 +23,16 @@ export class MembersService {
     getEmailList() {
         return this.http.get<any>(`${baseUrl}/emaillist`);
     }
+
+    getLapsed(months: number): Observable<MemberSearchResult[]> {
+        const queryUrl = `${baseUrl}/lapsed?months=${months}`;
+        
+        return this.http.get(queryUrl).pipe(
+          map((response: any) => {
+            return <any>response['records'].map((item: any) => {
+              return new MemberSearchResult(item);
+            });
+          })
+        );
+      }
 }

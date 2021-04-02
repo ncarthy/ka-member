@@ -1,6 +1,18 @@
-<th scope="row">{{ member.name }}</th>
-<td>{{ member.membershiptype }}</td>
-<td class="d-none d-sm-table-cell">{{ member.businessname }}</td>
+<th scope="row" class="d-none d-sm-table-cell">
+  {{ member.name }}<br /><span *ngIf="member.businessname"
+    >({{ member.businessname }})</span
+  >
+</th>
+<th scope="row" class="d-sm-none">
+  {{ member.name }}<br /><span *ngIf="member.businessname"
+    >({{ member.businessname }})<br /></span
+  >- {{ member.membershiptype }} -
+  <br />
+  {{ member.addressfirstline }}<br />
+          {{ member.addresssecondline }}<br *ngIf="member.addresssecondline" />
+          {{ member.postcode }}
+</th>
+<td class="d-none d-sm-table-cell">{{ member.membershiptype }}</td>
 <td class="text-center" class="d-none d-sm-table-cell">
   <div>
     <div class="form-check" *ngIf="member.email">
@@ -71,7 +83,7 @@
     class="btn btn-sm btn-primary mr-1 mb-1"
     [disabled]="member.isUpdating"
   >
-    <span class="d-none d-sm-inline">Member </span>Details
+    Member Details
   </button>
   <button
     routerLink="/members/manage/{{ member.id }}"
