@@ -24,6 +24,7 @@ const routes: Routes = [
             { path: 'noukaddress', component: MemberListComponent },
             { path: 'invalidemails', component: InvalidEmailsComponent },
             { path: 'invalidpostcodes', component: InvalidPostcodesComponent },
+            { path: 'deletedmembers', component: MemberListComponent },
         ]
     }
 ];

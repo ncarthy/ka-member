@@ -109,4 +109,14 @@ export class MembersService {
       })
     );
   }
+
+  getDeletedButNotFormer(): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/deletedbutnotformer`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
 }

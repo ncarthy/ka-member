@@ -1,5 +1,5 @@
 #Sanity Check 1: no deleted members except in 8,9
-# > They should be moved to 8 or 9 or (pending) removed
+# > They should be moved to 8 or 9 or (if pending) removed
 SELECT * FROM vwMember
 WHERE deletedate IS NOT NULL AND membershiptypeid NOT IN (8,9);
 

@@ -404,50 +404,23 @@ class Members{
 
     }
 
-    public function dataIntegrityQuery($report_name, $start, $end){
+    public function deletedButNotFormer(){
 
-        $tablename = '_DataIntegrity_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
-                        
-        $this->dropTemporaryTransactionTable($tablename); // Clear any old table
-
-        // Get transaction data for the time period
-        $this->populateTemporaryTransactionTable($tablename, $start, $end);
-
-        // narrow down the data according to criteria        
-        $query = "SELECT idmember,membershiptypeid,membershiptype,note,name,businessname,addressfirstline,
+        $query = "SELECT 
+                        m.idmember,membershiptypeid,membershiptype,note,`name`,businessname,addressfirstline,
                         addresssecondline,city,postcode,country,updatedate, expirydate, reminderdate, membershipfee,
-                        t.`amount`, t.`lasttransactiondate`,t.`count`
+                        t.`amount`, t.`lasttransactiondate`,t.`count` 
                     FROM vwMember m
-                    JOIN ".$tablename." t ON m.idmember = t.member_idmember";   
-
-        switch ($report_name) {
-            case 'HonLife':
-                $query = $query. " WHERE amount>0 AND membershiptypeid IN (5,6) ORDER BY `lasttransactiondate`;";
-                break;
-            case 'CEM':
-                $query = $query. " WHERE amount>=0 AND membershiptypeid=8 ORDER BY `lasttransactiondate`;";
-                break;
-            case 'Discount':
-                $query = $query. " WHERE amount>=0 AND amount < membershipfee AND membershiptypeid NOT IN(5,6,8) ORDER BY `lasttransactiondate`;";
-                break;
-            case 'Duplicates':
-                $query = $query. " WHERE amount>=0 AND count > 1 ORDER BY `lasttransactiondate`;";
-                break;
-        }
+                    LEFT OUTER JOIN (SELECT member_idmember, COUNT(idtransaction) as `count`, SUM(amount) as `amount`,
+                        MAX(`date`) AS `lasttransactiondate` FROM `transaction` GROUP BY member_idmember) as t ON m.idmember = t.member_idmember
+                    WHERE deletedate IS NOT NULL AND membershiptypeid NOT IN (8,9);";
 
         $stmt = $this->conn->query($query); 
         $num = $stmt->rowCount();
 
         $members_arr=array();
-        $members_arr["start"] = $start;
-        $members_arr["end"] = $end;
-        $members_arr["total"] = 0;  // total amount of fees received
-        $members_arr["expected"] = 0; // expected amount of fees
         $members_arr["count"] = $num; // add the count of rows
         $members_arr["records"]=array();
-
-        $total_received = 0; // sum of member payments as we loop over rows
-        $total_expected = 0; // sum of member fees as we loop over rows
 
         // check if more than 0 record found
         if($num>0){
@@ -455,18 +428,10 @@ class Members{
 
                 $member = $this->extractMember($row);
 
-                $total_received+=$row['amount'];
-                $total_expected+=$row['membershipfee'];
-
                 // create un-keyed list
                 array_push ($members_arr["records"], $member);
             }
         }
-        $members_arr["total"] = $total_received;
-        // honorary and life members aren't expected to pay anything
-        $members_arr["expected"] = $column=='HonLife'?0:$total_expected; 
-
-        $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
 
         return $members_arr;
 

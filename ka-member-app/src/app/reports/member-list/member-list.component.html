@@ -104,7 +104,7 @@
           (click)="setToFormer(member)"
           class="btn btn-sm btn-warning mr-1 mb-1"
           [disabled]="member.isUpdating"
-          *ngIf="user.isAdmin"
+          *ngIf="showButton(ButtonName.SETTOFORMER,member)"
         >
           <span
             *ngIf="member.isUpdating"
@@ -116,7 +116,7 @@
           (click)="sendReminder(member)"
           class="btn btn-sm btn-success mr-1 mb-1"
           [disabled]="member.isUpdating"
-          *ngIf="user.isAdmin"
+          *ngIf="showButton(ButtonName.REMINDER,member)"
         >
           <span
             *ngIf="member.isUpdating"
@@ -128,7 +128,7 @@
           (click)="sendGoCardlessRequest(member)"
           class="btn btn-sm purple-button text-white mr-1 mb-1"
           [disabled]="member.isUpdating"
-          *ngIf="user.isAdmin"
+          *ngIf="showButton(ButtonName.GOCARDLESS,member)"
         >
           <span
             *ngIf="member.isUpdating"
@@ -136,6 +136,18 @@
           ></span>
           GoCardless
         </button>
+        <button
+        (click)="deleteMember(member)"
+        class="btn btn-sm btn-danger mr-1 mb-1"
+        [disabled]="member.isDeleting"
+        *ngIf="showButton(ButtonName.DELETE,member)"
+      >
+        <span
+          *ngIf="member.isDeleting"
+          class="spinner-border spinner-border-sm"
+        ></span>
+        Delete
+      </button>
       </td>
     </tr>
     <tr *ngIf="!members || loading">

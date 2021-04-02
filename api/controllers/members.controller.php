@@ -113,6 +113,11 @@ class MembersCtl{
     echo json_encode($model->invalidPostcodes(), JSON_NUMERIC_CHECK);
   }
 
+  public static function deletedButNotFormer(){  
+    $model = new Members();
+    echo json_encode($model->deletedButNotFormer(), JSON_NUMERIC_CHECK);
+  }
+
   public static function filter(){  
 
     $model = new MemberFilter();
