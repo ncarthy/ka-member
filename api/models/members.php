@@ -401,8 +401,8 @@ class Members{
             
         $member=array(
             "id" => $idmember,
-            "statusID" => $membershiptypeid,
-            "statusname" => $membershiptype,
+            "membershiptypeid" => $membershiptypeid,
+            "membershiptype" => $membershiptype,
             "name" => $name,
             "businessname" => $businessname,
             "note" => $note,
@@ -415,7 +415,7 @@ class Members{
             "expirydate" => $expirydate,
             "reminderdate" => $reminderdate,
             "count" => $count,
-            "last" => $lasttransactiondate
+            "lasttransactiondate" => $lasttransactiondate
         );
 
         return $member;
