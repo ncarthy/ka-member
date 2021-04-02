@@ -397,8 +397,9 @@ CREATE VIEW IF NOT EXISTS  `vwMember` AS
                         END,
                         `mn`.`surname`) SEPARATOR ' & '),
                 '') AS `name`,
-        `m`.`businessname` AS `businessname`,
-        CONCAT(`m`.`note`, ' ') AS `note`,
+        CONCAT(`m`.`businessname`, '') AS `businessname`,
+        CONCAT(`m`.`title`, '') AS `title`,
+        CONCAT(`m`.`note`, '') AS `note`,
         CASE
             WHEN
                 `m`.`countryID` <> 186
