@@ -108,6 +108,11 @@ class MembersCtl{
     echo json_encode($model->invalidEmails(), JSON_NUMERIC_CHECK);
   }
 
+  public static function invalidPostcodes(){  
+    $model = new Members();
+    echo json_encode($model->invalidPostcodes(), JSON_NUMERIC_CHECK);
+  }
+
   public static function filter(){  
 
     $model = new MemberFilter();

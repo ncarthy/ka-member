@@ -1,0 +1,1 @@
+export * from './invalid-postcodes.component';

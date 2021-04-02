@@ -433,6 +433,50 @@ class Members{
 
     }
 
+    public function invalidPostcodes(){
+
+        //select all data
+        $query = "SELECT m.idmember,membershiptype,`name`,m.businessname,m1.postcode as postcode1,'' as postcode2
+                        FROM `vwMember` m
+                        JOIN member m1 ON m.idmember = m1.idmember
+                        WHERE m1.deletedate IS NULL AND m1.countryID=186 AND m1.postcode IS NOT NULL AND m1.postcode != '' AND 
+                            m1.postcode NOT REGEXP '^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$'
+                    UNION
+                        SELECT m.idmember,membershiptype,`name`,m.businessname,'' as postcode1, m1.postcode2
+                        FROM `vwMember` m
+                        JOIN member m1 ON m.idmember = m1.idmember
+                        WHERE m1.deletedate IS NULL AND m1.countryID=186 AND m1.postcode2 IS NOT NULL AND m1.postcode2 != '' AND 
+                        m1.postcode2 NOT REGEXP '^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$';";
+
+        $stmt = $this->conn->query( $query );
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num; // add the count of rows
+        $members_arr["records"]=array();
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+            
+                $member=array(
+                    "id" => $idmember,
+                    "membershiptype" => $membershiptype,
+                    "name" => $name,
+                    "businessname" => $businessname,
+                    "postcode1" => $postcode1,
+                    "postcode2" => $postcode2,
+                );
+                
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
+        }
+
+        return $members_arr;
+
+    }
+
     private function extractMember($row) {
         extract($row);
             

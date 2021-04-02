@@ -368,7 +368,7 @@ ALTER TABLE `member` DROP `country`;
 ALTER TABLE `member` DROP `country2`;
 
 UPDATE `member` SET postcode = 'SW7 1NZ' WHERE idmember = 878;
-UPDATE `member` SET postcode = 'SW7 1EW' WHERE idmember = 159;
+UPDATE `member` SET postcode2 = 'SW7 1EW' WHERE idmember = 159;
 UPDATE `member` SET postcode = 'W4 1BZ' WHERE idmember = 882;
 UPDATE `member` SET postcode2 = 'SE11 5HS' WHERE idmember = 16;
 UPDATE `member` SET addressfirstline='8 Stratford Road', addresssecondline= '', postcode = 'W8 6QD' WHERE idmember = 897;

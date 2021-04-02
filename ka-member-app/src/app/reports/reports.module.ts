@@ -10,6 +10,7 @@ import { ReportsComponent } from './reports.component';
 import { MailingListComponent} from './mailing-list';
 import { EmailListComponent} from './email-list';
 import { InvalidEmailsComponent} from './invalid-emails';
+import { InvalidPostcodesComponent} from './invalid-postcodes';
 import { MemberListComponent } from './member-list/member-list.component';
 
 @NgModule({
@@ -25,7 +26,8 @@ import { MemberListComponent } from './member-list/member-list.component';
         MailingListComponent,
         EmailListComponent,
         MemberListComponent,
-        InvalidEmailsComponent
+        InvalidEmailsComponent,
+        InvalidPostcodesComponent,
     ]
 })
 export class ReportsModule { }

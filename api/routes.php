@@ -101,6 +101,7 @@ $router->mount('/members', function () use ($router) {
     $router->get('/emaillist', 'MembersCtl@emailList');
     $router->get('/noukaddress', 'MembersCtl@noUKAddress');
     $router->get('/invalidemails', 'MembersCtl@invalidEmails');
+    $router->get('/invalidpostcodes', 'MembersCtl@invalidPostcodes');
     $router->get('/filter', 'MembersCtl@filter');
     $router->patch('/', 'MembersCtl@patch');
 });

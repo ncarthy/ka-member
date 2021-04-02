@@ -7,6 +7,7 @@ import { MailingListComponent } from './mailing-list';
 import { EmailListComponent } from './email-list';
 import { MemberListComponent } from './member-list';
 import { InvalidEmailsComponent } from './invalid-emails';
+import { InvalidPostcodesComponent } from './invalid-postcodes';
 
 const routes: Routes = [
     {
@@ -22,6 +23,7 @@ const routes: Routes = [
             { path: 'duplicatepayers', component: MemberListComponent },
             { path: 'noukaddress', component: MemberListComponent },
             { path: 'invalidemails', component: InvalidEmailsComponent },
+            { path: 'invalidpostcodes', component: InvalidPostcodesComponent },
         ]
     }
 ];

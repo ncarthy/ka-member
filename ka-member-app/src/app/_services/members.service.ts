@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { environment } from '@environments/environment';
-import { MemberCountResponse, MemberInvalidEmail, MemberSearchResult } from '@app/_models';
+import {
+  MemberCountResponse,
+  MemberInvalidEmail,
+  MemberInvalidPostcode,
+  MemberSearchResult,
+} from '@app/_models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -91,6 +95,16 @@ export class MembersService {
       map((response: any) => {
         return <any>response['records'].map((item: any) => {
           return new MemberInvalidEmail(item);
+        });
+      })
+    );
+  }
+
+  getInvalidPostcodes(): Observable<MemberInvalidPostcode[]> {
+    return this.http.get(`${baseUrl}/invalidpostcodes`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberInvalidPostcode(item);
         });
       })
     );
