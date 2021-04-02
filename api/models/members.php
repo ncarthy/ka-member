@@ -217,8 +217,7 @@ class Members{
                 AND (countryID = 186 OR country2ID = 186)				# UK only
                 ORDER BY postcode;";
 
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
+        $stmt = $this->conn->query( $query );
         $num = $stmt->rowCount();
 
         $members_arr=array();
@@ -295,7 +294,7 @@ class Members{
                     FROM vwMember m
                     LEFT OUTER JOIN (SELECT member_idmember, COUNT(idtransaction) as `count`, SUM(amount) as `amount`,
                         MAX(`date`) AS `lasttransactiondate` FROM `transaction` GROUP BY member_idmember) as t ON m.idmember = t.member_idmember
-                    WHERE deletedate IS NULL AND country != 'United Kingdom';";
+                    WHERE deletedate IS NULL AND (country != 'United Kingdom' OR addressfirstline = '');";
 
         $stmt = $this->conn->query( $query );
         $num = $stmt->rowCount();
