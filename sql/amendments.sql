@@ -381,7 +381,7 @@ DROP VIEW IF EXISTS `vwMembers`;
 CREATE VIEW IF NOT EXISTS  `vwMember` AS
  SELECT 
         `m`.`idmember` AS `idmember`,
-        `m`.`membership_idmembership` AS `idmembership`,
+        `m`.`membership_idmembership` AS `membershiptypeid`,
         `ms`.`name` AS `membershiptype`,
         IFNULL(`m`.`membership_fee`,
                 `ms`.`membershipfee`) AS `membershipfee`,
@@ -394,9 +394,9 @@ CREATE VIEW IF NOT EXISTS  `vwMember` AS
                             ELSE CONCAT(`mn`.`firstname`, ' ')
                         END,
                         `mn`.`surname`) SEPARATOR ' & '),
-                '') AS `Name`,
+                '') AS `name`,
         `m`.`businessname` AS `businessname`,
-        CONCAT(`m`.`note`, ' ') AS `Note`,
+        CONCAT(`m`.`note`, ' ') AS `note`,
         CASE
             WHEN
                 `m`.`countryID` <> 186
@@ -567,13 +567,13 @@ CREATE VIEW IF NOT EXISTS `vwTransaction` AS
     SELECT 
         `t`.`idtransaction` AS `idtransaction`,
         `m`.`idmember` AS `idmember`,
-        `m`.`idmembership` AS `idmembership`,
+        `m`.`membershiptypeid` AS `membershiptypeid`,
         `m`.`membershiptype` AS `membershiptype`,
-        `m`.`Name` AS `name`,
+        `m`.`name` AS `name`,
         IFNULL(`m`.`businessname`, '') AS `businessname`,
-        `m`.`Note` AS `note`,
-        `m`.`addressfirstline` AS `address1`,        
-        `m`.`addresssecondline` AS `address2`,
+        `m`.`note` AS `note`,
+        `m`.`addressfirstline` AS `addressfirstline`,        
+        `m`.`addresssecondline` AS `addresssecondline`,
         `m`.`city` AS `city`,
         `m`.`postcode` AS `postcode`,
         `m`.`country` AS `country`,
@@ -582,11 +582,15 @@ CREATE VIEW IF NOT EXISTS `vwTransaction` AS
         `m`.`reminderdate` AS `reminderdate`,
         `m`.`membershipfee` AS `membershipfee`,
         `t`.`date` AS `date`,
+        `t`.`paymenttypeID`,
         `pt`.`name` AS `paymenttype`,
+        `t`.`bankID`,
+        `ba`.`name` AS `bankaccount`,
         `t`.`amount` AS `amount`
     FROM `transaction` `t`
          INNER JOIN `vwMember` `m` ON `t`.`member_idmember` = `m`.`idmember`
-         INNER JOIN `paymenttype` `pt` ON  `t`.`paymenttypeID` = `pt`.`paymenttypeID`;
+         INNER JOIN `paymenttype` `pt` ON  `t`.`paymenttypeID` = `pt`.`paymenttypeID`
+         INNER JOIN `bankaccount` `ba` ON  `t`.`bankID` = `ba`.`bankID`;
 
 DROP TABLE IF EXISTS `osdata`;
 CREATE TABLE IF NOT EXISTS `osdata` (

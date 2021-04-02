@@ -163,17 +163,36 @@ class Members{
     private function tabulateTransactionData($column, $start, $end){
 
         $tablename = '_Transactions_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
-        
-        $query = "SELECT * FROM ".$tablename." WHERE ".$column." = 1 ORDER BY `last`;";               
-
+                        
         $this->dropTemporaryTransactionTable($tablename); // Clear any old table
 
         // Get transaction data for the time period
         $this->populateTemporaryTransactionTable($tablename, $start, $end);
 
-        // narrow down the data according to criteria          
-        $stmt = $this->conn->prepare( $query ); 
-        $stmt->execute();
+        // narrow down the data according to criteria        
+        $query = "SELECT idmember,membershiptypeid,membershiptype,note,name,businessname,addressfirstline,
+                        addresssecondline,city,postcode,country,updatedate, expirydate, reminderdate, membershipfee,
+                        t.`amount`, t.`lasttransactiondate`,t.`count`,
+                        CASE WHEN amount>=0 AND membershiptypeid=8 THEN 1 ELSE 0 END as `CEM`,
+                        CASE WHEN amount>=0 AND amount < membershipfee AND membershiptypeid NOT IN(5,6,8) THEN 1 ELSE 0 END as `Discount`,
+                        CASE WHEN amount>0 AND membershiptypeid IN (5,6) THEN 1 ELSE 0 END as `HonLife`,
+                        CASE WHEN amount = membershipfee THEN 1 ELSE 0 END as `Correct`
+                    FROM vwMember m
+                    JOIN ".$tablename." t ON m.idmember = t.member_idmember";   
+
+        switch ($column) {
+            case 'HonLife':
+                $query = $query. " WHERE amount>0 AND membershiptypeid IN (5,6) ORDER BY `lasttransactiondate`;";
+                break;
+            case 'CEM':
+                $query = $query. " WHERE amount>=0 AND membershiptypeid=8 ORDER BY `lasttransactiondate`;";
+                break;
+            case 'Discount':
+                $query = $query. " WHERE amount>=0 AND amount < membershipfee AND membershiptypeid NOT IN(5,6,8) ORDER BY `lasttransactiondate`;";
+                break;
+        }
+
+        $stmt = $this->conn->query($query); 
         $num = $stmt->rowCount();
 
         $members_arr=array();
@@ -215,22 +234,13 @@ class Members{
     private function populateTemporaryTransactionTable($tablename, $start, $end){
 
         $query = "CREATE TEMPORARY TABLE IF NOT EXISTS ".$tablename." AS (      
-                        SELECT 
-                            idmember,t.idmembership, t.membershiptype,t.`name`, membershipfee,
-                            IFNULL(t.businessname,'') as businessname, t.note as `note`,
-                            `t`.`address1`, `t`.`address2`, `t`.`city`,
-                            `t`.`postcode`, t.country, t.updatedate, t.expirydate,  
-                            t.reminderdate,
-                            SUM(amount) as amount, Max(`date`) as `last`,
-                            COUNT(t.idtransaction) as `count`,
-                            CASE WHEN SUM(amount)>=0 AND idmembership=8 THEN 1 ELSE 0 END as `CEM`,
-                            CASE WHEN SUM(amount)>=0 AND SUM(amount) < membershipfee AND idmembership NOT IN(5,6,8) THEN 1 ELSE 0 END as `Discount`,
-                            CASE WHEN SUM(amount)>0 AND idmembership IN (5,6) THEN 1 ELSE 0 END as `HonLife`,
-                            CASE WHEN SUM(amount) = membershipfee THEN 1 ELSE 0 END as `Correct`
-                        FROM vwTransaction t
-                        WHERE `date` >=  :start
-                        AND `date` <= :end
-                        GROUP BY idmember,membershiptype,Name,businessname
+                    SELECT member_idmember, 
+                        COUNT(idtransaction) as `count`, 
+                        SUM(amount) as `amount`,
+                        MAX(`date`) AS `lasttransactiondate`                     
+                    FROM `transaction` 
+                    WHERE `date` >=  :start AND `date` <= :end 
+                    GROUP BY member_idmember
                     );";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam (":start", $start);
@@ -417,6 +427,13 @@ class Members{
             "count" => $count,
             "lasttransactiondate" => $lasttransactiondate
         );
+
+        if ($membershipfee) {
+            $member['membershipfee'] = $membershipfee;
+        }
+        if ($amount) {
+            $member['amount'] = $amount;
+        }
 
         return $member;
     }
