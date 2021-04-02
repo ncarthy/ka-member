@@ -15,6 +15,9 @@ const routes: Routes = [
             { path: 'mailing-list', component: MailingListComponent },
             { path: 'email-list', component: EmailListComponent },
             { path: 'lapsed', component: MemberListComponent },
+            { path: 'cem', component: MemberListComponent },
+            { path: 'honlife', component: MemberListComponent },
+            { path: 'discount', component: MemberListComponent },
         ]
     }
 ];

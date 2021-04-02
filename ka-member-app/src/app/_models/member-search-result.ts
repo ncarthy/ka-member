@@ -23,6 +23,7 @@ export class MemberSearchResult {
     bankaccount: string
     email: string;
     postonhold: boolean;
+    amount: boolean;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
     
@@ -50,6 +51,7 @@ export class MemberSearchResult {
         this.bankaccount = obj && obj.bankaccount || null;
         this.count = obj && obj.count || 0;
         this.postonhold = obj && obj.postonhold;
+        this.amount = obj && obj.amount;
     }
 
     convertDateToUKLocale(m: string) : string{

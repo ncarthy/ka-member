@@ -10,29 +10,39 @@ const baseUrl = `${environment.apiUrl}/members`;
 
 @Injectable({ providedIn: 'root' })
 export class MembersService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getSummary() {
-        return this.http.get<MemberCountResponse>(`${baseUrl}/summary`);
-    }
+  getSummary() {
+    return this.http.get<MemberCountResponse>(`${baseUrl}/summary`);
+  }
 
-    getMailingList() {
-        return this.http.get<any>(`${baseUrl}/mailinglist`);
-    }
+  getMailingList() {
+    return this.http.get<any>(`${baseUrl}/mailinglist`);
+  }
 
-    getEmailList() {
-        return this.http.get<any>(`${baseUrl}/emaillist`);
-    }
+  getEmailList() {
+    return this.http.get<any>(`${baseUrl}/emaillist`);
+  }
 
-    getLapsed(months: number): Observable<MemberSearchResult[]> {
-        const queryUrl = `${baseUrl}/lapsed?months=${months}`;
-        
-        return this.http.get(queryUrl).pipe(
-          map((response: any) => {
-            return <any>response['records'].map((item: any) => {
-              return new MemberSearchResult(item);
-            });
-          })
-        );
-      }
+  getLapsed(months: number): Observable<MemberSearchResult[]> {
+    const queryUrl = `${baseUrl}/lapsed?months=${months}`;
+
+    return this.http.get(queryUrl).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
+  getPayingHonlife(): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/payinghonlife`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
 }

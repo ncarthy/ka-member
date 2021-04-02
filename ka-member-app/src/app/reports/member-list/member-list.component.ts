@@ -34,6 +34,16 @@ export class MemberListComponent implements OnInit {
           this.loading = false;
           this.members = response;
         });
+    } else if (this.router.url.includes("honlife")) {
+      this.loading = true;
+      this.title = 'Hon/Life Members Still Paying';
+
+      this.membersService
+        .getPayingHonlife()
+        .subscribe((response : MemberSearchResult[]) => {
+          this.loading = false;
+          this.members = response;
+        });
     }
 
   }
@@ -59,6 +69,12 @@ export class MemberListComponent implements OnInit {
           })
       )
       .add(() => (member.isUpdating = false));
+
+      return false; // don't let click event propagate
+  }
+
+  sendReminder(member: MemberSearchResult) {
+    return false; // don't let click event propagate
   }
 
 }
