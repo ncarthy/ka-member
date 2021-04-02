@@ -75,4 +75,24 @@ export class MembersService {
       })
     );
   }
+
+  getMemberWithoutUKAddress(): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/noukaddress`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
+  getInvalidEmails(): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/invalidemails`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
 }

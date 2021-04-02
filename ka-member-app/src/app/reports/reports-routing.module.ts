@@ -19,6 +19,7 @@ const routes: Routes = [
             { path: 'honlife', component: MemberListComponent },
             { path: 'discount', component: MemberListComponent },
             { path: 'duplicatepayers', component: MemberListComponent },
+            { path: 'noukaddress', component: MemberListComponent },
         ]
     }
 ];

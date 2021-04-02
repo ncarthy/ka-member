@@ -98,6 +98,13 @@ class MembersCtl{
     echo json_encode($model->membersPayingTwice($start, $end), JSON_NUMERIC_CHECK);
   }
 
+  public static function noUKAddress(){  
+
+    $model = new Members();
+
+    echo json_encode($model->noUKAddress(), JSON_NUMERIC_CHECK);
+  }
+
   public static function filter(){  
 
     $model = new MemberFilter();

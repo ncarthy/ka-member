@@ -99,6 +99,7 @@ $router->mount('/members', function () use ($router) {
     $router->get('/duplicatepayers', 'MembersCtl@duplicatepayers');
     $router->get('/mailinglist', 'MembersCtl@mailingList');
     $router->get('/emaillist', 'MembersCtl@emailList');
+    $router->get('/noukaddress', 'MembersCtl@noUKAddress');
     $router->get('/filter', 'MembersCtl@filter');
     $router->patch('/', 'MembersCtl@patch');
 });
