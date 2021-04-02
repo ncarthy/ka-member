@@ -32,13 +32,14 @@ export class MemberListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.router.url.includes('lapsed')) {
+    if (this.router.url.substring(9,16) == 'lapsed/') {
       this.loading = true;
       this.title = 'Lapsed Members';
-      this.subtitle = 'Members who have not paid fees in the last 15 months';
+      const months = this.route.snapshot.params['months'];
+      this.subtitle = `Members who have not paid fees in the last ${months} months`;
 
       this.membersService
-        .getLapsed(15)
+        .getLapsed(months)
         .subscribe((response: MemberSearchResult[]) => {
           this.loading = false;
           this.members = response;
@@ -53,9 +54,10 @@ export class MemberListComponent implements OnInit {
           this.loading = false;
           this.members = response;
         });
-    } else if (this.router.url.includes('cem')) {
+    } else if (this.router.url.substring(9) == 'cem') {
       this.loading = true;
       this.title = 'Contributing Ex-Members';
+      this.subtitle = 'Where a payment has been received in the last 18 months';
 
       this.membersService
         .getContributingExMembers()
@@ -106,6 +108,18 @@ export class MemberListComponent implements OnInit {
           this.loading = false;
           this.members = response;
         });
+    } else if (this.router.url.includes('lapsedcem')) {
+      this.loading = true;
+      this.title = 'Lapsed Contributing Ex-Members';
+      const months = this.route.snapshot.params['months'];
+      this.subtitle = `No payment received for ${months} months. Consider setting to 'Former Member'.`;
+
+      this.membersService
+        .getLapsedCEMs(months)
+        .subscribe((response: MemberSearchResult[]) => {
+          this.loading = false;
+          this.members = response;
+        });
     }
   }
 
@@ -130,6 +144,13 @@ export class MemberListComponent implements OnInit {
           })
       )
       .add(() => (member.isUpdating = false));
+
+    return false; // don't let click event propagate
+  }
+
+  setAllToFormer() {
+    if (!this.members) return;
+
 
     return false; // don't let click event propagate
   }

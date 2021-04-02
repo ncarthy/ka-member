@@ -95,7 +95,7 @@ $router->mount('/member', function () use ($router) {
 $router->mount('/members', function () use ($router) {
     $router->get('/life_and_hon', 'MembersCtl@lifeAndHonorary');
     $router->get('/summary', 'MembersSummaryCtl@activeMembersByType');
-    $router->get('/lapsed', 'MembersCtl@lapsed');
+    $router->get('/lapsed/(\d+)', 'MembersCtl@lapsed');
     $router->get('/cem', 'MembersCtl@cem');
     $router->get('/discount', 'MembersCtl@discount');
     $router->get('/payinghonlife', 'MembersCtl@payingHonLife');
@@ -106,6 +106,7 @@ $router->mount('/members', function () use ($router) {
     $router->get('/invalidemails', 'MembersCtl@invalidEmails');
     $router->get('/invalidpostcodes', 'MembersCtl@invalidPostcodes');
     $router->get('/deletedbutnotformer', 'MembersCtl@deletedButNotFormer');
+    $router->get('/lapsedcem/(\d+)', 'MembersCtl@lapsedCEM');
     $router->get('/filter', 'MembersCtl@filter');
     $router->patch('/', 'MembersCtl@patch');
 });

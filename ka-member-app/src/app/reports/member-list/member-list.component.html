@@ -4,6 +4,10 @@
     <p>{{ subtitle }}</p>
   </div>
   <div class="col-sm-3 mb-2">
+    <button (click)="setAllToFormer()" class="btn btn-danger mr-2"
+    *ngIf="user.isAdmin&&title=='Lapsed Contributing Ex-Members'">
+      Set All To Former
+    </button>
     <button routerLink="/reports" class="btn btn-outline-dark">
       Close &times;
     </button>

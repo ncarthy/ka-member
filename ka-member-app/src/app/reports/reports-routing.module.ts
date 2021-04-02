@@ -16,7 +16,7 @@ const routes: Routes = [
             { path: '', component: ReportsComponent },
             { path: 'mailing-list', component: MailingListComponent },
             { path: 'email-list', component: EmailListComponent },
-            { path: 'lapsed', component: MemberListComponent },
+            { path: 'lapsed/:months', component: MemberListComponent },
             { path: 'cem', component: MemberListComponent },
             { path: 'honlife', component: MemberListComponent },
             { path: 'discount', component: MemberListComponent },
@@ -25,6 +25,7 @@ const routes: Routes = [
             { path: 'invalidemails', component: InvalidEmailsComponent },
             { path: 'invalidpostcodes', component: InvalidPostcodesComponent },
             { path: 'deletedmembers', component: MemberListComponent },
+            { path: 'lapsedcem/:months', component: MemberListComponent },
         ]
     }
 ];

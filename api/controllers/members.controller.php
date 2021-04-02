@@ -39,13 +39,11 @@ class MembersCtl{
     echo json_encode($model->emailList(), JSON_NUMERIC_CHECK);
   }
   
-  public static function lapsed(){  
+  public static function lapsed($months){  
 
     $model = new Members();
 
     //$months is the number of months since last payment
-    $months = isset($_GET['months']) ? $_GET['months'] : 18;
-
     echo json_encode($model->lapsedMembers($months), JSON_NUMERIC_CHECK);
   }
 
@@ -58,11 +56,23 @@ class MembersCtl{
     //    plus one day e.g. '2020-02-10'
     $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
     $start = isset($_GET['start']) ? $_GET['start'] : 
-                (new DateTime($end))->modify('-1 year')->modify('+1 day')->format('Y-m-d');
+                (new DateTime($end))->modify('-18 month')->modify('+1 day')->format('Y-m-d');
 
     $model = new Members();
 
     echo json_encode($model->contributingExMembers($start, $end), JSON_NUMERIC_CHECK);
+  }
+
+  public static function lapsedCEM($months){  
+    $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
+    $start = isset($_GET['start']) ? $_GET['start'] : 
+                (new DateTime($end))->modify('-20 year')->format('Y-m-d');
+    $cutoff = isset($_GET['cutoff']) ? $_GET['cutoff'] : 
+                (new DateTime($end))->modify('-' . $months . ' month')->format('Y-m-d');                
+
+    $model = new Members();
+
+    echo json_encode($model->lapsedCEM($start, $end, $cutoff), JSON_NUMERIC_CHECK);
   }
 
   public static function discount(){  

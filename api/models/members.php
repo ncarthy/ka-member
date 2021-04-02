@@ -105,7 +105,11 @@ class Members{
         return $this->tabulateTransactionData('HonLife', $start, $end);
     }
 
-    private function tabulateTransactionData($report_name, $start, $end){
+    public function lapsedCEM($start, $end, $cutoff){       
+        return $this->tabulateTransactionData('LapsedCEM', $start, $end, $cutoff);
+    }
+
+    private function tabulateTransactionData($report_name, $start, $end, $cutoff=''){
 
         $tablename = '_Transactions_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
                         
@@ -134,6 +138,9 @@ class Members{
             case 'Duplicates':
                 $query = $query. " WHERE amount>=0 AND count > 1 ORDER BY `lasttransactiondate`;";
                 break;
+            case 'LapsedCEM':
+                $query = $query. " WHERE amount>=0 AND membershiptypeid=8 AND `lasttransactiondate` < '" . $cutoff . "' ORDER BY `lasttransactiondate`;";
+                break;                
         }
 
         $stmt = $this->conn->query($query); 
@@ -196,8 +203,7 @@ class Members{
       private function dropTemporaryTransactionTable($tablename){
 
         $query = "DROP TEMPORARY TABLE IF EXISTS ".$tablename.";";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
+        $stmt = $this->conn->query($query);
     }
 
     public function mailingList(){

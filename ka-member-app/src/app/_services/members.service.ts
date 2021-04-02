@@ -29,7 +29,7 @@ export class MembersService {
   }
 
   getLapsed(months: number): Observable<MemberSearchResult[]> {
-    const queryUrl = `${baseUrl}/lapsed?months=${months}`;
+    const queryUrl = `${baseUrl}/lapsed/${months}`;
 
     return this.http.get(queryUrl).pipe(
       map((response: any) => {
@@ -119,4 +119,19 @@ export class MembersService {
       })
     );
   }
+
+  getLapsedCEMs(months: number): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/lapsedcem/${months}`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
+  setLapsedCEMsToFormer(months: number) {
+    return this.http.patch(`${baseUrl}/lapsedcem/${months}`, `{"method": "setToFormer"}`);
+  }
+
 }
