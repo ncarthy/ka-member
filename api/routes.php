@@ -20,7 +20,10 @@ $router->setNamespace('\Controllers'); // Allows us to omit '\Controllers' from 
 // Custom 404 Handler
 $router->set404(function() {
   header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-  echo '404, route not found!';
+  http_response_code(404);  
+  echo json_encode(
+      array("message" => "404, route not found!")
+  );
 });
 
 
