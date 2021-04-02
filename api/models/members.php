@@ -15,29 +15,61 @@ class Members{
     public function lapsedMembers($months){
 
         //select all data
-        $query = "SELECT m.idmember,m.idmembership, m.membershiptype,m.Name as `name`,  
-                        IFNULL(m.businessname,'') as businessname, m.note as `note`,
-                        `m`.`addressfirstline` AS `address1`,
-                        `m`.`addresssecondline` AS `address2`,
-                        `m`.`city`,
-                        `m`.`postcode`,
-                        m.country,
+        $query = "SELECT m.idmember,m.membership_idmembership as membershiptypeid, 
+                        ms.name as membershiptype,
+                        m.note,
+                        IFNULL(GROUP_CONCAT( CONCAT(CASE
+                                            WHEN `mn`.`honorific` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`honorific`, ' ')
+                                        END,
+                                        CASE
+                                            WHEN `mn`.`firstname` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`firstname`, ' ')
+                                        END,
+                                        `mn`.`surname`) SEPARATOR ' & '),
+                                '') AS `name`, 
+                        IFNULL(`m`.`businessname`,'') AS `businessname`,
+                        CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                            THEN `m`.`addressfirstline2`
+                            ELSE `m`.`addressfirstline`
+                        END AS `addressfirstline`,
+                        CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                            THEN `m`.`addresssecondline2`
+                            ELSE `m`.`addresssecondline`
+                        END AS `addresssecondline`,
+                        CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                            THEN `m`.`city2`
+                            ELSE `m`.`city`
+                        END AS `city`,
+                        CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                            THEN
+                                `m`.`postcode2`
+                            ELSE `m`.`postcode`
+                        END AS `postcode`,
+                                IFNULL(CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                                            THEN `c2`.`name`
+                                            ELSE `c1`.`name`
+                                        END,'') AS `country`,
                         m.updatedate, m.expirydate,  
                         m.reminderdate,
-                        COUNT(t.idtransaction) as `count`, 
-                        MAX(t.`date`) AS `last`
-                    FROM vwMember m
-                    LEFT OUTER JOIN vwTransaction t ON m.idmember = t.idmember
-                    WHERE m.idmembership IN (2,3,4,10) AND m.deletedate IS NULL
+                        `count`, 
+                        `lasttransactiondate`
+                    FROM member m
+                    INNER JOIN membershipstatus ms ON m.membership_idmembership = ms.idmembership
+                    INNER JOIN membername mn ON m.idmember = mn.member_idmember
+                    LEFT JOIN `country` `c1` ON `m`.`countryID` = `c1`.`id`
+                    LEFT JOIN `country` `c2` ON `m`.`country2ID` = `c2`.`id`
+                    LEFT OUTER JOIN (SELECT member_idmember, COUNT(idtransaction) as `count`, 
+                        MAX(`date`) AS `lasttransactiondate` FROM `transaction` GROUP BY member_idmember) as t ON m.idmember = t.member_idmember
+                    WHERE m.membership_idmembership IN (2,3,4,10) AND m.deletedate IS NULL
                     GROUP BY m.idmember
-                    HAVING `last` IS NULL OR 
-                        `last` < DATE_SUB(CURDATE(), INTERVAL " .
-                        $months
-                        . " MONTH)
-                    ORDER BY `last`                                     
+                    HAVING `lasttransactiondate` IS NULL OR 
+                        `lasttransactiondate` < DATE_SUB(CURDATE(), INTERVAL :months MONTH)
+                    ORDER BY `lasttransactiondate`                                     
                     ";
 
         $stmt = $this->conn->prepare( $query );
+        $stmt->bindParam (":months", $months);
         $stmt->execute();
         $num = $stmt->rowCount();
 
@@ -369,13 +401,13 @@ class Members{
             
         $member=array(
             "id" => $idmember,
-            "statusID" => $idmembership,
+            "statusID" => $membershiptypeid,
             "statusname" => $membershiptype,
             "name" => $name,
-            "business" => $businessname,
+            "businessname" => $businessname,
             "note" => $note,
-            "address1" => $address1,
-            "address2" => $address2,
+            "addressfirstline" => $addressfirstline,
+            "addresssecondline" => $addresssecondline,
             "city" => $city,
             "postcode" => $postcode,
             "country" => $country,
@@ -383,7 +415,7 @@ class Members{
             "expirydate" => $expirydate,
             "reminderdate" => $reminderdate,
             "count" => $count,
-            "last" => $last
+            "last" => $lasttransactiondate
         );
 
         return $member;
