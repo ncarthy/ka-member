@@ -1,7 +1,7 @@
 #Sanity Check 1: no deleted members except in 8,9
 # > They should be moved to 8 or 9 or (pending) removed
 SELECT * FROM vwMember
-WHERE deletedate IS NOT NULL AND idmembership NOT IN (8,9);
+WHERE deletedate IS NOT NULL AND membershiptypeid NOT IN (8,9);
 
 #Sanity Check 2: no C ex-members (category 8) who haven't paid in the last 3 years
 # > They should be moved to former members and anonymised
