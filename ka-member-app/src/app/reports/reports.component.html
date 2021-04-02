@@ -14,7 +14,7 @@
     <div class="card-body">
       <ul>
         <li>
-          <a routerLink="mailing-list">Excel sheet of addresses for UK Mail</a>
+          <a routerLink="mailing-list">CSV file of addresses for UK Mail</a>
         </li>
         <li>
           <a routerLink="email-list"
@@ -22,7 +22,9 @@
           >
         </li>
         <li>
-          <a class="text-muted">Email address list chosen by location (TO DO)</a>
+          <a class="text-muted"
+            >Email address list chosen by location (TO DO)</a
+          >
         </li>
         <li>
           Excluded Members:
@@ -37,7 +39,6 @@
                 >Members with post on hold</a
               >
             </li>
-
           </ul>
         </li>
       </ul>
@@ -54,7 +55,7 @@
             >Lapsed Members: active members without a recent payment</a
           >
         </li>
-        <li>List of members who have paid twice</li>
+        <li><a routerLink="duplicatepayers">List of members who have paid twice</a></li>
         <li>
           <a routerLink="honlife">Life/Honorary members who are still paying</a>
         </li>
@@ -62,7 +63,9 @@
           <a routerLink="discount">Members paying less than full fees</a>
         </li>
         <li>
-          <a routerLink="cem">Former members who are still paying (Contributing ex-Members)</a>
+          <a routerLink="cem"
+            >Former members who are still paying (Contributing ex-Members)</a
+          >
         </li>
         <li class="text-muted">Recent PayPal payments (TO DO)</li>
       </ul>

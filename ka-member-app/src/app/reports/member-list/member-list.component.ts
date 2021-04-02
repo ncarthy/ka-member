@@ -4,8 +4,8 @@ import { Member, MemberSearchResult, User } from '@app/_models';
 import { AlertService, AuthenticationService, MemberService, MembersService } from '@app/_services';
 
 @Component({
-  selector: 'reports-member-list',
-  templateUrl: './member-list.component.html'
+  templateUrl: './member-list.component.html',
+  styleUrls: ['member-list.component.css']
 })
 export class MemberListComponent implements OnInit {
   @Input() title!: string;
@@ -40,6 +40,36 @@ export class MemberListComponent implements OnInit {
 
       this.membersService
         .getPayingHonlife()
+        .subscribe((response : MemberSearchResult[]) => {
+          this.loading = false;
+          this.members = response;
+        });
+    } else if (this.router.url.includes("cem")) {
+      this.loading = true;
+      this.title = 'Contributing Ex-Members';
+
+      this.membersService
+        .getContributingExMembers()
+        .subscribe((response : MemberSearchResult[]) => {
+          this.loading = false;
+          this.members = response;
+        });
+    } else if (this.router.url.includes("discount")) {
+      this.loading = true;
+      this.title = 'Members Paying Old Rates';
+
+      this.membersService
+        .getDiscountMembers()
+        .subscribe((response : MemberSearchResult[]) => {
+          this.loading = false;
+          this.members = response;
+        });
+    } else if (this.router.url.includes("duplicate")) {
+      this.loading = true;
+      this.title = 'Members Paying Twice';
+
+      this.membersService
+        .getMemberPayingTwice()
         .subscribe((response : MemberSearchResult[]) => {
           this.loading = false;
           this.members = response;

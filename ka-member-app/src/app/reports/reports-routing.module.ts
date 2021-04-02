@@ -18,6 +18,7 @@ const routes: Routes = [
             { path: 'cem', component: MemberListComponent },
             { path: 'honlife', component: MemberListComponent },
             { path: 'discount', component: MemberListComponent },
+            { path: 'duplicatepayers', component: MemberListComponent },
         ]
     }
 ];

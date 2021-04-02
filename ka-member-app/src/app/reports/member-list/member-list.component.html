@@ -123,6 +123,18 @@
           ></span>
           Send Reminder
         </button>
+        <button
+        (click)="sendGoCardlessRequest(member)"
+        class="btn btn-sm purple-button text-white mr-1 mb-1"
+        [disabled]="member.isUpdating"
+        *ngIf="user.isAdmin"
+      >
+        <span
+          *ngIf="member.isUpdating"
+          class="spinner-border spinner-border-sm"
+        ></span>
+        GoCardless
+      </button>
       </td>
     </tr>
     <tr *ngIf="!members || loading">

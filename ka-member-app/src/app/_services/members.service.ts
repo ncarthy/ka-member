@@ -45,4 +45,34 @@ export class MembersService {
       })
     );
   }
+
+  getContributingExMembers(): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/cem`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
+  getDiscountMembers(): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/discount`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
+  getMemberPayingTwice(): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/duplicatepayers`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
 }

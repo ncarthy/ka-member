@@ -89,62 +89,8 @@ class Members{
 
     }
 
-    public function membersPayingTwice($start, $end){       
-
-        $tablename = '_Duplicated_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
-        
-        $query = "SELECT 
-                        d.idmember,t.idmembership, t.membershiptype,t.`name`, membershipfee,
-                            IFNULL(t.businessname,'') as businessname, t.note as `note`,
-                            `t`.`address1`, `t`.`address2`, `t`.`city`,
-                            `t`.`postcode`, t.country, t.updatedate, t.expirydate,  
-                            t.reminderdate,
-                            SUM(amount) as amount, Max(`date`) as `last`,
-                            COUNT(t.idtransaction) as `count`
-                        FROM vwTransaction t
-                        JOIN ".$tablename." d ON t.idmember = d.idmember
-                        WHERE `date` >=  '" . $start ."'
-                        AND `date` <= '" . $end . "'                  
-                        ORDER BY t.idmember,`date`;";               
-
-        $this->dropTemporaryTransactionTable($tablename); // Clear any old table
-
-        // Get transaction data for the time period
-        $this->populateTemporaryDuplicateTable($tablename, $start, $end);
-
-        // narrow down the data according to criteria  
-        $stmt = $this->conn->prepare( $query );         
-        $stmt->execute();
-        $num = $stmt->rowCount();
-
-        $members_arr=array();
-        $members_arr["start"] = $start;
-        $members_arr["end"] = $end;
-        $members_arr["total"] = 0;  // total amount of fees received
-        $members_arr["expected"] = 0; // expected amount of fees
-        $members_arr["count"] = $num; // add the count of rows
-        $members_arr["records"]=array();
-
-        $total_received = 0; // sum of member payments as we loop over rows
-        $total_expected = 0; // sum of member fees as we loop over rows
-
-        // check if more than 0 record found
-        if($num>0){
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-
-                $member = $this->extractMember($row);
-
-                // create un-keyed list
-                array_push ($members_arr["records"], $member);
-            }
-        }
-        $members_arr["total"] = $total_received;
-        // honorary and life members aren't expected to pay anything
-        $members_arr["expected"] = $total_expected; 
-
-        $this->dropTemporaryTransactionTable($tablename);// DROP the temp table
-
-        return $members_arr;      
+    public function membersPayingTwice($start, $end){ 
+        return $this->tabulateTransactionData('Duplicates', $start, $end);
     }
 
     public function contributingExMembers($start, $end){       
@@ -189,6 +135,9 @@ class Members{
                 break;
             case 'Discount':
                 $query = $query. " WHERE amount>=0 AND amount < membershipfee AND membershiptypeid NOT IN(5,6,8) ORDER BY `lasttransactiondate`;";
+                break;
+            case 'Duplicates':
+                $query = $query. " WHERE amount>=0 AND count > 1 ORDER BY `lasttransactiondate`;";
                 break;
         }
 
