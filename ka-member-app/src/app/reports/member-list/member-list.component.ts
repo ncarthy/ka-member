@@ -9,6 +9,7 @@ import { AlertService, AuthenticationService, MemberService, MembersService } fr
 })
 export class MemberListComponent implements OnInit {
   @Input() title!: string;
+  @Input() subtitle!: string;
   
   user: User;
   members?: MemberSearchResult[];
@@ -27,6 +28,7 @@ export class MemberListComponent implements OnInit {
     if (this.router.url.includes("lapsed")) {
       this.loading = true;
       this.title = 'Lapsed Members';
+      this.subtitle = 'Members who have not paid fees in the last 15 months';
 
       this.membersService
         .getLapsed(15)
@@ -67,6 +69,7 @@ export class MemberListComponent implements OnInit {
     } else if (this.router.url.includes("duplicate")) {
       this.loading = true;
       this.title = 'Members Paying Twice';
+      this.subtitle = "Click on 'Payments' to see all transactions";
 
       this.membersService
         .getMemberPayingTwice()
