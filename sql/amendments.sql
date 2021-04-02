@@ -375,6 +375,8 @@ UPDATE `member` SET addressfirstline='8 Stratford Road', addresssecondline= '', 
 UPDATE `member` SET addresssecondline= 'Kingstone Winslow', city='Swindon' WHERE idmember = 126;
 UPDATE `member` SET addresssecondline= 'Charlbury Road' WHERE idmember = 507;
 
+UPDATE member SET email1=TRIM(email1), email2=TRIM(email2);
+
 DROP VIEW IF EXISTS `vwNames`;
 DROP VIEW IF EXISTS `vwMember`;
 DROP VIEW IF EXISTS `vwMembers`;

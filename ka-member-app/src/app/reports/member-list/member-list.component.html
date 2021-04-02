@@ -21,9 +21,7 @@
       <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
       <th scope="col" class="w-25 d-none d-sm-table-cell">Name</th>
       <th scope="col" class="d-sm-none w-25">Details</th>
-      <th scope="col" class="d-none d-sm-table-cell">
-        Type
-      </th>
+      <th scope="col" class="d-none d-sm-table-cell">Type</th>
       <th scope="col" class="d-none d-sm-table-cell">Address</th>
       <th scope="col" class="d-none d-sm-table-cell">Note</th>
       <th scope="col" class="d-none d-sm-table-cell">Payments</th>
@@ -67,11 +65,13 @@
       </td>
       <td class="d-none d-sm-table-cell">
         <small
-          ><span *ngIf="member.lasttransactiondate">{{ member.lasttransactiondate }} <br /></span>
+          ><span *ngIf="member.lasttransactiondate"
+            >{{ member.lasttransactiondate }} <br
+          /></span>
           {{ member.count ? member.count : "No" }} payment<span
             *ngIf="member.count && member.count > 1"
             >s</span
-          ><br />{{ member.amount ? '£'+member.amount : "" }}</small
+          ><br />{{ member.amount ? "£" + member.amount : "" }}</small
         >
       </td>
       <td class="d-none d-sm-table-cell">
@@ -124,17 +124,17 @@
           Send Reminder
         </button>
         <button
-        (click)="sendGoCardlessRequest(member)"
-        class="btn btn-sm purple-button text-white mr-1 mb-1"
-        [disabled]="member.isUpdating"
-        *ngIf="user.isAdmin"
-      >
-        <span
-          *ngIf="member.isUpdating"
-          class="spinner-border spinner-border-sm"
-        ></span>
-        GoCardless
-      </button>
+          (click)="sendGoCardlessRequest(member)"
+          class="btn btn-sm purple-button text-white mr-1 mb-1"
+          [disabled]="member.isUpdating"
+          *ngIf="user.isAdmin"
+        >
+          <span
+            *ngIf="member.isUpdating"
+            class="spinner-border spinner-border-sm"
+          ></span>
+          GoCardless
+        </button>
       </td>
     </tr>
     <tr *ngIf="!members || loading">

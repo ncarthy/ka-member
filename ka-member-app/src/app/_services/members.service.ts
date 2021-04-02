@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
-import { MemberCountResponse, MemberSearchResult } from '@app/_models';
+import { MemberCountResponse, MemberInvalidEmail, MemberSearchResult } from '@app/_models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -86,11 +86,11 @@ export class MembersService {
     );
   }
 
-  getInvalidEmails(): Observable<MemberSearchResult[]> {
+  getInvalidEmails(): Observable<MemberInvalidEmail[]> {
     return this.http.get(`${baseUrl}/invalidemails`).pipe(
       map((response: any) => {
         return <any>response['records'].map((item: any) => {
-          return new MemberSearchResult(item);
+          return new MemberInvalidEmail(item);
         });
       })
     );

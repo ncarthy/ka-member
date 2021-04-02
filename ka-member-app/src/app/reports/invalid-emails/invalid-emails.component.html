@@ -1,0 +1,52 @@
+<div class="row justify-content-between">
+  <div class="col-sm-6">
+    <h1>{{ members && members.length }} Members With Invalid Email Addresses</h1>
+  </div>
+  <div class="col-sm-2">
+    <button routerLink="/reports" class="btn btn-outline-dark">
+      Close &times;
+    </button>
+  </div>
+</div>
+<!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
+<table class="table table-sm table-striped table-hover table-responsive">
+  <caption>
+    {{
+      members && members.length
+    }}
+    invalid email addresses found
+  </caption>
+  <thead>
+    <tr class="m-0">
+      <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
+      <th scope="col" >Name</th>
+      <th scope="col" >Email1</th>
+      <th scope="col" >Email2</th>
+      <th scope="col" >Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let member of members" class="m-0">
+      <th scope="row">
+        {{ member.name }}<br /><span *ngIf="member.businessname"
+          >({{ member.businessname }})</span
+        >
+      </th>
+      <td>{{ member.email1 }}</td>
+      <td>{{ member.email2 }}</td>
+      <td>
+        <button
+          routerLink="/members/edit/{{ member.id }}"
+          class="btn btn-sm btn-primary mr-1 mb-1"
+        >
+          Member Details
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="!members || loading">
+      <td colspan="1" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>

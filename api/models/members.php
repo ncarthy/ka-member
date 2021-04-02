@@ -327,11 +327,13 @@ class Members{
         //select all data
         $query = "SELECT email1 as email
                     FROM member
-                    WHERE membership_idmembership NOT IN (7,8,9) AND email1 IS NOT NULL AND email1 != ''
+                    WHERE membership_idmembership NOT IN (7,8,9) AND email1 IS NOT NULL AND email1 != '' AND
+                        email1 REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$'
                     UNION
                     SELECT email2
                     FROM member
-                    WHERE membership_idmembership NOT IN (7,8,9) AND email2 IS NOT NULL AND email2 != ''
+                    WHERE membership_idmembership NOT IN (7,8,9) AND email2 IS NOT NULL AND email2 != '' AND
+                        email2 REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$'
                     ";
 
         $stmt = $this->conn->prepare( $query );
@@ -380,6 +382,48 @@ class Members{
 
                 $member = $this->extractMember($row);
 
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
+        }
+
+        return $members_arr;
+
+    }
+
+    public function invalidEmails(){
+
+        //select all data
+        $query = "SELECT idmember,membershiptype,`name`,businessname,email1 as email1,'' as email2 
+                        FROM `vwMember` 
+                        WHERE email1 IS NOT NULL AND email1 != '' AND 
+                            `email1` NOT REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$'
+                    UNION
+                        SELECT idmember,membershiptype,`name`,businessname,'' as email1, email2 
+                        FROM `vwMember` 
+                        WHERE email2 IS NOT NULL AND email2 != '' AND 
+                        `email2` NOT REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$';";
+
+        $stmt = $this->conn->query( $query );
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num; // add the count of rows
+        $members_arr["records"]=array();
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+            
+                $member=array(
+                    "id" => $idmember,
+                    "membershiptype" => $membershiptype,
+                    "name" => $name,
+                    "businessname" => $businessname,
+                    "email1" => $email1,
+                    "email2" => $email2,
+                );
+                
                 // create un-keyed list
                 array_push ($members_arr["records"], $member);
             }

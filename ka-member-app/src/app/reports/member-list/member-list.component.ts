@@ -84,16 +84,6 @@ export class MemberListComponent implements OnInit {
           this.loading = false;
           this.members = response;
         });
-    }  else if (this.router.url.includes("invalidemail")) {
-      this.loading = true;
-      this.title = 'Members With Invalid Email Addresses';
-
-      this.membersService
-        .getMemberWithoutUKAddress()
-        .subscribe((response : MemberSearchResult[]) => {
-          this.loading = false;
-          this.members = response;
-        });
     }
 
   }

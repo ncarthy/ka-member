@@ -11,6 +11,7 @@ export * from './getaddress-address';
 export * from './member';
 export * from './member-count';
 export * from './member-filter';
+export * from './member-invalid-email';
 export * from './member-name';
 export * from './member-search-result';
 export * from './membership-status';

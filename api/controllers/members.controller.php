@@ -99,10 +99,13 @@ class MembersCtl{
   }
 
   public static function noUKAddress(){  
-
     $model = new Members();
-
     echo json_encode($model->noUKAddress(), JSON_NUMERIC_CHECK);
+  }
+
+  public static function invalidEmails(){  
+    $model = new Members();
+    echo json_encode($model->invalidEmails(), JSON_NUMERIC_CHECK);
   }
 
   public static function filter(){  
