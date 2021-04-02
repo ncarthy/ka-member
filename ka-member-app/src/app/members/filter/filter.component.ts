@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { KeyValue } from '@angular/common';
-import {NgbPanelChangeEvent} from '@ng-bootstrap/ng-bootstrap';
+import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 import {
@@ -147,18 +147,14 @@ export class MemberFilterComponent implements OnInit {
           countryid: this.route.snapshot.params['countryid'],
         })
       );
-    } else if (this.router.url.substring(0, 12) === '/members/cem') {
-      this.filterSubject.next(
-        new MemberFilter({
-          removed: YesNoAny.YES,
-          membertypeid: 8,
-        })
-      );
-    } else if (this.router.url.substring(0, 22) === '/members/lifehonorary') {
+    } else if (this.router.url.includes('postonhold')) {
       this.filterSubject.next(
         new MemberFilter({
           removed: YesNoAny.NO,
-          membertyperange: '5,6',
+          postonhold:
+            this.route.snapshot.params['postonhold'] == 'true'
+              ? YesNoAny.YES
+              : YesNoAny.NO,
         })
       );
     }
