@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { ReportsRoutingModule } from './reports-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
@@ -18,7 +19,8 @@ import { MemberListComponent } from './member-list/member-list.component';
         CommonModule,
         ReactiveFormsModule,
         ReportsRoutingModule,
-        SharedModule
+        SharedModule,
+        NgbModule
     ],
     declarations: [
         ReportsComponent,

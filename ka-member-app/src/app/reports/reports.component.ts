@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '@app/_services';
 import { User } from '@app/_models';
 
@@ -9,6 +10,7 @@ import { User } from '@app/_models';
 })
 export class ReportsComponent implements OnInit {
   user:User;
+  panelOpen: boolean = false;
 
   constructor(private location: Location,
     private authenticationService: AuthenticationService) {
@@ -21,5 +23,10 @@ export class ReportsComponent implements OnInit {
   goBack() {
     this.location.back();
     return false; // don't propagate event
+  }
+
+  beforeChange($event: NgbPanelChangeEvent) {
+    console.log($event);
+    this.panelOpen = $event.nextState;
   }
 }
