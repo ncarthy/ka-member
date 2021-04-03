@@ -165,7 +165,6 @@ class MemberCtl{
 
     $data = json_decode(file_get_contents("php://input"));
     if(isset($data->method)){
-
         switch (strtolower($data->method)) {
             case 'settoformer':
                 $model->setToFormerMember();
@@ -183,7 +182,6 @@ class MemberCtl{
             );
         }
     }
-
   }
 
   private static function transferParameters($data, $model)

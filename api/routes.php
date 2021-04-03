@@ -108,6 +108,7 @@ $router->mount('/members', function () use ($router) {
     $router->get('/deletedbutnotformer', 'MembersCtl@deletedButNotFormer');
     $router->get('/lapsedcem/(\d+)', 'MembersCtl@lapsedCEM');
     $router->get('/filter', 'MembersCtl@filter');
+    $router->patch('/lapsedcem/(\d+)', 'MembersCtl@patchLapsedCEM');
     $router->patch('/', 'MembersCtl@patch');
 });
 /**********************/

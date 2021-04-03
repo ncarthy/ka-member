@@ -474,5 +474,21 @@ class Members{
 
         return $member;
     }
+
+    /** Set all the members in the $ids list to be former members */
+    public function setToFormer($ids, $username) {
+        $ids_string = implode(',',$ids);
+        $query = "UPDATE member m, membershipstatus ms
+                        SET membership_idmembership = ms.idmembership,
+                            updatedate= NULL, 
+                            deletedate=CASE WHEN deletedate IS NULL THEN CURDATE() ELSE deletedate END,
+                            username=:username 
+                        WHERE idmember IN (".$ids_string.") AND ms.name LIKE 'former%';";    
+
+        $stmt = $this->conn->prepare( $query );
+        $stmt->bindParam (":username", $username, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
 }
 ?>

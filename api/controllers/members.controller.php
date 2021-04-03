@@ -63,18 +63,6 @@ class MembersCtl{
     echo json_encode($model->contributingExMembers($start, $end), JSON_NUMERIC_CHECK);
   }
 
-  public static function lapsedCEM($months){  
-    $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
-    $start = isset($_GET['start']) ? $_GET['start'] : 
-                (new DateTime($end))->modify('-20 year')->format('Y-m-d');
-    $cutoff = isset($_GET['cutoff']) ? $_GET['cutoff'] : 
-                (new DateTime($end))->modify('-' . $months . ' month')->format('Y-m-d');                
-
-    $model = new Members();
-
-    echo json_encode($model->lapsedCEM($start, $end, $cutoff), JSON_NUMERIC_CHECK);
-  }
-
   public static function discount(){  
 
     $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
@@ -281,6 +269,63 @@ class MembersCtl{
     }
 
   }
+
+  // Last payment was $months months ago
+  public static function patchLapsedCEM($months){
+    $data = json_decode(file_get_contents("php://input"));
+    if(isset($data->method)){
+
+        switch (strtolower($data->method)) {
+            case 'settoformer':
+                $rowcount = MembersCtl::setLapsedCEMToFormer($months);
+                http_response_code(200);  
+                echo json_encode(
+                  array(
+                    "message" => "CEMs whose last payment was " . $months . "mths ago have been set to 'Former Member'",
+                    "count" => $rowcount
+                  )
+                );
+                break;
+            default:
+            http_response_code(422);  
+            echo json_encode(
+              array(
+                "message" => "Unknown method",
+                "method" => $data->method
+              )
+            );
+        }
+    }
+  }
+
+  public static function lapsedCEM($months){  
+    $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
+    $start = isset($_GET['start']) ? $_GET['start'] : 
+                (new DateTime($end))->modify('-20 year')->format('Y-m-d');
+    $cutoff = isset($_GET['cutoff']) ? $_GET['cutoff'] : 
+                (new DateTime($end))->modify('-' . $months . ' month')->format('Y-m-d');                
+
+    $model = new Members();
+
+    echo json_encode($model->lapsedCEM($start, $end, $cutoff), JSON_NUMERIC_CHECK);
+  }
+
+
+  public static function setLapsedCEMToFormer($months){  
+    $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
+    $start = isset($_GET['start']) ? $_GET['start'] : 
+                (new DateTime($end))->modify('-20 year')->format('Y-m-d');
+    $cutoff = isset($_GET['cutoff']) ? $_GET['cutoff'] : 
+                (new DateTime($end))->modify('-' . $months . ' month')->format('Y-m-d');                
+
+    $model = new Members();
+
+    $members = $model->lapsedCEM($start, $end, $cutoff)['records'];    
+    
+    return $model->setToFormer(array_map(fn($member) => $member['id'], $members), MembersCtl::username());
+  }
+
+
 
   public static function anonymize(){  
 

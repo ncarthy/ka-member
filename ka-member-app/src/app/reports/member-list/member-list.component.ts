@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonName, MemberSearchResult, User } from '@app/_models';
 import {
@@ -26,7 +27,8 @@ export class MemberListComponent implements OnInit {
     private membersService: MembersService,
     private memberService: MemberService,
     private alertService: AlertService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private location: Location,
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -149,8 +151,24 @@ export class MemberListComponent implements OnInit {
   }
 
   setAllToFormer() {
-    if (!this.members) return;
+    if (!this.members || !this.membersService) return;
 
+    const months = this.route.snapshot.params['months'];
+    if (!months) return;
+
+    this.membersService.setLapsedCEMsToFormer(months)
+    .subscribe(
+      (result: any) => {
+        this.alertService.success(result.count + " Members set to 'Former Member'", {
+          keepAfterRouteChange: true,
+        });
+        this.location.back();
+      },
+      (error) =>
+        this.alertService.error(`Unable to set to 'Former Member'`, {
+          keepAfterRouteChange: true,
+        })
+    );
 
     return false; // don't let click event propagate
   }
