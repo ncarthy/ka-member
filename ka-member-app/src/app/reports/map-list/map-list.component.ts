@@ -9,6 +9,7 @@ export class MapListComponent {
   map!: google.maps.Map;
   lat = 51.499063;
   lng = -0.165382;
+  marker!: google.maps.Marker;
 
   coordinates = new google.maps.LatLng(this.lat, this.lng);
 
@@ -23,6 +24,11 @@ export class MapListComponent {
 
   mapInitializer() {
     this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
+    this.marker = new google.maps.Marker({
+      position: this.coordinates,
+      map: this.map,
+    });
+    this.marker.setMap(this.map);
   }
 
   constructor() {}
