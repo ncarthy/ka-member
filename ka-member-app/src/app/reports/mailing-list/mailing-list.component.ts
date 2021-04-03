@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExportToCsv } from 'export-to-csv';
+import { ExportToCsv } from 'ts-export-to-csv'
 import { MembersService } from '@app/_services';
 
 @Component({

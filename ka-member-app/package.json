@@ -23,8 +23,8 @@
     "@ng-bootstrap/ng-bootstrap": "^9.0.2",
     "@types/googlemaps": "^3.43.3",
     "bootstrap": "^4.5.0",
-    "export-to-csv": "^0.2.1",
     "rxjs": "~6.6.0",
+    "ts-export-to-csv": "^0.3.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
