@@ -15,7 +15,7 @@ export class MemberSearchResult {
     city:string;    
     postcode: string;
     country: string;
-    deletedate: Date;
+    deletedate: string | null;
     reminderdate: string | null;
     lasttransactiondate: string | null;
     count: number;
@@ -43,7 +43,7 @@ export class MemberSearchResult {
         this.city = obj && obj.city || null;
         this.postcode = obj && obj.postcode || null;
         this.country = obj && obj.country || null;
-        this.deletedate = obj && obj.deletedate || null;
+        this.deletedate = obj && obj.deletedate && this.convertDateToUKLocale(obj.deletedate) || null;
         this.reminderdate = obj && obj.reminderdate && this.convertDateToUKLocale(obj.reminderdate) || null;
         this.lasttransactiondate = obj && obj.lasttransactiondate && this.convertDateToUKLocale(obj.lasttransactiondate) || null;
         this.email = obj && obj.email || null;

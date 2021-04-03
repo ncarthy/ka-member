@@ -450,6 +450,39 @@ class Members{
 
     }
 
+    public function oldFormerMember($deletedBefore){
+
+        $query = "SELECT 
+                        m.idmember,membershiptypeid,membershiptype,note,`name`,businessname,addressfirstline,
+                        addresssecondline,city,postcode,country,updatedate, expirydate, reminderdate, membershipfee,
+                        t.`amount`, t.`lasttransactiondate`,t.`count`, deletedate 
+                    FROM vwMember m
+                    LEFT OUTER JOIN (SELECT member_idmember, COUNT(idtransaction) as `count`, SUM(amount) as `amount`,
+                        MAX(`date`) AS `lasttransactiondate` FROM `transaction` GROUP BY member_idmember) as t ON m.idmember = t.member_idmember
+                    WHERE deletedate IS NOT NULL AND membershiptypeid =9 AND deletedate <= '".$deletedBefore."' AND m.name != 'Anonymized';";
+
+        $stmt = $this->conn->query($query); 
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num; // add the count of rows
+        $members_arr["records"]=array();
+
+        // check if more than 0 record found
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+                $member = $this->extractMember($row);
+
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
+        }
+
+        return $members_arr;
+
+    }
+
     private function extractMember($row) {
         extract($row);
             
@@ -477,6 +510,9 @@ class Members{
         }
         if (isset($amount)) {
             $member['amount'] = $amount;
+        }
+        if (isset($deletedate)) {
+            $member['deletedate'] = $deletedate;
         }
 
         return $member;

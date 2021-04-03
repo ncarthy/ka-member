@@ -27,6 +27,7 @@ const routes: Routes = [
             { path: 'deletedmembers', component: MemberListComponent },
             { path: 'lapsedcem/:months', component: MemberListComponent },
             { path: 'formermembers/:months', component: MemberListComponent },
+            { path: 'oldformermembers/:months', component: MemberListComponent },
         ]
     }
 ];

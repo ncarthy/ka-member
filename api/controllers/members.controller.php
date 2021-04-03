@@ -337,6 +337,17 @@ class MembersCtl{
     echo json_encode($model->formerMembersStillPaying($start, $end), JSON_NUMERIC_CHECK);
   }
 
+    /** Show all formerm members who have been deleted more than $months months ago*/
+    public static function oldFormerMember($months){          
+      $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
+      $deletedBefore = isset($_GET['start']) ? $_GET['start'] : 
+                  (new DateTime($end))->modify('-' . $months . ' month')->format('Y-m-d');
+  
+      $model = new Members();
+  
+      echo json_encode($model->oldFormerMember($deletedBefore), JSON_NUMERIC_CHECK);
+    }
+
   public static function anonymize(){  
 
     $filter_model = new MemberFilter();

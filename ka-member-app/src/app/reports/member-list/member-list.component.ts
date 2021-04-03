@@ -20,6 +20,7 @@ export class MemberListComponent implements OnInit {
   user: User;
   members?: MemberSearchResult[];
   loading: boolean = false;
+  showDeleteDate: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,13 +29,14 @@ export class MemberListComponent implements OnInit {
     private memberService: MemberService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private location: Location,
+    private location: Location
   ) {
     this.user = this.authenticationService.userValue;
   }
 
   ngOnInit(): void {
-    if (this.router.url.substring(9,16) == 'lapsed/') {
+    this.showDeleteDate = false;
+    if (this.router.url.substring(9, 16) == 'lapsed/') {
       this.loading = true;
       this.title = 'Lapsed Members';
       const months = this.route.snapshot.params['months'];
@@ -122,7 +124,7 @@ export class MemberListComponent implements OnInit {
           this.loading = false;
           this.members = response;
         });
-    } else if (this.router.url.includes('formermember')) {
+    } else if (this.router.url.substring(9, 21) == 'formermember') {
       this.loading = true;
       this.title = 'Former Members Still Paying';
       const months = this.route.snapshot.params['months'];
@@ -131,6 +133,19 @@ export class MemberListComponent implements OnInit {
       this.membersService
         .getFormerMembersWithRecentPayment(months)
         .subscribe((response: MemberSearchResult[]) => {
+          this.loading = false;
+          this.members = response;
+        });
+    } else if (this.router.url.includes('oldformermember')) {
+      this.loading = true;
+      this.title = 'Former Members Not Anonymized';
+      const months = this.route.snapshot.params['months'];
+      this.subtitle = `Deleted more than ${months} months ago. Consider anonymizing these members.`;
+
+      this.membersService
+        .getOldFormerMembers(months)
+        .subscribe((response: MemberSearchResult[]) => {
+          this.showDeleteDate = true;
           this.loading = false;
           this.members = response;
         });
@@ -168,16 +183,43 @@ export class MemberListComponent implements OnInit {
     const months = this.route.snapshot.params['months'];
     if (!months) return;
 
-    this.membersService.setLapsedCEMsToFormer(months)
-    .subscribe(
+    this.membersService.setLapsedCEMsToFormer(months).subscribe(
       (result: any) => {
-        this.alertService.success(result.count + " Members set to 'Former Member'", {
-          keepAfterRouteChange: true,
-        });
+        this.alertService.success(
+          result.count + " Members set to 'Former Member'",
+          {
+            keepAfterRouteChange: true,
+          }
+        );
         this.location.back();
       },
       (error) =>
         this.alertService.error(`Unable to set to 'Former Member'`, {
+          keepAfterRouteChange: true,
+        })
+    );
+
+    return false; // don't let click event propagate
+  }
+  
+  anonymizeAll() {
+    if (!this.members || !this.membersService) return;
+
+    const months = this.route.snapshot.params['months'];
+    if (!months) return;
+
+    this.membersService.anonymizeOldFormerMembers(months).subscribe(
+      (result: any) => {
+        this.alertService.success(
+          result.count + " Members anonymized",
+          {
+            keepAfterRouteChange: true,
+          }
+        );
+        this.location.back();
+      },
+      (error) =>
+        this.alertService.error(`Unable to anonymize old former members`, {
           keepAfterRouteChange: true,
         })
     );
@@ -221,7 +263,13 @@ export class MemberListComponent implements OnInit {
       case ButtonName.GOCARDLESS:
       case ButtonName.REMINDER:
       case ButtonName.SETTOFORMER:
-          return this.user.isAdmin && member.membershiptype != 'Former Member';
+        return this.user.isAdmin && member.membershiptype != 'Former Member';
+      case ButtonName.ANONYMIZE:
+        return (
+          this.user.isAdmin &&
+          member.membershiptype == 'Former Member' &&
+          member.name != 'Anonymized'
+        );
       default:
         return true;
     }

@@ -4,10 +4,20 @@
     <p>{{ subtitle }}</p>
   </div>
   <div class="col-sm-3 mb-2">
-    <button (click)="setAllToFormer()" class="btn btn-danger mr-2"
-    *ngIf="user.isAdmin&&title=='Lapsed Contributing Ex-Members'">
+    <button
+      (click)="setAllToFormer()"
+      class="btn btn-danger mr-2"
+      *ngIf="user.isAdmin && title == 'Lapsed Contributing Ex-Members'"
+    >
       Set All To Former
     </button>
+    <button
+    (click)="anonymizeAll()"
+    class="btn btn-danger mr-2"
+    *ngIf="user.isAdmin && title == 'Former Members Not Anonymized'"
+  >
+    Anonymize All
+  </button>
     <button routerLink="/reports" class="btn btn-outline-dark">
       Close &times;
     </button>
@@ -30,8 +40,19 @@
       <th scope="col" class="d-none d-sm-table-cell">Address</th>
       <th scope="col" class="d-none d-sm-table-cell">Note</th>
       <th scope="col" class="d-none d-sm-table-cell">Payments</th>
-      <th scope="col" class="d-none d-sm-table-cell text-center">
+      <th
+        scope="col"
+        class="d-none d-sm-table-cell text-center"
+        *ngIf="!showDeleteDate"
+      >
         Reminder Sent
+      </th>
+      <th
+        scope="col"
+        class="d-none d-sm-table-cell text-center"
+        *ngIf="showDeleteDate"
+      >
+        Delete Date
       </th>
       <th scope="col" class="w-25">Actions</th>
     </tr>
@@ -80,7 +101,10 @@
         >
       </td>
       <td class="d-none d-sm-table-cell">
-        <small>{{ member.reminderdate }}</small>
+        <small
+          ><span *ngIf="!showDeleteDate">{{ member.reminderdate }}</span
+          ><span *ngIf="showDeleteDate">{{ member.deletedate }}</span></small
+        >
       </td>
       <td>
         <button
@@ -108,7 +132,7 @@
           (click)="setToFormer(member)"
           class="btn btn-sm btn-warning mr-1 mb-1"
           [disabled]="member.isUpdating"
-          *ngIf="showButton(ButtonName.SETTOFORMER,member)"
+          *ngIf="showButton(ButtonName.SETTOFORMER, member)"
         >
           <span
             *ngIf="member.isUpdating"
@@ -120,7 +144,7 @@
           (click)="sendReminder(member)"
           class="btn btn-sm btn-success mr-1 mb-1"
           [disabled]="member.isUpdating"
-          *ngIf="showButton(ButtonName.REMINDER,member)"
+          *ngIf="showButton(ButtonName.REMINDER, member)"
         >
           <span
             *ngIf="member.isUpdating"
@@ -132,7 +156,7 @@
           (click)="sendGoCardlessRequest(member)"
           class="btn btn-sm purple-button text-white mr-1 mb-1"
           [disabled]="member.isUpdating"
-          *ngIf="showButton(ButtonName.GOCARDLESS,member)"
+          *ngIf="showButton(ButtonName.GOCARDLESS, member)"
         >
           <span
             *ngIf="member.isUpdating"
@@ -141,17 +165,17 @@
           GoCardless
         </button>
         <button
-        (click)="deleteMember(member)"
-        class="btn btn-sm btn-danger mr-1 mb-1"
-        [disabled]="member.isDeleting"
-        *ngIf="showButton(ButtonName.DELETE,member)"
-      >
-        <span
-          *ngIf="member.isDeleting"
-          class="spinner-border spinner-border-sm"
-        ></span>
-        Delete
-      </button>
+          (click)="deleteMember(member)"
+          class="btn btn-sm btn-danger mr-1 mb-1"
+          [disabled]="member.isDeleting"
+          *ngIf="showButton(ButtonName.DELETE, member)"
+        >
+          <span
+            *ngIf="member.isDeleting"
+            class="spinner-border spinner-border-sm"
+          ></span>
+          Delete
+        </button>
       </td>
     </tr>
     <tr *ngIf="!members || loading">

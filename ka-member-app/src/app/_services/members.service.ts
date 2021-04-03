@@ -144,4 +144,18 @@ export class MembersService {
     );
   }
 
+  getOldFormerMembers(months: number): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/oldformermember/${months}`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
+  anonymizeOldFormerMembers(months: number) {
+    return this.http.patch(`${baseUrl}/oldformermember/${months}`, `{"method": "Anonymize"}`);
+  }
+
 }
