@@ -10,6 +10,7 @@ import { ReportsLayoutComponent } from './layout.component';
 import { ReportsComponent } from './reports.component';
 import { MailingListComponent} from './mailing-list';
 import { EmailListComponent} from './email-list';
+import { MapListComponent} from './map-list';
 import { InvalidEmailsComponent} from './invalid-emails';
 import { InvalidPostcodesComponent} from './invalid-postcodes';
 import { MemberListComponent } from './member-list/member-list.component';
@@ -27,6 +28,7 @@ import { MemberListComponent } from './member-list/member-list.component';
         ReportsLayoutComponent,
         MailingListComponent,
         EmailListComponent,
+        MapListComponent,
         MemberListComponent,
         InvalidEmailsComponent,
         InvalidPostcodesComponent,

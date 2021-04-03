@@ -13,9 +13,9 @@ export class AppComponent {
         this.authenticationService.user.subscribe(x => this.user = x);
     }
 
-    get userID() {
+    /*get userID() {
         return this.user && this.user.id || this.user?.id;
-    }
+    }*/
 
     logout() {
         this.authenticationService.logout();

@@ -5,6 +5,7 @@ import { ReportsLayoutComponent } from './layout.component';
 import { ReportsComponent } from './reports.component';
 import { MailingListComponent } from './mailing-list';
 import { EmailListComponent } from './email-list';
+import { MapListComponent } from './map-list';
 import { MemberListComponent } from './member-list';
 import { InvalidEmailsComponent } from './invalid-emails';
 import { InvalidPostcodesComponent } from './invalid-postcodes';
@@ -16,6 +17,7 @@ const routes: Routes = [
             { path: '', component: ReportsComponent },
             { path: 'mailing-list', component: MailingListComponent },
             { path: 'email-list', component: EmailListComponent },
+            { path: 'map-list', component: MapListComponent },
             { path: 'lapsed/:months', component: MemberListComponent },
             { path: 'cem', component: MemberListComponent },
             { path: 'honlife', component: MemberListComponent },
