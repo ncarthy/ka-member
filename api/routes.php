@@ -111,7 +111,8 @@ $router->mount('/members', function () use ($router) {
     $router->get('/oldformermember/(\d+)', 'MembersCtl@oldFormerMember');
     $router->get('/filter', 'MembersCtl@filter');
     $router->patch('/lapsedcem/(\d+)', 'MembersCtl@patchLapsedCEM');
-    $router->patch('/', 'MembersCtl@patch');
+    $router->patch('/oldformermember/(\d+)', 'MembersCtl@patchOldFormerMember');
+    //$router->patch('/', 'MembersCtl@patch');
 });
 /**********************/
 /* Member Name Routes */

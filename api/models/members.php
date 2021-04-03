@@ -533,5 +533,49 @@ class Members{
         $stmt->execute();
         return $stmt->rowCount();
     }
+
+        /** Anonymize the members in the $ids list */
+        public function anonymize($ids, $username) {
+            $ids_string = implode(',',$ids);
+
+            $query = "DELETE FROM `membername` WHERE member_idmember IN (".$ids_string.");";
+            $stmt = $this->conn->query( $query );
+
+            /* Insert dummy name */
+            $query = "INSERT INTO `membername` 
+                ( `honorific`, `firstname`, `surname`, `member_idmember`) 
+                    SELECT '','','Anonymized',idmember
+                    FROM member WHERE idmember IN (".$ids_string.");";
+            $stmt = $this->conn->query($query);
+
+            $query = "UPDATE member
+                        SET 
+                            note='',
+                            addressfirstline='', 
+                            addresssecondline='', 
+                            city='', 
+                            county='', 
+                            postcode='', 
+                            countryID=NULL, 
+                            area='', 
+                            email1='', 
+                            phone1='', 
+                            addressfirstline2='', 
+                            addresssecondline2='', 
+                            city2='', 
+                            county2='', 
+                            postcode2='', 
+                            country2ID=NULL, 
+                            email2='', 
+                            phone2='', 
+                            updatedate= NULL, 
+                            username=:username   
+                        WHERE idmember IN (".$ids_string.");";    
+    
+            $stmt = $this->conn->prepare( $query );
+            $stmt->bindParam (":username", $username, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->rowCount();
+        }
 }
 ?>

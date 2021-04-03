@@ -326,7 +326,7 @@ class MembersCtl{
   }
 
 
-  /** Show all formerm members who have paid in the last $months months */
+  /** Show all formerm members who have paid in the last $months  */
   public static function formerMember($months){          
     $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
     $start = isset($_GET['start']) ? $_GET['start'] : 
@@ -337,7 +337,7 @@ class MembersCtl{
     echo json_encode($model->formerMembersStillPaying($start, $end), JSON_NUMERIC_CHECK);
   }
 
-    /** Show all formerm members who have been deleted more than $months months ago*/
+    /** Show all formerm members who have been deleted more than $months ago*/
     public static function oldFormerMember($months){          
       $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
       $deletedBefore = isset($_GET['start']) ? $_GET['start'] : 
@@ -348,6 +348,47 @@ class MembersCtl{
       echo json_encode($model->oldFormerMember($deletedBefore), JSON_NUMERIC_CHECK);
     }
 
+    public static function anonymizeOldFormerMember($months){  
+      $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
+      $deletedBefore = isset($_GET['start']) ? $_GET['start'] : 
+                  (new DateTime($end))->modify('-' . $months . ' month')->format('Y-m-d');              
+  
+      $model = new Members();
+  
+      $members = $model->oldFormerMember($deletedBefore)['records'];    
+      
+      return $model->anonymize(array_map(fn($member) => $member['id'], $members), MembersCtl::username());
+    }
+
+      // Member who is a former member and deleted more than $months ago
+  public static function patchOldFormerMember($months){
+    $data = json_decode(file_get_contents("php://input"));
+    if(isset($data->method)){
+
+        switch (strtolower($data->method)) {
+            case 'anonymize':
+                $rowcount = MembersCtl::anonymizeOldFormerMember($months);
+                http_response_code(200);  
+                echo json_encode(
+                  array(
+                    "message" => "Former members who were deleted more than " . $months . "mths ago have been anonymized.",
+                    "count" => $rowcount
+                  )
+                );
+                break;
+            default:
+            http_response_code(422);  
+            echo json_encode(
+              array(
+                "message" => "Unknown method",
+                "method" => $data->method
+              )
+            );
+        }
+    }
+  }
+
+  /*
   public static function anonymize(){  
 
     $filter_model = new MemberFilter();
@@ -397,7 +438,7 @@ class MembersCtl{
           echo '"message": "Unable to anonymize former members."';
       echo '}';
   }
-}
+}*/
 
 private static function username(){
   $jwt = new \Models\JWTWrapper();

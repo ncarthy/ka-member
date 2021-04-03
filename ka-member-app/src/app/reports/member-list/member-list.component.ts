@@ -201,6 +201,31 @@ export class MemberListComponent implements OnInit {
 
     return false; // don't let click event propagate
   }
+
+  anonymize(member: MemberSearchResult) {
+    if (!member || !member.id) return;
+
+    member.isUpdating = true;
+
+    this.memberService
+      .anonymize(member.id)
+      .subscribe(
+        (result: any) => {
+          this.alertService.success("Member anonymized", {
+            keepAfterRouteChange: true,
+          });
+
+          this.members = this.members?.filter((x) => x.id !== member.id);
+        },
+        (error) =>
+          this.alertService.error(`Unable to anonymize member`, {
+            keepAfterRouteChange: true,
+          })
+      )
+      .add(() => (member.isUpdating = false));
+
+    return false; // don't let click event propagate
+  }
   
   anonymizeAll() {
     if (!this.members || !this.membersService) return;

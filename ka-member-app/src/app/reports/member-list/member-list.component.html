@@ -141,6 +141,18 @@
           Set to Former
         </button>
         <button
+        (click)="anonymize(member)"
+        class="btn btn-sm btn-warning mr-1 mb-1"
+        [disabled]="member.isUpdating"
+        *ngIf="showButton(ButtonName.ANONYMIZE, member)"
+      >
+        <span
+          *ngIf="member.isUpdating"
+          class="spinner-border spinner-border-sm"
+        ></span>
+        Anonymize
+      </button>
+        <button
           (click)="sendReminder(member)"
           class="btn btn-sm btn-success mr-1 mb-1"
           [disabled]="member.isUpdating"
