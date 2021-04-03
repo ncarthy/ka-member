@@ -34,8 +34,7 @@ export class MemberListComponent implements OnInit {
     this.user = this.authenticationService.userValue;
   }
 
-  ngOnInit(): void {
-    this.showDeleteDate = false;
+  ngOnInit(): void {    
     if (this.router.url.substring(9, 16) == 'lapsed/') {
       this.loading = true;
       this.title = 'Lapsed Members';
