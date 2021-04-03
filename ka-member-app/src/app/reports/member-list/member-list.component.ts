@@ -126,7 +126,7 @@ export class MemberListComponent implements OnInit {
       this.loading = true;
       this.title = 'Former Members Still Paying';
       const months = this.route.snapshot.params['months'];
-      this.subtitle = `With payment received in the last ${months} months. Consider moving to 'Contributing ex-Member'.`;
+      this.subtitle = `With payment received in the last ${months} months. If payments continue change to 'Contributing ex-Member'.`;
 
       this.membersService
         .getFormerMembersWithRecentPayment(months)
@@ -221,7 +221,7 @@ export class MemberListComponent implements OnInit {
       case ButtonName.GOCARDLESS:
       case ButtonName.REMINDER:
       case ButtonName.SETTOFORMER:
-        return this.user.isAdmin;
+          return this.user.isAdmin && member.membershiptype != 'Former Member';
       default:
         return true;
     }
