@@ -26,6 +26,7 @@ const routes: Routes = [
             { path: 'invalidpostcodes', component: InvalidPostcodesComponent },
             { path: 'deletedmembers', component: MemberListComponent },
             { path: 'lapsedcem/:months', component: MemberListComponent },
+            { path: 'formermembers/:months', component: MemberListComponent },
         ]
     }
 ];

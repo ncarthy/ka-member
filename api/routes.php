@@ -107,6 +107,7 @@ $router->mount('/members', function () use ($router) {
     $router->get('/invalidpostcodes', 'MembersCtl@invalidPostcodes');
     $router->get('/deletedbutnotformer', 'MembersCtl@deletedButNotFormer');
     $router->get('/lapsedcem/(\d+)', 'MembersCtl@lapsedCEM');
+    $router->get('/formermember/(\d+)', 'MembersCtl@formerMember');
     $router->get('/filter', 'MembersCtl@filter');
     $router->patch('/lapsedcem/(\d+)', 'MembersCtl@patchLapsedCEM');
     $router->patch('/', 'MembersCtl@patch');

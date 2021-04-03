@@ -100,7 +100,7 @@ export class MemberListComponent implements OnInit {
         });
     } else if (this.router.url.includes('deleted')) {
       this.loading = true;
-      this.title = 'Mis-catergorized Deleted Members';
+      this.title = 'Mis-categorized Deleted Members';
       this.subtitle =
         "They should be moved to Former Member or, if 'Pending', deleted";
 
@@ -118,6 +118,18 @@ export class MemberListComponent implements OnInit {
 
       this.membersService
         .getLapsedCEMs(months)
+        .subscribe((response: MemberSearchResult[]) => {
+          this.loading = false;
+          this.members = response;
+        });
+    } else if (this.router.url.includes('formermember')) {
+      this.loading = true;
+      this.title = 'Former Members Still Paying';
+      const months = this.route.snapshot.params['months'];
+      this.subtitle = `With payment received in the last ${months} months. Consider moving to 'Contributing ex-Member'.`;
+
+      this.membersService
+        .getFormerMembersWithRecentPayment(months)
         .subscribe((response: MemberSearchResult[]) => {
           this.loading = false;
           this.members = response;

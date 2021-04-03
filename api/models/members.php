@@ -109,6 +109,10 @@ class Members{
         return $this->tabulateTransactionData('LapsedCEM', $start, $end, $cutoff);
     }
 
+    public function formerMembersStillPaying($start, $end){       
+        return $this->tabulateTransactionData('Former', $start, $end);
+    }
+
     private function tabulateTransactionData($report_name, $start, $end, $cutoff=''){
 
         $tablename = '_Transactions_'. substr(md5(microtime()),rand(0,26),5);   // 5 random characters     
@@ -141,6 +145,9 @@ class Members{
             case 'LapsedCEM':
                 $query = $query. " WHERE amount>=0 AND membershiptypeid=8 AND `lasttransactiondate` < '" . $cutoff . "' ORDER BY `lasttransactiondate`;";
                 break;                
+            case 'Former':
+                $query = $query. " WHERE amount>=0 AND membershiptypeid=9 ORDER BY `lasttransactiondate`;";
+                break;
         }
 
         $stmt = $this->conn->query($query); 

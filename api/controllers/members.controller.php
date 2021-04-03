@@ -326,6 +326,16 @@ class MembersCtl{
   }
 
 
+  /** Show all formerm members who have paid in the last $months months */
+  public static function formerMember($months){          
+    $end = isset($_GET['end']) ? $_GET['end'] : date('Y-m-d');
+    $start = isset($_GET['start']) ? $_GET['start'] : 
+                (new DateTime($end))->modify('-' . $months . ' month')->format('Y-m-d');
+
+    $model = new Members();
+
+    echo json_encode($model->formerMembersStillPaying($start, $end), JSON_NUMERIC_CHECK);
+  }
 
   public static function anonymize(){  
 

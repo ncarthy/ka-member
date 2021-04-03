@@ -134,4 +134,14 @@ export class MembersService {
     return this.http.patch(`${baseUrl}/lapsedcem/${months}`, `{"method": "setToFormer"}`);
   }
 
+  getFormerMembersWithRecentPayment(months: number): Observable<MemberSearchResult[]> {
+    return this.http.get(`${baseUrl}/formermember/${months}`).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
 }
