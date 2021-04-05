@@ -178,7 +178,7 @@
     #acc4="ngbAccordion"
     class="mb-2 col-sm-10"
     (panelChange)="beforeChange($event)"
-    *ngIF="user.isAdmin"
+    *ngIf="user.isAdmin"
   >
     <ngb-panel title="SecurityReports">
       <ng-template ngbPanelHeader let-opened="opened">

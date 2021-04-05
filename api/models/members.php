@@ -297,6 +297,51 @@ class Members{
 
     }
 
+    public function mapList(){
+
+        //select all data
+        $query = "SELECT idmember,name,title,businessname,addressfirstline,addresssecondline,
+                        city,m.postcode, os.gpslat,os.gpslong
+                    FROM vwMember m
+                    LEFT JOIN osdata os ON m.postcode = os.postcode
+                    WHERE deletedate IS NULL AND country='United Kingdom' AND 
+                        os.postcode IS NOT NULL AND
+                        `m`.membershiptypeid NOT IN (7,8,9)
+                    ORDER BY m.postcode;";
+
+        $stmt = $this->conn->query( $query );
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num;
+        $members_arr["records"]=array();
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+            
+                $member=array(
+                    "id" => $idmember,
+                    "name" => $name,
+                    "title" => $title,
+                    "businessname" => $businessname,
+                    "addressfirstline" => $addressfirstline,
+                    "addresssecondline" => $addresssecondline,
+                    "city" => $city,
+                    "postcode" => $postcode,
+                    "gpslat" => $gpslat,
+                    "gpslong" => $gpslong,
+                );
+                
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
+        }
+        
+        return $members_arr;
+
+    }    
+
     public function noUKAddress(){
 
         //select all data

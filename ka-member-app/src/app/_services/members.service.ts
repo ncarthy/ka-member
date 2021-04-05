@@ -28,6 +28,18 @@ export class MembersService {
     return this.http.get<any>(`${baseUrl}/emaillist`);
   }
 
+  getMapList(): Observable<MemberSearchResult[]> {
+    const queryUrl = `${baseUrl}/maplist`;
+
+    return this.http.get(queryUrl).pipe(
+      map((response: any) => {
+        return <any>response['records'].map((item: any) => {
+          return new MemberSearchResult(item);
+        });
+      })
+    );
+  }
+
   getLapsed(months: number): Observable<MemberSearchResult[]> {
     const queryUrl = `${baseUrl}/lapsed/${months}`;
 

@@ -100,8 +100,9 @@ $router->mount('/members', function () use ($router) {
     $router->get('/discount', 'MembersCtl@discount');
     $router->get('/payinghonlife', 'MembersCtl@payingHonLife');
     $router->get('/duplicatepayers', 'MembersCtl@duplicatepayers');
-    $router->get('/mailinglist', 'MembersCtl@mailingList');
-    $router->get('/emaillist', 'MembersCtl@emailList');
+    $router->get('/mailinglist', 'MembersCtl@mailinglist');
+    $router->get('/emaillist', 'MembersCtl@emaillist');
+    $router->get('/maplist', 'MembersCtl@maplist');
     $router->get('/noukaddress', 'MembersCtl@noUKAddress');
     $router->get('/invalidemails', 'MembersCtl@invalidEmails');
     $router->get('/invalidpostcodes', 'MembersCtl@invalidPostcodes');

@@ -42,7 +42,7 @@ export class MemberNameService {
   }
 
   /** Generate Observable of strings which are the concatanation of honorific, name and surname */
-  getNamesStringForMember(idmember: number) {
+  getNamesStringForMember(idmember: number) : Observable<string> {
 
     // http$ is of type Observable<MemberName[]>
     const http$ = this.http.get<MemberName[]>(`${baseUrl}/${idmember}`); 

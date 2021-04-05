@@ -38,6 +38,12 @@ class MembersCtl{
 
     echo json_encode($model->emailList(), JSON_NUMERIC_CHECK);
   }
+
+  public static function maplist(){
+    $model = new Members();
+
+    echo json_encode($model->mapList(), JSON_NUMERIC_CHECK);
+  }
   
   public static function lapsed($months){  
 

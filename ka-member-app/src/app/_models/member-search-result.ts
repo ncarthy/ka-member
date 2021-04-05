@@ -24,6 +24,8 @@ export class MemberSearchResult {
     email: string;
     postonhold: boolean;
     amount: boolean;
+    gpslat: number;
+    gpslong: number;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
     
@@ -51,7 +53,9 @@ export class MemberSearchResult {
         this.bankaccount = obj && obj.bankaccount || null;
         this.count = obj && obj.count || 0;
         this.postonhold = obj && obj.postonhold;
-        this.amount = obj && obj.amount;
+        this.amount = obj && obj.amount || 0;
+        this.gpslat = obj && obj.gpslat || null;
+        this.gpslong = obj && obj.gpslong || null;
     }
 
     convertDateToUKLocale(m: string) : string{
