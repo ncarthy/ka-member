@@ -8,8 +8,9 @@ import {
 import {} from 'googlemaps';
 import { MembersService } from '@app/_services';
 import { switchMap } from 'rxjs/operators';
-import { MemberSearchResult } from '@app/_models';
+import { MapMarker } from '@app/_models';
 import { Observable, merge, of } from 'rxjs';
+import CheapRuler from 'cheap-ruler';
 
 @Component({
   templateUrl: './map-list.component.html',
@@ -24,27 +25,36 @@ export class MapListComponent implements OnInit {
   markers$!: Observable<google.maps.Marker>;
   markers: google.maps.Marker[] = new Array();
   circle!: google.maps.Circle;
+  radius: number = 200;
+  ruler: CheapRuler = new CheapRuler(this.lat, 'meters');
 
   mapOptions: google.maps.MapOptions = {
     center: new google.maps.LatLng(this.lat, this.lng),
-    zoom: 15,
+    zoom: 16,
   };
 
   constructor(private membersService: MembersService) {
     // Create an Observable of Google Maps markers
     this.markers$ = this.membersService.getMapList().pipe(
-      switchMap((members: MemberSearchResult[]) => {
+      switchMap((members: MapMarker[]) => {
         const obs = members.map((x) => {
-          return of(
-            new google.maps.Marker({
-              position: new google.maps.LatLng(x.gpslat, x.gpslong),
-              map: this.map,
-              icon: {
-                path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                scale: 3,
-              },
-            })
-          );
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<p>${x.postcode}</p><p>No. of Members: ${x.count}</p>`,
+          });
+          let m: google.maps.Marker = new google.maps.Marker({
+            position: new google.maps.LatLng(x.gpslat, x.gpslng),
+            map: this.map,
+            icon: {
+              path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+              scale: 3,
+            },
+            label: x.postcode
+          });
+          m.addListener('click', () => {
+            infoWindow.open(this.map, m);
+            setTimeout(() => infoWindow.close(), 3000);
+          });
+          return of(m);
         });
         return merge(...obs);
       })
@@ -71,19 +81,25 @@ export class MapListComponent implements OnInit {
     );
     this.marker.setMap(this.map);
 
+    this.addCircleToMap(this.lat, this.lng);
+
     this.markers$.subscribe((m: google.maps.Marker) => {
+      const pos = m.getPosition();
+      if (!pos) return;
+      let d = this.ruler.distance([pos.lat(), pos.lng()], [this.lat, this.lng]);      
+      if (d <=
+          this.radius
+      ) {
+        m.setOpacity(1);
+      } else {
+        m.setOpacity(0.25);
+      }
       m.setMap(this.map);
       this.markers.push(m);
     });
   }
 
-  
-  drawCircleOnDragend(event: google.maps.MapMouseEvent) {
-    
-    if (this.circle) {
-      this.circle.setMap(null); // remove from map
-    }
-
+  addCircleToMap(lat: number, lng: number) {
     // add new circle
     this.circle = new google.maps.Circle({
       strokeColor: '#FF0000',
@@ -93,36 +109,41 @@ export class MapListComponent implements OnInit {
       fillOpacity: 0.35,
       map: this.map,
       center: {
-        lat: event.latLng.lat(),
-        lng: event.latLng.lng(),
+        lat: lat,
+        lng: lng,
       },
-      radius: 200,
+      radius: this.radius,
     });
-    //this.map.fitBounds(antennasCircle.getBounds());
-
-    this.findMarkersInArea();
   }
 
-  findMarkersInArea() {
-    if (!this.circle) return;
+  drawCircleOnDragend(event: google.maps.MapMouseEvent) {
+    if (this.circle) {
+      this.circle.setMap(null); // remove from map
+    }
 
-    const center: google.maps.LatLng = this.circle.getCenter();
-    const radius: number = this.circle.getRadius();
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
 
-    this.markers.forEach(element => {
+    this.addCircleToMap(lat, lng);
+
+    this.markers.forEach((element) => {
       const pos = element.getPosition();
 
-      if (pos && google.maps.geometry.spherical.computeDistanceBetween(
-        pos, center) <= radius) {
-          // inside circle
-          element.setOpacity(1);
-        } else {
-          element.setOpacity(0.5);
-        }
+      if (!pos) return;
+
+      const distance = this.ruler.distance(
+        [pos.lat(), pos.lng()],
+        [lat, lng]
+      );
+
+      if (distance <= this.radius) {
+        element.setOpacity(1);
+        console.log(element.getLabel());
+      } else {
+        element.setOpacity(0.5);
+      }
     });
-
-
-    
   }
 
+  
 }

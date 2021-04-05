@@ -300,14 +300,12 @@ class Members{
     public function mapList(){
 
         //select all data
-        $query = "SELECT idmember,name,title,businessname,addressfirstline,addresssecondline,
-                        city,m.postcode, os.gpslat,os.gpslong
+        $query = "SELECT m.postcode,os.gpslat,os.gpslong,COUNT(idmember) as `count`
                     FROM vwMember m
                     LEFT JOIN osdata os ON m.postcode = os.postcode
-                    WHERE deletedate IS NULL AND country='United Kingdom' AND 
-                        os.postcode IS NOT NULL AND
+                    WHERE deletedate IS NULL AND country='United Kingdom' AND os.postcode IS NOT NULL AND
                         `m`.membershiptypeid NOT IN (7,8,9)
-                    ORDER BY m.postcode;";
+                    GROUP BY os.gpslat, os.gpslong;";
 
         $stmt = $this->conn->query( $query );
         $num = $stmt->rowCount();
@@ -321,16 +319,10 @@ class Members{
                 extract($row);
             
                 $member=array(
-                    "id" => $idmember,
-                    "name" => $name,
-                    "title" => $title,
-                    "businessname" => $businessname,
-                    "addressfirstline" => $addressfirstline,
-                    "addresssecondline" => $addresssecondline,
-                    "city" => $city,
                     "postcode" => $postcode,
                     "gpslat" => $gpslat,
-                    "gpslong" => $gpslong,
+                    "gpslng" => $gpslong,
+                    "count" => $count,
                 );
                 
                 // create un-keyed list

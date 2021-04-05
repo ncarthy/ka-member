@@ -8,6 +8,7 @@ export * from './date-filter.enum';
 export * from './date-range.enum';
 export * from './form-mode.enum';
 export * from './getaddress-address';
+export * from './map-marker';
 export * from './member';
 export * from './member-count';
 export * from './member-filter';
