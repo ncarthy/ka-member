@@ -124,6 +124,10 @@ export class MemberAddEditComponent implements OnInit {
       area: [''],
       repeatpayment: [0],
       recurringpayment: [0],
+      gpslat1: [null],
+      gpslat2: [null],
+      gpslng1: [null],
+      gpslng2: [null],
     });
 
     // Fill country dropdown
