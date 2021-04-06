@@ -6,7 +6,6 @@ import {
   AuthenticationService,
   ToastService,
   MembersService,
-  MemberNameService,
 } from '@app/_services';
 
 @Component({ templateUrl: 'home.component.html' })
@@ -16,13 +15,11 @@ export class HomeComponent implements OnInit {
   membersByType!: MemberCount[];
   total!: number; // Estimated number of members, adjusted by contribution
   count!: number; // Actual number of members
-  test?: string;
 
   constructor(
     private authenticationService: AuthenticationService,
     private toastService: ToastService,
     private membersService: MembersService,
-    private memberNameService: MemberNameService
   ) {
     this.user = this.authenticationService.userValue;
   }

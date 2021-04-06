@@ -8,33 +8,47 @@ const baseUrl = `${environment.apiUrl}/member`;
 
 @Injectable({ providedIn: 'root' })
 export class MemberService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getAll() {
-        return this.http.get<Member[]>(baseUrl);
-    }
+  getAll() {
+    return this.http.get<Member[]>(baseUrl);
+  }
 
-    getById(id: number) {
-        return this.http.get<Member>(`${baseUrl}/${id}`);
-    }
+  getById(id: number) {
+    return this.http.get<Member>(`${baseUrl}/${id}`);
+  }
 
-    create(params: any) {
-        return this.http.post(baseUrl, params);
-    }
+  create(params: any) {
+    return this.http.post(baseUrl, params);
+  }
 
-    update(id: number, params: any) {
-        return this.http.put(`${baseUrl}/${id}`, params);
-    }
+  update(id: number, params: any) {
+    return this.http.put(`${baseUrl}/${id}`, params);
+  }
 
-    delete(id: number) {
-        return this.http.delete(`${baseUrl}/${id}`);
-    }
+  delete(id: number) {
+    return this.http.delete(`${baseUrl}/${id}`);
+  }
 
-    anonymize(id: number) {
-        return this.http.patch(`${baseUrl}/${id}`, `{"method": "Anonymize"}`);
-    }
+  anonymize(id: number) {
+    return this.http.patch(`${baseUrl}/${id}`, `{"method": "Anonymize"}`);
+  }
 
-    setToFormer(id: number) {
-        return this.http.patch(`${baseUrl}/${id}`, `{"method": "setToFormer"}`);
-    }
+  setToFormer(id: number) {
+    return this.http.patch(`${baseUrl}/${id}`, `{"method": "setToFormer"}`);
+  }
+
+  setPrimaryGeometry(id: number, lat: number, lng: number) {
+    return this.http.patch(
+      `${baseUrl}/${id}`,
+      `{"method": "setPrimaryGeometry", "gpslat":${lat}, "gpslng":${lng} }`
+    );
+  }
+
+  setSecondaryGeometry(id: number, lat: number, lng: number) {
+    return this.http.patch(
+      `${baseUrl}/${id}`,
+      `{"method": "setSecondaryGeometry", "gpslat":${lat}, "gpslng":${lng} }`
+    );
+  }
 }

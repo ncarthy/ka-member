@@ -6,9 +6,9 @@ import {
   OnInit,
 } from '@angular/core';
 import {} from 'googlemaps';
-import { MembersService } from '@app/_services';
-import { switchMap } from 'rxjs/operators';
-import { MapMarker } from '@app/_models';
+import { MemberService, MembersService } from '@app/_services';
+import { delay, map, switchMap } from 'rxjs/operators';
+import { Address, MapMarker, MemberSearchResult } from '@app/_models';
 import { Observable, merge, of } from 'rxjs';
 import CheapRuler from 'cheap-ruler';
 
@@ -22,44 +22,48 @@ export class MapListComponent implements OnInit {
   lng = -0.165382;
   marker!: google.maps.Marker;
   loading: boolean = false;
-  markers$!: Observable<google.maps.Marker>;
+  addresses$!: Observable<Address>;
   markers: google.maps.Marker[] = new Array();
   circle!: google.maps.Circle;
   radius: number = 200;
   ruler: CheapRuler = new CheapRuler(this.lat, 'meters');
   postcodesInCircle: string[] = new Array();
+  geocoder!: google.maps.Geocoder;
 
   mapOptions: google.maps.MapOptions = {
     center: new google.maps.LatLng(this.lat, this.lng),
     zoom: 16,
   };
 
-  constructor(private membersService: MembersService) {
-    // Create an Observable of Google Maps markers
-    this.markers$ = this.membersService.getMapList().pipe(
-      switchMap((members: MapMarker[]) => {
-        const obs = members.map((x) => {
+  constructor(
+    private membersService: MembersService,
+    private memberService: MemberService
+  ) {
+    this.geocoder = new google.maps.Geocoder();
 
-          let m: google.maps.Marker = this.createMarker(x);
-          return of(m);
+    // Create an Observable of Address
+    this.addresses$ = this.membersService.getMapList().pipe(
+      switchMap((memberAddresses: Address[]) => {
+        const obs = memberAddresses.map((x) => {
+          return of(x);
         });
         return merge(...obs);
       })
     );
   }
 
-  private createMarker(x: MapMarker) {
+  private createMarker(address: Address) {
     const infoWindow = new google.maps.InfoWindow({
-      content: `<p>${x.postcode}</p><p>No. of Members: ${x.count}</p>`,
+      content: `<p>${address.toString()}</p>`,
     });
     let m: google.maps.Marker = new google.maps.Marker({
-      position: new google.maps.LatLng(x.gpslat, x.gpslng),
+      position: new google.maps.LatLng(address.lat, address.lng),
       map: this.map,
       icon: {
         path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
         scale: 3,
       },
-      label: x.postcode
+      label: address.idmember.toString(),
     });
     m.addListener('click', () => {
       infoWindow.open(this.map, m);
@@ -90,7 +94,35 @@ export class MapListComponent implements OnInit {
 
     this.addCircleToMap(this.lat, this.lng);
 
-    this.markers$.subscribe((m: google.maps.Marker) => {
+    let i = 1;
+    this.addresses$.pipe(
+      map((address: Address) => {
+        if (!address.lat || !address.lng) {
+          this.geocoder.geocode(
+            { address: address.toString() },
+            (results, status) => {
+              if (status == 'OK') {
+                let m = this.memberService.setPrimaryGeometry(
+                  address.idmember,
+                  results[0].geometry.location.lat(),
+                  results[0].geometry.location.lng()
+                ).subscribe(() => console.log('Lat/Lng updated for idmember='+address.idmember));
+                address.lat = results[0].geometry.location.lat();
+                address.lng = results[0].geometry.location.lng();
+              } else {
+                console.log('Geocode was not successful: ' + status+', idmember='+address.idmember);
+              }                            
+              return address;
+            }
+          );
+        } else {
+
+          return address;
+        }
+      })
+    ).subscribe();
+
+    /*this.markers$.subscribe((m: google.maps.Marker) => {
       const pos = m.getPosition();
       if (!pos) return;
       let d = this.ruler.distance([pos.lat(), pos.lng()], [this.lat, this.lng]);      
@@ -103,7 +135,7 @@ export class MapListComponent implements OnInit {
       }
       m.setMap(this.map);
       this.markers.push(m);
-    });
+    });*/
   }
 
   addCircleToMap(lat: number, lng: number) {
@@ -120,7 +152,7 @@ export class MapListComponent implements OnInit {
         lng: lng,
       },
       radius: this.radius,
-    });    
+    });
   }
 
   drawCircleOnDragend(event: google.maps.MapMouseEvent) {
@@ -138,14 +170,11 @@ export class MapListComponent implements OnInit {
 
       if (!pos) return;
 
-      const distance = this.ruler.distance(
-        [pos.lat(), pos.lng()],
-        [lat, lng]
-      );
+      const distance = this.ruler.distance([pos.lat(), pos.lng()], [lat, lng]);
 
       if (distance <= this.radius) {
         element.setOpacity(1);
-        //this.postcodesInCircle.push(element.getLabel()?.text);        
+        //this.postcodesInCircle.push(element.getLabel()?.text);
       } else {
         element.setOpacity(0.5);
       }
@@ -153,6 +182,4 @@ export class MapListComponent implements OnInit {
 
     this.map.setCenter(event.latLng);
   }
-
-  
 }

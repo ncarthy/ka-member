@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import {
-  MapMarker,
+  Address,
   MemberCountResponse,
   MemberInvalidEmail,
   MemberInvalidPostcode,
@@ -29,13 +29,13 @@ export class MembersService {
     return this.http.get<any>(`${baseUrl}/emaillist`);
   }
 
-  getMapList(): Observable<MapMarker[]> {
+  getMapList(): Observable<Address[]> {
     const queryUrl = `${baseUrl}/maplist`;
 
     return this.http.get(queryUrl).pipe(
       map((response: any) => {
         return <any>response['records'].map((item: any) => {
-          return new MapMarker(item);
+          return new Address(item);
         });
       })
     );

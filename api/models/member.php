@@ -494,7 +494,7 @@ class Member{
                     gpslat1=NULL,                  
                     gpslat2=NULL,
                     gpslng1=NULL,
-                    gpslng2=NULL,                    
+                    gpslng2=NULL                    
                  WHERE
                     idmember=:id";
         

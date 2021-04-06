@@ -85,7 +85,7 @@ $router->mount('/member', function () use ($router) {
     // update member
     $router->put('/(\d+)', 'MemberCtl@update');
 
-    // take action on member; One of 'settoformer' or 'anonymize'
+    // take action on member; One of 'settoformer', 'anonymize', 'setPrimaryGeometry' etc.
     $router->patch('/(\d+)', 'MemberCtl@patch');
     // PATCH vs PUT: https://stackoverflow.com/a/34400076/6941165
 });
