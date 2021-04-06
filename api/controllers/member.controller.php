@@ -80,7 +80,11 @@ class MemberCtl{
           "country" => $model->country2ID
         ),
         "multiplier" => $model->multiplier,
-        "membershipfee" => $model->membershipfee
+        "membershipfee" => $model->membershipfee,
+        "gpslat1" => $model->gpslat1,
+        "gpslat2" => $model->gpslat2,
+        "gpslng1" => $model->gpslng1,
+        "gpslng2" => $model->gpslng2
     );
 
     // Substitution trick to preserve phone numbers as strings
@@ -172,6 +176,16 @@ class MemberCtl{
             case 'anonymize':
                 $model->anonymize();
                 break;
+            case 'setprimarygeometry':
+                if (isset($data->gpslat) && isset($data->gpslng)) {
+                  $model->setGeometry(false,$data->gpslat, $data->gpslng);
+                }                
+                break;
+            case 'setsecondarygeometry':
+              if (isset($data->gpslat) && isset($data->gpslng)) {
+                $model->setGeometry(true,$data->gpslat, $data->gpslng);
+              }                
+              break;
             default:
             http_response_code(422);  
             echo json_encode(

@@ -23,6 +23,8 @@ class Member{
     public $county;
     public $postcode;
     public $countryID;
+    public $gpslat1;
+    public $gpslng1;
     public $area;
     public $email1;
     public $phone1;
@@ -32,6 +34,8 @@ class Member{
     public $county2;
     public $postcode2;
     public $country2ID;
+    public $gpslat2;
+    public $gpslng2;
     public $email2;
     public $phone2;
     public $statusID;
@@ -62,7 +66,8 @@ class Member{
                     addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold,multiplier,membership_fee
+                    gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold,multiplier,membership_fee,
+                    gpslat1,gpslng1,gpslat2,gpslng2
                     FROM
                     " . $this->table_name;                    
 
@@ -125,7 +130,11 @@ class Member{
                             "country" => $country2ID
                         ),
                         "multiplier" => $multiplier,
-                        "membershipfee" => $membership_fee
+                        "membershipfee" => $membership_fee,
+                        "gpslat1" => $gpslat1,
+                        "gpslat2" => $gpslat2,
+                        "gpslng1" => $gpslng1,
+                        "gpslng2" => $gpslng2,
                     );
 
                     array_push($member_arr, $member_item);
@@ -150,7 +159,8 @@ class Member{
                         addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
                         phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                         updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
-                        gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold, multiplier, membership_fee
+                        gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold, multiplier, membership_fee,
+                        gpslat1,gpslng1,gpslat2,gpslng2
                         FROM
                         " . $this->table_name . " 
                         WHERE idmember = ?
@@ -208,6 +218,10 @@ class Member{
                 $this->postonhold = $row['postonhold']?true:false;
                 $this->multiplier = $row['multiplier'];
                 $this->membershipfee = $row['membership_fee'];
+                $this->gpslat1 = $row['gpslat1'];
+                $this->gpslat2 = $row['gpslat2'];
+                $this->gpslng1 = $row['gpslng1'];
+                $this->gpslng2 = $row['gpslng2'];
             }
         }
 
@@ -251,7 +265,11 @@ class Member{
                     gdpr_sm=:gdpr_sm,
                     postonhold=:postonhold,
                     multiplier=:multiplier,
-                    membership_fee=:membershipfee
+                    membership_fee=:membershipfee,
+                    gpslat1=:gpslat1,
+                    gpslat2=:gpslat2,
+                    gpslng1=:gpslng1,
+                    gpslng2=:gpslng2
                     ;";
         
         // prepare query
@@ -303,6 +321,10 @@ class Member{
         $stmt->bindParam(":postonhold", $postonhold);
         $stmt->bindParam(":multiplier", $this->multiplier);
         $stmt->bindParam(":membershipfee", $this->membershipfee);
+        $stmt->bindParam(":gpslat1", $this->gpslat1);
+        $stmt->bindParam(":gpslat2", $this->gpslat2);
+        $stmt->bindParam(":gpslng1", $this->gpslng1);
+        $stmt->bindParam(":gpslng2", $this->gpslng2);
         
         // execute query
         if($stmt->execute()){
@@ -357,7 +379,11 @@ class Member{
                     gdpr_sm=:gdpr_sm,
                     postonhold=:postonhold,
                     multiplier=:multiplier,
-                    membership_fee=:membershipfee                    
+                    membership_fee=:membershipfee,
+                    gpslat1=:gpslat1,
+                    gpslat2=:gpslat2,
+                    gpslng1=:gpslng1,
+                    gpslng2=:gpslng2                    
                  WHERE
                     idmember=:id";
         
@@ -410,6 +436,10 @@ class Member{
         $stmt->bindParam(":postonhold", $postonhold);
         $stmt->bindParam(":multiplier", $this->multiplier);
         $stmt->bindParam(":membershipfee", $this->membershipfee);
+        $stmt->bindParam(":gpslat1", $this->gpslat1);
+        $stmt->bindParam(":gpslat2", $this->gpslat2);
+        $stmt->bindParam(":gpslng1", $this->gpslng1);
+        $stmt->bindParam(":gpslng2", $this->gpslng2);
 
         // execute query
         if($stmt->execute()){
@@ -460,7 +490,11 @@ class Member{
                     email2='', 
                     phone2='', 
                     updatedate= NULL, 
-                    username=:username                  
+                    username=:username,
+                    gpslat1=NULL,                  
+                    gpslat2=NULL,
+                    gpslng1=NULL,
+                    gpslng2=NULL,                    
                  WHERE
                     idmember=:id";
         
@@ -513,6 +547,48 @@ class Member{
         
         return false;
     }
+
+        function setGeometry($isSecondary, $lat, $lng){
+            /* sanitize */
+            $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+    
+            $query = "UPDATE
+                        " . $this->table_name . "
+                        SET ";
+
+            if ($isSecondary) {
+                $query .= "gpslat2 = :lat, gpslng2 = :lng,";
+                $this->gpslat2 = $lat;
+                $this->gpslng2 = $lng;
+            } else {
+                $query .= "gpslat1 = :lat, gpslng1 = :lng,";
+                $this->gpslat1 = $lat;
+                $this->gpslng1 = $lng;
+            }
+            
+            $query .= "     updatedate= NULL, 
+                            username=:username  
+                        WHERE idmember=:id; ";
+            
+            // prepare query
+            $stmt = $this->conn->prepare($query);
+    
+            // sanitize
+            $this->username=htmlspecialchars(strip_tags($this->username));            
+    
+            // bind values
+            $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
+            $stmt->bindParam(":username", $this->username);             
+            $stmt->bindParam(":lat", $lat);            
+            $stmt->bindParam(":lng", $lng);
+    
+            // execute query
+            if($stmt->execute()){
+                return true;
+            }
+            
+            return false;
+        }
 
 
     // Delete one member from the database
@@ -598,6 +674,10 @@ class Member{
         $this->country2ID = !empty($this->country2ID) ? $this->country2ID : NULL;
         $this->multiplier = !empty($this->multiplier) ? $this->multiplier : NULL;
         $this->membershipfee = !empty($this->membershipfee) ? $this->membershipfee : NULL;
+        $this->gpslat1 = !empty($this->gpslat1) ? $this->gpslat1 : NULL;
+        $this->gpslat2 = !empty($this->gpslat2) ? $this->gpslat2 : NULL;
+        $this->gpslng1 = !empty($this->gpslng1) ? $this->gpslng1 : NULL;
+        $this->gpslng2 = !empty($this->gpslng2) ? $this->gpslng2 : NULL;        
     }
 }
 ?>

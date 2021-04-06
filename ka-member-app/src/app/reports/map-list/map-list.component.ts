@@ -27,6 +27,7 @@ export class MapListComponent implements OnInit {
   circle!: google.maps.Circle;
   radius: number = 200;
   ruler: CheapRuler = new CheapRuler(this.lat, 'meters');
+  postcodesInCircle: string[] = new Array();
 
   mapOptions: google.maps.MapOptions = {
     center: new google.maps.LatLng(this.lat, this.lng),
@@ -38,27 +39,33 @@ export class MapListComponent implements OnInit {
     this.markers$ = this.membersService.getMapList().pipe(
       switchMap((members: MapMarker[]) => {
         const obs = members.map((x) => {
-          const infoWindow = new google.maps.InfoWindow({
-            content: `<p>${x.postcode}</p><p>No. of Members: ${x.count}</p>`,
-          });
-          let m: google.maps.Marker = new google.maps.Marker({
-            position: new google.maps.LatLng(x.gpslat, x.gpslng),
-            map: this.map,
-            icon: {
-              path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-              scale: 3,
-            },
-            label: x.postcode
-          });
-          m.addListener('click', () => {
-            infoWindow.open(this.map, m);
-            setTimeout(() => infoWindow.close(), 3000);
-          });
+
+          let m: google.maps.Marker = this.createMarker(x);
           return of(m);
         });
         return merge(...obs);
       })
     );
+  }
+
+  private createMarker(x: MapMarker) {
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<p>${x.postcode}</p><p>No. of Members: ${x.count}</p>`,
+    });
+    let m: google.maps.Marker = new google.maps.Marker({
+      position: new google.maps.LatLng(x.gpslat, x.gpslng),
+      map: this.map,
+      icon: {
+        path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+        scale: 3,
+      },
+      label: x.postcode
+    });
+    m.addListener('click', () => {
+      infoWindow.open(this.map, m);
+      setTimeout(() => infoWindow.close(), 3000);
+    });
+    return m;
   }
 
   ngOnInit(): void {}
@@ -113,7 +120,7 @@ export class MapListComponent implements OnInit {
         lng: lng,
       },
       radius: this.radius,
-    });
+    });    
   }
 
   drawCircleOnDragend(event: google.maps.MapMouseEvent) {
@@ -138,11 +145,13 @@ export class MapListComponent implements OnInit {
 
       if (distance <= this.radius) {
         element.setOpacity(1);
-        console.log(element.getLabel());
+        //this.postcodesInCircle.push(element.getLabel()?.text);        
       } else {
         element.setOpacity(0.5);
       }
     });
+
+    this.map.setCenter(event.latLng);
   }
 
   

@@ -604,12 +604,12 @@ CREATE TABLE IF NOT EXISTS `osdata` (
   `oslat` decimal(10,6) DEFAULT NULL COMMENT 'Originally from OS',
   `oslong` decimal(10,6) DEFAULT NULL COMMENT 'From OS',
   `gpslat` decimal(10,6) DEFAULT NULL COMMENT 'Google maps values',
-  `gpslong` decimal(10,6) DEFAULT NULL COMMENT 'google maps values',
+  `gpslng` decimal(10,6) DEFAULT NULL COMMENT 'Google maps values',
   PRIMARY KEY (`postcodeid`),
   UNIQUE KEY `Unique_Postcode` (`postcode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2162 DEFAULT CHARSET=utf8mb4 COMMENT='Store postcode to Easting/Northing conversion';
 
-INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslong`) VALUES
+INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslng`) VALUES
 (1, 'SW1X 0AA', 527861, 179206, '51.496822', '-0.157841', '51.497333', '-0.159443'),
 (2, 'SW1X 0AB', 527818, 179205, '51.496823', '-0.158460', '51.497334', '-0.160063'),
 (3, 'SW1X 0AD', 527678, 179178, '51.496612', '-0.160486', '51.497123', '-0.162088'),
@@ -1205,7 +1205,7 @@ INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, 
 (593, 'SW3 2BQ', 527209, 179191, '51.496834', '-0.167235', '51.497345', '-0.168836'),
 (594, 'SW3 2BS', 527285, 179095, '51.495954', '-0.166175', '51.496465', '-0.167777'),
 (595, 'SW3 2BT', 527371, 179016, '51.495225', '-0.164965', '51.495736', '-0.166567');
-INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslong`) VALUES
+INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslng`) VALUES
 (596, 'SW3 2BU', 527406, 179054, '51.495559', '-0.164448', '51.496070', '-0.166049'),
 (597, 'SW3 2BW', 527252, 179023, '51.495315', '-0.166676', '51.495826', '-0.168278'),
 (598, 'SW3 2BX', 527284, 179150, '51.496449', '-0.166170', '51.496960', '-0.167771'),
@@ -1797,7 +1797,7 @@ INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, 
 (1184, 'SW3 5NR', 527181, 177942, '51.485615', '-0.168088', '51.486127', '-0.169689'),
 (1185, 'SW3 5NT', 527255, 177891, '51.485140', '-0.167041', '51.485652', '-0.168642'),
 (1186, 'SW3 5NU', 527273, 177925, '51.485441', '-0.166770', '51.485954', '-0.168371');
-INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslong`) VALUES
+INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslng`) VALUES
 (1187, 'SW3 5NX', 527278, 177866, '51.484910', '-0.166719', '51.485422', '-0.168320'),
 (1188, 'SW3 5NY', 527332, 177842, '51.484682', '-0.165950', '51.485194', '-0.167551'),
 (1189, 'SW3 5NZ', 527330, 177810, '51.484395', '-0.165991', '51.484907', '-0.167592'),
@@ -2387,7 +2387,7 @@ INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, 
 (1773, 'SW7 3JW', 526722, 178656, '51.492135', '-0.174440', '51.492647', '-0.176040'),
 (1774, 'SW7 3JX', 526715, 178662, '51.492191', '-0.174538', '51.492702', '-0.176139'),
 (1775, 'SW7 3JZ', 526696, 178647, '51.492060', '-0.174817', '51.492571', '-0.176418');
-INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslong`) VALUES
+INSERT INTO `osdata` (`postcodeid`, `postcode`, `easting`, `northing`, `oslat`, `oslong`, `gpslat`, `gpslng`) VALUES
 (1776, 'SW7 3LB', 526677, 178631, '51.491921', '-0.175096', '51.492432', '-0.176697'),
 (1777, 'SW7 3LD', 526656, 178632, '51.491934', '-0.175398', '51.492446', '-0.176999'),
 (1778, 'SW7 3LE', 526597, 178591, '51.491579', '-0.176263', '51.492090', '-0.177863'),
@@ -2771,6 +2771,10 @@ UPDATE member SET postcode = 'SW7 1EH' WHERE idmember=478;
 UPDATE member SET postcode = 'SW1X 7PL' WHERE idmember=557;
 UPDATE member SET postcode = 'SW3 1LH' WHERE idmember=579;
 UPDATE member SET postcode = 'SW7 1JY' WHERE idmember=746;
+
+ALTER TABLE `member` ADD `gpslat1` DECIMAL(10,6) NULL AFTER `countryID`, ADD `gpslng1` DECIMAL(10,6) NULL AFTER `gpslat1`;
+ALTER TABLE `member` ADD `gpslat2` DECIMAL(10,6) NULL AFTER `country2ID`, ADD `gpslng2` DECIMAL(10,6) NULL AFTER `gpslat2`;
+
 COMMIT;
 
 OPTIMIZE TABLE `member`;
