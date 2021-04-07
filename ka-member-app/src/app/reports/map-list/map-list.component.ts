@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import {} from 'googlemaps';
 import { MemberService, MembersService } from '@app/_services';
-import { delay, map, switchMap } from 'rxjs/operators';
+import { concatMap, delay, map, switchMap } from 'rxjs/operators';
 import { Address, MapMarker, MemberSearchResult } from '@app/_models';
-import { Observable, merge, of } from 'rxjs';
+import { Observable, from, merge, of, concat, bindCallback } from 'rxjs';
 import CheapRuler from 'cheap-ruler';
 
 @Component({
@@ -20,7 +20,7 @@ export class MapListComponent implements OnInit {
   map!: google.maps.Map;
   lat = 51.499063;
   lng = -0.165382;
-  marker!: google.maps.Marker;
+  mapCentreMarker!: google.maps.Marker;
   loading: boolean = false;
   addresses$!: Observable<Address>;
   markers: google.maps.Marker[] = new Array();
@@ -29,6 +29,7 @@ export class MapListComponent implements OnInit {
   ruler: CheapRuler = new CheapRuler(this.lat, 'meters');
   postcodesInCircle: string[] = new Array();
   geocoder!: google.maps.Geocoder;
+  ids: number[] = new Array();
 
   mapOptions: google.maps.MapOptions = {
     center: new google.maps.LatLng(this.lat, this.lng),
@@ -52,7 +53,7 @@ export class MapListComponent implements OnInit {
     );
   }
 
-  private createMarker(address: Address) {
+  private createMarker(address: Address): google.maps.Marker {
     const infoWindow = new google.maps.InfoWindow({
       content: `<p>${address.toString()}</p>`,
     });
@@ -61,6 +62,7 @@ export class MapListComponent implements OnInit {
       map: this.map,
       icon: {
         path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+        strokeColor: 'blue',
         scale: 3,
       },
       label: address.idmember.toString(),
@@ -80,25 +82,42 @@ export class MapListComponent implements OnInit {
 
   mapInitializer() {
     this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
-    this.marker = new google.maps.Marker({
+    this.mapCentreMarker = new google.maps.Marker({
       position: new google.maps.LatLng(this.lat, this.lng),
       map: this.map,
       draggable: true,
     });
     google.maps.event.addListener(
-      this.marker,
+      this.mapCentreMarker,
       'dragend',
       (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event)
     );
-    this.marker.setMap(this.map);
+    this.mapCentreMarker.setMap(this.map);
 
     this.addCircleToMap(this.lat, this.lng);
 
-    let i = 1;
     this.addresses$.pipe(
       map((address: Address) => {
-        if (!address.lat || !address.lng) {
-          this.geocoder.geocode(
+        let m: google.maps.Marker = this.createMarker(address);
+        const pos = m.getPosition();
+        if (!pos) return;
+        let d = this.ruler.distance([pos.lat(), pos.lng()], [this.lat, this.lng]);      
+        if (d <=
+            this.radius
+        ) {
+          this.ids.push(address.idmember);
+        }
+        m.setMap(this.map);
+        this.markers.push(m);
+      })
+    ).subscribe();
+
+    /* let i = 1;
+    this.addresses$
+      .pipe(
+        map((address: Address) => {
+          if (!address.lat || !address.lng) {
+            this.geocoder.geocode(
             { address: address.toString() },
             (results, status) => {
               if (status == 'OK') {
@@ -111,16 +130,16 @@ export class MapListComponent implements OnInit {
                 address.lng = results[0].geometry.location.lng();
               } else {
                 console.log('Geocode was not successful: ' + status+', idmember='+address.idmember);
-              }                            
-              return address;
+              }                      
+            return address;
             }
           );
-        } else {
-
-          return address;
-        }
-      })
-    ).subscribe();
+          } else {
+            return address;
+          }
+        })
+      )
+      .subscribe();*/
 
     /*this.markers$.subscribe((m: google.maps.Marker) => {
       const pos = m.getPosition();
@@ -136,6 +155,48 @@ export class MapListComponent implements OnInit {
       m.setMap(this.map);
       this.markers.push(m);
     });*/
+/*
+    this.addresses$
+      .pipe(
+        concatMap((value: Address, index: number) => {
+          console.log(value.toString());
+          return this.geocode(value);
+        }),
+        concatMap((value: Address, index: number) => {
+          return this.memberService.setSecondaryGeometry(
+            value.idmember,
+            value.lat,
+            value.lng
+          );
+        })
+      )
+      .subscribe((reasult) => console.log('done'));*/
+  }
+
+  geocode(address: Address): Observable<Address> {
+    return new Observable((observer) =>
+      this.geocoder.geocode(
+        { address: address.toString() },
+        (
+          results: google.maps.GeocoderResult[],
+          status: google.maps.GeocoderStatus
+        ) => {
+          if ((status = google.maps.GeocoderStatus.OK)) {
+            let ll = results[0].geometry.location;
+            address.lat = ll.lat();
+            address.lng = ll.lng();
+          } else {
+            console.log(
+              'Geocode was not successful: ' +
+                status +
+                ', idmember=' +
+                address.idmember
+            );
+          }
+          observer.next(address);
+        }
+      )
+    );
   }
 
   addCircleToMap(lat: number, lng: number) {
@@ -164,6 +225,7 @@ export class MapListComponent implements OnInit {
     const lng = event.latLng.lng();
 
     this.addCircleToMap(lat, lng);
+    this.ids = new Array();
 
     this.markers.forEach((element) => {
       const pos = element.getPosition();
@@ -173,10 +235,11 @@ export class MapListComponent implements OnInit {
       const distance = this.ruler.distance([pos.lat(), pos.lng()], [lat, lng]);
 
       if (distance <= this.radius) {
-        element.setOpacity(1);
-        //this.postcodesInCircle.push(element.getLabel()?.text);
-      } else {
-        element.setOpacity(0.5);
+        let label = element.getLabel();
+        if (label) {
+          let text = label.text;
+          this.ids.push(parseInt(text));
+        }        
       }
     });
 

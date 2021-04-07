@@ -73,7 +73,11 @@ export class MemberManageComponent implements OnInit {
       address: [{ value: null, disabled: true }],
       note: [null],
       username: [null],
-      updatedate: [null]
+      updatedate: [null],
+      gpslat1: [null],
+      gpslat2: [null],
+      gpslng1: [null],
+      gpslng2: [null],
     });
 
     this.memberService

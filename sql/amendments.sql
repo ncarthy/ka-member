@@ -2771,6 +2771,7 @@ UPDATE member SET postcode = 'SW7 1EH' WHERE idmember=478;
 UPDATE member SET postcode = 'SW1X 7PL' WHERE idmember=557;
 UPDATE member SET postcode = 'SW3 1LH' WHERE idmember=579;
 UPDATE member SET postcode = 'SW7 1JY' WHERE idmember=746;
+UPDATE member SET postcode2 = 'SW1X 7PQ' WHERE idmember=2;
 UPDATE member SET addresssecondline = 'Knightsbridge' WHERE idmember IN (21,263);
 UPDATE member SET addressfirstline='Flat 3 Chase Court',addresssecondline='28-29 Beaufort Gardens' WHERE idmember = 453;
 UPDATE `member` SET `addressfirstline` = 'Flat 69 Montrose Court', `addresssecondline` = 'Princes Gate', `postcode` = 'SW7 2QG' WHERE `member`.`idmember` = 604;
@@ -2779,6 +2780,7 @@ UPDATE `member` SET `addressfirstline` = 'Flat 13 Montrose Court', `addresssecon
 UPDATE `member` SET `addressfirstline` = 'Flat 45 Montrose Court', `addresssecondline` = 'Princes Gate' WHERE `member`.`idmember` = 474;
 UPDATE `member` SET `postcode` = 'SW7 1HX' WHERE `member`.`idmember` = 594;
 UPDATE `member` SET `addressfirstline` = 'Flat 23 Denbigh House', `addresssecondline` = '8-13 Hans Place', `postcode` = 'SW1X 0EX' WHERE `member`.`idmember` = 593;
+UPDATE `member` SET addressfirstline='',`addressfirstline2` = '16 Ennismore Mews', city2='London' WHERE `member`.`idmember` = 321;
 
 ALTER TABLE `member` ADD `gpslat1` DECIMAL(10,6) NULL AFTER `countryID`, ADD `gpslng1` DECIMAL(10,6) NULL AFTER `gpslat1`;
 ALTER TABLE `member` ADD `gpslat2` DECIMAL(10,6) NULL AFTER `country2ID`, ADD `gpslng2` DECIMAL(10,6) NULL AFTER `gpslat2`;
@@ -3529,6 +3531,28 @@ UPDATE member SET gpslat1=51.500785, gpslng1=-0.179866 WHERE idmember = 917;
 UPDATE member SET gpslat1=51.501548, gpslng1=-0.162072 WHERE idmember = 918;
 UPDATE member SET gpslat1=51.4927, gpslng1=-0.167176 WHERE idmember = 920;
 UPDATE member SET gpslat1=51.501215, gpslng1=-0.167724 WHERE idmember = 921;
+UPDATE member SET gpslat2=51.502095, gpslng2=-0.162957 WHERE idmember = 2;
+UPDATE member SET gpslat2=51.488272, gpslng2=-0.119152 WHERE idmember = 16;
+UPDATE member SET gpslat2=51.492135, gpslng2=-0.165339 WHERE idmember = 41;
+UPDATE member SET gpslat2=51.501441, gpslng2=-0.167616 WHERE idmember = 49;
+UPDATE member SET gpslat2=51.390858, gpslng2=-2.833458 WHERE idmember = 63;
+UPDATE member SET gpslat2=51.488271, gpslng2=-0.167104 WHERE idmember = 67;
+UPDATE member SET gpslat2=51.496377, gpslng2=-0.1685 WHERE idmember = 92;
+UPDATE member SET gpslat2=51.498786, gpslng2=-0.166383 WHERE idmember = 159;
+UPDATE member SET gpslat2=51.496736, gpslng2=-0.153747 WHERE idmember = 204;
+UPDATE member SET gpslat2=51.499377, gpslng2=-0.171183 WHERE idmember = 227;
+UPDATE member SET gpslat2=51.491042, gpslng2=-0.175961 WHERE idmember = 249;
+UPDATE member SET gpslat2=51.499356, gpslng2=-0.165627 WHERE idmember = 301;
+UPDATE member SET gpslat2=51.498574, gpslng2=-0.167896 WHERE idmember = 311;
+UPDATE member SET gpslat2=51.495908, gpslng2=-0.163831 WHERE idmember = 331;
+UPDATE member SET gpslat2=51.499976, gpslng2=-0.170511 WHERE idmember = 419;
+UPDATE member SET gpslat2=51.477848, gpslng2=-2.631155 WHERE idmember = 433;
+UPDATE member SET gpslat2=51.501343, gpslng2=-0.163962 WHERE idmember = 460;
+UPDATE member SET gpslat2=51.500179, gpslng2=-0.164183 WHERE idmember = 511;
+UPDATE member SET gpslat2=51.49696, gpslng2=-0.164361 WHERE idmember = 533;
+UPDATE member SET gpslat2=51.49906, gpslng2=-0.167188 WHERE idmember = 617;
+UPDATE member SET gpslat2=51.496442, gpslng2=-0.168782 WHERE idmember = 660;
+UPDATE member SET gpslat2=51.500434, gpslng2=-0.163942 WHERE idmember = 702;
 
 
 COMMIT;

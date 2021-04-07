@@ -11,6 +11,8 @@ import {
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import {} from 'googlemaps';
+
 import { from, throwError } from 'rxjs';
 import { first, map, concatMap, catchError } from 'rxjs/operators';
 
@@ -124,10 +126,6 @@ export class MemberAddEditComponent implements OnInit {
       area: [''],
       repeatpayment: [0],
       recurringpayment: [0],
-      gpslat1: [null],
-      gpslat2: [null],
-      gpslng1: [null],
-      gpslng2: [null],
     });
 
     // Fill country dropdown

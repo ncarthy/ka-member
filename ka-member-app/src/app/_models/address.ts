@@ -25,8 +25,7 @@ export class Address {
     return (
       this.addressfirstline +
       ' ' +
-      this.addresssecondline +
-      ' ' +
+      (this.addresssecondline?this.addresssecondline + ' ':'') +
       this.city +
       ' ' +
       this.postcode +
