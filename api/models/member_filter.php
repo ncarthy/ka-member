@@ -199,10 +199,14 @@ class MemberFilter{
         FROM " . $this->tablename . " M
         JOIN member m ON M.idmember = m.idmember
         LEFT JOIN membername mn ON m.idmember = mn.member_idmember
-        WHERE m.businessname NOT LIKE :param AND 
-            (mn.surname NOT LIKE :param OR mn.surname IS NULL);";
+        WHERE m.businessname NOT LIKE :param1 AND 
+            (mn.surname NOT LIKE :param2 OR mn.surname IS NULL);";
 
-        $this->executeDeleteStringParam($name, $query);
+        $stmt = $this->conn->prepare($query);      
+        $param_clean = htmlspecialchars(strip_tags($name)).'%';
+        $stmt->bindParam (":param1", $param_clean, PDO::PARAM_STR);
+        $stmt->bindParam (":param2", $param_clean, PDO::PARAM_STR);
+        $stmt->execute();
     }
 
     public function setMemberTypeID($membertypeID){      
