@@ -244,11 +244,16 @@ class MemberFilter{
         $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member M2 ON M.idmember = M2.idmember
-                    WHERE (M2.`addressfirstline` IS NULL OR M2.`addressfirstline` NOT LIKE :param) AND (
-                        M2.`addresssecondline` IS NULL OR M2.`addresssecondline` NOT LIKE :param) AND (
-                        M2.`city` IS NULL OR M2.`city` NOT LIKE :param)
+                    WHERE (M2.`addressfirstline` IS NULL OR M2.`addressfirstline` NOT LIKE :param1) AND (
+                        M2.`addresssecondline` IS NULL OR M2.`addresssecondline` NOT LIKE :param2) AND (
+                        M2.`city` IS NULL OR M2.`city` NOT LIKE :param3)
                     ;";
-        $this->executeDeleteStringParam('%'.$address, $query);      
+        $stmt = $this->conn->prepare($query);      
+        $param_clean = '%'.htmlspecialchars(strip_tags($address)).'%';
+        $stmt->bindParam (":param1", $param_clean, PDO::PARAM_STR);
+        $stmt->bindParam (":param2", $param_clean, PDO::PARAM_STR);
+        $stmt->bindParam (":param3", $param_clean, PDO::PARAM_STR);
+        $stmt->execute();    
     }
 
     public function setPaymentTypeID($paymenttypeid){      

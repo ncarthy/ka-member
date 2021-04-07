@@ -299,13 +299,59 @@ class Members{
 
     public function mapList(){
 
-        //select all data
-        $query = "SELECT m.postcode,os.gpslat,os.gpslong,COUNT(idmember) as `count`
-                    FROM vwMember m
-                    LEFT JOIN osdata os ON m.postcode = os.postcode
-                    WHERE deletedate IS NULL AND country='United Kingdom' AND os.postcode IS NOT NULL AND
-                        `m`.membershiptypeid NOT IN (7,8,9)
-                    GROUP BY os.gpslat, os.gpslong;";
+        $query = "SELECT m.idmember, IFNULL(GROUP_CONCAT(CONCAT(CASE
+                            WHEN `mn`.`honorific` = '' THEN ''
+                            ELSE CONCAT(`mn`.`honorific`, ' ')
+                        END,
+                        CASE
+                            WHEN `mn`.`firstname` = '' THEN ''
+                            ELSE CONCAT(`mn`.`firstname`, ' ')
+                        END,
+                        `mn`.`surname`)
+                    SEPARATOR ' & '),
+                    '') AS `name`,
+                    CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN
+                    `m`.`addressfirstline2`
+                    ELSE `m`.`addressfirstline`
+                    END AS `addressfirstline`,
+                    CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN
+                    `m`.`addresssecondline2`
+                    ELSE `m`.`addresssecondline`
+                    END AS `addresssecondline`,
+                    CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN
+                    `m`.`city2`
+                    ELSE `m`.`city`
+                    END AS `city`,
+                    CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN
+                    `m`.`postcode2`
+                    ELSE `m`.`postcode`
+                    END AS `postcode`,
+                    CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN `c2`.`name`
+                    ELSE `c1`.`name`
+                    END AS `country`,
+                    CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN CASE WHEN `m`.`gpslat2` IS NULL THEN `os2`.gpslat ELSE `m`.`gpslat2` END
+                    ELSE CASE WHEN `m`.`gpslat1` IS NULL THEN `os1`.gpslat ELSE `m`.`gpslat1` END
+                    END AS lat,
+                    CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN CASE WHEN `m`.`gpslng2` IS NULL THEN `os2`.gpslng ELSE `m`.`gpslng2` END
+                    ELSE CASE WHEN `m`.`gpslng1` IS NULL THEN `os1`.gpslng ELSE `m`.`gpslng1` END
+                    END AS lng
+                    FROM
+                    `member` `m`
+                    LEFT JOIN `membername` `mn` ON (`m`.`idmember` = `mn`.`member_idmember`)
+                    LEFT JOIN country c1 ON m.countryID = c1.id
+                    LEFT JOIN country c2 ON m.country2ID = c2.id
+                    LEFT JOIN `osdata` `os1` ON (`m`.`postcode` = `os1`.`postcode`)
+                    LEFT JOIN `osdata` `os2` ON (`m`.`postcode` = `os2`.`postcode`)
+                    WHERE m.deletedate IS NULL
+                    GROUP BY `m`.`idmember`
+            ";
 
         $stmt = $this->conn->query( $query );
         $num = $stmt->rowCount();
@@ -319,10 +365,14 @@ class Members{
                 extract($row);
             
                 $member=array(
+                    "idmember" => $idmember,
+                    "addressfirstline" => $addressfirstline,
+                    "addresssecondline" => $addresssecondline,
+                    "city" => $city,
                     "postcode" => $postcode,
-                    "gpslat" => $gpslat,
-                    "gpslng" => $gpslong,
-                    "count" => $count,
+                    "country" => $country,
+                    "lat" => $lat,
+                    "lng" => $lng
                 );
                 
                 // create un-keyed list
@@ -557,6 +607,9 @@ class Members{
 
     /** Set all the members in the $ids list to be former members */
     public function setToFormer($ids, $username) {
+        if (empty($ids)) {
+            return 0;
+        }
         $ids_string = implode(',',$ids);
         $query = "UPDATE member m, membershipstatus ms
                         SET membership_idmembership = ms.idmembership,

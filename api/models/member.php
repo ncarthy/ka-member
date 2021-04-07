@@ -119,7 +119,9 @@ class Member{
                             "city" => html_entity_decode($city),
                             "county" => html_entity_decode($county),
                             "postcode" => html_entity_decode($postcode),
-                            "country" => $countryID
+                            "country" => $countryID,
+                            "lat" => $gpslat1,
+                            "lng" => $gpslng1,
                         ),
                         "secondaryAddress" => array(
                             "addressfirstline" => html_entity_decode($addressfirstline2),
@@ -127,14 +129,12 @@ class Member{
                             "city" => html_entity_decode($city2),
                             "county" => html_entity_decode($county2),
                             "postcode" => html_entity_decode($postcode2),
-                            "country" => $country2ID
+                            "country" => $country2ID,
+                            "lat" => $gpslat2,
+                            "lng" => $gpslng2,
                         ),
                         "multiplier" => $multiplier,
-                        "membershipfee" => $membership_fee,
-                        "gpslat1" => $gpslat1,
-                        "gpslat2" => $gpslat2,
-                        "gpslng1" => $gpslng1,
-                        "gpslng2" => $gpslng2,
+                        "membershipfee" => $membership_fee
                     );
 
                     array_push($member_arr, $member_item);

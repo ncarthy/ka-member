@@ -69,7 +69,9 @@ class MemberCtl{
           "city" => $model->city,
           "county" => $model->county,
           "postcode" => $model->postcode,
-          "country" => $model->countryID
+          "country" => $model->countryID,
+          "lat" => $model->gpslat1,
+          "lng" => $model->gpslng1
         ),
         "secondaryAddress" => array(
           "addressfirstline" => $model->addressfirstline2,
@@ -77,14 +79,12 @@ class MemberCtl{
           "city" => $model->city2,
           "county" => $model->county2,
           "postcode" => $model->postcode2,
-          "country" => $model->country2ID
+          "country" => $model->country2ID,
+          "lat" => $model->gpslat2,
+          "lng" => $model->gpslng2
         ),
         "multiplier" => $model->multiplier,
-        "membershipfee" => $model->membershipfee,
-        "gpslat1" => $model->gpslat1,
-        "gpslat2" => $model->gpslat2,
-        "gpslng1" => $model->gpslng1,
-        "gpslng2" => $model->gpslng2
+        "membershipfee" => $model->membershipfee
     );
 
     // Substitution trick to preserve phone numbers as strings
