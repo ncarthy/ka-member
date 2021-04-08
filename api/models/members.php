@@ -265,12 +265,12 @@ class Members{
     public function emailList(){
 
         //select all data
-        $query = "SELECT email1 as email
+        $query = "SELECT idmember,email1 as email
                     FROM member
                     WHERE membership_idmembership NOT IN (7,8,9) AND email1 IS NOT NULL AND email1 != '' AND
                         email1 REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$'
                     UNION
-                    SELECT email2
+                    SELECT idmember,email2
                     FROM member
                     WHERE membership_idmembership NOT IN (7,8,9) AND email2 IS NOT NULL AND email2 != '' AND
                         email2 REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$'
@@ -287,9 +287,13 @@ class Members{
         if($num>0){
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
+
+                $member_email=array();
+                array_push($member_email, $idmember);
+                array_push($member_email, $email);
                 
                 // create un-keyed list
-                array_push ($members_arr["records"], $email);
+                array_push ($members_arr["records"], $member_email);
             }
         }
         

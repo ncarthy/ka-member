@@ -1,6 +1,6 @@
 <div class="row justify-content-between">
   <div class="col-sm-6">
-    <h1>{{ emails && emails.length }} Email Addresses Found</h1>
+    <h1>{{ member_emails && member_emails.length }} Email Addresses Found</h1>
   </div>
   <div class="col-sm-2">
     <button routerLink="/reports" class="btn btn-outline-dark">
@@ -12,7 +12,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-      emails && emails.length
+      member_emails && member_emails.length
     }}
     email addresses found
   </caption>
@@ -23,10 +23,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let email of emails" class="m-0">
-      <td>{{ email }}</td>
+    <tr *ngFor="let email of member_emails" class="m-0">
+      <td>{{ email[1] }}</td>
     </tr>
-    <tr *ngIf="!emails">
+    <tr *ngIf="!member_emails">
       <td colspan="1" class="text-center">
         <span class="spinner-border spinner-border-lg align-center"></span>
       </td>

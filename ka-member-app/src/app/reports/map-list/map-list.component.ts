@@ -5,12 +5,14 @@ import {
   ElementRef,
   OnInit,
 } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {} from 'googlemaps';
-import { MemberService, MembersService } from '@app/_services';
+import { MembersService } from '@app/_services';
 import { concatMap, delay, map, switchMap } from 'rxjs/operators';
 import { Address, MapMarker, MemberSearchResult } from '@app/_models';
 import { Observable, from, merge, of, concat, bindCallback } from 'rxjs';
-import CheapRuler from 'cheap-ruler';
+import CheapRuler from 'cheap-ruler'; // Ruler 'points' are lng,lat. Opposite to GMaps
+import { ListType } from './list-type.enum';
 
 @Component({
   templateUrl: './map-list.component.html',
@@ -26,10 +28,10 @@ export class MapListComponent implements OnInit {
   markers: google.maps.Marker[] = new Array();
   circle!: google.maps.Circle;
   radius: number = 200;
-  ruler: CheapRuler = new CheapRuler(this.lat, 'meters');
-  postcodesInCircle: string[] = new Array();
+  ruler: CheapRuler = new CheapRuler(51, 'meters');
   geocoder!: google.maps.Geocoder;
   ids: number[] = new Array();
+  form!: FormGroup;
 
   mapOptions: google.maps.MapOptions = {
     center: new google.maps.LatLng(this.lat, this.lng),
@@ -38,7 +40,7 @@ export class MapListComponent implements OnInit {
 
   constructor(
     private membersService: MembersService,
-    private memberService: MemberService
+    private formBuilder: FormBuilder
   ) {
     this.geocoder = new google.maps.Geocoder();
 
@@ -62,7 +64,7 @@ export class MapListComponent implements OnInit {
       map: this.map,
       icon: {
         path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-        strokeColor: 'blue',
+        strokeColor: 'grey',
         scale: 3,
       },
       label: address.idmember.toString(),
@@ -74,7 +76,12 @@ export class MapListComponent implements OnInit {
     return m;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      listtype: ['address'],
+      radius: ['200'],
+    });
+  }
 
   ngAfterViewInit() {
     this.mapInitializer();
@@ -96,21 +103,29 @@ export class MapListComponent implements OnInit {
 
     this.addCircleToMap(this.lat, this.lng);
 
-    this.addresses$.pipe(
-      map((address: Address) => {
-        let m: google.maps.Marker = this.createMarker(address);
-        const pos = m.getPosition();
-        if (!pos) return;
-        let d = this.ruler.distance([pos.lat(), pos.lng()], [this.lat, this.lng]);      
-        if (d <=
-            this.radius
-        ) {
-          this.ids.push(address.idmember);
-        }
-        m.setMap(this.map);
-        this.markers.push(m);
-      })
-    ).subscribe();
+    this.addresses$
+      .pipe(
+        map((address: Address) => {
+          let m: google.maps.Marker = this.createMarker(address);
+          const pos = m.getPosition();
+          if (!pos) return;
+          let d = this.ruler.distance(
+            [pos.lng(), pos.lat()],
+            [this.lng, this.lat]
+          );
+          if (d <= parseInt(this.f.radius.value)) {
+            this.ids.push(address.idmember);
+            m.setIcon({
+              path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+              strokeColor: 'blue',
+              scale: 3,
+            });
+          }
+          m.setMap(this.map);
+          this.markers.push(m);
+        })
+      )
+      .subscribe();
 
     /* let i = 1;
     this.addresses$
@@ -155,7 +170,7 @@ export class MapListComponent implements OnInit {
       m.setMap(this.map);
       this.markers.push(m);
     });*/
-/*
+    /*
     this.addresses$
       .pipe(
         concatMap((value: Address, index: number) => {
@@ -212,7 +227,7 @@ export class MapListComponent implements OnInit {
         lat: lat,
         lng: lng,
       },
-      radius: this.radius,
+      radius: parseInt(this.f.radius.value),
     });
   }
 
@@ -232,17 +247,27 @@ export class MapListComponent implements OnInit {
 
       if (!pos) return;
 
-      const distance = this.ruler.distance([pos.lat(), pos.lng()], [lat, lng]);
+      const distance = this.ruler.distance([pos.lng(), pos.lat()], [lng, lat]);
 
       if (distance <= this.radius) {
         let label = element.getLabel();
         if (label) {
           let text = label.text;
           this.ids.push(parseInt(text));
-        }        
+        }
       }
     });
 
     this.map.setCenter(event.latLng);
+  }
+
+  // Required so that the template can access the EnumS
+  // From https://stackoverflow.com/a/59289208
+  public get ListType() {
+    return ListType;
+  }
+  // convenience getters for easy access to form fields
+  get f() {
+    return this.form.controls;
   }
 }
