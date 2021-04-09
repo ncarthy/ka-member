@@ -11,11 +11,15 @@ import { MembersService } from '@app/_services';
 import { concatMap, delay, map, switchMap } from 'rxjs/operators';
 import { Address, MapMarker, MemberSearchResult } from '@app/_models';
 import { Observable, from, merge, of, concat, bindCallback } from 'rxjs';
+
+// From https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016
+// Github: https://github.com/mapbox/cheap-ruler
 import CheapRuler from 'cheap-ruler'; // Ruler 'points' are lng,lat. Opposite to GMaps
 import { ListType } from './list-type.enum';
 
 @Component({
   templateUrl: './map-list.component.html',
+  styleUrls: ['./map-list.component.css'],
 })
 export class MapListComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) gmap!: ElementRef;
@@ -27,7 +31,7 @@ export class MapListComponent implements OnInit {
   addresses$!: Observable<Address>;
   markers: google.maps.Marker[] = new Array();
   circle!: google.maps.Circle;
-  radius: number = 200;
+  //radius: number = 200;
   ruler: CheapRuler = new CheapRuler(51, 'meters');
   geocoder!: google.maps.Geocoder;
   ids: number[] = new Array();
@@ -78,9 +82,11 @@ export class MapListComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      listtype: ['address'],
+      isEmailList: [false],
       radius: ['200'],
     });
+
+    this.form.controls['radius'].valueChanges.subscribe((x: any) => {});
   }
 
   ngAfterViewInit() {
@@ -101,7 +107,7 @@ export class MapListComponent implements OnInit {
     );
     this.mapCentreMarker.setMap(this.map);
 
-    this.addCircleToMap(this.lat, this.lng);
+    this.addCircleToMap(this.lat, this.lng, parseInt(this.f.radius.value));
 
     this.addresses$
       .pipe(
@@ -214,7 +220,7 @@ export class MapListComponent implements OnInit {
     );
   }
 
-  addCircleToMap(lat: number, lng: number) {
+  private addCircleToMap(lat: number, lng: number, radius: number) {
     // add new circle
     this.circle = new google.maps.Circle({
       strokeColor: '#FF0000',
@@ -227,19 +233,26 @@ export class MapListComponent implements OnInit {
         lat: lat,
         lng: lng,
       },
-      radius: parseInt(this.f.radius.value),
+      radius: radius,
     });
   }
 
   drawCircleOnDragend(event: google.maps.MapMouseEvent) {
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    const radius = parseInt(this.f.radius.value);
+
+    this.replaceCircle(lat, lng, radius);
+
+    this.map.setCenter(event.latLng);
+  }
+
+  replaceCircle(lat: number, lng: number, radius: number) {
     if (this.circle) {
       this.circle.setMap(null); // remove from map
     }
 
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
-
-    this.addCircleToMap(lat, lng);
+    this.addCircleToMap(lat, lng, radius);
     this.ids = new Array();
 
     this.markers.forEach((element) => {
@@ -249,16 +262,41 @@ export class MapListComponent implements OnInit {
 
       const distance = this.ruler.distance([pos.lng(), pos.lat()], [lng, lat]);
 
-      if (distance <= this.radius) {
+      if (distance <= radius) {
         let label = element.getLabel();
         if (label) {
-          let text = label.text;
-          this.ids.push(parseInt(text));
+          //let text = label.text;
+          this.ids.push(parseInt(label.toString()));
+          element.setIcon({
+            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+            strokeColor: 'blue',
+            scale: 3,
+          });
         }
+      } else if (
+        (element.getIcon() as google.maps.ReadonlySymbol).strokeColor != 'grey'
+      ) {
+        element.setIcon({
+          path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+          strokeColor: 'grey',
+          scale: 3,
+        });
       }
     });
+  }
 
-    this.map.setCenter(event.latLng);
+  onRadiusChange(radius: number | string) {
+    let centre: google.maps.LatLng = this.circle.getCenter();
+    this.replaceCircle(centre.lat(), centre.lng(), parseInt(radius.toString()));
+  }
+
+  onIdSelected(idmember: number) {
+    this.markers.forEach((element) => {
+      let label = element.getLabel();
+      if (label && parseInt(label.toString()) == idmember) {
+        google.maps.event.trigger(element, 'click');
+      }
+    });
   }
 
   // Required so that the template can access the EnumS
