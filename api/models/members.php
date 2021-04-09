@@ -228,7 +228,7 @@ class Members{
                     `m`.membership_idmembership NOT IN (7,8,9) AND      # Active member
                     IFNULL(m.addressfirstline,'') != ''					# Valid Address
                 AND (countryID = 186 OR country2ID = 186)				# UK only
-                ORDER BY postcode;";
+                ORDER BY `postcode`;";
 
         $stmt = $this->conn->query( $query );
         $num = $stmt->rowCount();

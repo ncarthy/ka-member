@@ -1,12 +1,16 @@
 <div class="row justify-content-between">
   <div class="col-sm-6">
-    <h4>{{ members && members.length }} Active Members With UK Addresses</h4>
+    <h4>
+      {{ members && members.length }} Members With UK Addresses <span *ngIf="ids&&ids.length">(Filtered)</span>
+    </h4>
   </div>
   <div class="col-sm-3 mb-2">
-      <button class="btn btn-primary mr-2" (click)="exportToCSV()">Export To CSV</button>
-      <button routerLink="/reports" class="btn btn-outline-dark">
-        Close &times;
-      </button>
+    <button class="btn btn-primary mr-2" (click)="exportToCSV()">
+      Export To CSV
+    </button>
+    <button routerLink="/reports" class="btn btn-outline-dark">
+      Close &times;
+    </button>
   </div>
 </div>
 <!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
@@ -30,7 +34,11 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let member of members" class="m-0">
+    <tr
+      *ngFor="let member of members"
+      class="m-0"
+      (click)="memberSelected(member)"
+    >
       <td>{{ member.name }}</td>
       <td>{{ member.title }}</td>
       <td>{{ member.businessname }}</td>

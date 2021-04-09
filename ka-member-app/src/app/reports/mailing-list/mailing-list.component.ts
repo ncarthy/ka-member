@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { ExportToCsv } from 'ts-export-to-csv';
@@ -14,6 +16,7 @@ import { MembersService } from '@app/_services';
 })
 export class MailingListComponent implements OnInit, OnChanges {
   @Input() ids: number[] = new Array();
+  @Output() idSelected: EventEmitter<number> = new EventEmitter<number>();
   all_members!: any[];
   members!: any[];
   csvMembers: any[] = new Array();
@@ -33,7 +36,7 @@ export class MailingListComponent implements OnInit, OnChanges {
         this.members = response.records;
       }
 
-      // Exclude the id and country properties from what wull be outputted to CSV
+      // Exclude the id and country properties from what will be outputted to CSV
       this.members.forEach((element) => {
         const { id, countryID, ...csvMember } = element;
         csvMember.country = ''; // blank country
@@ -44,7 +47,13 @@ export class MailingListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     // only run when property "ids" changed
-    if (changes['ids'] && this.all_members && this.ids) {
+    if (changes['ids']) {
+      this.refresh();
+    }
+  }
+
+  refresh() {
+    if (this.all_members && this.ids){
       this.members = this.all_members.filter((x) => this.ids.includes(x.id));
 
       this.csvMembers = new Array();
@@ -55,6 +64,10 @@ export class MailingListComponent implements OnInit, OnChanges {
       });
     }
   }
+
+  memberSelected(member_address: any) {
+    this.idSelected.emit(member_address.id);
+}
 
   exportToCSV(): void {
     //From https://www.npmjs.com/package/export-to-csv

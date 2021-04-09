@@ -66,11 +66,6 @@ export class MapListComponent implements OnInit {
     let m: google.maps.Marker = new google.maps.Marker({
       position: new google.maps.LatLng(address.lat, address.lng),
       map: this.map,
-      icon: {
-        path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-        strokeColor: 'grey',
-        scale: 3,
-      },
       label: address.idmember.toString(),
     });
     m.addListener('click', () => {
@@ -85,8 +80,6 @@ export class MapListComponent implements OnInit {
       isEmailList: [false],
       radius: ['200'],
     });
-
-    this.form.controls['radius'].valueChanges.subscribe((x: any) => {});
   }
 
   ngAfterViewInit() {
@@ -109,6 +102,18 @@ export class MapListComponent implements OnInit {
 
     this.addCircleToMap(this.lat, this.lng, parseInt(this.f.radius.value));
 
+    let radius = parseInt(this.f.radius.value);
+    let iconIN = {
+      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+      strokeColor: 'blue',
+      scale: 3,
+    };
+    let iconOUT = {
+      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+      strokeColor: 'grey',
+      scale: 3,
+    };
+    let ids: number[] = new Array();
     this.addresses$
       .pipe(
         map((address: Address) => {
@@ -119,19 +124,17 @@ export class MapListComponent implements OnInit {
             [pos.lng(), pos.lat()],
             [this.lng, this.lat]
           );
-          if (d <= parseInt(this.f.radius.value)) {
-            this.ids.push(address.idmember);
-            m.setIcon({
-              path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-              strokeColor: 'blue',
-              scale: 3,
-            });
+          if (d <= radius) {            
+            ids.push(address.idmember);
+            m.setIcon(iconIN);
+          } else {
+            m.setIcon(iconOUT);
           }
           m.setMap(this.map);
           this.markers.push(m);
         })
       )
-      .subscribe();
+      .subscribe().add(() => {this.ids = ids;});
 
     /* let i = 1;
     this.addresses$
@@ -161,37 +164,6 @@ export class MapListComponent implements OnInit {
         })
       )
       .subscribe();*/
-
-    /*this.markers$.subscribe((m: google.maps.Marker) => {
-      const pos = m.getPosition();
-      if (!pos) return;
-      let d = this.ruler.distance([pos.lat(), pos.lng()], [this.lat, this.lng]);      
-      if (d <=
-          this.radius
-      ) {
-        m.setOpacity(1);
-      } else {
-        m.setOpacity(0.25);
-      }
-      m.setMap(this.map);
-      this.markers.push(m);
-    });*/
-    /*
-    this.addresses$
-      .pipe(
-        concatMap((value: Address, index: number) => {
-          console.log(value.toString());
-          return this.geocode(value);
-        }),
-        concatMap((value: Address, index: number) => {
-          return this.memberService.setSecondaryGeometry(
-            value.idmember,
-            value.lat,
-            value.lng
-          );
-        })
-      )
-      .subscribe((reasult) => console.log('done'));*/
   }
 
   geocode(address: Address): Observable<Address> {
