@@ -21,26 +21,26 @@
       </div>
     </div>
   </div>
-  
+
   <!--<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">-->
   <ngb-accordion #acc="ngbAccordion" (panelChange)="beforeChange($event)">
     <ngb-panel title="Filter">
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="d-flex align-items-center justify-content-between">
           <div>
-          <button
-            ngbPanelToggle
-            class="btn btn-link mb-2"
-            *ngIf="!working"
-            placement="bottom"
-            ngbTooltip="Show/Hide Filter Options"
-            container="body"
-          >
-          <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
-          <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
-          </button>
-          <span>Member Filter</span>
-        </div>
+            <button
+              ngbPanelToggle
+              class="btn btn-link mb-2"
+              *ngIf="!working"
+              placement="bottom"
+              ngbTooltip="Show/Hide Filter Options"
+              container="body"
+            >
+              <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
+              <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
+            </button>
+            <span>Member Filter</span>
+          </div>
           <span *ngIf="working" class="spinner-border spinner-border-sm"></span>
           <div class="row justify-content-end mb-2 mr-2">
             <div class="col">
@@ -97,6 +97,7 @@
                 name="statusSelect"
                 class="form-control"
               >
+                <option selected [ngValue]="null">Any</option>
                 <option
                   *ngFor="let status of membershipStatuses$ | async"
                   [ngValue]="status.id"
@@ -136,6 +137,7 @@
                 name="countrySelect"
                 class="form-control"
               >
+                <option selected [ngValue]="null">Any</option>
                 <option
                   *ngFor="let country of countries$ | async"
                   [ngValue]="country.id"
