@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { MembersService } from '@app/_services';
@@ -13,6 +15,7 @@ import { MembersService } from '@app/_services';
 })
 export class EmailListComponent implements OnInit, OnChanges {
   @Input() ids: number[] = new Array();
+  @Output() idSelected: EventEmitter<number> = new EventEmitter<number>();
   member_emails!: [number, string][];
   all_member_emails!: [number, string][];
   loading: boolean = false;
@@ -28,7 +31,7 @@ export class EmailListComponent implements OnInit, OnChanges {
       if (this.ids && this.ids.length) {
         this.member_emails = this.all_member_emails.filter((x) =>
           this.ids.includes(x[0])
-        );
+        );                
       } else {
         this.member_emails = response.records;
       }
@@ -42,5 +45,9 @@ export class EmailListComponent implements OnInit, OnChanges {
         this.ids.includes(x[0])
       );
     }
+  }
+
+  emailSelected(member_email : [number, string]) {
+        this.idSelected.emit(member_email[0]);
   }
 }

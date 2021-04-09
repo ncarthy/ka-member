@@ -23,7 +23,11 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let email of member_emails" class="m-0">
+    <tr
+      *ngFor="let email of member_emails"
+      class="m-0"
+      (click)="emailSelected(email)"
+    >
       <td>{{ email[1] }}</td>
     </tr>
     <tr *ngIf="!member_emails">
