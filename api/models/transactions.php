@@ -34,6 +34,12 @@ class Transactions{
         $num = $stmt->rowCount();
 
         $items_arr=array();
+        $items_arr["total"] = 0;
+        $items_arr["count"] = 0;
+        $items_arr["records"]=array();
+
+        $sum_total =0;
+        $count_total =0;
 
         if($num>0){       
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -48,8 +54,14 @@ class Transactions{
                     "sum" => $sum
                 );
 
-                array_push($items_arr, $item_item);
+                $sum_total+=$sum;
+                $count_total+=$count;
+
+                array_push($items_arr["records"], $item_item);
             }
+
+            $items_arr["total"] = $sum_total;
+            $items_arr["count"] = $count_total;
         }
 
         return $items_arr;

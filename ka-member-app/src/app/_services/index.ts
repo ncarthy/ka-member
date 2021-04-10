@@ -11,4 +11,5 @@ export * from './membership-status.service';
 export * from './payment-type.service';
 export * from './toast.service';
 export * from './transaction.service';
+export * from './transactions.service';
 export * from './user.service';
