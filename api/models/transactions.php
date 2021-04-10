@@ -17,11 +17,10 @@ class Transactions{
     function summary_by_month(){
         
         $query = "SELECT CONCAT(year(t.date),'-',month(t.date)) as `index`,
-                    t.bankID, ba.name as bankaccount, 
+                    t.bankID,
                     COUNT(t.idtransaction) as `count`,
                     SUM(t.amount)  as `sum`
         FROM `transaction` t
-        JOIN bankaccount ba ON t.bankID = ba.bankID
         WHERE t.date >= :start AND t.date <= :end
         GROUP BY t.bankID,year(t.date),month(t.date)";
 
@@ -49,7 +48,6 @@ class Transactions{
                 $item_item=array(
                     "index" => $index,
                     "bankID" => $bankID,
-                    "bankname" => $bankaccount,
                     "count" => $count,
                     "sum" => $sum
                 );
