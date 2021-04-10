@@ -34,26 +34,15 @@ export class TransactionsSummaryComponent implements OnInit {
       endDate: [null],
     });
 
-    const dtRng = this.dateRangeAdapter.enumToDateRange(
+    /*const dtRng = this.dateRangeAdapter.enumToDateRange(
       DateRangeEnum.THIS_YEAR
-    );
+    );*/
 
     this.bankAccountService
       .getAll()
-      .pipe(
-        switchMap((banks: BankAccount[]) => {
-          this.bankAccounts = banks;
-
-          return this.transactionsService.getSummary(
-            dtRng.startDate,
-            dtRng.endDate
-          );
-        })
-      )
-      .subscribe((response: any) => {
-        this.count = response.count;
-        this.total = response.total;
-        this.summary = response.records;
+      .subscribe((banks: BankAccount[]) => {
+        this.bankAccounts = banks;
+        this.onDateRangeChanged(DateRangeEnum.THIS_YEAR);
       });
   }
 
