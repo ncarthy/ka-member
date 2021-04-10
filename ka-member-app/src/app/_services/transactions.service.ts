@@ -10,6 +10,11 @@ export class TransactionsService {
     constructor(private http: HttpClient) { }
 
     getSummary(start: string = '', end: string = '', bankID: string = '') {
+
+        if (bankID==null) {
+            bankID = '';
+        } 
+        
         return this.http.get<any>(`${baseUrl}/summary?start=${start}&end=${end}&bankID=${bankID}`);
     }
 

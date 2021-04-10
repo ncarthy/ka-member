@@ -1,4 +1,3 @@
-import {BankAccount} from './bank-account';
 export class TransactionSummary {
 
     index: string;
@@ -8,7 +7,7 @@ export class TransactionSummary {
     
     constructor(obj?: any) {
 
-        this.index = obj && obj.id || null;
+        this.index = obj && obj.index || null;
         this.count = obj && obj.count || null;
         this.sum = obj && obj.sum || null;
         this.bankID = obj && obj.bankID || null;

@@ -16,7 +16,8 @@ export class TransactionsSummaryComponent implements OnInit {
   count!: number;
   bankAccounts?: BankAccount[];
   form!: FormGroup;
-  detail?: any;
+  detail: boolean = false;
+  selectedRow?: TransactionSummary;
 
   constructor(
     private bankAccountService: BankAccountService,
@@ -29,6 +30,8 @@ export class TransactionsSummaryComponent implements OnInit {
     this.form = this.formBuilder.group({
       bank: [null],
       dateRange: [DateRangeEnum.THIS_YEAR],
+      startDate: [null],
+      endDate: [null],
     });
 
     const dtRng = this.dateRangeAdapter.enumToDateRange(
@@ -76,22 +79,29 @@ export class TransactionsSummaryComponent implements OnInit {
 
   /* Set the date range control values according to the select value */
   onDateRangeChanged(value: DateRangeEnum) {
-    this.refreshSummary(value, this.f['bank'].value);
+    const dtRng = this.dateRangeAdapter.enumToDateRange(value);
+    this.f['startDate'].setValue(dtRng.startDate);
+    this.f['endDate'].setValue(dtRng.endDate);
+    this.refreshSummary(dtRng.startDate, dtRng.endDate, this.f['bank'].value);
   }
 
   onBankChanged(value: string) {
-    this.refreshSummary(this.f['dateRange'].value, value);
+    this.refreshSummary(this.f['startDate'].value, this.f['endDate'].value, value);
   }
 
-  refreshSummary(dateRange: DateRangeEnum, bank: string) {
-    const dtRng = this.dateRangeAdapter.enumToDateRange(dateRange);
+  refreshSummary(startDate: string, endDate: string, bank: string) {    
     const bankID = isNaN(parseInt(bank))?bank:null;
     this.transactionsService
-      .getSummary(dtRng.startDate, dtRng.endDate, bank)
+      .getSummary(startDate, endDate, bank)
       .subscribe((response: any) => {
         this.count = response.count;
         this.total = response.total;
         this.summary = response.records;
       });
+  }
+
+  summaryRowSelected(summaryRow: TransactionSummary){
+    this.selectedRow = summaryRow;
+    this.detail = true;
   }
 }

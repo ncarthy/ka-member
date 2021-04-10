@@ -69,6 +69,7 @@ export class AuthenticationService {
     }
 
     refreshToken() {
+        console.log('Refresh called');
         return this.http.get<any>(`${environment.apiUrl}/auth/refresh`, { withCredentials: true })
             .pipe(map((user) => {
                 user.isAdmin = user && user.role && user.role === Role.Admin; // Add extra property

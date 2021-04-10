@@ -26,7 +26,7 @@ class Transactions{
 
         ($this->bankID ? ' AND bankID = :bankID ' : ' ') .
 
-        "GROUP BY t.bankID,year(t.date),month(t.date)";
+        "GROUP BY t.bankID,year(t.date),month(t.date);";
 
         $stmt = $this->conn->prepare( $query );
 
@@ -75,16 +75,27 @@ class Transactions{
 
     function detail_by_month(){
         
-        $query = "SELECT CONCAT(year(t.date),'-',month(t.date)) as `index`,
-                    t.bankID,
-                    COUNT(t.idtransaction) as `count`,
-                    SUM(t.amount)  as `sum`
-        FROM `transaction` t
-        WHERE t.date >= :start AND t.date <= :end" . 
-
-        ($this->bankID ? ' AND bankID = :bankID ' : ' ') .
-
-        "GROUP BY t.bankID,year(t.date),month(t.date)";
+        $query = "SELECT t.`idtransaction`,t.`date`,t.amount,t.paymenttypeID,
+                    t.member_idmember,t.bankID,t.note,
+                    IFNULL(GROUP_CONCAT(CONCAT(CASE
+                                            WHEN `mn`.`honorific` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`honorific`, ' ')
+                                        END,
+                                        CASE
+                                            WHEN `mn`.`firstname` = '' THEN ''
+                                            ELSE CONCAT(`mn`.`firstname`, ' ')
+                                        END,
+                                        `mn`.`surname`)
+                                SEPARATOR ' & '),
+                            '') AS `name`,
+                    CONCAT(`m`.`businessname`, '') AS `businessname`
+                    FROM `transaction` t
+                    INNER JOIN `member` m ON t.member_idmember = m.idmember
+                    INNER JOIN `membername` mn ON m.idmember = mn.member_idmember
+                    WHERE t.`date` >= :start AND t.`date` <= :end" . 
+                        ($this->bankID ? ' AND t.`bankID` = :bankID ' : ' ') .
+                    "GROUP BY t.`idtransaction`, t.`member_idmember` 
+                    ORDER BY t.`date`;";
 
         $stmt = $this->conn->prepare( $query );
 
@@ -112,14 +123,19 @@ class Transactions{
                 extract($row);
 
                 $item_item=array(
-                    "index" => $index,
+                    "idtransaction" => $idtransaction,
+                    "date" => $date,
                     "bankID" => $bankID,
-                    "count" => $count,
-                    "sum" => $sum
+                    "amount" => $amount,
+                    "paymenttypeID" => $paymenttypeID,
+                    "idmember" => $member_idmember,
+                    "note" => $note,
+                    "name" => $name,
+                    "businessname" => $businessname
                 );
 
-                $sum_total+=$sum;
-                $count_total+=$count;
+                $sum_total+=$amount;
+                $count_total++;
 
                 array_push($items_arr["records"], $item_item);
             }

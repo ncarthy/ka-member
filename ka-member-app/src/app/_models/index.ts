@@ -21,6 +21,7 @@ export * from './payment-type';
 export * from './role';
 export * from './success-response.interface';
 export * from './transaction';
+export * from './transaction-detail';
 export * from './transaction-summary';
 export * from './user';
 export * from './user-form-mode.enum';

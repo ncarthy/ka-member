@@ -28,7 +28,9 @@ class TransactionsCtl{
 
         if (isset($_GET['bankID']) && !empty($_GET['bankID'])) {
             $model->bankID = $_GET['bankID'];
-      }
+        } else {
+            $model->bankID = 0;
+        }
     
         echo json_encode($model->summary_by_month(), JSON_NUMERIC_CHECK);
       }

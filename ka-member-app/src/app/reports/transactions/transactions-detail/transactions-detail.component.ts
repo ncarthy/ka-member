@@ -5,8 +5,18 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { TransactionsService } from '@app/_services';
-import { BankAccount } from '@app/_models';
+import {
+  AuthenticationService,
+  PaymentTypeService,
+  TransactionsService,
+} from '@app/_services';
+import {
+  BankAccount,
+  PaymentType,
+  TransactionDetail,
+  TransactionSummary,
+  User,
+} from '@app/_models';
 
 @Component({
   selector: 'transactions-detail',
@@ -14,21 +24,41 @@ import { BankAccount } from '@app/_models';
 })
 export class TransactionsDetailComponent implements OnInit, OnChanges {
   @Input() bankAccounts?: BankAccount[];
-  @Input() month?: number;
-  @Input() year?: number;
-  @Input() bankID?: string;
+  @Input() summaryRow?: TransactionSummary;
+  user!: User;
+  total!: number;
+  count!: number;
+  transactions!: TransactionDetail[];
+  paymentTypes?: PaymentType[];
 
   constructor(
-    private transactionsService: TransactionsService
-  ) {}
+    private authenticationService: AuthenticationService,
+    private transactionsService: TransactionsService,
+    private paymentTypeService: PaymentTypeService
+  ) {
+    this.user = this.authenticationService.userValue;
+  }
 
   ngOnInit(): void {
-
+    this.paymentTypeService.getAll().subscribe((types: PaymentType[]) => {
+      this.paymentTypes = types;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['bank'] || changes['month']||changes['year']) {
-      
+    if (changes['summaryRow']) {
+      console.log(
+        `index: ${this.summaryRow?.index}, bank: ${this.summaryRow?.bankID}`
+      );      
+      let index = this.summaryRow?.index.split('-');
+      if (!index) { return; }
+      this.transactionsService
+        .getDetail(index[1], index[0], this.summaryRow?.bankID.toString())
+        .subscribe((response: any) => {
+          this.count = response.count;
+          this.total = response.total;
+          this.transactions = response.records;
+        });
     }
   }
 }
