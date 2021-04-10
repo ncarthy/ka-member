@@ -9,8 +9,8 @@ const baseUrl = `${environment.apiUrl}/transactions`;
 export class TransactionsService {
     constructor(private http: HttpClient) { }
 
-    getSummary(start: string = '', end: string = '') {
-        return this.http.get<any>(`${baseUrl}/summary?start=${start}&end=${end}`);
+    getSummary(start: string = '', end: string = '', bankID: string = '') {
+        return this.http.get<any>(`${baseUrl}/summary?start=${start}&end=${end}&bankID=${bankID}`);
     }
 
 }

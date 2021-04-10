@@ -22,6 +22,10 @@ class TransactionsCtl{
             $model->startdate = '2000-01-01';
             $model->enddate = date('Y-m-d');
         }
+
+        if (isset($_GET['bankID']) && !empty($_GET['bankID'])) {
+            $model->bankID = $_GET['bankID'];
+      }
     
         echo json_encode($model->summary_by_month(), JSON_NUMERIC_CHECK);
       }

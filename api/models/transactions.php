@@ -9,6 +9,7 @@ class Transactions{
     private $conn;
     public $startdate;
     public $enddate;
+    public $bankID;
 
     public function __construct(){
         $this->conn = \Core\Database::getInstance()->conn;
@@ -21,13 +22,20 @@ class Transactions{
                     COUNT(t.idtransaction) as `count`,
                     SUM(t.amount)  as `sum`
         FROM `transaction` t
-        WHERE t.date >= :start AND t.date <= :end
-        GROUP BY t.bankID,year(t.date),month(t.date)";
+        WHERE t.date >= :start AND t.date <= :end" . 
+
+        ($this->bankID ? ' AND bankID = :bankID ' : ' ') .
+
+        "GROUP BY t.bankID,year(t.date),month(t.date)";
 
         $stmt = $this->conn->prepare( $query );
 
         $stmt->bindParam(":start", $this->startdate);
         $stmt->bindParam(":end", $this->enddate);
+        if ($this->bankID) {
+            $bankID = filter_var($this->bankID, FILTER_SANITIZE_NUMBER_INT);
+            $stmt->bindParam (":bankID", $bankID, PDO::PARAM_INT);
+        }
 
         $stmt->execute();
         $num = $stmt->rowCount();

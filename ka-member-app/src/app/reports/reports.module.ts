@@ -15,6 +15,7 @@ import { InvalidEmailsComponent} from './invalid-emails';
 import { InvalidPostcodesComponent} from './invalid-postcodes';
 import { MemberListComponent } from './member-list/member-list.component';
 import { TransactionsSummaryComponent } from './transactions/transactions-summary.component';
+import { TransactionsDetailComponent } from './transactions/transactions-detail/transactions-detail.component';
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import { TransactionsSummaryComponent } from './transactions/transactions-summar
         InvalidEmailsComponent,
         InvalidPostcodesComponent,
         TransactionsSummaryComponent,
+        TransactionsDetailComponent,
     ]
 })
 export class ReportsModule { }

@@ -26,6 +26,7 @@ export class TransactionsSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
+      bank: [null],
       dateRange: [DateRangeEnum.THIS_YEAR],
     });
 
@@ -52,6 +53,11 @@ export class TransactionsSummaryComponent implements OnInit {
       });
   }
 
+  // convenience getters for easy access to form fields
+  get f() {
+    return this.form.controls;
+  }
+
   // Required so that the template can access the EnumS
   // From https://stackoverflow.com/a/59289208
   public get DateRange() {
@@ -69,9 +75,18 @@ export class TransactionsSummaryComponent implements OnInit {
 
   /* Set the date range control values according to the select value */
   onDateRangeChanged(value: DateRangeEnum) {
-    const dtRng = this.dateRangeAdapter.enumToDateRange(value);
+    this.refreshSummary(value, this.f['bank'].value);
+  }
+
+  onBankChanged(value: string) {
+    this.refreshSummary(this.f['dateRange'].value, value);
+  }
+
+  refreshSummary(dateRange: DateRangeEnum, bank: string) {
+    const dtRng = this.dateRangeAdapter.enumToDateRange(dateRange);
+    const bankID = isNaN(parseInt(bank))?bank:null;
     this.transactionsService
-      .getSummary(dtRng.startDate, dtRng.endDate)
+      .getSummary(dtRng.startDate, dtRng.endDate, bank)
       .subscribe((response: any) => {
         this.count = response.count;
         this.total = response.total;

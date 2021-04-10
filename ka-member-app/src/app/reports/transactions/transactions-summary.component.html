@@ -1,13 +1,13 @@
 <div class="row justify-content-center">
-  <div class="card mt-4 col-sm-8">
+  <div class="card mt-4 col-sm-9">
     <div class="card-header row justify-content-between">
       <div class="col-sm">
-        <div class="row">
-          <div>
-            <h4>Recent Payments For</h4>
-          </div>
-          <div class="ml-4">
-            <form [formGroup]="form">
+        <form [formGroup]="form">
+          <div class="row">
+            <div>
+              <h4>Recent Payments For</h4>
+            </div>
+            <div class="ml-4">
               <select
                 class="form-control"
                 #selectList
@@ -22,9 +22,28 @@
                   {{ dtRng.value }}
                 </option>
               </select>
-            </form>
+            </div>
+            <div class="ml-4">
+              <select
+                class="form-control"
+                #selectList
+                (change)="onDateRangeChanged(selectList.value)"
+                formControlName="bank"
+              >
+                <option selected [ngValue]="null">Any</option>
+                <option
+                  *ngFor="let bank of bankAccounts"
+                  value="{{ bank.id }}"
+                >
+                  {{ bank.name }}
+                </option>
+              </select>
+            </div>
           </div>
-        </div>
+          <div *ngIf="false">
+            <p>Form Value: {{ form.value | json }}</p>
+          </div>
+        </form>
       </div>
       <div>
         <button routerLink="/reports" class="btn btn-outline-dark">
