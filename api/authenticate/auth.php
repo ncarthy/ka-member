@@ -74,9 +74,8 @@ if($num>0){
 
 }
 else{
-        http_response_code(401);
-        echo json_encode(
-            array("message" => "Unable to validate that username and password.")
-        );
-    }
-?>
+    http_response_code(401);
+    echo json_encode(
+        array("message" => "Unable to validate that username and password.")
+    );
+}

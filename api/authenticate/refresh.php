@@ -33,5 +33,3 @@ else {
         array("message" => "Unauthorized")
     );
 }
-
-?>

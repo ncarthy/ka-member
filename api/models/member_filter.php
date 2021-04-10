@@ -547,4 +547,3 @@ class MemberFilter{
         return $d && $d->format($format) === $date;
     }
 }
-?>

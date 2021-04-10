@@ -672,4 +672,3 @@ class Members{
             return $stmt->rowCount();
         }
 }
-?>

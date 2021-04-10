@@ -452,5 +452,3 @@ private static function username(){
 }
 
 }
-
-?>

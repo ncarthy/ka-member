@@ -279,4 +279,3 @@ class Transaction{
             return false;
         }
 }
-?>

@@ -350,4 +350,3 @@ class JWTWrapper{
         return $guidv4;
     }
 }
-?>

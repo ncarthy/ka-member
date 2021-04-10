@@ -14,5 +14,3 @@ if(!$jwt->loggedIn){
         array("message" => "Logged out.")
     ); 
 }
-
-?>

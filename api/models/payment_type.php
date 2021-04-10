@@ -102,4 +102,3 @@ class PaymentType{
             return $item;
         }
 }
-?>

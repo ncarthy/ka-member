@@ -288,4 +288,3 @@ class User{
         return $row['total_rows'];
     }
 }
-?>

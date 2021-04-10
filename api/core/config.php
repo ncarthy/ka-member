@@ -51,5 +51,3 @@ Config::write('token.envkeyname', 'KA_MEMBER_KEY');
 Config::write('token.cookiename', 'refreshToken');
 Config::write('token.cookiepath', Config::read('api.path') . 'auth');
 Config::write('token.cookiesecure', false);
-
-?>

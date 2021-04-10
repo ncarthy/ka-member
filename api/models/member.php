@@ -680,4 +680,3 @@ class Member{
         $this->gpslng2 = !empty($this->gpslng2) ? $this->gpslng2 : NULL;        
     }
 }
-?>
