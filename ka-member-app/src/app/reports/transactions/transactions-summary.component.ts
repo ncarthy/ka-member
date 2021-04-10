@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { KeyValue } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 
@@ -14,31 +15,44 @@ export class TransactionsSummaryComponent implements OnInit {
   total!: number;
   count!: number;
   bankAccounts?: BankAccount[];
+  form!: FormGroup;
 
-  constructor(private bankAccountService:  BankAccountService, 
+  constructor(
+    private bankAccountService: BankAccountService,
     private transactionsService: TransactionsService,
-    private dateRangeAdapter: DateRangeAdapter) {}
+    private dateRangeAdapter: DateRangeAdapter,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
-    const dtRng = this.dateRangeAdapter.enumToDateRange(DateRangeEnum.THIS_YEAR);
+    this.form = this.formBuilder.group({
+      dateRange: [DateRangeEnum.THIS_YEAR],
+    });
+
+    const dtRng = this.dateRangeAdapter.enumToDateRange(
+      DateRangeEnum.THIS_YEAR
+    );
 
     this.bankAccountService
-    .getAll()
-    .pipe(
-      switchMap((banks: BankAccount[]) => {
-        this.bankAccounts = banks;
+      .getAll()
+      .pipe(
+        switchMap((banks: BankAccount[]) => {
+          this.bankAccounts = banks;
 
-        return this.transactionsService.getSummary(dtRng.startDate, dtRng.endDate);
-      })
-    )
-    .subscribe((response: any) => {
-      this.count = response.count;
-      this.total = response.total;
-      this.summary = response.records;
-    });
+          return this.transactionsService.getSummary(
+            dtRng.startDate,
+            dtRng.endDate
+          );
+        })
+      )
+      .subscribe((response: any) => {
+        this.count = response.count;
+        this.total = response.total;
+        this.summary = response.records;
+      });
   }
 
-    // Required so that the template can access the EnumS
+  // Required so that the template can access the EnumS
   // From https://stackoverflow.com/a/59289208
   public get DateRange() {
     return DateRangeEnum;
@@ -54,9 +68,14 @@ export class TransactionsSummaryComponent implements OnInit {
   };
 
   /* Set the date range control values according to the select value */
-  /* Index is supplied because it is a FormArray */
   onDateRangeChanged(value: DateRangeEnum) {
     const dtRng = this.dateRangeAdapter.enumToDateRange(value);
-    console.log(dtRng);
+    this.transactionsService
+      .getSummary(dtRng.startDate, dtRng.endDate)
+      .subscribe((response: any) => {
+        this.count = response.count;
+        this.total = response.total;
+        this.summary = response.records;
+      });
   }
 }

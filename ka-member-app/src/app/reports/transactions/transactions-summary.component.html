@@ -1,23 +1,35 @@
 <div class="row justify-content-center">
   <div class="card mt-4 col-sm-8">
-    <div class="card-header row">
-      <div>
-        <h4>Recent Payments For</h4>
+    <div class="card-header row justify-content-between">
+      <div class="col-sm">
+        <div class="row">
+          <div>
+            <h4>Recent Payments For</h4>
+          </div>
+          <div class="ml-4">
+            <form [formGroup]="form">
+              <select
+                class="form-control"
+                #selectList
+                (change)="onDateRangeChanged(selectList.value)"
+                formControlName="dateRange"
+              >
+                <option disabled selected [ngValue]="null">-- select --</option>
+                <option
+                  *ngFor="let dtRng of DateRange | keyvalue: originalOrder"
+                  value="{{ dtRng.value }}"
+                >
+                  {{ dtRng.value }}
+                </option>
+              </select>
+            </form>
+          </div>
+        </div>
       </div>
-      <div class="ml-4">
-        <select
-          class="form-control"
-          #selectList
-          (change)="onDateRangeChanged(selectList.value)"
-        >
-          <option disabled selected [ngValue]="null">-- select --</option>
-          <option
-            *ngFor="let dtRng of DateRange | keyvalue: originalOrder"
-            value="{{ dtRng.value }}"
-          >
-            {{ dtRng.value }}
-          </option>
-        </select>
+      <div>
+        <button routerLink="/reports" class="btn btn-outline-dark">
+          Close &times;
+        </button>
       </div>
     </div>
     <div class="card-body">

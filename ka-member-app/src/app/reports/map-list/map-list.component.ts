@@ -31,8 +31,7 @@ export class MapListComponent implements OnInit {
   addresses$!: Observable<Address>;
   markers: google.maps.Marker[] = new Array();
   circle!: google.maps.Circle;
-  //radius: number = 200;
-  ruler: CheapRuler = new CheapRuler(51, 'meters');
+  ruler: CheapRuler = new CheapRuler(51, 'meters'); //51 degrees latitude
   geocoder!: google.maps.Geocoder;
   ids: number[] = new Array();
   form!: FormGroup;
