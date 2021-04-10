@@ -16,6 +16,7 @@ export class TransactionsSummaryComponent implements OnInit {
   count!: number;
   bankAccounts?: BankAccount[];
   form!: FormGroup;
+  detail?: any;
 
   constructor(
     private bankAccountService: BankAccountService,

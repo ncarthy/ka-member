@@ -13,4 +13,8 @@ export class TransactionsService {
         return this.http.get<any>(`${baseUrl}/summary?start=${start}&end=${end}&bankID=${bankID}`);
     }
 
+    getDetail(month: string = '', year: string = '', bankID: string = '') {
+        return this.http.get<any>(`${baseUrl}/detail?month=${month}&year=${year}&bankID=${bankID}`);
+    }
+
 }

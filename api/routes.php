@@ -181,6 +181,7 @@ $router->mount('/transaction', function () use ($router) {
 /**********************/
 $router->mount('/transactions', function () use ($router) {
     $router->get('/summary', 'TransactionsCtl@summary_by_month');
+    $router->get('/detail', 'TransactionsCtl@detail_by_month');
 });
 /***************/
 /* User Routes */
