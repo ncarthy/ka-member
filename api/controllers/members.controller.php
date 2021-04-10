@@ -165,7 +165,7 @@ class MembersCtl{
     if(isset($_GET['expirydatestart']) || isset($_GET['expirydateend'])) {
       $start='';
       $end='';
-      list($start, $end) = $model->sanitizeDateValues(
+      list($start, $end) = \Core\DatesHelper::sanitizeDateValues(
                                   !isset($_GET['expirydatestart']) ? '' : $_GET['expirydatestart'], 
                                   !isset($_GET['expirydateend']) ? '' : $_GET['expirydateend']
                               );
@@ -175,7 +175,7 @@ class MembersCtl{
     if(isset($_GET['joindatestart']) || isset($_GET['joindateend'])) {
       $start='';
       $end='';
-      list($start, $end) = $model->sanitizeDateValues(
+      list($start, $end) = \Core\DatesHelper::sanitizeDateValues(
                                   !isset($_GET['joindatestart']) ? '' : $_GET['joindatestart'], 
                                   !isset($_GET['joindateend']) ? '' : $_GET['joindateend']
                               );
@@ -185,7 +185,7 @@ class MembersCtl{
     if(isset($_GET['reminderdatestart']) || isset($_GET['reminderdateend'])) {
       $start='';
       $end='';
-      list($start, $end) = $model->sanitizeDateValues(
+      list($start, $end) = \Core\DatesHelper::sanitizeDateValues(
                                   !isset($_GET['reminderdatestart']) ? '' : $_GET['reminderdatestart'], 
                                   !isset($_GET['reminderdateend']) ? '' : $_GET['reminderdateend']
                               );
@@ -195,7 +195,7 @@ class MembersCtl{
     if(isset($_GET['updatedatestart']) || isset($_GET['updatedateend'])) {
       $start='';
       $end='';
-      list($start, $end) = $model->sanitizeDateValues(
+      list($start, $end) = \Core\DatesHelper::sanitizeDateValues(
                                   !isset($_GET['updatedatestart']) ? '' : $_GET['updatedatestart'], 
                                   !isset($_GET['updatedateend']) ? '' : $_GET['updatedateend']
                               );
@@ -205,7 +205,7 @@ class MembersCtl{
     if(isset($_GET['lasttransactiondatestart']) || isset($_GET['lasttransactiondateend'])) {
       $start='';
       $end='';
-      list($start, $end) = $model->sanitizeDateValues(
+      list($start, $end) = \Core\DatesHelper::sanitizeDateValues(
                                   !isset($_GET['lasttransactiondatestart']) ? '' : $_GET['lasttransactiondatestart'], 
                                   !isset($_GET['lasttransactiondateend']) ? '' : $_GET['lasttransactiondateend']
                               );
@@ -217,7 +217,7 @@ class MembersCtl{
     if(isset($_GET['deletedatestart']) || isset($_GET['deletedateend'])) {
       $start='';
       $end='';
-      list($start, $end) = $model->sanitizeDateValues(
+      list($start, $end) = \Core\DatesHelper::sanitizeDateValues(
                                   !isset($_GET['deletedatestart']) ? '' : $_GET['deletedatestart'], 
                                   !isset($_GET['deletedateend']) ? '' : $_GET['deletedateend']
                               );

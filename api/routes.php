@@ -176,6 +176,12 @@ $router->mount('/transaction', function () use ($router) {
     $router->delete('/(\d+)', 'TransactionCtl@delete_by_id');
     $router->delete('/idmember/(\d+)', 'TransactionCtl@delete_by_idmember');
 });
+/**********************/
+/* Transactions Routes */
+/**********************/
+$router->mount('/transactions', function () use ($router) {
+    $router->get('/summary', 'TransactionsCtl@summary_by_month');
+});
 /***************/
 /* User Routes */
 /***************/
