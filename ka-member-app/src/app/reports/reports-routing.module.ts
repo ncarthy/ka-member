@@ -9,6 +9,7 @@ import { MapListComponent } from './map-list';
 import { MemberListComponent } from './member-list';
 import { InvalidEmailsComponent } from './invalid-emails';
 import { InvalidPostcodesComponent } from './invalid-postcodes';
+import {TransactionsSummaryComponent} from './transactions';
 
 const routes: Routes = [
     {
@@ -30,6 +31,7 @@ const routes: Routes = [
             { path: 'lapsedcem/:months', component: MemberListComponent },
             { path: 'formermembers/:months', component: MemberListComponent },
             { path: 'oldformermembers/:months', component: MemberListComponent },
+            { path: 'transactions', component: TransactionsSummaryComponent },
         ]
     }
 ];

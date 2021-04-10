@@ -26,6 +26,7 @@ export class ReportsComponent implements OnInit {
   }
 
   beforeChange($event: NgbPanelChangeEvent) {
+    console.log($event);
     this.panelOpen = $event.nextState;
   }
 }

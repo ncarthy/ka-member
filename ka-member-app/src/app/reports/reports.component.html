@@ -35,15 +35,14 @@
             <a routerLink="mailing-list">All Postal addresses for UK Mail</a>
           </li>
           <li>
-            <a routerLink="email-list"
-              >All email addressess</a
-            >
+            <a routerLink="email-list">All email addressess</a>
           </li>
           <li>
             <a routerLink="map-list"
               >Email/Address chosen by location (Google Maps))</a
             >
-          </li><br/>
+          </li>
+          <br />
           <li>
             Reports to investigate members excluded from lists:
             <ul>
@@ -94,8 +93,10 @@
       </ng-template>
       <ng-template ngbPanelContent>
         <ul>
-          <li class="text-muted">
-            Summary of payments received by payment type/ bank account. (TO DO)
+          <li>
+            <a routerLink="transactions">
+              Summary of payments received by bank account</a
+            >
           </li>
           <li>
             <a routerLink="lapsed/18"
