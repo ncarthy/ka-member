@@ -4,7 +4,7 @@ import { KeyValue } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 
 import { BankAccountService, TransactionsService } from '@app/_services';
-import { BankAccount, DateRangeEnum, TransactionSummary } from '@app/_models';
+import { BankAccount, DateRange, DateRangeEnum, TransactionSummary } from '@app/_models';
 import { DateRangeAdapter } from '@app/_helpers';
 
 @Component({
@@ -28,7 +28,7 @@ export class TransactionsSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      bank: [null],
+      bank: ['0'],
       dateRange: [DateRangeEnum.THIS_YEAR],
       startDate: [null],
       endDate: [null],
@@ -67,10 +67,25 @@ export class TransactionsSummaryComponent implements OnInit {
   };
 
   /* Set the date range control values according to the select value */
-  onDateRangeChanged(value: DateRangeEnum) {
-    const dtRng = this.dateRangeAdapter.enumToDateRange(value);
-    this.f['startDate'].setValue(dtRng.startDate);
-    this.f['endDate'].setValue(dtRng.endDate);
+  onDateRangeChanged(value: DateRangeEnum | null) {
+    let dtRng: DateRange;
+    if (value == null || value.toString() =='null') {
+      dtRng = this.dateRangeAdapter.enumToDateRange(DateRangeEnum.NEXT_YEAR); 
+      dtRng.startDate = '2000-01-01';
+      this.f['startDate'].disable();
+      this.f['endDate'].disable();
+    } else if (value == DateRangeEnum.CUSTOM) {
+      this.f['startDate'].enable();
+      this.f['endDate'].enable();
+      dtRng = new DateRange({startDate: this.f['startDate'].value, endDate: this.f['endDate'].value});
+    } else {
+      this.f['startDate'].enable();
+      this.f['endDate'].enable();
+      dtRng = this.dateRangeAdapter.enumToDateRange(value!);
+      this.f['startDate'].setValue(dtRng.startDate);
+      this.f['endDate'].setValue(dtRng.endDate);
+    }
+  
     this.refreshSummary(dtRng.startDate, dtRng.endDate, this.f['bank'].value);
   }
 
@@ -93,4 +108,5 @@ export class TransactionsSummaryComponent implements OnInit {
     this.selectedRow = summaryRow;
     this.detail = true;
   }
+
 }
