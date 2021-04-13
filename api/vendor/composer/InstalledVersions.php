@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'b31b8059202b3e488410a1b56672e0b73a0e350f',
+    'reference' => '5bb0d8070ad9e5bc903550ec099b0173f3356acf',
     'name' => '__root__',
   ),
   'versions' => 
@@ -42,7 +42,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'b31b8059202b3e488410a1b56672e0b73a0e350f',
+      'reference' => '5bb0d8070ad9e5bc903550ec099b0173f3356acf',
     ),
     'bramus/router' => 
     array (
@@ -70,6 +70,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'c544710aa18e079baf0027ca4c8236913f46945b',
+    ),
+    'pear/net_dns2' => 
+    array (
+      'pretty_version' => 'v1.5.2',
+      'version' => '1.5.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd5dbae0b0c0567923d25b3ae5e2bf1e9cbcedf76',
     ),
   ),
 );

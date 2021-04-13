@@ -51,3 +51,11 @@ Config::write('token.envkeyname', 'KA_MEMBER_KEY');
 Config::write('token.cookiename', 'refreshToken');
 Config::write('token.cookiepath', Config::read('api.path') . 'auth');
 Config::write('token.cookiesecure', false);
+
+// email
+Config::write('em.host', 'uk1.cp.netnerd.com');
+Config::write('em.port', '465');
+Config::write('em.user', 'neil.carthy+knightsbridgeassociation.com');
+Config::write('em.replyto', 'neil.carthy@knightsbridgeassociation.com');
+Config::write('em.password', ';?r26=7h9CUo');
+Config::write('em.secure', true);

@@ -26,6 +26,13 @@ class ComposerStaticInitf635231196898d4ab0ebc025aa04e471
     );
 
     public static $prefixesPsr0 = array (
+        'N' => 
+        array (
+            'Net_DNS2' => 
+            array (
+                0 => __DIR__ . '/..' . '/pear/net_dns2',
+            ),
+        ),
         'B' => 
         array (
             'Bramus' => 

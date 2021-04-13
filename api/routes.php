@@ -203,4 +203,11 @@ $router->mount('/user', function () use ($router) {
     // update user
     $router->put('/(\d+)', 'UserCtl@update');
 });
+/***************/
+/* Email Routes */
+/***************/
+$router->mount('/email', function () use ($router) {
+    // new user
+    $router->post('/', 'EmailCtl@send');
+});
 

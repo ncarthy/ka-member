@@ -430,9 +430,7 @@
 		public static function GetDNSRecord($domain, $types = array("MX", "A"), $nameservers = array("8.8.8.8", "8.8.4.4"), $cache = true)
 		{
 			// Check for a mail server based on a DNS lookup.
-			if (!class_exists("Net_DNS2_Resolver", false))  require_once str_replace("\\", "/", dirname(__FILE__)) . "/Net/DNS2.php";
-
-			$resolver = new Net_DNS2_Resolver(array("nameservers" => $nameservers));
+			$resolver = new \Net_DNS2_Resolver(array("nameservers" => $nameservers));
 			try
 			{
 				foreach ($types as $type)
@@ -459,7 +457,7 @@
 
 				return array("success" => false, "error" => self::SMTP_Translate("Invalid domain name or missing DNS record."), "errorcode" => "invalid_domain_or_missing_record", "info" => $domain);
 			}
-			catch (Exception $e)
+			catch (\Exception $e)
 			{
 				if ($cache)  self::$dnsttlcache[$domain] = array("success" => false, "ts" => time() + 3600);
 

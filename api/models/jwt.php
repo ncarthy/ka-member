@@ -163,7 +163,7 @@ class JWTWrapper{
                 $this->initializeToken();
             }
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             $this->initializeToken();
         }
     }
@@ -212,7 +212,7 @@ class JWTWrapper{
                     return NULL;
                 }
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return NULL;
             }
         }

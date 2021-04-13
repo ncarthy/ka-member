@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Net_DNS2' => array($vendorDir . '/pear/net_dns2'),
     'Bramus' => array($vendorDir . '/bramus/router/src'),
 );
