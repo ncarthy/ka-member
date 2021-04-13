@@ -1,6 +1,7 @@
 <?php
 	// CubicleSoft PHP SMTP e-mail functions.
 	// (C) 2020 CubicleSoft.  All Rights Reserved.
+	// https://github.com/cubiclesoft/ultimate-email
 
 	// Load dependencies.
 	if (!class_exists("UTF8", false))  require_once str_replace("\\", "/", dirname(__FILE__)) . "/utf8.php";
