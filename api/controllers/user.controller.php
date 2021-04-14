@@ -40,7 +40,8 @@ class UserCtl{
         "username" => $model->username,
         "fullname" => html_entity_decode($model->fullname),
         "role" => $model->role,
-        "suspended" => $model->suspended
+        "suspended" => $model->suspended,
+        "email" => $model->email
     );
 
     echo json_encode($user, JSON_NUMERIC_CHECK);
@@ -55,6 +56,7 @@ class UserCtl{
     $model->role = $data->role;
     $model->suspended = $data->suspended;
     $model->fullname = $data->fullname;
+    $model->email = $data->email;
     $model->failedloginattempts = isset($data->failedloginattempts)?$data->failedloginattempts:0;
     $model->password = password_hash($data->password, PASSWORD_DEFAULT);
 
@@ -89,6 +91,7 @@ class UserCtl{
     $model->username = $data->username;
     $model->role = $data->role;
     $model->suspended = $data->suspended;
+    $model->email = $data->email;
     $model->fullname = $data->fullname;    
     if (isset($data->password) && !empty($data->password)) {
       $model->password = password_hash($data->password, PASSWORD_DEFAULT);

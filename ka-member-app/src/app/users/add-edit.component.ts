@@ -52,6 +52,7 @@ export class UserAddEditComponent implements OnInit {
             fullname: ['', Validators.required],
             suspended: [false],
             username: ['', [Validators.required]],
+            email: ['', [Validators.email]],
             role: ['', Validators.required],
             password: ['', [Validators.minLength(8), (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]],
             confirmPassword: ['', (this.formMode == UserFormMode.Add) ? Validators.required : Validators.nullValidator]

@@ -18,6 +18,7 @@ class User{
     public $id;
     public $username;
     public $role;
+    public $email;
     public $suspended;
     public $password;
     public $fullname;
@@ -29,7 +30,7 @@ class User{
         //select all data
         $query = "SELECT
                     u.iduser as `id`, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`, u.failedloginattempts
+                    u.isAdmin, u.suspended, u.`name`, u.failedloginattempts, u.`email`
                     FROM
                     " . $this->table_name . " u " . 
                     (isset($this->suspended)?'WHERE suspended = '.$this->suspended.' ':'');                    
@@ -59,7 +60,8 @@ class User{
                         "username" => $username,
                         "fullname" => html_entity_decode($name),
                         "role" => $isAdmin?'Admin':'User',
-                        "suspended" => $suspended?true:false
+                        "suspended" => $suspended?true:false,
+                        "email" => html_entity_decode($email)
                     );
         
                     // create nonindexed array
@@ -77,7 +79,8 @@ class User{
         //select all data
         $query = "SELECT
                     u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`
+                    u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`,
+                    u.`email`
                     FROM
                     " . $this->table_name . " u
                     WHERE u.iduser = :id
@@ -102,6 +105,7 @@ class User{
             $this->username = $row['username'];
             $this->fullname = $row['name'];
             $this->password = $row['password'];
+            $this->email = $row['email'];
             $this->role = $row['isAdmin'] ? 'Admin' : 'User';
             $this->suspended = $row['suspended']?true:false;
             $this->failedloginattempts = $row['failedloginattempts'];
@@ -115,7 +119,8 @@ class User{
         $query = "SELECT
                     u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
                     u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`,
-                    CASE WHEN u.isAdmin THEN 'Admin' ELSE 'User' END as `role`
+                    CASE WHEN u.isAdmin THEN 'Admin' ELSE 'User' END as `role`,
+                    u.`email`
                     FROM
                     " . $this->table_name . " u
                     WHERE username = ?
@@ -135,6 +140,7 @@ class User{
                     username=:username,
                     isAdmin=:isadmin, 
                     name=:fullname,
+                    email=:email,
                     suspended=:suspended,
                     failedloginattempts=:failedloginattempts
                     " . (isset($this->password)?',new_pass=:password ':'');
@@ -145,6 +151,7 @@ class User{
         // sanitize
         $this->username=htmlspecialchars(strip_tags($this->username));
         $this->fullname=htmlspecialchars(strip_tags($this->fullname));
+        $this->email=htmlspecialchars(strip_tags($this->email));
         $this->role=htmlspecialchars(strip_tags($this->role));
         $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
         $isadmin = ($this->role=='Admin') ? 1 : 0;
@@ -155,6 +162,7 @@ class User{
         $stmt->bindParam(":isadmin", $isadmin, PDO::PARAM_INT);
         $stmt->bindParam(":suspended", $suspended, PDO::PARAM_INT);
         $stmt->bindParam(":fullname", $this->fullname);
+        $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":failedloginattempts", $this->failedloginattempts, PDO::PARAM_INT);
         $stmt->bindParam(":password", $this->password);
         
@@ -178,6 +186,7 @@ class User{
                     username=:username,
                     isAdmin=:isadmin, 
                     suspended=:suspended,
+                    email=:email,
                     name=:fullname,
                     timestamp=NULL,
                     failedloginattempts=:failedloginattempts
@@ -191,6 +200,7 @@ class User{
         // sanitize
         $this->username=htmlspecialchars(strip_tags($this->username));
         $this->fullname=htmlspecialchars(strip_tags($this->fullname));
+        $this->email=htmlspecialchars(strip_tags($this->email));
         $this->role=htmlspecialchars(strip_tags($this->role));
         $this->failedloginattempts=filter_var($this->failedloginattempts, FILTER_SANITIZE_NUMBER_INT);
         if(isset($this->password)) {
@@ -205,6 +215,7 @@ class User{
         // bind values
         $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
         $stmt->bindParam(":username", $this->username);
+        $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":isadmin", $isadmin, PDO::PARAM_INT);
         $stmt->bindParam(":suspended", $suspended, PDO::PARAM_INT);
         $stmt->bindParam(":fullname", $this->fullname);        

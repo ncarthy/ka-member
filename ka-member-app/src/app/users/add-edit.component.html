@@ -41,6 +41,15 @@
             <input type="checkbox" *ngIf="!f.suspended.value" class="form-control">
         </div>
     </div>
+    <div class="form-row">
+        <div class="form-group col-7">
+            <label>Email</label>
+            <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.email">Enter a valid email address</div>
+            </div>
+        </div>
+    </div>
     <div *ngIf="!isUserAdd">
         <h3 class="pt-3">Change Password</h3>
         <p>Leave blank to keep the same password</p>
