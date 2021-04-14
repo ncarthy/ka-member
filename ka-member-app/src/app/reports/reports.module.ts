@@ -5,6 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { ReportsRoutingModule } from './reports-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
+import { EmailModule } from '@app/email/email.module';
 
 import { ReportsLayoutComponent } from './layout.component';
 import { ReportsComponent } from './reports.component';
@@ -23,7 +24,8 @@ import { TransactionsDetailComponent } from './transactions/transactions-detail/
         ReactiveFormsModule,
         ReportsRoutingModule,
         SharedModule,
-        NgbModule
+        NgbModule,
+        EmailModule
     ],
     declarations: [
         ReportsComponent,
@@ -35,7 +37,7 @@ import { TransactionsDetailComponent } from './transactions/transactions-detail/
         InvalidEmailsComponent,
         InvalidPostcodesComponent,
         TransactionsSummaryComponent,
-        TransactionsDetailComponent,
+        TransactionsDetailComponent
     ]
 })
 export class ReportsModule { }

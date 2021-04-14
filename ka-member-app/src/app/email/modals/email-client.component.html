@@ -1,0 +1,51 @@
+<form [formGroup]="form">
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Reminder Email</h5>
+    <button
+      type="button"
+      class="close"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <div class="form-group col-7">
+        <label>From</label>
+        <input
+          type="text"
+          formControlName="email"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+        />
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+          <div *ngIf="f.email.errors.email">Enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="true">
+        <!--Debug Information for Testing -->
+        <hr />
+        <p>Form Value: {{ form.value | json }}</p>
+        <p>Form Status: {{ form.status | json }}</p>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel click')"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="modal.close('Ok click')"
+    >
+      Send
+    </button>
+  </div>
+</form>

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { from } from 'rxjs';
 import { ButtonName, MemberSearchResult, User } from '@app/_models';
 import {
   AlertService,
@@ -8,6 +10,7 @@ import {
   MemberService,
   MembersService,
 } from '@app/_services';
+import { EmailClientComponent } from '@app/email/modals/email-client.component';
 
 @Component({
   templateUrl: './member-list.component.html',
@@ -29,7 +32,8 @@ export class MemberListComponent implements OnInit {
     private memberService: MemberService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private location: Location
+    private location: Location,
+    private modalService: NgbModal
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -277,6 +281,7 @@ export class MemberListComponent implements OnInit {
   }
 
   sendReminder(member: MemberSearchResult) {
+    from(this.modalService.open(EmailClientComponent).result)
     return false; // don't let click event propagate
   }
 

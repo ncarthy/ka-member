@@ -2,7 +2,6 @@
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
 
 import { UserService, AlertService, AuthenticationService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
