@@ -2,7 +2,7 @@
 	require_once "./smtp.php";
 	require_once "./pop3.php";
     require_once "./email_builder.php";
-    require '../autoload.php';
+    require_once '../autoload.php';
 
 	$toaddr = "neil.carthy42@gmail.com";
 	$body = "<html><body>Your message goes here</body></html>";
@@ -64,8 +64,8 @@
 				array(
 					"type" => "image",
 					"width" => 600,
-//					"src" => "http://localhost/ultimate-email/test_suite/test_newsletter_header.png",
-					"file" => "./test_newsletter_header.png"
+					"src" => "https://github.com/cubiclesoft/ultimate-email/blob/master/test_suite/test_newsletter_header.png",
+//					"file" => "./test_newsletter_header.png"
 				)
 			)
 		),
@@ -150,9 +150,10 @@
 					"content" => array(
 						array("type" => "space", "height" => 1),
 
-						"<p>Blah blah blah</p>",
-						"<p><a href=\"#\">Unsubscribe</a></p>",
-						"<p>Blah blah blah</p>",
+						"<p><a href=\"https://www.knightsbridgeassociation.com/\">Knightsbridge Association</a></p>",
+						"<p>6 Montpelier Street, London, SW7 1EZ</p>",
+						"<p><a href=\"mailto:membership@knightsbridgeassociation.com?subject=Unsubscribe\">Unsubscribe</a></p>",
+						
 
 						array("type" => "space", "height" => 1),
 					)
@@ -162,6 +163,7 @@
 	);
 
 	$result = EmailBuilder::Generate($styles, $content);
+	file_put_contents('php://stderr', print_r($result["html"], TRUE));
     $smtpoptions = array(
 		"headers" => SMTP::GetUserAgent("Thunderbird"),
 		"htmlmessage" => $result["html"],
@@ -169,12 +171,12 @@
 		"server" => "uk1.cp.netnerd.com",
 		"port" => 465,
 		"secure" => true,
-		"username" => "neil.carthy+knightsbridgeassociation.com",
-		"password" => ";?r26=7h9CUo"
+		"username" => "member_admin+knightsbridgeassociation.com",
+		"password" => "K*-ESnyw]C6F7*JD"
 	);
 
 
-	$fromaddr = "neil.carthy@knightsbridgeassociation.com";
+	$fromaddr = "membership@knightsbridgeassociation.com";
 	$subject = "Thanks for signing up!";
 	$result = SMTP::SendEmail($fromaddr, $toaddr, $subject, $smtpoptions);
 	if (!$result["success"])
