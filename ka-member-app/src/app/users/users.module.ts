@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
@@ -15,7 +16,8 @@ import { UserRowComponent } from './row.component';
         CommonModule,
         ReactiveFormsModule,
         UsersRoutingModule,
-        SharedModule
+        SharedModule,
+        NgbModule
     ],
     declarations: [
         UserLayoutComponent,

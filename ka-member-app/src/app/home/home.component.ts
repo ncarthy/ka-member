@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { first } from 'rxjs/operators';
 
 import { User, MemberCount, MemberName } from '@app/_models';
 import {
