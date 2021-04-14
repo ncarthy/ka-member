@@ -10,7 +10,7 @@ import { User } from '@app/_models';
 })
 export class ReportsComponent implements OnInit {
   user:User;
-  panelOpen: boolean = false;
+  panelOpen: boolean[] = [false, false, false, false]; // 4 Accordians
 
   constructor(private location: Location,
     private authenticationService: AuthenticationService) {
@@ -25,8 +25,10 @@ export class ReportsComponent implements OnInit {
     return false; // don't propagate event
   }
 
-  beforeChange($event: NgbPanelChangeEvent) {
-    console.log($event);
-    this.panelOpen = $event.nextState;
+  beforeChange(event: NgbPanelChangeEvent) {
+    // panelID is one of 'static-1', 'static-2','static-3','static-4'
+    let panelId = parseInt(event.panelId.substring(event.panelId.length-1))-1;
+
+    this.panelOpen[panelId] = event.nextState;
   }
 }

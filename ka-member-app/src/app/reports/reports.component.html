@@ -14,7 +14,7 @@
     class="mb-2 col-sm-10"
     (panelChange)="beforeChange($event)"
   >
-    <ngb-panel title="MailingLists">
+    <ngb-panel title="MailingLists" id="static-1">
       <ng-template ngbPanelHeader let-opened="opened">
         <button
           ngbPanelToggle
@@ -24,8 +24,8 @@
           ngbTooltip="Show/Hide mailing list reports"
           container="body"
         >
-          <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
-          <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
+          <i class="fas fa-chevron-down" *ngIf="!panelOpen[0]"></i>
+          <i class="fas fa-chevron-up" *ngIf="panelOpen[0]"></i>
         </button>
         <span>Mailing Lists</span>
       </ng-template>
@@ -76,7 +76,7 @@
     class="mb-2 col-sm-10"
     (panelChange)="beforeChange($event)"
   >
-    <ngb-panel title="TransactionReports">
+    <ngb-panel title="TransactionReports" id="static-2">
       <ng-template ngbPanelHeader let-opened="opened">
         <button
           ngbPanelToggle
@@ -86,8 +86,8 @@
           ngbTooltip="Show/Hide reports of members payments"
           container="body"
         >
-          <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
-          <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
+          <i class="fas fa-chevron-down" *ngIf="!panelOpen[1]"></i>
+          <i class="fas fa-chevron-up" *ngIf="panelOpen[1]"></i>
         </button>
         <span>Transaction Reports</span>
       </ng-template>
@@ -132,7 +132,7 @@
     class="mb-2 col-sm-10"
     (panelChange)="beforeChange($event)"
   >
-    <ngb-panel title="DatabaseIntegrity">
+    <ngb-panel title="DatabaseIntegrity" id="static-3">
       <ng-template ngbPanelHeader let-opened="opened">
         <button
           ngbPanelToggle
@@ -142,8 +142,8 @@
           ngbTooltip="Show/Hide Reports that interrogate database integrity"
           container="body"
         >
-          <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
-          <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
+          <i class="fas fa-chevron-down" *ngIf="!panelOpen[2]"></i>
+          <i class="fas fa-chevron-up" *ngIf="panelOpen[2]"></i>
         </button>
         <span>Database Integrity Checks</span>
       </ng-template>
@@ -181,7 +181,7 @@
     (panelChange)="beforeChange($event)"
     *ngIf="user.isAdmin"
   >
-    <ngb-panel title="SecurityReports">
+    <ngb-panel title="SecurityReports" id="static-4">
       <ng-template ngbPanelHeader let-opened="opened">
         <button
           ngbPanelToggle
@@ -191,8 +191,8 @@
           ngbTooltip="Show/Hide reports related to audit and security"
           container="body"
         >
-          <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
-          <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
+          <i class="fas fa-chevron-down" *ngIf="!panelOpen[3]"></i>
+          <i class="fas fa-chevron-up" *ngIf="panelOpen[3]"></i>
         </button>
         <span>Security & Audit</span>
       </ng-template>
