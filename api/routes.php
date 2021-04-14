@@ -208,6 +208,6 @@ $router->mount('/user', function () use ($router) {
 /***************/
 $router->mount('/email', function () use ($router) {
     // new user
-    $router->post('/', 'EmailCtl@send');
+    $router->post('/reminder', 'EmailCtl@send_reminder');
 });
 

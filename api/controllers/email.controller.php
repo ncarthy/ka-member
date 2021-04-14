@@ -5,20 +5,19 @@ namespace Controllers;
 class EmailCtl{
 
 
-    public static function send(){
+    public static function send_reminder(){
 
         $model = new \Models\Email();
         $data = json_decode(file_get_contents("php://input"));
-        //EmailCtl::transferParameters($data, $model);
+        EmailCtl::transferParameters($data, $model);
         
-        if( $model->send()) {
+        if( $model->send_reminder()) {
           echo json_encode(
             array(
               "message" => "Email sent."
             )
-          , JSON_NUMERIC_CHECK);
+          );
         } else{
-          // if unable to create the model, tell the admin
             http_response_code(422);  
             echo json_encode(
               array("message" => "Unable to send email.")
@@ -28,14 +27,26 @@ class EmailCtl{
 
       private static function transferParameters($data, $model)
       {
-        // Flatten addresses
-        if (empty($data->primaryAddress)) {
-          $model->addressfirstline = empty($data->addressfirstline)?null:$data->addressfirstline;
-          $model->addresssecondline = empty($data->addresssecondline)?null:$data->addresssecondline;
-          $model->city = empty($data->city)?null:$data->city;
-          $model->county = empty($data->county)?null:$data->county;
-          $model->postcode = empty($data->postcode)?null:$data->postcode;
-          $model->countryID = empty($data->countryID)?null:$data->countryID;
+        if (isset($data->to)) {
+          $model->toAddress = $data->to->email;
+          $model->toName = $data->to->name;
+        }  else {
+          http_response_code(422);  
+          echo json_encode(
+            array("message" => "No 'to' email address supplied")
+          );
+          exit(0);
         }
+        if (isset($data->from)) {
+          $model->fromAddress = $data->from->email;  
+          $model->fromName = $data->from->name;
+        } else {
+          http_response_code(422);  
+          echo json_encode(
+            array("message" => "No 'to' email address supplied")
+          );
+          exit(0);
+        }     
+        $model->goCardlessLink = $data->goCardlessLink;
     }
 }
