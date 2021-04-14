@@ -48,10 +48,11 @@ UPDATE member SET addressfirstline = addresssecondline, addresssecondline='' WHE
 
 ALTER TABLE `membershipstatus` ADD `multiplier` DECIMAL(11,2) NOT NULL DEFAULT '1' AFTER `name`;
 ALTER TABLE `membershipstatus` ADD `membershipfee` DECIMAL(11,2) NOT NULL DEFAULT '0' AFTER `multiplier`;
-UPDATE `membershipstatus` SET `name` = 'Individual', `membershipfee` = 20 WHERE `membershipstatus`.`idmembership` = 2;
-UPDATE `membershipstatus` SET `name` = 'Household',`multiplier`=2, `membershipfee` = 30 WHERE `membershipstatus`.`idmembership` = 3;
-UPDATE `membershipstatus` SET `name` = 'Corporate',`multiplier`=4, `membershipfee` = 40 WHERE `membershipstatus`.`idmembership` = 4;
-UPDATE `membershipstatus` SET `name` = 'Lifetime',`multiplier`=1.5, `membershipfee` = 500 WHERE `membershipstatus`.`idmembership` = 5;
+ALTER TABLE `membershipstatus` ADD `gocardlesslink` VARCHAR(100) NULL AFTER `membershipfee`;
+UPDATE `membershipstatus` SET `name` = 'Individual', `membershipfee` = 20, `gocardlesslink`= 'https://pay.gocardless.com/AL0003MJMZ4H3F' WHERE `membershipstatus`.`idmembership` = 2;
+UPDATE `membershipstatus` SET `name` = 'Household',`multiplier`=2, `membershipfee` = 30, `gocardlesslink`= 'https://pay.gocardless.com/AL0003MJN9KEQP' WHERE `membershipstatus`.`idmembership` = 3;
+UPDATE `membershipstatus` SET `name` = 'Corporate',`multiplier`=4, `membershipfee` = 40, `gocardlesslink`= 'https://pay.gocardless.com/AL0003MJNEY3GF' WHERE `membershipstatus`.`idmembership` = 4;
+UPDATE `membershipstatus` SET `name` = 'Lifetime',`multiplier`=1.5, `membershipfee` = 500, `gocardlesslink`= 'https://pay.gocardless.com/AL0003MJNJGJBD' WHERE `membershipstatus`.`idmembership` = 5;
 UPDATE `membershipstatus` SET `name` = 'Honorary' WHERE `membershipstatus`.`idmembership` = 6;
 UPDATE `membershipstatus` SET `name` = 'Pending' WHERE `membershipstatus`.`idmembership` = 7;
 UPDATE `membershipstatus` SET `name` = 'Contributing Ex-member' WHERE `membershipstatus`.`idmembership` = 8;
@@ -544,6 +545,10 @@ INSERT INTO user
 SET username='user', isAdmin='0', name='Normal User', suspended='0', failedloginattempts='0',new_pass='$2y$10$EjYfEuhGJsrwDfReJDk8Au2wJeIQDs0TuBZoLWq.pU4K7P2bFo8/W';
 INSERT INTO user
 SET username='admin', isAdmin='1', name='Admin User', suspended='0', failedloginattempts='0',new_pass='$2y$10$FJ8kSpWlrCbv18SIhVwK1.Thx9xzBEkVvqhjurlYk2n853KH9IW8G';
+ALTER TABLE `user` ADD `email` VARCHAR(255) NULL AFTER `failedloginattempts`;
+UPDATE `user` SET `email` = 'neil.carthy@knightsbridgeassociation.com' WHERE iduser = 5;
+UPDATE `user` SET `email` = 'membership@knightsbridgeassociation.com' WHERE iduser = 8;
+UPDATE `user` SET `email` = 'carol.seymour-newton@knightsbridgeassociation.com' WHERE iduser = 13;
 
 ALTER TABLE `user` DROP `password`;
 

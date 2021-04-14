@@ -8,6 +8,7 @@ export class User {
     fullname: string;
     password?: string;
     accessToken?: string;
+    email?: string;
     isDeleting: boolean = false;
     isUpdating: boolean = false;
     isAdmin: boolean = false;
@@ -21,6 +22,7 @@ export class User {
         this.fullname = obj && obj.fullname || null;
         this.password = obj && obj.password || null;
         this.accessToken = obj && obj.accessToken || null;
+        this.email = obj && obj.email || null;
         this.isAdmin = obj && obj.role && obj.role === Role.Admin;
     }
 }

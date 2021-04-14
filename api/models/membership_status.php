@@ -16,6 +16,7 @@ class MembershipStatus{
     public $name;
     public $multiplier;
     public $membershipfee;
+    public $gocardlesslink;
 
     public function __construct(){
         $this->conn = \Core\Database::getInstance()->conn;
@@ -27,7 +28,7 @@ class MembershipStatus{
         //select all data
         $query = "SELECT
                     " . $this->table_id ." as `id`, `name`
-                    , `multiplier`, `membershipfee`
+                    , `multiplier`, `membershipfee`, `gocardlesslink`
                 FROM
                     " . $this->table_name . "
                 ORDER BY ". $this->table_id;
@@ -56,6 +57,7 @@ class MembershipStatus{
                         "name" => $name,
                         "multiplier" => $multiplier,
                         "membershipfee" => $membershipfee,
+                        "gocardlesslink" => $gocardlesslink
                     );
 
                     $item_arr[] = $item;
@@ -70,7 +72,7 @@ class MembershipStatus{
             //select data for one item using PK of table
             $query = "SELECT
                         " . $this->table_id ." as `id`, `name`
-                            , `multiplier`, `membershipfee`
+                            , `multiplier`, `membershipfee`, `gocardlesslink`
                     FROM
                         " . $this->table_name . "
                         WHERE "; 
@@ -106,13 +108,15 @@ class MembershipStatus{
             $this->name = $row['name'];
             $this->multiplier = $row['multiplier'];
             $this->membershipfee = $row['membershipfee'];
+            $this->gocardlesslink = $row['gocardlesslink'];
 
             // create array
             $item = array(
                 "id" => $this->id,
                 "name" => $this->name,
                 "multiplier" => $this->multiplier,
-                "membershipfee" => $this->membershipfee 
+                "membershipfee" => $this->membershipfee,
+                "gocardlesslink" => $this->gocardlesslink
             );
 
             return $item;

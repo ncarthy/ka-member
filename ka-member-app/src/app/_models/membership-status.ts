@@ -3,6 +3,7 @@
     name: string;    
     multiplier: number;
     membershipfee: number;
+    gocardlesslink: string;
 
     constructor(obj?: any) {
 
@@ -10,5 +11,6 @@
         this.name = obj && obj.name || null;
         this.multiplier = obj && obj.multiplier || null;
         this.membershipfee = obj && obj.membershipfee || null;
+        this.gocardlesslink = obj && obj.gocardlesslink || null;
     }
 }
