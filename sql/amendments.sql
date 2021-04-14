@@ -546,9 +546,11 @@ SET username='user', isAdmin='0', name='Normal User', suspended='0', failedlogin
 INSERT INTO user
 SET username='admin', isAdmin='1', name='Admin User', suspended='0', failedloginattempts='0',new_pass='$2y$10$FJ8kSpWlrCbv18SIhVwK1.Thx9xzBEkVvqhjurlYk2n853KH9IW8G';
 ALTER TABLE `user` ADD `email` VARCHAR(255) NULL AFTER `failedloginattempts`;
-UPDATE `user` SET `email` = 'neil.carthy@knightsbridgeassociation.com' WHERE iduser = 5;
-UPDATE `user` SET `email` = 'membership@knightsbridgeassociation.com' WHERE iduser = 8;
-UPDATE `user` SET `email` = 'carol.seymour-newton@knightsbridgeassociation.com' WHERE iduser = 13;
+ALTER TABLE `user` ADD `title` VARCHAR(100) NULL AFTER `email`;
+UPDATE `user` SET `email` = 'neil.carthy@knightsbridgeassociation.com',`title` = 'IT Support' WHERE iduser = 5;
+UPDATE `user` SET `email` = 'neil.carthy@knightsbridgeassociation.com',`title` = 'IT Support' WHERE iduser = 22;
+UPDATE `user` SET `email` = 'membership@knightsbridgeassociation.com',`title` = 'Treasurer' WHERE iduser = 8;
+UPDATE `user` SET `email` = 'carol.seymour-newton@knightsbridgeassociation.com',`title` = 'Vice Chair' WHERE iduser = 13;
 
 ALTER TABLE `user` DROP `password`;
 

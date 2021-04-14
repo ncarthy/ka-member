@@ -51,6 +51,7 @@ export class UserAddEditComponent implements OnInit {
         this.form = this.formBuilder.group({
             fullname: ['', Validators.required],
             suspended: [false],
+            title: [''],
             username: ['', [Validators.required]],
             email: ['', [Validators.email]],
             role: ['', Validators.required],
