@@ -209,5 +209,7 @@ $router->mount('/user', function () use ($router) {
 $router->mount('/email', function () use ($router) {
     $router->post('/prepare_reminder', 'EmailCtl@prepare_reminder');
     $router->post('/send_reminder', 'EmailCtl@send_reminder');
+    $router->post('/prepare_switchrequest', 'EmailCtl@prepare_switchrequest');
+    $router->post('/send_switchrequest', 'EmailCtl@send_switchrequest');
 });
 

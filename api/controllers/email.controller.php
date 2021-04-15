@@ -7,9 +7,50 @@ use \Models\MembershipStatus;
 class EmailCtl{
 
 
+  public static function send_switchrequest(){
+
+    $model = EmailCtl::getEmailModel();
+    
+    if( $model->prepare_switchrequest()) {
+      if ($model->send_switchrequest()) {
+        echo json_encode(
+          array("message" => "Success")
+        );
+      } else {
+        http_response_code(422);  
+        echo json_encode(
+          array("message" => "Unable to send email.")
+        );          
+      }
+    } else{
+          http_response_code(422);  
+          echo json_encode(
+            array("message" => "Unable to prepare email.")
+          );
+      }
+    }
+
+    public static function prepare_switchrequest(){
+
+      $model = EmailCtl::getEmailModel();
+      
+      if( $model->prepare_switchrequest()) {
+        echo json_encode(
+          array(
+            "html" => $model->body
+          )
+        );
+      } else{
+          http_response_code(422);  
+          echo json_encode(
+            array("message" => "Unable to prepare email.")
+          );
+      }
+    }
+
     public static function send_reminder(){
 
-      $model = EmailCtl::reminderModel();
+      $model = EmailCtl::getEmailModel();
       
       if( $model->prepare_reminder()) {
         if ($model->send_reminder()) {
@@ -32,7 +73,7 @@ class EmailCtl{
 
       public static function prepare_reminder(){
 
-        $model = EmailCtl::reminderModel();
+        $model = EmailCtl::getEmailModel();
         
         if( $model->prepare_reminder()) {
           echo json_encode(
@@ -40,7 +81,6 @@ class EmailCtl{
               "html" => $model->body
             )
           );
-          //echo $model->body;
         } else{
             http_response_code(422);  
             echo json_encode(
@@ -49,7 +89,7 @@ class EmailCtl{
         }
       }
 
-      private static function reminderModel() {
+      private static function getEmailModel() {
         $model = new \Models\Email();
         $data = json_decode(file_get_contents("php://input"));
         $idmember = $data->idmember;
