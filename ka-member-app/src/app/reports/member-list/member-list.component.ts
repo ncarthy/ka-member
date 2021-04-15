@@ -292,9 +292,11 @@ export class MemberListComponent implements OnInit {
         });
       },
       (error: any) => {
-        this.alertService.error(`Unable to send email`, {
-          keepAfterRouteChange: true,
-        });
+        if (error == 'Fail') {
+          this.alertService.error(`Unable to send email`, {
+            keepAfterRouteChange: true,
+          });
+        }
       }
     );
 
