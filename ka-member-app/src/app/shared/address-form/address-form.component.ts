@@ -16,7 +16,7 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { CountryService } from '@app/_services';
+import { CountryService, GeocodeService } from '@app/_services';
 import { Address, Country, GetAddressAddress } from '@app/_models';
 
 @Component({
@@ -51,13 +51,16 @@ export class AddressFormComponent
     county: [null],
     country: [null, Validators.required],
     postcode: [null, Validators.required],
+    lat: [null],
+    lng: [null],
   });
 
   private subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private geocodeService: GeocodeService
   ) {}
 
   // convenience getter for easy access to form fields
@@ -82,6 +85,8 @@ export class AddressFormComponent
         this.addressForm.controls['county'].setValue(this.address.county);
         this.addressForm.controls['country'].setValue(this.address.country);
         this.addressForm.controls['postcode'].setValue(this.address.postcode);
+        this.addressForm.controls['lat'].setValue(this.address.lat);
+        this.addressForm.controls['lng'].setValue(this.address.lng);
         this.showFormFields = true;
       } else {
         this.addressForm.controls['country'].setValue(this.uk.id);
@@ -130,5 +135,13 @@ export class AddressFormComponent
     this.addressForm.controls['county'].setValue(address.county);
     this.addressForm.controls['country'].setValue(address.country.id);
     this.addressForm.controls['postcode'].setValue(address.postcode);
+
+    let a = new Address(this.addressForm.value);
+    this.geocodeService.geocode(a).subscribe((new_address:Address) => {
+      if (new_address.lng && new_address.lat) {
+        this.addressForm.controls['lat'].setValue(new_address.lat);
+        this.addressForm.controls['lng'].setValue(new_address.lng);
+      }
+    } );
   }
 }

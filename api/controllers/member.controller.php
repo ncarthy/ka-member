@@ -209,6 +209,8 @@ class MemberCtl{
       $model->county = empty($data->county)?null:$data->county;
       $model->postcode = empty($data->postcode)?null:$data->postcode;
       $model->countryID = empty($data->countryID)?null:$data->countryID;
+      $model->gpslat1 = empty($data->gpslat1)?null:$data->gpslat1;
+      $model->gpslng1 = empty($data->gpslng1)?null:$data->gpslng1;
     } else {
       $model->addressfirstline = $data->primaryAddress->addressfirstline;
       $model->addresssecondline = $data->primaryAddress->addresssecondline;
@@ -216,14 +218,18 @@ class MemberCtl{
       $model->county = $data->primaryAddress->county;
       $model->postcode = $data->primaryAddress->postcode;
       $model->countryID = $data->primaryAddress->country;
+      $model->gpslat1 = $data->primaryAddress->lat;
+      $model->gpslng1 = $data->primaryAddress->lng;
     }
     if (empty($data->secondaryAddress)) {
-      $model->addressfirstline2 = empty($data->addressfirstline)?null:$data->addressfirstline;
-      $model->addresssecondline2 = empty($data->addresssecondline)?null:$data->addresssecondline;
-      $model->city2 = empty($data->city)?null:$data->city;
-      $model->county2 = empty($data->county)?null:$data->county;
-      $model->postcode2 = empty($data->postcode)?null:$data->postcode;
-      $model->country2ID = empty($data->countryID)?null:$data->countryID;
+      $model->addressfirstline2 = empty($data->addressfirstline2)?null:$data->addressfirstline2;
+      $model->addresssecondline2 = empty($data->addresssecondline2)?null:$data->addresssecondline2;
+      $model->city2 = empty($data->city2)?null:$data->city2;
+      $model->county2 = empty($data->county2)?null:$data->county2;
+      $model->postcode2 = empty($data->postcode2)?null:$data->postcode2;
+      $model->country2ID = empty($data->country2ID)?null:$data->country2ID;
+      $model->gpslat2 = empty($data->gpslat2)?null:$data->gpslat2;
+      $model->gpslng2 = empty($data->gpslng2)?null:$data->gpslng2;
     } else {
       $model->addressfirstline2 = $data->secondaryAddress->addressfirstline;
       $model->addresssecondline2 = $data->secondaryAddress->addresssecondline;
@@ -231,6 +237,8 @@ class MemberCtl{
       $model->county2 = $data->secondaryAddress->county;
       $model->postcode2 = $data->secondaryAddress->postcode;
       $model->country2ID = $data->secondaryAddress->country;
+      $model->gpslat2 = $data->secondaryAddress->lat;
+      $model->gpslng2 = $data->secondaryAddress->lng;
     }
 
     // flatten emails & telephone numbers

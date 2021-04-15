@@ -31,7 +31,6 @@ import {
   FormMode,
   MemberName,
   MembershipStatus,
-  SuccessResponse,
   User,
 } from '@app/_models';
 import { phoneNumberRegex } from '@app/shared/regexes.const';
