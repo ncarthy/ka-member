@@ -134,61 +134,6 @@ export class MapListComponent implements OnInit {
         })
       )
       .subscribe().add(() => {this.ids = ids;});
-
-    /* let i = 1;
-    this.addresses$
-      .pipe(
-        map((address: Address) => {
-          if (!address.lat || !address.lng) {
-            this.geocoder.geocode(
-            { address: address.toString() },
-            (results, status) => {
-              if (status == 'OK') {
-                let m = this.memberService.setPrimaryGeometry(
-                  address.idmember,
-                  results[0].geometry.location.lat(),
-                  results[0].geometry.location.lng()
-                ).subscribe(() => console.log('Lat/Lng updated for idmember='+address.idmember));
-                address.lat = results[0].geometry.location.lat();
-                address.lng = results[0].geometry.location.lng();
-              } else {
-                console.log('Geocode was not successful: ' + status+', idmember='+address.idmember);
-              }                      
-            return address;
-            }
-          );
-          } else {
-            return address;
-          }
-        })
-      )
-      .subscribe();*/
-  }
-
-  geocode(address: Address): Observable<Address> {
-    return new Observable((observer) =>
-      this.geocoder.geocode(
-        { address: address.toString() },
-        (
-          results: google.maps.GeocoderResult[],
-          status: google.maps.GeocoderStatus
-        ) => {
-          if ((status = google.maps.GeocoderStatus.OK)) {
-            let ll = results[0].geometry.location;
-            address.lat = ll.lat();
-            address.lng = ll.lng();
-          } else {
-            console.log(
-              'Geocode was not successful: ' +
-                status +
-                ', idmember=' +
-                address.idmember
-            );
-          }
-          observer.next(address);
-        }
-      )
-    );
   }
 
   private addCircleToMap(lat: number, lng: number, radius: number) {

@@ -104,7 +104,7 @@ export class EmailClientComponent implements OnInit {
   }
 
   // Hash function from https://stackoverflow.com/a/52171480
-  private cyrb53(str: string, seed = 0): number {
+  /*private cyrb53(str: string, seed = 0): number {
     let h1 = 0xdeadbeef ^ seed,
       h2 = 0x41c6ce57 ^ seed;
     for (let i = 0, ch; i < str.length; i++) {
@@ -119,5 +119,5 @@ export class EmailClientComponent implements OnInit {
       Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
       Math.imul(h1 ^ (h1 >>> 13), 3266489909);
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
-  }
+  }*/
 }
