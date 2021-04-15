@@ -67,58 +67,98 @@ class MembershipStatus{
         return $item_arr;
     }
         
-        public function readOne(){
+    public function readOne(){
 
-            //select data for one item using PK of table
-            $query = "SELECT
-                        " . $this->table_id ." as `id`, `name`
-                            , `multiplier`, `membershipfee`, `gocardlesslink`
-                    FROM
-                        " . $this->table_name . "
-                        WHERE "; 
+        //select data for one item using PK of table
+        $query = "SELECT
+                    " . $this->table_id ." as `id`, `name`
+                        , `multiplier`, `membershipfee`, `gocardlesslink`
+                FROM
+                    " . $this->table_name . "
+                    WHERE "; 
 
-            // WHERE clause depends on parameters
-            if($this->name) {
-                $query .= "LOWER(name) LIKE :name ";
-            }            
-            else {
-                $query .= $this->table_id ." = :id ";
-            }
-            $query .= "LIMIT 0,1";
-    
-            // prepare query statement
-            $stmt = $this->conn->prepare($query);      
-
-            if($this->name) {
-                $name = htmlspecialchars(strip_tags($this->name)).'%';
-                $stmt->bindParam (":name", $name, PDO::PARAM_STR);
-            }
-            else {
-                $id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
-                $stmt->bindParam (":id", $id, PDO::PARAM_INT);
-            }
-            
-            $stmt->execute();
-
-            // get retrieved row
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-            // set values to object properties
-            $this->id = $row['id'];
-            $this->name = $row['name'];
-            $this->multiplier = $row['multiplier'];
-            $this->membershipfee = $row['membershipfee'];
-            $this->gocardlesslink = $row['gocardlesslink'];
-
-            // create array
-            $item = array(
-                "id" => $this->id,
-                "name" => $this->name,
-                "multiplier" => $this->multiplier,
-                "membershipfee" => $this->membershipfee,
-                "gocardlesslink" => $this->gocardlesslink
-            );
-
-            return $item;
+        // WHERE clause depends on parameters
+        if($this->name) {
+            $query .= "LOWER(name) LIKE :name ";
+        }            
+        else {
+            $query .= $this->table_id ." = :id ";
         }
+        $query .= "LIMIT 0,1";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);      
+
+        if($this->name) {
+            $name = htmlspecialchars(strip_tags($this->name)).'%';
+            $stmt->bindParam (":name", $name, PDO::PARAM_STR);
+        }
+        else {
+            $id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+            $stmt->bindParam (":id", $id, PDO::PARAM_INT);
+        }
+        
+        $stmt->execute();
+
+        // get retrieved row
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set values to object properties
+        $this->id = $row['id'];
+        $this->name = $row['name'];
+        $this->multiplier = $row['multiplier'];
+        $this->membershipfee = $row['membershipfee'];
+        $this->gocardlesslink = $row['gocardlesslink'];
+
+        // create array
+        $item = array(
+            "id" => $this->id,
+            "name" => $this->name,
+            "multiplier" => $this->multiplier,
+            "membershipfee" => $this->membershipfee,
+            "gocardlesslink" => $this->gocardlesslink
+        );
+
+        return $item;
+    }
+
+    public function readOneFromIdmember($idmember){
+
+        $query = "SELECT
+                    ms." . $this->table_id ." as `id`, ms.`name`
+                        , ms.`multiplier`, ms.`membershipfee`, ms.`gocardlesslink`
+                FROM `member` m
+                    JOIN " . $this->table_name . " ms ON m.membership_idmembership = ms.". $this->table_id ."
+                    WHERE m.idmember = :idmember 
+                    LIMIT 0,1"; 
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);      
+
+        $idmember = filter_var($idmember, FILTER_SANITIZE_NUMBER_INT);
+        $stmt->bindParam (":idmember", $idmember, PDO::PARAM_INT);
+        
+        $stmt->execute();
+
+        // get retrieved row
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set values to object properties
+        $this->id = $row['id'];
+        $this->name = $row['name'];
+        $this->multiplier = $row['multiplier'];
+        $this->membershipfee = $row['membershipfee'];
+        $this->gocardlesslink = $row['gocardlesslink'];
+
+        // create array
+        $item = array(
+            "id" => $this->id,
+            "name" => $this->name,
+            "multiplier" => $this->multiplier,
+            "membershipfee" => $this->membershipfee,
+            "gocardlesslink" => $this->gocardlesslink
+        );
+
+        return $item;
+    }
 }

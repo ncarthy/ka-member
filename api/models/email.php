@@ -11,10 +11,12 @@ class Email{
     // object properties
     protected $smtpOptions;
     public $toAddress;
-    public $toName;
+    public $salutation;
     public $fromAddress;
     public $fromName;
+    public $fromTitle;
     public $goCardlessLink;
+    public $subject;
 
     // constructor
     public function __construct(){
@@ -33,25 +35,36 @@ class Email{
 
     public function send_reminder() {
 
-        $subject = "Membership Renewal";
+        $this->subject = "Membership Renewal";
+
+        $this->smtpOptions['htmlmessage'] = $this->body;
+        $this->smtpOptions['textmessage'] = \SMTP::ConvertHTMLToText($this->body);
+
+        $result = \SMTP::SendEmail($this->fromAddress, $this->toAddress, $this->subject, $this->smtpOptions);
+        if (!$result["success"]) {
+            return false;
+        } else {
+            return true;
+        }        
+    }
+
+    public function prepare_reminder() {        
 
         $content = array();
         array_push($content, $this->header());
         array_push($content, $this->reminder_content());
         array_push($content, $this->footer());
 
-        $body = \EmailBuilder::Generate($this->styles(), $content);
-
-        $this->smtpOptions['htmlmessage'] = $body["html"];
-        $this->smtpOptions['textmessage'] = \SMTP::ConvertHTMLToText($body["html"]);
-
-        $result = \SMTP::SendEmail($this->fromAddress, $this->toAddress, $subject, $this->smtpOptions);
-        if (!$result["success"])
-        {
+        $result = \EmailBuilder::Generate($this->styles(), $content);      
+        if (!$result["success"]) {
             return false;
         } else {
+            $whitespace = array('\r', '\t', '\n');
+            $altered_body = str_replace($whitespace, '', $result['html']);
+            $altered_body = preg_replace('/[\s\t\n\r]{2,}/', '', $result['html']);
+            $this->body = $altered_body;
             return true;
-        }        
+        } 
     }
 
     private function reminder_content() {
@@ -72,7 +85,7 @@ class Email{
 
         $top_level['content']['0']['content'] = array(
             array("type" => "space", "height" => 1),
-            "<p>Dear {$this->toName},</p>",
+            "<p>{$this->salutation}</p>",
             "<p>Your annual membership of the Knightsbridge Association is now due for renewal. We are very grateful for your support and hope that you will renew your subscription by one of the methods given below.</p>",
             // Display a clickable link as a centered button (e.g. a call to action).
             array(
@@ -99,7 +112,7 @@ class Email{
 
             "<p>Yours Sincerely,</p>",
             "<p>{$this->fromName}</p>",
-            "<p>Treasurer</p>",
+            "<p>{$this->fromTitle}</p>",
 
             array("type" => "space", "height" => 5)
         );
