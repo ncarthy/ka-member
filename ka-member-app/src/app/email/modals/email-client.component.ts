@@ -97,7 +97,6 @@ export class EmailClientComponent implements OnInit {
   onSend() {
     this.emailService.sendReminderEmail(this.form.value).subscribe(
       (response: any) => {
-        console.log(response);
         this.modal.close('OK');
       },
       (error: any) => this.modal.dismiss('Fail')
