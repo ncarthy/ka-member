@@ -6,6 +6,7 @@ export * from './country';
 export * from './date-range-filter';
 export * from './date-filter.enum';
 export * from './date-range.enum';
+export * from './email';
 export * from './form-mode.enum';
 export * from './getaddress-address';
 export * from './map-marker';

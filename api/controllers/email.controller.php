@@ -36,15 +36,15 @@ class EmailCtl{
 
         $memberstatus_model = new \Models\MembershipStatus();
         $status = $memberstatus_model->readOneFromIdmember($idmember);
-        $model->goCardlessLink = isset($status['goCardlessLink'])?$status['goCardlessLink']:null;
+        $model->goCardlessLink = isset($status['gocardlesslink'])?$status['gocardlesslink']:null;
         
         if( $model->prepare_reminder()) {
-          /*echo json_encode(
+          echo json_encode(
             array(
               "html" => $model->body
             )
-          );*/
-          echo $model->body;
+          );
+          //echo $model->body;
         } else{
             http_response_code(422);  
             echo json_encode(
@@ -80,8 +80,8 @@ class EmailCtl{
           if (!empty($returnValue)) { $returnValue .= '; '; }
           $returnValue .= " Salutation missing";
         }
-        if (isset($data->fromAddress)) {
-          $model->fromAddress = $data->fromAddress;          
+        if (isset($data->fromEmail)) {
+          $model->fromAddress = $data->fromEmail;          
         }  else {
           if (!empty($returnValue)) { $returnValue .= '; '; }
           $returnValue .= " 'From' email address missing";

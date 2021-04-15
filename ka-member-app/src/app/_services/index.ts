@@ -3,6 +3,7 @@ export * from './alert.service';
 export * from './bank-account.service';
 export * from './authentication.service';
 export * from './country.service';
+export * from './email.service';
 export * from './member-filter.service';
 export * from './member-name.service';
 export * from './member.service';
