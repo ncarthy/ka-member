@@ -7,7 +7,7 @@ use \Models\MembershipStatus;
 class EmailCtl{
 
 
-    public static function send_reminder($idmember){
+    public static function send_reminder(){
 
         $model = new \Models\Email();
         $data = json_decode(file_get_contents("php://input"));
@@ -27,10 +27,11 @@ class EmailCtl{
         }
       }
 
-      public static function prepare_reminder($idmember){
+      public static function prepare_reminder(){
 
         $model = new \Models\Email();
         $data = json_decode(file_get_contents("php://input"));
+        $idmember = $data->idmember;
         EmailCtl::transferParameters($data, $model);
 
         $memberstatus_model = new \Models\MembershipStatus();
@@ -54,24 +55,42 @@ class EmailCtl{
 
       private static function transferParameters($data, $model)
       {
-        if (isset($data->to)) {
-          $model->toAddress = $data->to->email;
-          $model->salutation = $data->to->salutation;
+        $returnValue= '';
+
+        if (isset($data->toEmail)) {
+          $model->toAddress = $data->toEmail;          
         }  else {
-          http_response_code(422);  
-          echo json_encode(
-            array("message" => "'To' email address or salutation missing")
-          );
-          exit(0);
+          $returnValue= "'To' email address missing";
         }
-        if (isset($data->from)) {
-          $model->fromAddress = $data->from->email;  
-          $model->fromName = $data->from->name;
-          $model->fromTitle = $data->from->title;
-        } else {
+        if (isset($data->fromName)) {
+          $model->fromName = $data->fromName;          
+        }  else {
+          if (!empty($returnValue)) { $returnValue .= '; '; }
+          $returnValue .= " 'From' name is missing";
+        }
+        if (isset($data->fromTitle)) {
+          $model->fromTitle = $data->fromTitle;          
+        }  else {
+          if (!empty($returnValue)) { $returnValue .= '; '; }
+          $returnValue .= " 'From' title is missing";
+        }
+        if (isset($data->salutation)) {
+          $model->salutation = $data->salutation;          
+        }  else {
+          if (!empty($returnValue)) { $returnValue .= '; '; }
+          $returnValue .= " Salutation missing";
+        }
+        if (isset($data->fromAddress)) {
+          $model->fromAddress = $data->fromAddress;          
+        }  else {
+          if (!empty($returnValue)) { $returnValue .= '; '; }
+          $returnValue .= " 'From' email address missing";
+        }
+
+        if (!isset($returnValue)) {
           http_response_code(422);  
           echo json_encode(
-            array("message" => "'From' email address, Name or Title missing")
+            array("message" => $returnValue)
           );
           exit(0);
         }     

@@ -59,8 +59,6 @@ class Email{
         if (!$result["success"]) {
             return false;
         } else {
-            $whitespace = array('\r', '\t', '\n');
-            $altered_body = str_replace($whitespace, '', $result['html']);
             $altered_body = preg_replace('/[\s\t\n\r]{2,}/', '', $result['html']);
             $this->body = $altered_body;
             return true;

@@ -207,7 +207,7 @@ $router->mount('/user', function () use ($router) {
 /* Email Routes */
 /***************/
 $router->mount('/email', function () use ($router) {
-    $router->post('/prepare_reminder/(\d+)', 'EmailCtl@prepare_reminder');
-    $router->post('/send_reminder/(\d+)', 'EmailCtl@send_reminder');
+    $router->post('/prepare_reminder', 'EmailCtl@prepare_reminder');
+    $router->post('/send_reminder', 'EmailCtl@send_reminder');
 });
 
