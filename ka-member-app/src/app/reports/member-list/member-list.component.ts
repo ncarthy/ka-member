@@ -281,7 +281,17 @@ export class MemberListComponent implements OnInit {
   }
 
   sendReminder(member: MemberSearchResult) {
-    from(this.modalService.open(EmailClientComponent).result)
+
+    if (!member || !member.id) return false;
+
+    const modalRef = this.modalService.open(EmailClientComponent, { size: 'lg' });
+    modalRef.componentInstance.member = member;
+
+    from(modalRef.result)
+      .subscribe((success) => {
+        /* save transaction */
+      }, (error:any) => {});
+
     return false; // don't let click event propagate
   }
 
