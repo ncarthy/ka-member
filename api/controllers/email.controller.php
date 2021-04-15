@@ -9,14 +9,7 @@ class EmailCtl{
 
     public static function send_reminder(){
 
-      $model = new \Models\Email();
-      $data = json_decode(file_get_contents("php://input"));
-      $idmember = $data->idmember;
-      EmailCtl::transferParameters($data, $model);
-
-      $memberstatus_model = new \Models\MembershipStatus();
-      $status = $memberstatus_model->readOneFromIdmember($idmember);
-      $model->goCardlessLink = isset($status['gocardlesslink'])?$status['gocardlesslink']:null;
+      $model = EmailCtl::reminderModel();
       
       if( $model->prepare_reminder()) {
         if ($model->send_reminder()) {
@@ -39,14 +32,7 @@ class EmailCtl{
 
       public static function prepare_reminder(){
 
-        $model = new \Models\Email();
-        $data = json_decode(file_get_contents("php://input"));
-        $idmember = $data->idmember;
-        EmailCtl::transferParameters($data, $model);
-
-        $memberstatus_model = new \Models\MembershipStatus();
-        $status = $memberstatus_model->readOneFromIdmember($idmember);
-        $model->goCardlessLink = isset($status['gocardlesslink'])?$status['gocardlesslink']:null;
+        $model = EmailCtl::reminderModel();
         
         if( $model->prepare_reminder()) {
           echo json_encode(
@@ -61,6 +47,19 @@ class EmailCtl{
               array("message" => "Unable to prepare email.")
             );
         }
+      }
+
+      private static function reminderModel() {
+        $model = new \Models\Email();
+        $data = json_decode(file_get_contents("php://input"));
+        $idmember = $data->idmember;
+        EmailCtl::transferParameters($data, $model);
+
+        $memberstatus_model = new \Models\MembershipStatus();
+        $status = $memberstatus_model->readOneFromIdmember($idmember);
+        $model->goCardlessLink = isset($status['gocardlesslink'])?$status['gocardlesslink']:null;
+
+        return $model;
       }
 
       private static function transferParameters($data, $model)
