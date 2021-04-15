@@ -157,6 +157,16 @@ export class MemberFilterComponent implements OnInit {
               : YesNoAny.NO,
         })
       );
+    }  else if (this.router.url.includes('emailonhold')) {
+      this.filterSubject.next(
+        new MemberFilter({
+          removed: YesNoAny.NO,
+          emailonhold:
+            this.route.snapshot.params['emailonhold'] == 'true'
+              ? YesNoAny.YES
+              : YesNoAny.NO,
+        })
+      );
     }
   }
 

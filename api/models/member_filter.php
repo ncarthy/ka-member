@@ -339,6 +339,33 @@ class MemberFilter{
         }
     }
 
+    public function setEmailOnHold($emailonhold){    
+        switch ($emailonhold) {
+            case 'n':
+            case 'no':
+                $query = " DELETE 
+                    FROM " . $this->tablename . "
+                    WHERE emailonhold IS NOT NULL AND emailonhold != 0                    
+                    ;";
+                    $stmt = $this->conn->prepare($query);  
+                    $stmt->execute(); 
+                break;
+
+            case 'y':
+            case 'yes':
+                $query = " DELETE 
+                    FROM " . $this->tablename . "
+                    WHERE emailonhold IS NULL OR emailonhold = 0
+                    ;";
+                    $stmt = $this->conn->prepare($query);  
+                    $stmt->execute(); 
+                break;
+
+            default:
+                break;
+        }
+    }
+
     public function setExpiryRange($start, $end){      
         $this->setDateRange('expirydate',$start,$end);
     }
@@ -412,7 +439,7 @@ class MemberFilter{
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
-                        0 as paymenttypeID, 0 as bankaccountID, m.postonhold
+                        0 as paymenttypeID, 0 as bankaccountID, m.postonhold, m.emailonhold
                         FROM member m
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
                         GROUP BY m.idmember

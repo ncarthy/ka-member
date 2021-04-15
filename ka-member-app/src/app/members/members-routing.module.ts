@@ -18,7 +18,8 @@ const routes: Routes = [
             { path: 'status/:id', component: MemberListComponent },
             { path: 'transactions/:idmember', component: TransactionManagerComponent },
             { path: 'country/:countryid', component: MemberListComponent },
-            { path: 'postonhold/:postonhold', component: MemberListComponent }
+            { path: 'postonhold/:postonhold', component: MemberListComponent },
+            { path: 'emailonhold/:emailonhold', component: MemberListComponent }
         ]
     }
 ];

@@ -17,6 +17,7 @@ import {DateFilterType} from './date-filter.enum';
     countryid?: number;
     email1?: YesNoAny;
     postonhold?: YesNoAny;
+    emailonhold?: YesNoAny;
     address?: string;
     paymenttypeid?: number;
     bankaccountid?: number;
@@ -35,6 +36,7 @@ import {DateFilterType} from './date-filter.enum';
         this.countryid = obj && obj.countryid || null;
         this.email1 = obj && obj.email1 || null;
         this.postonhold = obj && obj.postonhold || null;
+        this.emailonhold = obj && obj.emailonhold || null;
         this.address = obj && obj.address || null;
         this.paymenttypeid = obj && obj.paymenttypeid || null;
         this.bankaccountid = obj && obj.bankaccountid || null;
@@ -72,6 +74,9 @@ import {DateFilterType} from './date-filter.enum';
         }
         if (this.postonhold && this.postonhold !== YesNoAny.ANY) {
             str = str.concat('&','postonhold=',this.postonhold.toString());
+        }
+        if (this.emailonhold && this.emailonhold !== YesNoAny.ANY) {
+            str = str.concat('&','emailonhold=',this.emailonhold.toString());
         }
         if (this.address) {
             str = str.concat('&','address=',this.address)

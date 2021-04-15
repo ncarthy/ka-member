@@ -153,6 +153,9 @@ class MembersCtl{
     if (isset($_GET['postonhold']) && !empty($_GET['postonhold'])) {
       $model->setPostOnHold($_GET['postonhold']);
     }
+    if (isset($_GET['emailonhold']) && !empty($_GET['emailonhold'])) {
+      $model->setEmailOnHold($_GET['emailonhold']);
+    }
     if (isset($_GET['address']) && !empty($_GET['address'])) {
       $model->setPrimaryAddress($_GET['address']);
     }
