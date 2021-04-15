@@ -35,8 +35,6 @@ class Email{
 
     public function send_reminder() {
 
-        $this->subject = "Membership Renewal";
-
         $this->smtpOptions['htmlmessage'] = $this->body;
         $this->smtpOptions['textmessage'] = \SMTP::ConvertHTMLToText($this->body);
 
@@ -59,8 +57,8 @@ class Email{
         if (!$result["success"]) {
             return false;
         } else {
+            $this->body = $result['html'];
             $altered_body = preg_replace('/[\s\t\n\r]{2,}/', '', $result['html']);
-            $this->body = $altered_body;
             return true;
         } 
     }

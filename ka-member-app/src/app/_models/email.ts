@@ -1,8 +1,9 @@
 ﻿export class Email {
-    id: string;
+    id: number;
     to: string;    
     from: string;
     body: string;
+    subject: string;
 
     constructor(obj?: any) {
 
@@ -10,5 +11,6 @@
         this.to = obj && obj.to || null;
         this.from = obj && obj.from || null;
         this.body = obj && obj.body || null;
+        this.subject = obj && obj.subject || null;
     }
 }

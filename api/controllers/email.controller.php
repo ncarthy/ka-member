@@ -9,20 +9,30 @@ class EmailCtl{
 
     public static function send_reminder(){
 
-        $model = new \Models\Email();
-        $data = json_decode(file_get_contents("php://input"));
-        EmailCtl::transferParameters($data, $model);
-        
-        if( $model->send_reminder()) {
+      $model = new \Models\Email();
+      $data = json_decode(file_get_contents("php://input"));
+      $idmember = $data->idmember;
+      EmailCtl::transferParameters($data, $model);
+
+      $memberstatus_model = new \Models\MembershipStatus();
+      $status = $memberstatus_model->readOneFromIdmember($idmember);
+      $model->goCardlessLink = isset($status['gocardlesslink'])?$status['gocardlesslink']:null;
+      
+      if( $model->prepare_reminder()) {
+        if ($model->send_reminder()) {
           echo json_encode(
-            array(
-              "message" => "Email sent."
-            )
+            array("message" => "Success")
           );
-        } else{
+        } else {
+          http_response_code(422);  
+          echo json_encode(
+            array("message" => "Unable to send email.")
+          );          
+        }
+      } else{
             http_response_code(422);  
             echo json_encode(
-              array("message" => "Unable to send email.")
+              array("message" => "Unable to prepare email.")
             );
         }
       }
@@ -66,28 +76,34 @@ class EmailCtl{
           $model->fromName = $data->fromName;          
         }  else {
           if (!empty($returnValue)) { $returnValue .= '; '; }
-          $returnValue .= " 'From' name is missing";
+          $returnValue .= "'From' name is missing";
         }
         if (isset($data->fromTitle)) {
           $model->fromTitle = $data->fromTitle;          
         }  else {
           if (!empty($returnValue)) { $returnValue .= '; '; }
-          $returnValue .= " 'From' title is missing";
+          $returnValue .= "'From' title is missing";
         }
         if (isset($data->salutation)) {
           $model->salutation = $data->salutation;          
         }  else {
           if (!empty($returnValue)) { $returnValue .= '; '; }
-          $returnValue .= " Salutation missing";
+          $returnValue .= "Salutation missing";
         }
         if (isset($data->fromEmail)) {
           $model->fromAddress = $data->fromEmail;          
         }  else {
           if (!empty($returnValue)) { $returnValue .= '; '; }
-          $returnValue .= " 'From' email address missing";
+          $returnValue .= "'From' email address missing";
+        }
+        if (isset($data->subject)) {
+          $model->subject = $data->subject;          
+        }  else {
+          if (!empty($returnValue)) { $returnValue .= '; '; }
+          $returnValue .= "Subject missing";
         }
 
-        if (!isset($returnValue)) {
+        if (!empty($returnValue)) {
           http_response_code(422);  
           echo json_encode(
             array("message" => $returnValue)

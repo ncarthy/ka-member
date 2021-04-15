@@ -10,7 +10,11 @@ export class EmailService {
     constructor(private http: HttpClient) { }
 
     prepareReminderEmail(params: any) {
-        return this.http.post<string>(`${baseUrl}/prepare_reminder`, params);
+        return this.http.post<any>(`${baseUrl}/prepare_reminder`, params);
+    }
+
+    sendReminderEmail(params: any) {
+        return this.http.post<any>(`${baseUrl}/send_reminder`, params);
     }
 
 }

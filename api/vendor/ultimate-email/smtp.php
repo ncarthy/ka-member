@@ -1684,6 +1684,8 @@
 				$destheaders .= $messagefromaddr;
 				if ($headers != "")  $destheaders .= $headers;
 				$destheaders .= "MIME-Version: 1.0\r\n";
+				//Added 15/4/2021
+				$destheaders .= "List-Unsubscribe: <mailto: membership@knightsbridgeassociation.com?subject=unsubscribe>\r\n";
 				if (!isset($options["usemail"]) || !$options["usemail"])  $destheaders .= $messagetoaddr;
 				if ($replytoaddr != "")  $destheaders .= $replytoaddr;
 				if ($ccaddr != "")  $destheaders .= $ccaddr;

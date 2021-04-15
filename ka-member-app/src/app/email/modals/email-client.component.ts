@@ -42,9 +42,9 @@ export class EmailClientComponent implements OnInit {
       toEmail: ['', [Validators.required, Validators.email]],
       fromEmail: ['', [Validators.required, Validators.email]],
       salutation: [''],
-      body: [{ value: '', disabled: true }],
       fromName: [''],
       fromTitle: [''],
+      subject: ['Membership Renewal', Validators.required]
     });
 
     this.form.valueChanges
@@ -67,10 +67,10 @@ export class EmailClientComponent implements OnInit {
       .pipe(
         switchMap((m: Member) => {
           this.memberFull = m;
-          this.f['idmember'].setValue(this.member!.id);
+          this.f['idmember'].setValue(m.id);
           let email = m.email1 ? m.email1 : m.email2;
           this.f['toEmail'].setValue(email);
-          this.f['salutation'].setValue('Dear ' + this.member?.name + ',');
+          this.f['salutation'].setValue('Dear ' + this.member!.name + ',');
           return this.userService.getById(
             this.authenticationService.userValue.id
           );
@@ -94,4 +94,31 @@ export class EmailClientComponent implements OnInit {
     this.body = this.sanitizer.bypassSecurityTrustHtml(html); // this line bypasses angular security
   }
 
+  onSend() {
+    this.emailService.sendReminderEmail(this.form.value).subscribe(
+      (response: any) => {
+        console.log(response);
+        this.modal.close('OK');
+      },
+      (error: any) => this.modal.dismiss('Fail')
+    );
+  }
+
+  // Hash function from https://stackoverflow.com/a/52171480
+  private cyrb53(str: string, seed = 0): number {
+    let h1 = 0xdeadbeef ^ seed,
+      h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0, ch; i < str.length; i++) {
+      ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 =
+      Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^
+      Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 =
+      Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
+      Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+  }
 }

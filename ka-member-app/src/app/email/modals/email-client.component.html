@@ -4,7 +4,7 @@
     <button
       type="button"
       class="btn btn-danger"
-      (click)="modal.close('Ok click')"
+      (click)="onSend()"
       [disabled]="this.form.invalid"
     >
       Send
@@ -133,9 +133,32 @@
       </div>
       <div class="col">
         <p>
-          The text of the email is not editable, only the salutation and your
-          name and title.
+          The text of the email is not editable, only the subject, the
+          salutation and your name and title.
         </p>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-sm">
+        <div class="input-group mb-1">
+          <span class="input-group-text col-3" id="subject-label">Subject</span>
+          <input
+            id="subjectInput"
+            name="subjectInput"
+            type="text"
+            class="form-control text-left col"
+            formControlName="subject"
+            [ngClass]="{
+              'is-invalid': !loading && submitted && f.subject.errors
+            }"
+          />
+          <div *ngIf="submitted && f.subject.errors" class="invalid-feedback">
+            <div *ngIf="f.to.subject.required">
+              Must enter a subject line for the email
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -158,11 +181,5 @@
   >
     Cancel
   </button>
-  <button
-    type="button"
-    class="btn btn-danger"
-    (click)="modal.close('Ok click')"
-  >
-    Send
-  </button>
+  <button type="button" class="btn btn-danger" (click)="onSend()">Send</button>
 </div>

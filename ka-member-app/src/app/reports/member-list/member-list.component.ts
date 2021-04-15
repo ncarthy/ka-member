@@ -38,7 +38,7 @@ export class MemberListComponent implements OnInit {
     this.user = this.authenticationService.userValue;
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     if (this.router.url.substring(9, 16) == 'lapsed/') {
       this.loading = true;
       this.title = 'Lapsed Members';
@@ -214,7 +214,7 @@ export class MemberListComponent implements OnInit {
       .anonymize(member.id)
       .subscribe(
         (result: any) => {
-          this.alertService.success("Member anonymized", {
+          this.alertService.success('Member anonymized', {
             keepAfterRouteChange: true,
           });
 
@@ -229,7 +229,7 @@ export class MemberListComponent implements OnInit {
 
     return false; // don't let click event propagate
   }
-  
+
   anonymizeAll() {
     if (!this.members || !this.membersService) return;
 
@@ -238,12 +238,9 @@ export class MemberListComponent implements OnInit {
 
     this.membersService.anonymizeOldFormerMembers(months).subscribe(
       (result: any) => {
-        this.alertService.success(
-          result.count + " Members anonymized",
-          {
-            keepAfterRouteChange: true,
-          }
-        );
+        this.alertService.success(result.count + ' Members anonymized', {
+          keepAfterRouteChange: true,
+        });
         this.location.back();
       },
       (error) =>
@@ -281,16 +278,25 @@ export class MemberListComponent implements OnInit {
   }
 
   sendReminder(member: MemberSearchResult) {
-
     if (!member || !member.id) return false;
 
-    const modalRef = this.modalService.open(EmailClientComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(EmailClientComponent, {
+      size: 'lg',
+    });
     modalRef.componentInstance.member = member;
 
-    from(modalRef.result)
-      .subscribe((success) => {
-        /* save transaction */
-      }, (error:any) => {});
+    from(modalRef.result).subscribe(
+      (success) => {
+        this.alertService.success(`Email sent.`, {
+          keepAfterRouteChange: true,
+        });
+      },
+      (error: any) => {
+        this.alertService.error(`Unable to send email`, {
+          keepAfterRouteChange: true,
+        });
+      }
+    );
 
     return false; // don't let click event propagate
   }
