@@ -29,7 +29,7 @@ export class MapListComponent implements OnInit {
   mapCentreMarker!: google.maps.Marker;
   loading: boolean = false;
   addresses$!: Observable<Address>;
-  markers: google.maps.Marker[] = new Array();
+  markers: [number, google.maps.Marker][] = new Array();
   circle!: google.maps.Circle;
   ruler: CheapRuler = new CheapRuler(51, 'meters'); //51 degrees latitude
   geocoder!: google.maps.Geocoder;
@@ -65,7 +65,6 @@ export class MapListComponent implements OnInit {
     let m: google.maps.Marker = new google.maps.Marker({
       position: new google.maps.LatLng(address.lat, address.lng),
       map: this.map,
-      label: address.idmember.toString(),
     });
     m.addListener('click', () => {
       infoWindow.open(this.map, m);
@@ -130,7 +129,7 @@ export class MapListComponent implements OnInit {
             m.setIcon(iconOUT);
           }
           m.setMap(this.map);
-          this.markers.push(m);
+          this.markers.push([address.idmember,m]);
         })
       )
       .subscribe().add(() => {this.ids = ids;});
@@ -172,27 +171,26 @@ export class MapListComponent implements OnInit {
     this.ids = new Array();
 
     this.markers.forEach((element) => {
-      const pos = element.getPosition();
+      const pos = element[1].getPosition();
 
       if (!pos) return;
 
       const distance = this.ruler.distance([pos.lng(), pos.lat()], [lng, lat]);
 
       if (distance <= radius) {
-        let label = element.getLabel();
-        if (label) {
-          //let text = label.text;
-          this.ids.push(parseInt(label.toString()));
-          element.setIcon({
+        let idmember = element[0];
+        if (idmember) {
+          this.ids.push(idmember);
+          element[1].setIcon({
             path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
             strokeColor: 'blue',
             scale: 3,
           });
         }
       } else if (
-        (element.getIcon() as google.maps.ReadonlySymbol).strokeColor != 'grey'
+        (element[1].getIcon() as google.maps.ReadonlySymbol).strokeColor != 'grey'
       ) {
-        element.setIcon({
+        element[1].setIcon({
           path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
           strokeColor: 'grey',
           scale: 3,
@@ -208,9 +206,9 @@ export class MapListComponent implements OnInit {
 
   onIdSelected(idmember: number) {
     this.markers.forEach((element) => {
-      let label = element.getLabel();
-      if (label && parseInt(label.toString()) == idmember) {
-        google.maps.event.trigger(element, 'click');
+      let id = element[0];
+      if (id && id == idmember) {
+        google.maps.event.trigger(element[1], 'click');
       }
     });
   }
