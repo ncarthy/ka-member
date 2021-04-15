@@ -44,7 +44,7 @@ export class EmailClientComponent implements OnInit {
       salutation: [''],
       fromName: [''],
       fromTitle: [''],
-      subject: ['Membership Renewal', Validators.required]
+      subject: ['Membership Renewal', Validators.required],
     });
 
     this.form.valueChanges
@@ -96,10 +96,8 @@ export class EmailClientComponent implements OnInit {
 
   onSend() {
     this.emailService.sendReminderEmail(this.form.value).subscribe(
-      (response: any) => {
-        this.modal.close('OK');
-      },
-      (error: any) => this.modal.dismiss('Fail')
+      () => this.modal.close('OK'),
+      () => this.modal.dismiss('Fail')
     );
   }
 

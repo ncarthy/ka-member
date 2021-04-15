@@ -12,7 +12,7 @@ class EmailCtl{
     $model = EmailCtl::getEmailModel();
     
     if( $model->prepare_switchrequest()) {
-      if ($model->send_switchrequest()) {
+      if ($model->send()) {
         echo json_encode(
           array("message" => "Success")
         );
@@ -53,7 +53,7 @@ class EmailCtl{
       $model = EmailCtl::getEmailModel();
       
       if( $model->prepare_reminder()) {
-        if ($model->send_reminder()) {
+        if ($model->send()) {
           echo json_encode(
             array("message" => "Success")
           );

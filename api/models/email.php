@@ -33,7 +33,7 @@ class Email{
         );
     }
 
-    public function send_reminder() {
+    public function send() {
 
         $this->smtpOptions['htmlmessage'] = $this->body;
         $this->smtpOptions['textmessage'] = \SMTP::ConvertHTMLToText($this->body);
@@ -63,7 +63,77 @@ class Email{
         } 
     }
 
+    public function prepare_switchrequest() {        
+
+        $content = array();
+        array_push($content, $this->header());
+        array_push($content, $this->switchrequest_content());
+        array_push($content, $this->footer());
+
+        $result = \EmailBuilder::Generate($this->styles(), $content);      
+        if (!$result["success"]) {
+            return false;
+        } else {
+            $this->body = $result['html'];
+            $altered_body = preg_replace('/[\s\t\n\r]{2,}/', '', $result['html']);
+            return true;
+        } 
+    }
+
     private function reminder_content() {
+
+        $top_level = array(
+			"type" => "layout",
+			"width" => 600,
+            //"padding" => 30,
+			"content" => array(
+                array(
+                    "type" => "layout",
+                    "id" => "contentwrap",
+                    "width" => "90%",
+                    "content" => array()
+                )
+            )
+        );
+
+        $top_level['content']['0']['content'] = array(
+            array("type" => "space", "height" => 1),
+            "<p>{$this->salutation}</p>",
+            "<p>Your annual membership of the Knightsbridge Association is now due for renewal. We are very grateful for your support and hope that you will renew your subscription by one of the methods given below.</p>",
+            // Display a clickable link as a centered button (e.g. a call to action).
+            array(
+                "type" => "layout",
+                "align" => "center",
+                "content" => array(
+                    array(
+                        "type" => "button",
+                        "href" => "{$this->goCardlessLink}",
+                        "class" => "bigbutton",
+                        "bgcolor" => "#4E88C2",
+                        "padding" => array(12, 18),
+                        "text" => "Pay By Direct Debit"
+                    )
+                )
+            ),
+            "<p>We also accept payment by bank transfer. Please give your name/company name as a reference. Our bank details are : The Knightsbridge Association, sort code 40-04-10, account number 31595180.</p>",
+            "<p>If you wish to pay by cheque, please send your cheque to The Knightsbridge Association, 6 Montpelier Street, London, SW7 1EZ.</p>",
+            "<p>Membership Fees are as follows: Individual £20, Family or Household £30 and Corporate £40.</p>",
+            "<p>Without your support we cannot continue our mission of maintaining Knightsbridge as a vibrant and welcoming place to live and work.</p>",
+
+            // Spacer
+            array("type" => "space", "height" => 20),
+
+            "<p>Yours Sincerely,</p>",
+            "<p>{$this->fromName}</p>",
+            "<p>{$this->fromTitle}</p>",
+
+            array("type" => "space", "height" => 5)
+        );
+
+        return $top_level;
+    }
+
+    private function switchrequest_content() {
 
         $top_level = array(
 			"type" => "layout",
