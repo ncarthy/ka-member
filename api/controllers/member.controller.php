@@ -63,6 +63,7 @@ class MemberCtl{
         "gdpr_address" => $model->gdpr_address,
         "gdpr_sm" => $model->gdpr_sm,    
         "postonhold" => $model->postonhold,
+        "emailonhold" => $model->emailonhold,
         "primaryAddress" => array(
           "addressfirstline" => $model->addressfirstline,
           "addresssecondline" => $model->addresssecondline,
@@ -258,6 +259,7 @@ class MemberCtl{
     $model->gdpr_address = $data->gdpr_address;
     $model->gdpr_sm = $data->gdpr_sm;
     $model->postonhold = $data->postonhold;
+    $model->emailonhold = $data->emailonhold;
     $model->statusID = $data->statusID;
     $model->expirydate = $data->expirydate;
     $model->joindate = $data->joindate;

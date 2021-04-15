@@ -39,6 +39,7 @@ ALTER TABLE `member` CHANGE `expirydate` `expirydate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` CHANGE `joindate` `joindate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` CHANGE `deletedate` `deletedate` DATE NULL DEFAULT NULL;
 ALTER TABLE `member` ADD `postonhold` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'When 1 send no mail to member' AFTER `membership_fee`;
+ALTER TABLE `member` ADD `emailonhold` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'When 1 send no email to member' AFTER `postonhold`;
 ALTER TABLE `member` CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'UK';
 UPDATE `member` SET area = '' WHERE area = 'UK';
 UPDATE `member` SET city = 'London', county = '' WHERE county = 'London';

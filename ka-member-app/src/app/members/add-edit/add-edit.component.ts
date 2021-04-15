@@ -91,6 +91,7 @@ export class MemberAddEditComponent implements OnInit {
       gdpr_address: [false],
       gdpr_sm: [false],
       postonhold: [false],
+      emailonhold: [false],
       showSecondaryAdress: [false],
 
       // Individual / Corporate/ Lifetime etc.

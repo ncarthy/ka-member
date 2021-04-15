@@ -28,6 +28,7 @@ export class Member {
     gdpr_address: boolean;
     gdpr_sm: boolean;
     postonhold: boolean;
+    emailonhold: boolean;
     primaryAddress: Address;
     secondaryAddress: Address;
     multiplier: number;
@@ -60,6 +61,7 @@ export class Member {
         this.gdpr_address = obj && obj.gdpr_address;
         this.gdpr_sm = obj && obj.gdpr_sm;
         this.postonhold = obj && obj.postonhold;
+        this.emailonhold = obj && obj.emailonhold;
         this.primaryAddress = obj && obj.primaryAddress || null;
         this.secondaryAddress = obj && obj.secondaryAddress || null;
         this.multiplier = obj && obj.multiplier || null;

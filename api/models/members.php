@@ -267,12 +267,12 @@ class Members{
         //select all data
         $query = "SELECT idmember,email1 as email
                     FROM member
-                    WHERE membership_idmembership NOT IN (7,8,9) AND email1 IS NOT NULL AND email1 != '' AND
+                    WHERE emailonhold = 0 AND membership_idmembership NOT IN (7,8,9) AND email1 IS NOT NULL AND email1 != '' AND
                         email1 REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$'
                     UNION
                     SELECT idmember,email2
                     FROM member
-                    WHERE membership_idmembership NOT IN (7,8,9) AND email2 IS NOT NULL AND email2 != '' AND
+                    WHERE emailonhold = 0 AND membership_idmembership NOT IN (7,8,9) AND email2 IS NOT NULL AND email2 != '' AND
                         email2 REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$'
                     ";
 

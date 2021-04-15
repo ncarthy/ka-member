@@ -60,6 +60,7 @@ export class MemberManageComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       postonhold: [false],
+      emailonhold: [false],
       statusID: [null, Validators.required],
       expirydate: [null],
       joindate: [null],
@@ -137,6 +138,7 @@ export class MemberManageComponent implements OnInit {
       this.loading = true;
 
       this.member.postonhold = this.form.value.postonhold;
+      this.member.emailonhold = this.form.value.emailonhold;
       this.member.statusID = this.form.value.statusID;
       this.member.multiplier = this.form.value.multiplier;
       this.member.membershipfee = this.form.value.membershipfee;

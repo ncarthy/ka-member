@@ -52,6 +52,7 @@ class Member{
     public $gdpr_address;
     public $gdpr_sm;
     public $postonhold;
+    public $emailonhold;
     public $multiplier;
     public $membershipfee;
 
@@ -67,7 +68,7 @@ class Member{
                     phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                     updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
                     gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold,multiplier,membership_fee,
-                    gpslat1,gpslng1,gpslat2,gpslng2
+                    gpslat1,gpslng1,gpslat2,gpslng2,emailonhold
                     FROM
                     " . $this->table_name;                    
 
@@ -113,6 +114,7 @@ class Member{
                         "gdpr_address" => $gdpr_address?true:false,
                         "gdpr_sm" => $gdpr_sm?true:false,
                         "postonhold" => $postonhold?true:false,
+                        "emailonhold" => $emailonhold?true:false,
                         "primaryAddress" => array(
                             "addressfirstline" => html_entity_decode($addressfirstline),
                             "addresssecondline" => html_entity_decode($addresssecondline),
@@ -160,7 +162,7 @@ class Member{
                         phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
                         updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
                         gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold, multiplier, membership_fee,
-                        gpslat1,gpslng1,gpslat2,gpslng2
+                        gpslat1,gpslng1,gpslat2,gpslng2,emailonhold
                         FROM
                         " . $this->table_name . " 
                         WHERE idmember = ?
@@ -216,6 +218,7 @@ class Member{
                 $this->gdpr_address = $row['gdpr_address']?true:false;
                 $this->gdpr_sm = $row['gdpr_sm']?true:false;            
                 $this->postonhold = $row['postonhold']?true:false;
+                $this->emailonhold = $row['emailonhold']?true:false;
                 $this->multiplier = $row['multiplier'];
                 $this->membershipfee = $row['membership_fee'];
                 $this->gpslat1 = $row['gpslat1'];
@@ -264,6 +267,7 @@ class Member{
                     gdpr_address=:gdpr_address, 
                     gdpr_sm=:gdpr_sm,
                     postonhold=:postonhold,
+                    emailonhold=:emailonhold,
                     multiplier=:multiplier,
                     membership_fee=:membershipfee,
                     gpslat1=:gpslat1,
@@ -282,6 +286,7 @@ class Member{
         $gdpr_address = $this->gdpr_address?1:0;
         $gdpr_sm = $this->gdpr_sm?1:0;
         $postonhold = $this->postonhold?1:0;
+        $emailonhold = $this->emailonhold?1:0;
 
         // bind values
         $stmt->bindParam(":title", $this->title);
@@ -319,6 +324,7 @@ class Member{
         $stmt->bindParam(":gdpr_address", $gdpr_address);
         $stmt->bindParam(":gdpr_sm", $gdpr_sm);
         $stmt->bindParam(":postonhold", $postonhold);
+        $stmt->bindParam(":emailonhold", $emailonhold);
         $stmt->bindParam(":multiplier", $this->multiplier);
         $stmt->bindParam(":membershipfee", $this->membershipfee);
         $stmt->bindParam(":gpslat1", $this->gpslat1);
@@ -378,6 +384,7 @@ class Member{
                     gdpr_address=:gdpr_address, 
                     gdpr_sm=:gdpr_sm,
                     postonhold=:postonhold,
+                    emailonhold=:emailonhold,
                     multiplier=:multiplier,
                     membership_fee=:membershipfee,
                     gpslat1=:gpslat1,
@@ -396,6 +403,7 @@ class Member{
         $gdpr_address = $this->gdpr_address?1:0;
         $gdpr_sm = $this->gdpr_sm?1:0;
         $postonhold = $this->postonhold?1:0;
+        $emailonhold = $this->emailonhold?1:0;
 
         // bind values
         $stmt->bindParam(":id", $this->id);
@@ -434,6 +442,7 @@ class Member{
         $stmt->bindParam(":gdpr_address", $gdpr_address);
         $stmt->bindParam(":gdpr_sm", $gdpr_sm);
         $stmt->bindParam(":postonhold", $postonhold);
+        $stmt->bindParam(":emailonhold", $emailonhold);
         $stmt->bindParam(":multiplier", $this->multiplier);
         $stmt->bindParam(":membershipfee", $this->membershipfee);
         $stmt->bindParam(":gpslat1", $this->gpslat1);
@@ -494,7 +503,7 @@ class Member{
                     gpslat1=NULL,                  
                     gpslat2=NULL,
                     gpslng1=NULL,
-                    gpslng2=NULL                    
+                    gpslng2=NULL                                        
                  WHERE
                     idmember=:id";
         
