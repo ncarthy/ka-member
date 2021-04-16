@@ -17,4 +17,12 @@ export class EmailService {
         return this.http.post<any>(`${baseUrl}/send_reminder`, params);
     }
 
+    prepareSwitchRequestEmail(params: any) {
+        return this.http.post<any>(`${baseUrl}/prepare_switchrequest`, params);
+    }
+
+    sendSwitchRequestEmail(params: any) {
+        return this.http.post<any>(`${baseUrl}/send_switchrequest`, params);
+    }
+
 }

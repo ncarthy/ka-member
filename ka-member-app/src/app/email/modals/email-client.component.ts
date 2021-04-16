@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { switchMap, debounceTime } from 'rxjs/operators';
 
-import { Member, MemberSearchResult, User } from '@app/_models';
+import { EmailTypeEnum, Member, MemberSearchResult, User } from '@app/_models';
 import {
   AuthenticationService,
   EmailService,
@@ -20,6 +20,7 @@ import {
 })
 export class EmailClientComponent implements OnInit {
   @Input() member?: MemberSearchResult;
+  @Input() email_type: EmailTypeEnum = EmailTypeEnum.REMINDER;
   memberFull?: Member;
   user?: User;
   form!: FormGroup;
@@ -51,7 +52,11 @@ export class EmailClientComponent implements OnInit {
       .pipe(
         debounceTime(500),
         switchMap(() => {
-          return this.emailService.prepareReminderEmail(this.form.value);
+          if (this.email_type! == EmailTypeEnum.SWITCH_TO_GOCARDLESS) {
+            return this.emailService.prepareSwitchRequestEmail(this.form.value);
+          } else {
+            return this.emailService.prepareReminderEmail(this.form.value);
+          }
         })
       )
       .subscribe((response: any) => {
@@ -83,6 +88,10 @@ export class EmailClientComponent implements OnInit {
         this.f['fromTitle'].setValue(u.title);
       })
       .add(() => (this.loading = false));
+
+    if (this.email_type == EmailTypeEnum.SWITCH_TO_GOCARDLESS) {
+      this.f['subject'].setValue('Switch to Direct Debit');
+    }
   }
 
   // convenience getters for easy access to form fields
@@ -95,10 +104,17 @@ export class EmailClientComponent implements OnInit {
   }
 
   onSend() {
-    this.emailService.sendReminderEmail(this.form.value).subscribe(
-      () => this.modal.close('OK'),
-      () => this.modal.dismiss('Fail')
-    );
+    if (this.email_type == EmailTypeEnum.SWITCH_TO_GOCARDLESS) {
+      this.emailService.sendSwitchRequestEmail(this.form.value).subscribe(
+        () => this.modal.close('OK'),
+        () => this.modal.dismiss('Fail')
+      );
+    } else {
+      this.emailService.sendReminderEmail(this.form.value).subscribe(
+        () => this.modal.close('OK'),
+        () => this.modal.dismiss('Fail')
+      );
+    }
   }
 
   // Hash function from https://stackoverflow.com/a/52171480

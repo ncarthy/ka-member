@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { from } from 'rxjs';
-import { ButtonName, MemberSearchResult, User } from '@app/_models';
+import { ButtonName, EmailTypeEnum, MemberSearchResult, User } from '@app/_models';
 import {
   AlertService,
   AuthenticationService,
@@ -284,6 +284,33 @@ export class MemberListComponent implements OnInit {
       size: 'lg',
     });
     modalRef.componentInstance.member = member;
+
+    from(modalRef.result).subscribe(
+      (success) => {
+        this.alertService.success(`Email sent.`, {
+          keepAfterRouteChange: true,
+        });
+      },
+      (error: any) => {
+        if (error == 'Fail') {
+          this.alertService.error(`Unable to send email`, {
+            keepAfterRouteChange: true,
+          });
+        }
+      }
+    );
+
+    return false; // don't let click event propagate
+  }
+
+  sendGoCardlessRequest(member: MemberSearchResult) {
+    if (!member || !member.id) return false;
+
+    const modalRef = this.modalService.open(EmailClientComponent, {
+      size: 'lg',
+    });
+    modalRef.componentInstance.member = member;
+    modalRef.componentInstance.email_type = EmailTypeEnum.SWITCH_TO_GOCARDLESS;
 
     from(modalRef.result).subscribe(
       (success) => {
