@@ -3,7 +3,12 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { from } from 'rxjs';
-import { ButtonName, EmailTypeEnum, MemberSearchResult, User } from '@app/_models';
+import {
+  ButtonName,
+  EmailTypeEnum,
+  MemberSearchResult,
+  User,
+} from '@app/_models';
 import {
   AlertService,
   AuthenticationService,
@@ -287,6 +292,11 @@ export class MemberListComponent implements OnInit {
 
     from(modalRef.result).subscribe(
       (success) => {
+        this.memberService
+          .setReminderDate(member.id)
+          .subscribe((response: any) => {
+            member.reminderdate = response.reminderdate;
+          });
         this.alertService.success(`Email sent.`, {
           keepAfterRouteChange: true,
         });
@@ -336,6 +346,11 @@ export class MemberListComponent implements OnInit {
         return this.user.isAdmin && member.membershiptype === 'Pending';
       case ButtonName.GOCARDLESS:
       case ButtonName.REMINDER:
+        return (
+          this.user.isAdmin &&
+          member.membershiptype != 'Former Member' &&
+          member.name != 'Anonymized'
+        );
       case ButtonName.SETTOFORMER:
         return this.user.isAdmin && member.membershiptype != 'Former Member';
       case ButtonName.ANONYMIZE:

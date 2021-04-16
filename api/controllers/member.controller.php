@@ -170,7 +170,8 @@ class MemberCtl{
 
     $data = json_decode(file_get_contents("php://input"));
     if(isset($data->method)){
-        switch (strtolower($data->method)) {
+        /* Set to lower case to make case insensitive */
+        switch (strtolower($data->method)) {           
             case 'settoformer':
                 $model->setToFormerMember();
                 break;
@@ -186,6 +187,15 @@ class MemberCtl{
               if (isset($data->gpslat) && isset($data->gpslng)) {
                 $model->setGeometry(true,$data->gpslat, $data->gpslng);
               }                
+              break;
+            case 'setreminderdate':
+              $model->setReminderDate();
+              echo json_encode(
+                array(
+                  "message" => "Success",
+                  "reminderdate" => date("Y-m-d")
+                )
+              );
               break;
             default:
             http_response_code(422);  

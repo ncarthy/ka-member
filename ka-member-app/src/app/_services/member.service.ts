@@ -38,6 +38,10 @@ export class MemberService {
     return this.http.patch(`${baseUrl}/${id}`, `{"method": "setToFormer"}`);
   }
 
+  setReminderDate(id: number) {
+    return this.http.patch(`${baseUrl}/${id}`, `{"method": "setReminderDate"}`);
+  }
+
   setPrimaryGeometry(id: number, lat: number, lng: number) {
     return this.http.patch(
       `${baseUrl}/${id}`,

@@ -557,6 +557,36 @@ class Member{
         return false;
     }
 
+    /* update reminder date to today */
+    function setReminderDate(){
+        /* sanitize */
+        $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+
+        $query = "UPDATE
+                    " . $this->table_name . "
+                    SET reminderdate=CURDATE(),
+                        updatedate= NULL,                         
+                        username=:username  
+                    WHERE idmember=:id; ";
+        
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->username=htmlspecialchars(strip_tags($this->username));
+
+        // bind values
+        $stmt->bindParam(":id", $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(":username", $this->username);
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+        
+        return false;
+    }
+
         function setGeometry($isSecondary, $lat, $lng){
             /* sanitize */
             $this->id=filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
