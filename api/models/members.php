@@ -301,6 +301,56 @@ class Members{
 
     }
 
+    public function noemailList(){
+
+        //select a list of names and UK addresses for members without email
+        $query = "SELECT m.`idmember`, `name`, v.`title`, v.`businessname`, v.`addressfirstline`, v.`addresssecondline`,
+        v.`city`, v.`postcode`, `country`,
+                CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
+                    THEN `m`.`country2ID`
+                    ELSE `m`.`countryID`
+                END AS `countryID`
+                FROM `vwMember` v
+                JOIN member m ON v.idmember = m.idmember
+                WHERE `m`.postonhold = 0 AND 							# Not post on hold
+                    `m`.membership_idmembership NOT IN (7,8,9) AND      # Active member
+                    IFNULL(m.addressfirstline,'') != ''					# Valid Address
+                AND (countryID = 186 OR country2ID = 186)				# UK only
+                AND (m.email1 IS NULL OR m.email1 = '' OR m.email1 REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\\.[a-zA-Z]{2,63}$' = 0)
+                ORDER BY `postcode`;";
+
+        $stmt = $this->conn->query( $query );
+        $num = $stmt->rowCount();
+
+        $members_arr=array();
+        $members_arr["count"] = $num;
+        $members_arr["records"]=array();
+
+        if($num>0){
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                extract($row);
+            
+                $member=array(
+                    "id" => $idmember,
+                    "name" => $name,
+                    "title" => $title,
+                    "businessname" => $businessname,
+                    "addressfirstline" => $addressfirstline,
+                    "addresssecondline" => $addresssecondline,
+                    "city" => $city,
+                    "postcode" => $postcode,
+                    "countryID" => $countryID
+                );
+                
+                // create un-keyed list
+                array_push ($members_arr["records"], $member);
+            }
+        }
+        
+        return $members_arr;
+
+    }
+
     public function mapList(){
 
         $query = "SELECT m.idmember, IFNULL(GROUP_CONCAT(CONCAT(CASE

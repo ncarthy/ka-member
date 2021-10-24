@@ -39,6 +39,12 @@ class MembersCtl{
     echo json_encode($model->emailList(), JSON_NUMERIC_CHECK);
   }
 
+  public static function noemaillist(){
+    $model = new Members();
+
+    echo json_encode($model->noemailList(), JSON_NUMERIC_CHECK);
+  }
+
   public static function maplist(){
     $model = new Members();
 

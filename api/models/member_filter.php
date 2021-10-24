@@ -295,7 +295,7 @@ class MemberFilter{
     }
 
     public function setEmail1($email1){      
-        if(($email1 || $email1 = 'y') && $email1 != 'n') {
+        if(($email1 || $email1 = 'y') && $email1 != 'n' && $email1 != 'no') {
             $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member m1 ON M.idmember = m1.idmember
