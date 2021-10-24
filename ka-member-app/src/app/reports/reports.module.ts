@@ -11,6 +11,7 @@ import { ReportsLayoutComponent } from './layout.component';
 import { ReportsComponent } from './reports.component';
 import { MailingListComponent} from './mailing-list';
 import { EmailListComponent} from './email-list';
+import { NoEmailListComponent} from './no-email-list';
 import { MapListComponent} from './map-list';
 import { InvalidEmailsComponent} from './invalid-emails';
 import { InvalidPostcodesComponent} from './invalid-postcodes';
@@ -32,6 +33,7 @@ import { TransactionsDetailComponent } from './transactions/transactions-detail/
         ReportsLayoutComponent,
         MailingListComponent,
         EmailListComponent,
+        NoEmailListComponent,
         MapListComponent,
         MemberListComponent,
         InvalidEmailsComponent,

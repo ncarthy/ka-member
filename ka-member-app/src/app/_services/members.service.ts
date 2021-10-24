@@ -29,6 +29,10 @@ export class MembersService {
     return this.http.get<any>(`${baseUrl}/emaillist`);
   }
 
+  getNoEmailList() {
+    return this.http.get<any>(`${baseUrl}/noemaillist`);
+  }
+
   getMapList(): Observable<Address[]> {
     const queryUrl = `${baseUrl}/maplist`;
 
