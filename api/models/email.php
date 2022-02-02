@@ -115,7 +115,7 @@ class Email{
                     )
                 )
             ),
-            "<p>We also accept payment by bank transfer. Please give your name/company name as a reference. Our bank details are : The Knightsbridge Association, sort code 40-04-10, account number 31595180.</p>",
+            "<p>We also accept payment by bank transfer. Please give your name/company name as a reference. Our bank details are : The Knightsbridge Association, sort code 30-94-81, account number 01914702.</p>",
             "<p>If you wish to pay by cheque, please send your cheque to The Knightsbridge Association, 6 Montpelier Street, London, SW7 1EZ.</p>",
             "<p>Membership Fees are as follows: Individual £20, Family or Household £30 and Corporate £40.</p>",
             "<p>Without your support we cannot continue our mission of maintaining Knightsbridge as a vibrant and welcoming place to live and work.</p>",
