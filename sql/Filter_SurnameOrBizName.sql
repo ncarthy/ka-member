@@ -12,6 +12,7 @@
                         0 as paymenttypeID, 0 as bankaccountID, m.postonhold
                         FROM member m
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
+                        WHERE m.idmember > 880
                         GROUP BY m.idmember
     );    
     #Run third
@@ -23,13 +24,14 @@
     
 
     #Run Fourth:
-    DELETE M
-                    FROM _Members M
+    DELETE FROM _Members 
+    WHERE idmember NOT IN (SELECT DISTINCT(M.idmember) FROM _Members M
                     JOIN member m ON M.idmember = m.idmember
                     LEFT JOIN membername mn ON m.idmember = mn.member_idmember
-                    WHERE m.businessname NOT LIKE 'pa%' AND 
-                        (mn.surname NOT LIKE 'pa%' OR mn.surname IS NULL);
-    
+                    WHERE m.businessname LIKE 'nad%' OR 
+                        (mn.surname LIKE 'nad%' AND mn.surname IS NOT NULL));
+                        
+
 
 
     # Test results

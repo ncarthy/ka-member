@@ -169,11 +169,13 @@ class MemberFilter{
     */
 
     public function setSurname($surname){      
-        $query = " DELETE M
-                    FROM " . $this->tablename . " M
-                    LEFT JOIN membername MN ON M.idmember = MN.member_idmember
-                    WHERE MN.member_idmember IS NULL OR MN.surname NOT LIKE :param
-                    ;";
+        $query = " DELETE FROM " . $this->tablename . "
+        WHERE idmember NOT IN (
+            SELECT DISTINCT(M.idmember) FROM _Members M
+            JOIN member m ON M.idmember = m.idmember
+            LEFT JOIN membername mn ON m.idmember = mn.member_idmember
+            WHERE mn.surname LIKE :param AND mn.surname IS NOT NULL
+        );";
         $this->executeDeleteStringParam($surname, $query);        
     }
     public function setNotSurname($surname){      
@@ -195,12 +197,14 @@ class MemberFilter{
     }
 
     public function setBusinessOrSurname($name){    
-        $query = " DELETE M
-        FROM " . $this->tablename . " M
-        JOIN member m ON M.idmember = m.idmember
-        LEFT JOIN membername mn ON m.idmember = mn.member_idmember
-        WHERE m.businessname NOT LIKE :param1 AND 
-            (mn.surname NOT LIKE :param2 OR mn.surname IS NULL);";
+        $query = " DELETE FROM " . $this->tablename . "
+        WHERE idmember NOT IN (
+            SELECT DISTINCT(M.idmember) FROM _Members M
+            JOIN member m ON M.idmember = m.idmember
+            LEFT JOIN membername mn ON m.idmember = mn.member_idmember
+            WHERE m.businessname LIKE :param1 OR 
+                (mn.surname LIKE :param2 AND mn.surname IS NOT NULL)
+        );";
 
         $stmt = $this->conn->prepare($query);      
         $param_clean = htmlspecialchars(strip_tags($name)).'%';
