@@ -170,7 +170,7 @@ class Email{
             ),
             "<p>If you are currently paying by standing order please don't forget to contact your bank to suspend that payment.</p>",
             "<p>Annual membership fees are as follows: Individual £20, Family or Household £30 and Corporate £40.</p>",
-            "<p>Without your support we cannot continue our mission of maintaining Knightsbridge as a vibrant and welcoming place to live and work. We have no paid staff and rely entrely on contributions from members like you to cover our running costs.</p>",
+            "<p>Without your support we cannot continue our mission of maintaining Knightsbridge as a vibrant and welcoming place to live and work. We have no paid staff and rely entirely on contributions from members like you to cover our running costs.</p>",
 
             // Spacer
             array("type" => "space", "height" => 20),
