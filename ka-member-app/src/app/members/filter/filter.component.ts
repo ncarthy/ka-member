@@ -218,8 +218,8 @@ export class MemberFilterComponent implements OnInit {
 
   /* Set the date range control values according to the select value */
   /* Index is supplied because it is a FormArray */
-  onDateRangeChanged(index: number, value: DateRangeEnum) {
-    const dtRng = this.dateRangeAdapter.enumToDateRange(value);
+  onDateRangeChanged(index: number, value: string) {
+    const dtRng = this.dateRangeAdapter.enumToDateRange(value as DateRangeEnum);
 
     const fg: FormGroup = this.dateRangesFormGroups[index];
     fg.controls['startDate'].setValue(dtRng.startDate);

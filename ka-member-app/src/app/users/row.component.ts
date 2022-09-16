@@ -38,7 +38,7 @@ export class UserRowComponent {
       });
   }
 
-  onSuspendedChange(value: any) {
+  onSuspendedChange() {
     if (!this.user) return;
     this.user.isUpdating = true;
     this.user.suspended = !this.user.suspended;
@@ -58,10 +58,14 @@ export class UserRowComponent {
     e.stopPropagation();
   }
 
-  onRoleChange(value: Role) {
+  onRoleChange(e: any) {
     if (!this.user || !this.user.id) return;
+
+    const role:Role = e.target.value as Role;
+    if (!role) return;
+
     this.user.isUpdating = true;
-    this.user.role = value;
+    this.user.role = role;
     this.userService
       .update(this.user.id, this.user)
       .subscribe(() => {

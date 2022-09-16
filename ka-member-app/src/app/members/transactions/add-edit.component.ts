@@ -12,6 +12,7 @@ import {
 import {
   ControlValueAccessor,
   FormBuilder,
+  UntypedFormBuilder,
   NG_VALUE_ACCESSOR, // Example: https://github.com/xiongemi/angular-form-ngxs/
   Validators,
 } from '@angular/forms';
@@ -79,7 +80,7 @@ export class TransactionAddEditComponent
   });
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder ,
     private authenticationService: AuthenticationService,
     private transactionService: TransactionService,
     private bankAccountService: BankAccountService,

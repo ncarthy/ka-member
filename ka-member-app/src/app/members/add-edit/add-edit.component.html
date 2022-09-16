@@ -107,43 +107,45 @@
         <div class="col-sm-auto">
           <h5>Name {{ i + 1 }}</h5>
         </div>
-        <div class="form-group col-sm">
-          <div class="row m-0">
-            <label class="col-sm-auto">Honorific</label>
-            <input
-              type="text"
-              formControlName="honorific"
-              class="col-sm form-control text-right"
-            />
+        <div class="row m-0">
+          <div class="form-group col-6 col-sm-3">
+            <div class="row m-0">
+              <label class="col-sm-auto">Honorific</label>
+              <input
+                type="text"
+                formControlName="honorific"
+                class="col-sm form-control text-right"
+              />
+            </div>
           </div>
-        </div>
-        <div class="form-group col-sm">
-          <div class="row m-0">
-            <label class="col-sm-auto">First Name</label>
-            <input
-              type="text"
-              formControlName="firstname"
-              class="col-sm form-control text-right"
-            />
+          <div class="form-group col col-sm">
+            <div class="row m-0">
+              <label class="col-sm-auto">First Name</label>
+              <input
+                type="text"
+                formControlName="firstname"
+                class="col-sm form-control text-right"
+              />
+            </div>
           </div>
-        </div>
-        <div class="form-group col-sm">
-          <div class="row m-0">
-            <label class="col-sm-auto">Surname</label>
-            <input
-              type="text"
-              formControlName="surname"
-              class="col-sm form-control text-right"
-              [ngClass]="{
-                'is-invalid': submitted && name.controls.surname.errors
-              }"
-            />
-            <div
-              *ngIf="submitted && name.controls.surname.errors"
-              class="invalid-feedback"
-            >
-              <div *ngIf="name.controls.surname.errors.required">
-                Surname is required, First Name and Honorific are optional
+          <div class="form-group col col-sm">
+            <div class="row m-0">
+              <label class="col-sm-auto">Surname</label>
+              <input
+                type="text"
+                formControlName="surname"
+                class="col-sm form-control text-right"
+                [ngClass]="{
+                  'is-invalid': submitted && name.controls.surname.errors
+                }"
+              />
+              <div
+                *ngIf="submitted && name.controls.surname.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="name.controls.surname.errors.required">
+                  Surname is required, First Name and Honorific are optional
+                </div>
               </div>
             </div>
           </div>

@@ -100,7 +100,7 @@
                 id="statusSelect"
                 name="statusSelect"
                 class="form-control"
-                (change)="onStatusChange($event.target.value)"
+                (change)="onStatusChange($event.target?.value)"
               >
                 <option *ngFor="let status of statuses" [ngValue]="status.id">
                   {{ status.name }}

@@ -1,16 +1,16 @@
 <td>{{user.fullname}}</td>
 <td>{{user.username}}</td>
 <td>
-    <select (change)="onRoleChange($event.target.value)" (click)= "onClickEvent($event)">
+    <select (change)="onRoleChange($event)" (click)= "onClickEvent($event)">
         <option *ngFor="let role of roles" [ngValue]="role" [selected]="role===user.role">{{roles2[role]}}</option>
     </select>
 </td>
 <td class="text-center">
     <div>
-        <div (change)="onSuspendedChange($event.target.value)" (click)= "onClickEvent($event)" class="form-check" *ngIf="user.suspended">
+        <div (change)="onSuspendedChange()" (click)= "onClickEvent($event)" class="form-check" *ngIf="user.suspended">
             <input class="form-check-input" type="checkbox" id="flexCheckCheckedDisabled" checked>
         </div>
-        <div (change)="onSuspendedChange($event.target.value)" (click)= "onClickEvent($event)" class="form-check" *ngIf="!user.suspended">
+        <div (change)="onSuspendedChange()" (click)= "onClickEvent($event)" class="form-check" *ngIf="!user.suspended">
             <input class="form-check-input" type="checkbox" id="flexCheckDisabled">
         </div>
     </div>

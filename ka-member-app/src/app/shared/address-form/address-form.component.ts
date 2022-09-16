@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormBuilder,
+  UntypedFormBuilder,
   NG_VALUE_ACCESSOR, // Example: https://github.com/xiongemi/angular-form-ngxs/
   Validators,
 } from '@angular/forms';
@@ -58,7 +58,7 @@ export class AddressFormComponent
   private subscription = new Subscription();
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private countryService: CountryService,
     private geocodeService: GeocodeService
   ) {}
