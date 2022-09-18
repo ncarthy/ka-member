@@ -182,6 +182,10 @@ export class MemberAddEditComponent implements OnInit {
           if (this.secondaryAddress && this.secondaryAddress.addressfirstline) {
             this.form.controls['showSecondaryAdress'].setValue(true);
           }
+
+          if (x.expirydate &&  x.expirydate.toString() == '0000-00-00') {
+            this.form.controls['expirydate'].setValue(null);
+          }
         })
         .add(() => (this.loading = false));
     }
@@ -222,6 +226,13 @@ export class MemberAddEditComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
+      const controls = this.form.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              console.log('Invalid control: ' + name);
+          }
+      }
+      
       return;
     }
 
@@ -271,20 +282,20 @@ export class MemberAddEditComponent implements OnInit {
         }),
         catchError((err) => throwError(err))
       )
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: () => {
           this.alertService.success('Member added', {
             keepAfterRouteChange: true,
           });
           this.goBack();
         },
-        (error) => {
+        error: (error) => {
           console.log(error);
           this.alertService.error('Unable to add new member.', {
             keepAfterRouteChange: true,
           });
         }
-      )
+  })
       .add(() => (this.loading = false));
   }
 
@@ -303,20 +314,20 @@ export class MemberAddEditComponent implements OnInit {
         }),
         catchError((err) => throwError(err))
       )
-      .subscribe(
-        () => {
+      .subscribe({
+        next: (v) => {
           this.alertService.success('Member updated', {
             keepAfterRouteChange: true,
           });
 
           this.goBack();
         },
-        () => {
+        error: (e) => {
           this.alertService.error('Member not updated', {
             keepAfterRouteChange: true,
           });
         }
-      )
+      })
       .add(() => (this.loading = false));
   }
 
@@ -327,38 +338,37 @@ export class MemberAddEditComponent implements OnInit {
       (success) => {
         this.memberService
           .anonymize(this.id)
-          .subscribe(
-            (result: any) => {
+          .subscribe({
+            next: () => {
               this.alertService.success('Member anonymized', {
                 keepAfterRouteChange: true,
               });
               this.goBack();
             },
-            (error) =>
+            error: () =>
               this.alertService.error('Unable to anonymize member.', {
                 keepAfterRouteChange: true,
               })
-          );
-      },
-      (error) => {}
+            });
+      }
     ); // If user dismisses the modal just ignore it
   }
 
   onSetToFormer() {
     this.memberService
       .setToFormer(this.id)
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: () => {
           this.alertService.success('Set to "former member" succeeded.', {
             keepAfterRouteChange: true,
           });
           this.router.navigate(['/members'], { relativeTo: this.route });
         },
-        (error) =>
+        error: () =>
           this.alertService.error('Unable to set member to "former member".', {
             keepAfterRouteChange: true,
           })
-      );
+        });
   }
 
   onDelete() {
@@ -368,20 +378,19 @@ export class MemberAddEditComponent implements OnInit {
       (success) => {
         this.memberService
           .delete(this.id)
-          .subscribe(
-            (result: any) => {
+          .subscribe({
+            next: () => {
               this.alertService.success('Member deleted', {
                 keepAfterRouteChange: true,
               });
               this.router.navigate(['/members'], { relativeTo: this.route });
             },
-            (error) =>
+            error: () =>
               this.alertService.error('Unable to delete member.', {
                 keepAfterRouteChange: true,
               })
-          );
-      },
-      (error) => {}
+          });
+      }
     ); // If user dismisses the modal just ignore it
   }
 }
