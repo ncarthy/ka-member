@@ -29,7 +29,7 @@ every address in the postcode:
 }
 
 */
-export class GetAddressAddress {
+export class GetAddressIOAddress {
   line1?: string;
   line2?: string;
   line3?: string;
@@ -40,7 +40,7 @@ export class GetAddressAddress {
 
   // Allow initialization of object even if not all properties are present
   // From https://stackoverflow.com/a/37682352/6941165
-  public constructor(init?: Partial<GetAddressAddress>) {
+  public constructor(init?: Partial<GetAddressIOAddress>) {
     Object.assign(this, init);
 
     // Squash line 1 & 2 together and move line 3 to line2

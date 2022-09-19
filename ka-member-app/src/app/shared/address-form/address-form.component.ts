@@ -17,7 +17,7 @@ import {
 import { Subscription } from 'rxjs';
 
 import { CountryService, GeocodeService } from '@app/_services';
-import { Address, Country, GetAddressAddress } from '@app/_models';
+import { Address, Country, GetAddressIOAddress } from '@app/_models';
 
 @Component({
   selector: 'address-form',
@@ -36,7 +36,7 @@ export class AddressFormComponent
   @Input() touched: boolean = false;
   @Input() address?: Address;
 
-  addresses!: GetAddressAddress[]; // from the api
+  addresses!: GetAddressIOAddress[]; // from the api
   countries!: Country[];
   uk!: Country;
   loading: boolean = false; // set by 'address-search-box' component
@@ -124,11 +124,11 @@ export class AddressFormComponent
     this.onTouch = fn;
   }
 
-  updateAddresses(results: GetAddressAddress[]): void {
+  updateAddresses(results: GetAddressIOAddress[]): void {
     this.addresses = results;
   }
 
-  onAddressChange(address: GetAddressAddress): void {
+  onAddressChange(address: GetAddressIOAddress): void {
     this.showFormFields = true;
     this.addressForm.controls['addressfirstline'].setValue(address.line1);
     this.addressForm.controls['addresssecondline'].setValue(address.line2);
