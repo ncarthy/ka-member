@@ -1,7 +1,7 @@
 import { Country } from './country';
 
 /*
-AddressApiResponse holds the object received from https://getaddress.io
+GetAddressIOAddress holds the object received from https://getaddress.io
 
 It is of the form:
 {
