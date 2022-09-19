@@ -260,6 +260,22 @@ class MemberFilter{
         $stmt->execute();    
     }
 
+    public function setEmail($email){    
+        $query = " DELETE FROM " . $this->tablename . "
+        WHERE idmember NOT IN (
+            SELECT DISTINCT(M.idmember) FROM _Members M
+            JOIN member m ON M.idmember = m.idmember
+            WHERE (m.email1 IS NOT NULL AND m.email1 LIKE :param1) OR 
+                (m.email2 IS NOT NULL AND m.email2 LIKE :param2)
+        );";
+
+        $stmt = $this->conn->prepare($query);      
+        $param_clean = '%'.htmlspecialchars(strip_tags($email)).'%';
+        $stmt->bindParam (":param1", $param_clean, PDO::PARAM_STR);
+        $stmt->bindParam (":param2", $param_clean, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
     public function setPaymentTypeID($paymenttypeid){      
         $query = " DELETE 
                         FROM " . $this->tablename . "

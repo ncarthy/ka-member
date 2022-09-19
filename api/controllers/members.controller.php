@@ -144,6 +144,9 @@ class MembersCtl{
     if (isset($_GET['businessorsurname']) && !empty($_GET['businessorsurname'])) {
       $model->setBusinessOrSurname($_GET['businessorsurname']);
     }
+    if (isset($_GET['email']) && !empty($_GET['email'])) {
+      $model->setEmail($_GET['email']);
+    }
     if (isset($_GET['membertypeid']) && !empty($_GET['membertypeid'])) {
       $model->setMemberTypeID($_GET['membertypeid']);
     }
