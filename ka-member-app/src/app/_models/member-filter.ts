@@ -12,6 +12,7 @@ export class MemberFilter {
   notsurname?: string;
   businessname?: string;
   businessorsurname?: string;
+  email?: string;
   membertypeid?: number;
   countryid?: number;
   hasemail?: YesNoAny;
@@ -30,6 +31,7 @@ export class MemberFilter {
     this.notsurname = (obj && obj.notsurname) || null;
     this.businessname = (obj && obj.businessname) || null;
     this.businessorsurname = (obj && obj.businessorsurname) || null;
+    this.email = (obj && obj.email) || null;
     this.membertypeid = (obj && obj.membertypeid) || null;
     this.countryid = (obj && obj.countryid) || null;
     this.hasemail = (obj && obj.hasemail) || null;
@@ -59,6 +61,9 @@ export class MemberFilter {
     }
     if (this.businessorsurname) {
       str = str.concat('&', 'businessorsurname=', this.businessorsurname);
+    }
+    if (this.email) {
+      str = str.concat('&', 'email=', this.email);
     }
     if (this.membertypeid) {
       str = str.concat('&', 'membertypeid=', this.membertypeid.toString());
