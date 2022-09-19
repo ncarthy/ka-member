@@ -17,6 +17,7 @@ import {
   CountryService,
   MemberFilterService,
   MembershipStatusService,
+  PaymentTypeService,
 } from '@app/_services';
 import {
   Country,
@@ -24,6 +25,7 @@ import {
   MemberFilter,
   MemberSearchResult,
   MembershipStatus,
+  PaymentType,
   YesNoAny,
 } from '@app/_models';
 import { DateRangeAdapter } from '@app/_helpers';
@@ -42,6 +44,7 @@ export class MemberFilterComponent implements OnInit {
   form!: FormGroup;
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
+  paymentTypes$!: Observable<PaymentType[]>;
   filterSubject: BehaviorSubject<MemberFilter> =
     new BehaviorSubject<MemberFilter>(
       new MemberFilter({ removed: YesNoAny.NO })
@@ -55,12 +58,14 @@ export class MemberFilterComponent implements OnInit {
     private countryService: CountryService,
     private MemberFilterService: MemberFilterService,
     private membershipStatusService: MembershipStatusService,
+    private paymentTypeService: PaymentTypeService,
     private route: ActivatedRoute,
     private router: Router,
     private dateRangeAdapter: DateRangeAdapter
   ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
+    this.paymentTypes$ = this.paymentTypeService.getAll();
   }
 
   // convenience getters for easy access to form fields
@@ -83,11 +88,12 @@ export class MemberFilterComponent implements OnInit {
       // Text
       businessorsurname: [null],
       address: [null],
+      email: [null],
 
       // checkboxes
       removed: ['no'],
       postonhold: ['any'],
-      email1: ['any'],
+      hasemail: ['any'],
 
       // selects (drop downs)
       membertypeid: [null],
@@ -192,7 +198,7 @@ export class MemberFilterComponent implements OnInit {
     return false; // Must return false from click event to stop it reloading the page
   }
 
-  // Required so that the template can access the EnumS
+  // Required so that the template can access the Enum
   // From https://stackoverflow.com/a/59289208
   public get YesNoAny() {
     return YesNoAny;

@@ -14,7 +14,7 @@ export class MemberFilter {
   businessorsurname?: string;
   membertypeid?: number;
   countryid?: number;
-  email1?: YesNoAny;
+  hasemail?: YesNoAny;
   postonhold?: YesNoAny;
   emailonhold?: YesNoAny;
   address?: string;
@@ -32,7 +32,7 @@ export class MemberFilter {
     this.businessorsurname = (obj && obj.businessorsurname) || null;
     this.membertypeid = (obj && obj.membertypeid) || null;
     this.countryid = (obj && obj.countryid) || null;
-    this.email1 = (obj && obj.email1) || null;
+    this.hasemail = (obj && obj.hasemail) || null;
     this.postonhold = (obj && obj.postonhold) || null;
     this.emailonhold = (obj && obj.emailonhold) || null;
     this.address = (obj && obj.address) || null;
@@ -66,8 +66,8 @@ export class MemberFilter {
     if (this.countryid) {
       str = str.concat('&', 'countryid=', this.countryid.toString());
     }
-    if (this.email1 && this.email1 !== YesNoAny.ANY) {
-      str = str.concat('&', 'email1=', this.email1);
+    if (this.hasemail && this.hasemail !== YesNoAny.ANY) {
+      str = str.concat('&', 'hasemail=', this.hasemail);
     }
     if (this.postonhold && this.postonhold !== YesNoAny.ANY) {
       str = str.concat('&', 'postonhold=', this.postonhold.toString());

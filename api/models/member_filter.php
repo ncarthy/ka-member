@@ -298,22 +298,33 @@ class MemberFilter{
         $stmt->execute();
     }
 
-    public function setEmail1($email1){      
-        if(($email1 || $email1 = 'y') && $email1 != 'n' && $email1 != 'no') {
-            $query = " DELETE M
+    public function setHasEmail($hasemail){      
+        switch ($hasemail) {
+            case 'n':
+            case 'no':
+                $query = " DELETE M
+                FROM " . $this->tablename . " M
+                JOIN member m1 ON M.idmember = m1.idmember
+                WHERE email1 IS NOT NULL AND email1 != ''
+                ;";
+            $stmt = $this->conn->prepare($query);  
+            $stmt->execute(); 
+            break;
+
+            case 'y':
+            case 'yes':
+                $query = " DELETE M
                     FROM " . $this->tablename . " M
                     JOIN member m1 ON M.idmember = m1.idmember
                     WHERE email1 IS NULL OR email1 = ''
                     ;";
-        } else {
-            $query = " DELETE M
-                    FROM " . $this->tablename . " M
-                    JOIN member m1 ON M.idmember = m1.idmember
-                    WHERE email1 IS NOT NULL AND email1 != ''
-                    ;";
-        }
-        $stmt = $this->conn->prepare($query);  
-        $stmt->execute();      
+                $stmt = $this->conn->prepare($query);  
+                $stmt->execute();   
+                break;
+
+            default:
+                break;
+        }   
     }
 
     public function setPostOnHold($postonhold){    

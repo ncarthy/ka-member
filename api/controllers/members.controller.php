@@ -153,8 +153,8 @@ class MembersCtl{
     if (isset($_GET['countryid']) && !empty($_GET['countryid'])) {
       $model->setPrimaryCountryID($_GET['countryid']);
     }
-    if (isset($_GET['email1']) && !empty($_GET['email1'])) {
-      $model->setEmail1($_GET['email1']);
+    if (isset($_GET['hasemail']) && !empty($_GET['hasemail'])) {
+      $model->setHasEmail($_GET['hasemail']);
     }
     if (isset($_GET['postonhold']) && !empty($_GET['postonhold'])) {
       $model->setPostOnHold($_GET['postonhold']);

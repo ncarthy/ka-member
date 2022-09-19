@@ -29,6 +29,10 @@ export class MembersService {
     return this.http.get<any>(`${baseUrl}/emaillist`);
   }
 
+  getEmailMemberList() {
+    return this.http.get<any>(`${baseUrl}/emailmemberlist`);
+  }
+
   getNoEmailList() {
     return this.http.get<any>(`${baseUrl}/noemaillist`);
   }

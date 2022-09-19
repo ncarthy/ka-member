@@ -3,7 +3,7 @@
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '@app/_services';
-import { MemberFilter, MemberSearchResult, User, YesNoAny } from '@app/_models';
+import { MemberFilter, MemberSearchResult, User } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
 export class MemberListComponent implements OnInit {
