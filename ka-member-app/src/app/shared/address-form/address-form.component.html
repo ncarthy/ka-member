@@ -1,10 +1,10 @@
 <div>
-  <div class="mb-3" *ngIf="!address||!address.postcode" >
+  <div class="mb-3" *ngIf="!address || !address.postcode">
     <a class="text-primary" (click)="showFormFields = !showFormFields"
       >Enter address manually</a
     >
   </div>
-  <div class="mb-3" *ngIf="!address||!address.postcode">
+  <div class="mb-3" *ngIf="!address || !address.postcode">
     <label class="form-label">Find address by postcode:</label>
     <address-search-box
       (loading)="loading = $event"
@@ -37,13 +37,20 @@
         id="inputAddressLine1"
         [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }"
       />
-      <div *ngIf="submitted && f.addressfirstline.errors" class="invalid-feedback">
+      <div
+        *ngIf="submitted && f.addressfirstline.errors"
+        class="invalid-feedback"
+      >
         <div *ngIf="f.addressfirstline.errors.required">Line 1 is required</div>
       </div>
     </div>
     <div class="mb-2">
       <label>Line 2</label>
-      <input type="text" formControlName="addresssecondline" class="form-control" />
+      <input
+        type="text"
+        formControlName="addresssecondline"
+        class="form-control"
+      />
     </div>
     <div class="mb-2">
       <label>City *</label>

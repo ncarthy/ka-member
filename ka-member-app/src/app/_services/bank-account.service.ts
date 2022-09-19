@@ -8,10 +8,9 @@ const baseUrl = `${environment.apiUrl}/bank_account`;
 
 @Injectable({ providedIn: 'root' })
 export class BankAccountService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getAll() {
-        return this.http.get<BankAccount[]>(baseUrl);
-    }
-
+  getAll() {
+    return this.http.get<BankAccount[]>(baseUrl);
+  }
 }

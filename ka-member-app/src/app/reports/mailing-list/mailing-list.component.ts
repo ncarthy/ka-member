@@ -53,7 +53,7 @@ export class MailingListComponent implements OnInit, OnChanges {
   }
 
   refresh() {
-    if (this.all_members && this.ids){
+    if (this.all_members && this.ids) {
       this.members = this.all_members.filter((x) => this.ids.includes(x.id));
 
       this.csvMembers = new Array();
@@ -67,7 +67,7 @@ export class MailingListComponent implements OnInit, OnChanges {
 
   memberSelected(member_address: any) {
     this.idSelected.emit(member_address.id);
-}
+  }
 
   exportToCSV(): void {
     //From https://www.npmjs.com/package/export-to-csv

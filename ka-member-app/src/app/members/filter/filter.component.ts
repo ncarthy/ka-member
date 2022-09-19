@@ -36,16 +36,16 @@ export class MemberFilterComponent implements OnInit {
   @Output()
   filter: EventEmitter<MemberFilter> = new EventEmitter<MemberFilter>();
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() filteredMembers: EventEmitter<
-    MemberSearchResult[]
-  > = new EventEmitter<MemberSearchResult[]>();
+  @Output() filteredMembers: EventEmitter<MemberSearchResult[]> =
+    new EventEmitter<MemberSearchResult[]>();
 
   form!: FormGroup;
   countries$!: Observable<Country[]>;
   membershipStatuses$!: Observable<MembershipStatus[]>;
-  filterSubject: BehaviorSubject<MemberFilter> = new BehaviorSubject<MemberFilter>(
-    new MemberFilter({ removed: YesNoAny.NO })
-  );
+  filterSubject: BehaviorSubject<MemberFilter> =
+    new BehaviorSubject<MemberFilter>(
+      new MemberFilter({ removed: YesNoAny.NO })
+    );
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
   working: boolean = false;
   panelOpen: boolean = false;
@@ -157,7 +157,7 @@ export class MemberFilterComponent implements OnInit {
               : YesNoAny.NO,
         })
       );
-    }  else if (this.router.url.includes('emailonhold')) {
+    } else if (this.router.url.includes('emailonhold')) {
       this.filterSubject.next(
         new MemberFilter({
           removed: YesNoAny.NO,

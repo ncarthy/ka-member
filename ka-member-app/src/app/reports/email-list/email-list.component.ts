@@ -41,7 +41,7 @@ export class EmailListComponent implements OnInit, OnChanges {
       // Exclude the id and country properties from what will be outputted to CSV
       this.csvEmails = new Array();
       this.member_emails.forEach((element) => {
-        this.csvEmails.push({email: element[1]});
+        this.csvEmails.push({ email: element[1] });
       });
     });
   }
@@ -56,7 +56,7 @@ export class EmailListComponent implements OnInit, OnChanges {
       // Exclude the id and country properties from what will be outputted to CSV
       this.csvEmails = new Array();
       this.member_emails.forEach((element) => {
-        this.csvEmails.push({email: element[1]});
+        this.csvEmails.push({ email: element[1] });
       });
     }
   }

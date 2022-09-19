@@ -31,7 +31,8 @@ import { Address, Country, GetAddressAddress } from '@app/_models';
   ],
 })
 export class AddressFormComponent
-  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
+  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges
+{
   @Input() touched: boolean = false;
   @Input() address?: Address;
 
@@ -137,11 +138,11 @@ export class AddressFormComponent
     this.addressForm.controls['postcode'].setValue(address.postcode);
 
     let a = new Address(this.addressForm.value);
-    this.geocodeService.geocode(a).subscribe((new_address:Address) => {
+    this.geocodeService.geocode(a).subscribe((new_address: Address) => {
       if (new_address.lng && new_address.lat) {
         this.addressForm.controls['lat'].setValue(new_address.lat);
         this.addressForm.controls['lng'].setValue(new_address.lng);
       }
-    } );
+    });
   }
 }

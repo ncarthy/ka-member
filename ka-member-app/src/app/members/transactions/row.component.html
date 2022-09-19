@@ -20,10 +20,10 @@
   </div>
 </th>
 <th scope="row" class="d-table-cell d-sm-none">
-  {{transaction.date}}
+  {{ transaction.date }}
 </th>
 <td scope="row" class="d-table-cell d-sm-none">
-  {{transaction.amount | number: '1.2-2'}}
+  {{ transaction.amount | number: "1.2-2" }}
 </td>
 <td class="d-none d-sm-table-cell">
   <select
@@ -65,14 +65,15 @@
 </td>
 <td class="d-none d-sm-table-cell">
   <textarea
-  rows="2" cols="25"
+    rows="2"
+    cols="25"
     [(ngModel)]="transaction.note"
     (ngModelChange)="onTransactionNoteChange()"
     (click)="onClickEvent($event)"
   >
   </textarea>
 </td>
-<td style="width: 15%;">
+<td style="width: 15%">
   <button
     (click)="onTransactionChange()"
     class="btn btn-sm btn-info mr-1 mb-1"
@@ -87,7 +88,7 @@
   </button>
   <button
     (click)="onTransactionUpdated.emit(this.transaction)"
-    class="btn btn-sm btn-info mr-1  mb-1"
+    class="btn btn-sm btn-info mr-1 mb-1"
     [disabled]="transaction.isUpdating"
     *ngIf="user.isAdmin && showSaveButton"
   >

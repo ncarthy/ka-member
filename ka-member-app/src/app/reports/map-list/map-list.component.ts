@@ -122,17 +122,20 @@ export class MapListComponent implements OnInit {
             [pos.lng(), pos.lat()],
             [this.lng, this.lat]
           );
-          if (d <= radius) {            
+          if (d <= radius) {
             ids.push(address.idmember);
             m.setIcon(iconIN);
           } else {
             m.setIcon(iconOUT);
           }
           m.setMap(this.map);
-          this.markers.push([address.idmember,m]);
+          this.markers.push([address.idmember, m]);
         })
       )
-      .subscribe().add(() => {this.ids = ids;});
+      .subscribe()
+      .add(() => {
+        this.ids = ids;
+      });
   }
 
   private addCircleToMap(lat: number, lng: number, radius: number) {
@@ -188,7 +191,8 @@ export class MapListComponent implements OnInit {
           });
         }
       } else if (
-        (element[1].getIcon() as google.maps.ReadonlySymbol).strokeColor != 'grey'
+        (element[1].getIcon() as google.maps.ReadonlySymbol).strokeColor !=
+        'grey'
       ) {
         element[1].setIcon({
           path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,

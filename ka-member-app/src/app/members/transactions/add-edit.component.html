@@ -46,7 +46,9 @@
         </option>
       </select>
       <div *ngIf="submitted && f.paymenttypeID.errors" class="invalid-feedback">
-        <div *ngIf="f.paymenttypeID.errors.required">Payment type is required</div>
+        <div *ngIf="f.paymenttypeID.errors.required">
+          Payment type is required
+        </div>
       </div>
     </div>
     <div class="input-group mb-1">

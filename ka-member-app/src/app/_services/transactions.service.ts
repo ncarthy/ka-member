@@ -7,19 +7,21 @@ const baseUrl = `${environment.apiUrl}/transactions`;
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getSummary(start: string = '', end: string = '', bankID: string = '') {
-
-        if (bankID==null) {
-            bankID = '';
-        } 
-        
-        return this.http.get<any>(`${baseUrl}/summary?start=${start}&end=${end}&bankID=${bankID}`);
+  getSummary(start: string = '', end: string = '', bankID: string = '') {
+    if (bankID == null) {
+      bankID = '';
     }
 
-    getDetail(month: string = '', year: string = '', bankID: string = '') {
-        return this.http.get<any>(`${baseUrl}/detail?month=${month}&year=${year}&bankID=${bankID}`);
-    }
+    return this.http.get<any>(
+      `${baseUrl}/summary?start=${start}&end=${end}&bankID=${bankID}`
+    );
+  }
 
+  getDetail(month: string = '', year: string = '', bankID: string = '') {
+    return this.http.get<any>(
+      `${baseUrl}/detail?month=${month}&year=${year}&bankID=${bankID}`
+    );
+  }
 }

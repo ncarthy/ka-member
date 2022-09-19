@@ -5,19 +5,19 @@ import { User, Role } from './_models';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
-    user?: User;
-    active: any = 1;
-    isMenuCollapsed: boolean = true;
+  user?: User;
+  active: any = 1;
+  isMenuCollapsed: boolean = true;
 
-    constructor(private authenticationService: AuthenticationService) {
-        this.authenticationService.user.subscribe(x => this.user = x);
-    }
+  constructor(private authenticationService: AuthenticationService) {
+    this.authenticationService.user.subscribe((x) => (this.user = x));
+  }
 
-    /*get userID() {
+  /*get userID() {
         return this.user && this.user.id || this.user?.id;
     }*/
 
-    logout() {
-        this.authenticationService.logout();
-    }
+  logout() {
+    this.authenticationService.logout();
+  }
 }

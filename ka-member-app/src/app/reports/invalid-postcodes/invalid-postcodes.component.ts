@@ -14,11 +14,9 @@ export class InvalidPostcodesComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.membersService
-      .getInvalidPostcodes()
-      .subscribe((response) => {        
-        this.members = response;
-        this.loading = false;
-      });
+    this.membersService.getInvalidPostcodes().subscribe((response) => {
+      this.members = response;
+      this.loading = false;
+    });
   }
 }

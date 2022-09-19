@@ -20,21 +20,25 @@ import { Address, GetAddressAddress } from '@app/_models';
 @Component({
   selector: 'address-search-box',
   template: `
-  <div class="input-group">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1"
+          ><i class="fas fa-search"></i
+        ></span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search By Postcode"
+      />
     </div>
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Search By Postcode"
-    />
-  </div>
   `,
 })
 export class SearchBoxComponent implements OnInit {
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() results: EventEmitter<GetAddressAddress[]> = new EventEmitter<GetAddressAddress[]>();
+  @Output() results: EventEmitter<GetAddressAddress[]> = new EventEmitter<
+    GetAddressAddress[]
+  >();
   @Input() disable: boolean = false;
 
   constructor(

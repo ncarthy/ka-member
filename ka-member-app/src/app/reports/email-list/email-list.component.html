@@ -1,7 +1,11 @@
 <div class="row justify-content-between">
   <div class="col-sm-6">
-    <h4 *ngIf="ids&&ids.length">{{ member_emails && member_emails.length }} Emails After Filter</h4>
-    <h4 *ngIf="!ids||!ids.length">{{ member_emails && member_emails.length }} Email Addresses Found</h4>
+    <h4 *ngIf="ids && ids.length">
+      {{ member_emails && member_emails.length }} Emails After Filter
+    </h4>
+    <h4 *ngIf="!ids || !ids.length">
+      {{ member_emails && member_emails.length }} Email Addresses Found
+    </h4>
   </div>
   <div class="col-sm-3 mb-2">
     <button class="btn btn-primary mr-2" (click)="exportToCSV()">

@@ -8,24 +8,28 @@ import { MemberManageComponent } from './manage/manage.component';
 import { TransactionManagerComponent } from './transaction-manager/transaction-manager.component';
 
 const routes: Routes = [
-    {
-        path: '', component: MemberLayoutComponent,
-        children: [
-            { path: '', component: MemberListComponent },
-            { path: 'add', component: MemberAddEditComponent },
-            { path: 'edit/:id', component: MemberAddEditComponent },
-            { path: 'manage/:idmember', component: MemberManageComponent },
-            { path: 'status/:id', component: MemberListComponent },
-            { path: 'transactions/:idmember', component: TransactionManagerComponent },
-            { path: 'country/:countryid', component: MemberListComponent },
-            { path: 'postonhold/:postonhold', component: MemberListComponent },
-            { path: 'emailonhold/:emailonhold', component: MemberListComponent }
-        ]
-    }
+  {
+    path: '',
+    component: MemberLayoutComponent,
+    children: [
+      { path: '', component: MemberListComponent },
+      { path: 'add', component: MemberAddEditComponent },
+      { path: 'edit/:id', component: MemberAddEditComponent },
+      { path: 'manage/:idmember', component: MemberManageComponent },
+      { path: 'status/:id', component: MemberListComponent },
+      {
+        path: 'transactions/:idmember',
+        component: TransactionManagerComponent,
+      },
+      { path: 'country/:countryid', component: MemberListComponent },
+      { path: 'postonhold/:postonhold', component: MemberListComponent },
+      { path: 'emailonhold/:emailonhold', component: MemberListComponent },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class MembersRoutingModule { }
+export class MembersRoutingModule {}

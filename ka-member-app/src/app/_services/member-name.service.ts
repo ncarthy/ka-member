@@ -42,22 +42,24 @@ export class MemberNameService {
   }
 
   /** Generate Observable of strings which are the concatanation of honorific, name and surname */
-  getNamesStringForMember(idmember: number) : Observable<string> {
-
+  getNamesStringForMember(idmember: number): Observable<string> {
     // http$ is of type Observable<MemberName[]>
-    const http$ = this.http.get<MemberName[]>(`${baseUrl}/${idmember}`); 
+    const http$ = this.http.get<MemberName[]>(`${baseUrl}/${idmember}`);
 
     // x$ is of type Observable<string> after the various transforms
-    const x$ = http$.pipe(switchMap((names: MemberName[]) => {
-      const obs = names.map((x) => {
-        return of(this.concatName(x));
-      });
-      return merge(...obs); 
-    }));
-    return x$.pipe(reduce((finalString: string, value: string, idx: number) => {
-      return idx == 0 ? value : finalString + ' and ' + value;
-
-    }))
+    const x$ = http$.pipe(
+      switchMap((names: MemberName[]) => {
+        const obs = names.map((x) => {
+          return of(this.concatName(x));
+        });
+        return merge(...obs);
+      })
+    );
+    return x$.pipe(
+      reduce((finalString: string, value: string, idx: number) => {
+        return idx == 0 ? value : finalString + ' and ' + value;
+      })
+    );
   }
 
   // method extracted for clarity

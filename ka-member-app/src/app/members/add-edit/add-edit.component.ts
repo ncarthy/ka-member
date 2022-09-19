@@ -129,21 +129,17 @@ export class MemberAddEditComponent implements OnInit {
     });
 
     // Fill country dropdown
-    this.countryService
-      .getAll()
-      .subscribe((x) => {
-        this.countries = x;
-      });
+    this.countryService.getAll().subscribe((x) => {
+      this.countries = x;
+    });
 
     // Fill status dropdown
-    this.membershipStatusService
-      .getAll()
-      .subscribe((x) => {
-        this.statuses = x;
-        if (this.formMode === FormMode.Add) {
-          this.loading = false;
-        }
-      });
+    this.membershipStatusService.getAll().subscribe((x) => {
+      this.statuses = x;
+      if (this.formMode === FormMode.Add) {
+        this.loading = false;
+      }
+    });
 
     // Member names
     if (this.formMode === FormMode.Add) {
@@ -183,7 +179,7 @@ export class MemberAddEditComponent implements OnInit {
             this.form.controls['showSecondaryAdress'].setValue(true);
           }
 
-          if (x.expirydate &&  x.expirydate.toString() == '0000-00-00') {
+          if (x.expirydate && x.expirydate.toString() == '0000-00-00') {
             this.form.controls['expirydate'].setValue(null);
           }
         })
@@ -228,11 +224,11 @@ export class MemberAddEditComponent implements OnInit {
     if (this.form.invalid) {
       const controls = this.form.controls;
       for (const name in controls) {
-          if (controls[name].invalid) {
-              console.log('Invalid control: ' + name);
-          }
+        if (controls[name].invalid) {
+          console.log('Invalid control: ' + name);
+        }
       }
-      
+
       return;
     }
 
@@ -294,8 +290,8 @@ export class MemberAddEditComponent implements OnInit {
           this.alertService.error('Unable to add new member.', {
             keepAfterRouteChange: true,
           });
-        }
-  })
+        },
+      })
       .add(() => (this.loading = false));
   }
 
@@ -326,7 +322,7 @@ export class MemberAddEditComponent implements OnInit {
           this.alertService.error('Member not updated', {
             keepAfterRouteChange: true,
           });
-        }
+        },
       })
       .add(() => (this.loading = false));
   }
@@ -334,63 +330,53 @@ export class MemberAddEditComponent implements OnInit {
   onAnonymize() {
     from(
       this.modalService.open(MemberAnonymizeConfirmModalComponent).result
-    ).subscribe(
-      (success) => {
-        this.memberService
-          .anonymize(this.id)
-          .subscribe({
-            next: () => {
-              this.alertService.success('Member anonymized', {
-                keepAfterRouteChange: true,
-              });
-              this.goBack();
-            },
-            error: () =>
-              this.alertService.error('Unable to anonymize member.', {
-                keepAfterRouteChange: true,
-              })
-            });
-      }
-    ); // If user dismisses the modal just ignore it
+    ).subscribe((success) => {
+      this.memberService.anonymize(this.id).subscribe({
+        next: () => {
+          this.alertService.success('Member anonymized', {
+            keepAfterRouteChange: true,
+          });
+          this.goBack();
+        },
+        error: () =>
+          this.alertService.error('Unable to anonymize member.', {
+            keepAfterRouteChange: true,
+          }),
+      });
+    }); // If user dismisses the modal just ignore it
   }
 
   onSetToFormer() {
-    this.memberService
-      .setToFormer(this.id)
-      .subscribe({
-        next: () => {
-          this.alertService.success('Set to "former member" succeeded.', {
-            keepAfterRouteChange: true,
-          });
-          this.router.navigate(['/members'], { relativeTo: this.route });
-        },
-        error: () =>
-          this.alertService.error('Unable to set member to "former member".', {
-            keepAfterRouteChange: true,
-          })
+    this.memberService.setToFormer(this.id).subscribe({
+      next: () => {
+        this.alertService.success('Set to "former member" succeeded.', {
+          keepAfterRouteChange: true,
         });
+        this.router.navigate(['/members'], { relativeTo: this.route });
+      },
+      error: () =>
+        this.alertService.error('Unable to set member to "former member".', {
+          keepAfterRouteChange: true,
+        }),
+    });
   }
 
   onDelete() {
     from(
       this.modalService.open(MemberDeleteConfirmModalComponent).result
-    ).subscribe(
-      (success) => {
-        this.memberService
-          .delete(this.id)
-          .subscribe({
-            next: () => {
-              this.alertService.success('Member deleted', {
-                keepAfterRouteChange: true,
-              });
-              this.router.navigate(['/members'], { relativeTo: this.route });
-            },
-            error: () =>
-              this.alertService.error('Unable to delete member.', {
-                keepAfterRouteChange: true,
-              })
+    ).subscribe((success) => {
+      this.memberService.delete(this.id).subscribe({
+        next: () => {
+          this.alertService.success('Member deleted', {
+            keepAfterRouteChange: true,
           });
-      }
-    ); // If user dismisses the modal just ignore it
+          this.router.navigate(['/members'], { relativeTo: this.route });
+        },
+        error: () =>
+          this.alertService.error('Unable to delete member.', {
+            keepAfterRouteChange: true,
+          }),
+      });
+    }); // If user dismisses the modal just ignore it
   }
 }

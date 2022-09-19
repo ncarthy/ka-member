@@ -1,82 +1,90 @@
 ﻿<div class="row justify-content-center">
-    <div class="card mt-4 col-sm-8">
-      <h4 class="card-header">Summary</h4>
-      <div class="card-body">
-        <p *ngIf="!loading">
-          Total number of members: <strong>{{ total }}</strong>
-        </p>
-        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
-        <table class="table table-striped table-responsive w-auto">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Number</th>
-              <th class="d-none d-sm-table-cell">Default Multiplier</th>
-              <th
-                class="d-none d-sm-table-cell"
-                placement="top"
-                ngbTooltip="Multiplier can vary by Member. This is the average value used for this class of member."
-              >
-                Applied Multiplier
-              </th>
-              <th
-                placement="bottom"
-                ngbTooltip="The effective number of members in this membership class"
-              >
-                Contribution
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of membersByType">
-              <th><a routerLink="/members/status/{{ item.id }}" class="text-dark">{{ item.name }}</a></th>
-              <td class="text-center">{{ item.count }}</td>
-              <td class="text-center d-none d-sm-table-cell">
-                {{ item.multiplier }}
-              </td>
-              <td class="text-center d-none d-sm-table-cell">
-                {{ item.actmultiplier }}
-              </td>
-              <td class="text-center">{{ item.contribution }}</td>
-            </tr>
-            <tr>
-              <td>Total</td>
-              <td class="text-center">
-                <strong>{{ count }}</strong>
-              </td>
-              <td class="d-none d-sm-table-cell"></td>
-              <td class="d-none d-sm-table-cell"></td>
-              <td class="text-center">
-                <strong>{{ total }}</strong>
-              </td>
-            </tr>
-            <tr *ngIf="!membersByType">
-              <td colspan="4" class="text-center">
-                <span
-                  class="spinner-border spinner-border-lg align-center"
-                ></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="card mt-4 col-sm-8">
+    <h4 class="card-header">Summary</h4>
+    <div class="card-body">
+      <p *ngIf="!loading">
+        Total number of members: <strong>{{ total }}</strong>
+      </p>
+      <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+      <table class="table table-striped table-responsive w-auto">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Number</th>
+            <th class="d-none d-sm-table-cell">Default Multiplier</th>
+            <th
+              class="d-none d-sm-table-cell"
+              placement="top"
+              ngbTooltip="Multiplier can vary by Member. This is the average value used for this class of member."
+            >
+              Applied Multiplier
+            </th>
+            <th
+              placement="bottom"
+              ngbTooltip="The effective number of members in this membership class"
+            >
+              Contribution
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of membersByType">
+            <th>
+              <a routerLink="/members/status/{{ item.id }}" class="text-dark">{{
+                item.name
+              }}</a>
+            </th>
+            <td class="text-center">{{ item.count }}</td>
+            <td class="text-center d-none d-sm-table-cell">
+              {{ item.multiplier }}
+            </td>
+            <td class="text-center d-none d-sm-table-cell">
+              {{ item.actmultiplier }}
+            </td>
+            <td class="text-center">{{ item.contribution }}</td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td class="text-center">
+              <strong>{{ count }}</strong>
+            </td>
+            <td class="d-none d-sm-table-cell"></td>
+            <td class="d-none d-sm-table-cell"></td>
+            <td class="text-center">
+              <strong>{{ total }}</strong>
+            </td>
+          </tr>
+          <tr *ngIf="!membersByType">
+            <td colspan="4" class="text-center">
+              <span
+                class="spinner-border spinner-border-lg align-center"
+              ></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="card mt-4 col-sm-8">
-      <div class="card-body">
-        <p>
-          Different membership classes have different contributions to the
-          membership total.
-        </p>
-        <p>
-          Each household member counts as 2 individual members, a corporate
-          member counts as 4, a lifetime member counts as 1. The exact
-          contribution from each member can be edited in the
-          <a routerLink="/members">members</a> section.
-        </p>
-        <p>
-          '<a routerLink="/members/status/10" class="text-dark">Residence</a>' members are a special case: 199 Knightsbridge has a single
-          membership but counts as 100 individual members. Number of members can be edited in the '<a routerLink="members/manage/418" class="text-dark">Subscription</a>' page.
-        </p>
-      </div>
+  </div>
+  <div class="card mt-4 col-sm-8">
+    <div class="card-body">
+      <p>
+        Different membership classes have different contributions to the
+        membership total.
+      </p>
+      <p>
+        Each household member counts as 2 individual members, a corporate member
+        counts as 4, a lifetime member counts as 1. The exact contribution from
+        each member can be edited in the
+        <a routerLink="/members">members</a> section.
+      </p>
+      <p>
+        '<a routerLink="/members/status/10" class="text-dark">Residence</a>'
+        members are a special case: 199 Knightsbridge has a single membership
+        but counts as 100 individual members. Number of members can be edited in
+        the '<a routerLink="members/manage/418" class="text-dark"
+          >Subscription</a
+        >' page.
+      </p>
+    </div>
   </div>
 </div>

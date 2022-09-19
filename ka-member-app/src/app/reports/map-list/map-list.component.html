@@ -4,7 +4,6 @@
   <div class="card mb-2">
     <div class="card-header">
       <div class="row justify-content-between">
-        
         <div class="row ml-4">
           <label>Mailing Addresses</label>
           <label class="switch">
@@ -17,15 +16,15 @@
           <div class="input-group">
             <span class="input-group-text col-4" id="status-label">Radius</span>
             <select
-            formControlName="radius"
-            class="form-control"
-            (change)="onRadiusChange($event.target.value)"
+              formControlName="radius"
+              class="form-control"
+              (change)="onRadiusChange($event.target.value)"
             >
-            <option value="50">50m</option>
-            <option value="100">100m</option>
-            <option value="200">200m</option>
-            <option value="500">500m</option>
-            <option value="1000">1000m</option>
+              <option value="50">50m</option>
+              <option value="100">100m</option>
+              <option value="200">200m</option>
+              <option value="500">500m</option>
+              <option value="1000">1000m</option>
             </select>
           </div>
         </div>
@@ -35,8 +34,16 @@
   </div>
   <div *ngIf="false">
     <p>Form Value: {{ form.value | json }}</p>
-  </div>  
+  </div>
 </form>
 
-<mailing-list *ngIf="f.isEmailList.value == false" [ids]="ids" (idSelected)="onIdSelected($event)"></mailing-list>
-<email-list *ngIf="f.isEmailList.value == true" [ids]="ids" (idSelected)="onIdSelected($event)"></email-list>
+<mailing-list
+  *ngIf="f.isEmailList.value == false"
+  [ids]="ids"
+  (idSelected)="onIdSelected($event)"
+></mailing-list>
+<email-list
+  *ngIf="f.isEmailList.value == true"
+  [ids]="ids"
+  (idSelected)="onIdSelected($event)"
+></email-list>

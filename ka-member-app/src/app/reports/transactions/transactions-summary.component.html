@@ -80,7 +80,11 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-auto p-0"><a class="btn btn-link"  (click)="onBankChanged(selectBank.value)">Refresh</a></div>
+        <div class="col-sm-auto p-0">
+          <a class="btn btn-link" (click)="onBankChanged(selectBank.value)"
+            >Refresh</a
+          >
+        </div>
       </div>
       <div class="row class">
         <div class="col-sm">
@@ -153,7 +157,6 @@
               <p>Form Value: {{ form.value | json }}</p>
             </div>
           </div>
-          
         </div>
       </div>
     </form>

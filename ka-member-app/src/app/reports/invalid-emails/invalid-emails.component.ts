@@ -14,11 +14,9 @@ export class InvalidEmailsComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.membersService
-      .getInvalidEmails()
-      .subscribe((response) => {        
-        this.members = response;
-        this.loading = false;
-      });
+    this.membersService.getInvalidEmails().subscribe((response) => {
+      this.members = response;
+      this.loading = false;
+    });
   }
 }

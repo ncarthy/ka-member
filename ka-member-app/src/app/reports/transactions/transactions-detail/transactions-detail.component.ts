@@ -49,9 +49,11 @@ export class TransactionsDetailComponent implements OnInit, OnChanges {
     if (changes['summaryRow']) {
       console.log(
         `index: ${this.summaryRow?.index}, bank: ${this.summaryRow?.bankID}`
-      );      
+      );
       let index = this.summaryRow?.index.split('-');
-      if (!index) { return; }
+      if (!index) {
+        return;
+      }
       this.transactionsService
         .getDetail(index[1], index[0], this.summaryRow?.bankID.toString())
         .subscribe((response: any) => {

@@ -49,7 +49,8 @@ import { Subscription } from 'rxjs';
   ],
 })
 export class TransactionAddEditComponent
-  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
+  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges
+{
   @Input() touched: boolean = false;
   @Input() transaction?: Transaction;
   @Input() mostRecentTransaction?: Transaction;
@@ -80,7 +81,7 @@ export class TransactionAddEditComponent
   });
 
   constructor(
-    private fb: UntypedFormBuilder ,
+    private fb: UntypedFormBuilder,
     private authenticationService: AuthenticationService,
     private transactionService: TransactionService,
     private bankAccountService: BankAccountService,

@@ -54,5 +54,4 @@ export class MemberListComponent implements OnInit {
   filterIsLoading(value: boolean) {
     this.loading = value;
   }
-
 }

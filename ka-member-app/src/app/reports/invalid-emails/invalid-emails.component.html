@@ -1,6 +1,8 @@
 <div class="row justify-content-between">
   <div class="col-sm-9">
-    <h1>{{ members && members.length }} Members With Invalid Email Addresses</h1>
+    <h1>
+      {{ members && members.length }} Members With Invalid Email Addresses
+    </h1>
   </div>
   <div class="col-sm-2">
     <button routerLink="/reports" class="btn btn-outline-dark">
@@ -19,10 +21,10 @@
   <thead>
     <tr class="m-0">
       <!-- "scope" just tells browsers which cells the header is related to. It is not a bootstrap flex 'col' directive-->
-      <th scope="col" >Name</th>
-      <th scope="col" >Email1</th>
-      <th scope="col" >Email2</th>
-      <th scope="col" >Actions</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email1</th>
+      <th scope="col">Email2</th>
+      <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>

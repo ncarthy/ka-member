@@ -6,11 +6,12 @@ import { ToastService } from '@app/_services';
   selector: 'app-toasts',
   templateUrl: './toast-container.component.html',
   styleUrls: ['./toast-container.component.css'],
-  host: {'[class.ngb-toasts]': 'true'}
+  host: { '[class.ngb-toasts]': 'true' },
 })
-export class ToastContainerComponent  {
+export class ToastContainerComponent {
+  constructor(public toastService: ToastService) {}
 
-  constructor(public toastService: ToastService) { }
-
-  isTemplate(toast: any) { return toast.textOrTpl instanceof TemplateRef; }
+  isTemplate(toast: any) {
+    return toast.textOrTpl instanceof TemplateRef;
+  }
 }

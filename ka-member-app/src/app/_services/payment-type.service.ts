@@ -8,10 +8,9 @@ const baseUrl = `${environment.apiUrl}/payment_type`;
 
 @Injectable({ providedIn: 'root' })
 export class PaymentTypeService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getAll() {
-        return this.http.get<PaymentType[]>(baseUrl);
-    }
-
+  getAll() {
+    return this.http.get<PaymentType[]>(baseUrl);
+  }
 }

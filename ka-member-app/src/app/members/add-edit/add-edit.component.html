@@ -13,12 +13,12 @@
       Subscription
     </button>
     <button
-    type="button"
-    routerLink="/members/transactions/{{ id }}"
-    class="btn btn-secondary mr-1"
-    *ngIf="isMemberEdit"
+      type="button"
+      routerLink="/members/transactions/{{ id }}"
+      class="btn btn-secondary mr-1"
+      *ngIf="isMemberEdit"
     >
-    Payments
+      Payments
     </button>
     <button (click)="goBack()" class="btn btn-outline-dark">
       Close &times;

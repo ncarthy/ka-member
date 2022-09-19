@@ -1,4 +1,4 @@
 export enum ListType {
-    ADDRESS = 'address',
-    EMAIL = 'email'
+  ADDRESS = 'address',
+  EMAIL = 'email',
 }

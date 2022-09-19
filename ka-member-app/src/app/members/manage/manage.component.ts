@@ -148,15 +148,16 @@ export class MemberManageComponent implements OnInit {
       this.member.deletedate = this.form.value.deletedate;
       this.member.note = this.form.value.note;
 
-      this.memberService.update(this.member.id, this.member).subscribe(
-        () => {
+      this.memberService
+        .update(this.member.id, this.member)
+        .subscribe(() => {
           this.alertService.success('Member updated', {
             keepAfterRouteChange: true,
           });
 
           this.goBack();
-        }
-      ).add(() => this.loading= false);
+        })
+        .add(() => (this.loading = false));
     }
   }
 

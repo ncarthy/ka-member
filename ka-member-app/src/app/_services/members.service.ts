@@ -148,10 +148,15 @@ export class MembersService {
   }
 
   setLapsedCEMsToFormer(months: number) {
-    return this.http.patch(`${baseUrl}/lapsedcem/${months}`, `{"method": "setToFormer"}`);
+    return this.http.patch(
+      `${baseUrl}/lapsedcem/${months}`,
+      `{"method": "setToFormer"}`
+    );
   }
 
-  getFormerMembersWithRecentPayment(months: number): Observable<MemberSearchResult[]> {
+  getFormerMembersWithRecentPayment(
+    months: number
+  ): Observable<MemberSearchResult[]> {
     return this.http.get(`${baseUrl}/formermember/${months}`).pipe(
       map((response: any) => {
         return <any>response['records'].map((item: any) => {
@@ -172,7 +177,9 @@ export class MembersService {
   }
 
   anonymizeOldFormerMembers(months: number) {
-    return this.http.patch(`${baseUrl}/oldformermember/${months}`, `{"method": "Anonymize"}`);
+    return this.http.patch(
+      `${baseUrl}/oldformermember/${months}`,
+      `{"method": "Anonymize"}`
+    );
   }
-
 }

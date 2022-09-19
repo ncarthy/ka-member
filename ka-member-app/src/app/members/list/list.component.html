@@ -1,14 +1,22 @@
 ﻿<div class="row justify-content-between">
-  <div class="col-sm-6"><h1>{{
-    members && members.length
-  }} Members Found</h1></div>
+  <div class="col-sm-6">
+    <h1>{{ members && members.length }} Members Found</h1>
+  </div>
   <div class="col-sm-2">
-      <button routerLink="/members/add" class="btn btn-sm btn-success m-1 mt-1" *ngIf="user.isAdmin">
-        Add New Member
-      </button>
+    <button
+      routerLink="/members/add"
+      class="btn btn-sm btn-success m-1 mt-1"
+      *ngIf="user.isAdmin"
+    >
+      Add New Member
+    </button>
   </div>
 </div>
-<member-filter (filteredMembers)="membersUpdated($event)" (loading)="filterIsLoading($event)" (filter)="membersFilterUpdated($event)"></member-filter>
+<member-filter
+  (filteredMembers)="membersUpdated($event)"
+  (loading)="filterIsLoading($event)"
+  (filter)="membersFilterUpdated($event)"
+></member-filter>
 <!-- See https://getbootstrap.com/docs/4.0/content/tables/ for explanation of class directives-->
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
@@ -23,14 +31,12 @@
       <th scope="col" class="w-25 d-none d-sm-table-cell">Name</th>
       <th scope="col" class="d-sm-none w-25">Details</th>
       <!-- 'w-10': https://stackoverflow.com/a/37928581' -->
-      <th scope="col" class="d-none d-sm-table-cell">
-        Type
-      </th>
+      <th scope="col" class="d-none d-sm-table-cell">Type</th>
       <th scope="col" class="d-none d-sm-table-cell">Em</th>
       <th scope="col" class="d-none d-sm-table-cell">POH</th>
       <th scope="col" class="d-none d-sm-table-cell">Last Pmt</th>
       <th scope="col" class="d-none d-sm-table-cell w-25">Address</th>
-      <th scope="col" class="w-25" >Actions</th>
+      <th scope="col" class="w-25">Actions</th>
     </tr>
   </thead>
   <tbody>

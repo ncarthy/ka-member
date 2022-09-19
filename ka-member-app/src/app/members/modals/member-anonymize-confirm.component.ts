@@ -22,8 +22,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         All personally identifiable information (names, addresses, emails, phone
         numbers) will be removed from the database.
       </p>
-      <p><span class="text-danger">This operation can not be undone.</span>
-      </p>
+      <p><span class="text-danger">This operation can not be undone.</span></p>
     </div>
     <div class="modal-footer">
       <button

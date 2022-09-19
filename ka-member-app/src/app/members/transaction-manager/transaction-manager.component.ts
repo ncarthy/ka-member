@@ -2,12 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
-import {
-  Member,
-  MembershipStatus,
-  Transaction,
-  User,
-} from '@app/_models';
+import { Member, MembershipStatus, Transaction, User } from '@app/_models';
 import {
   AuthenticationService,
   MemberNameService,

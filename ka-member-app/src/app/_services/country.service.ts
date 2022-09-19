@@ -8,10 +8,9 @@ const baseUrl = `${environment.apiUrl}/country`;
 
 @Injectable({ providedIn: 'root' })
 export class CountryService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getAll() {
-        return this.http.get<Country[]>(baseUrl);
-    }
-
+  getAll() {
+    return this.http.get<Country[]>(baseUrl);
+  }
 }

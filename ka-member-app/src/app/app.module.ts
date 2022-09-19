@@ -17,26 +17,27 @@ import { MembersModule } from './members/members.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        NgbModule,
-        MembersModule,
-        SharedModule
-    ],
-    declarations: [
-        AppComponent,
-        HomeComponent,
-        LoginComponent,    
-    ],
-    providers: [
-        { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    ],
-    bootstrap: [AppComponent]
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    NgbModule,
+    MembersModule,
+    SharedModule,
+  ],
+  declarations: [AppComponent, HomeComponent, LoginComponent],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializer,
+      multi: true,
+      deps: [AuthenticationService],
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

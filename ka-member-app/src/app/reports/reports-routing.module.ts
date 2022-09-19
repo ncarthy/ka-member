@@ -10,36 +10,37 @@ import { MapListComponent } from './map-list';
 import { MemberListComponent } from './member-list';
 import { InvalidEmailsComponent } from './invalid-emails';
 import { InvalidPostcodesComponent } from './invalid-postcodes';
-import {TransactionsSummaryComponent} from './transactions';
+import { TransactionsSummaryComponent } from './transactions';
 
 const routes: Routes = [
-    {
-        path: '', component: ReportsLayoutComponent,
-        children: [
-            { path: '', component: ReportsComponent },
-            { path: 'mailing-list', component: MailingListComponent },
-            { path: 'email-list', component: EmailListComponent },
-            { path: 'no-email-list', component: NoEmailListComponent },
-            { path: 'map-list', component: MapListComponent },
-            { path: 'lapsed/:months', component: MemberListComponent },
-            { path: 'cem', component: MemberListComponent },
-            { path: 'honlife', component: MemberListComponent },
-            { path: 'discount', component: MemberListComponent },
-            { path: 'duplicatepayers', component: MemberListComponent },
-            { path: 'noukaddress', component: MemberListComponent },
-            { path: 'invalidemails', component: InvalidEmailsComponent },
-            { path: 'invalidpostcodes', component: InvalidPostcodesComponent },
-            { path: 'deletedmembers', component: MemberListComponent },
-            { path: 'lapsedcem/:months', component: MemberListComponent },
-            { path: 'formermembers/:months', component: MemberListComponent },
-            { path: 'oldformermembers/:months', component: MemberListComponent },
-            { path: 'transactions', component: TransactionsSummaryComponent },
-        ]
-    }
+  {
+    path: '',
+    component: ReportsLayoutComponent,
+    children: [
+      { path: '', component: ReportsComponent },
+      { path: 'mailing-list', component: MailingListComponent },
+      { path: 'email-list', component: EmailListComponent },
+      { path: 'no-email-list', component: NoEmailListComponent },
+      { path: 'map-list', component: MapListComponent },
+      { path: 'lapsed/:months', component: MemberListComponent },
+      { path: 'cem', component: MemberListComponent },
+      { path: 'honlife', component: MemberListComponent },
+      { path: 'discount', component: MemberListComponent },
+      { path: 'duplicatepayers', component: MemberListComponent },
+      { path: 'noukaddress', component: MemberListComponent },
+      { path: 'invalidemails', component: InvalidEmailsComponent },
+      { path: 'invalidpostcodes', component: InvalidPostcodesComponent },
+      { path: 'deletedmembers', component: MemberListComponent },
+      { path: 'lapsedcem/:months', component: MemberListComponent },
+      { path: 'formermembers/:months', component: MemberListComponent },
+      { path: 'oldformermembers/:months', component: MemberListComponent },
+      { path: 'transactions', component: TransactionsSummaryComponent },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class ReportsRoutingModule { }
+export class ReportsRoutingModule {}

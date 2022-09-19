@@ -9,8 +9,8 @@
   >- {{ member.membershiptype }} -
   <br />
   {{ member.addressfirstline }}<br />
-          {{ member.addresssecondline }}<br *ngIf="member.addresssecondline" />
-          {{ member.postcode }}
+  {{ member.addresssecondline }}<br *ngIf="member.addresssecondline" />
+  {{ member.postcode }}
 </th>
 <td class="d-none d-sm-table-cell">{{ member.membershiptype }}</td>
 <td class="text-center" class="d-none d-sm-table-cell">
@@ -93,12 +93,12 @@
     <span>Subscription</span>
   </button>
   <button
-  routerLink="/members/transactions/{{ member.id }}"
-  class="btn btn-sm btn-secondary mr-1 mb-1"
-  [disabled]="member.isUpdating"
->
-  <span>Payments</span>
-</button>
+    routerLink="/members/transactions/{{ member.id }}"
+    class="btn btn-sm btn-secondary mr-1 mb-1"
+    [disabled]="member.isUpdating"
+  >
+    <span>Payments</span>
+  </button>
   <button
     (click)="anonymizeMember($event)"
     class="btn btn-sm btn-warning mr-1 mb-1"

@@ -1,4 +1,4 @@
-import { Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
@@ -12,9 +12,8 @@ export class MemberFilterService {
   constructor(private http: HttpClient) {}
 
   filter(urlParameters: string): Observable<MemberSearchResult[]> {
-
     const queryUrl = `${environment.apiUrl}/members/filter?${urlParameters}`;
-    
+
     return this.http.get(queryUrl).pipe(
       map((response: any) => {
         return <any>response['records'].map((item: any) => {
@@ -23,5 +22,4 @@ export class MemberFilterService {
       })
     );
   }
-
 }

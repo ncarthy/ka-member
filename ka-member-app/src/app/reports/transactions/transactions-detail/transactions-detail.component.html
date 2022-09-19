@@ -15,17 +15,15 @@
       <th>
         <span class="text-dark">{{ item.date }}</span>
       </th>
-      <td>
-        {{ item.name }}<br />{{ item.businessname }}
-      </td>
+      <td>{{ item.name }}<br />{{ item.businessname }}</td>
       <td class="text-center">
         {{ bankAccounts[item.bankID - 1].name }}
       </td>
       <td class="text-center d-none d-sm-table-cell">
         {{ paymentTypes[item.paymenttypeID - 1].name }}
       </td>
-      <td class="text-center d-none d-sm-table-cell">{{item.note}}</td>
-      <td class="text-center">{{item.amount | number: '1.2-2'}}</td>
+      <td class="text-center d-none d-sm-table-cell">{{ item.note }}</td>
+      <td class="text-center">{{ item.amount | number: "1.2-2" }}</td>
     </tr>
     <tr>
       <td>Total</td>
@@ -36,9 +34,9 @@
       <td class="d-none d-sm-table-cell"></td>
       <td class="d-none d-sm-table-cell"></td>
       <td class="text-center">
-        <strong>£{{total| number: '1.2-2'}}</strong>
+        <strong>£{{ total | number: "1.2-2" }}</strong>
       </td>
-      <td ></td>
+      <td></td>
     </tr>
   </tbody>
 </table>
