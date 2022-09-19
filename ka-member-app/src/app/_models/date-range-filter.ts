@@ -1,22 +1,20 @@
-import {DateFilterType} from './date-filter.enum';
+import { DateFilterType } from './date-filter.enum';
 
 export class DateRange {
-    startDate: string;
-    endDate: string;
+  startDate: string;
+  endDate: string;
 
-    constructor(obj?: any) {
-
-        this.startDate = obj && obj.startDate || null;
-        this.endDate = obj && obj.endDate || null;
-    }
+  constructor(obj?: any) {
+    this.startDate = (obj && obj.startDate) || null;
+    this.endDate = (obj && obj.endDate) || null;
+  }
 }
 
-export class DateRangeFilter extends DateRange{
+export class DateRangeFilter extends DateRange {
+  dateType: DateFilterType;
 
-    dateType: DateFilterType;
-
-    constructor(obj?: any) {
-        super(obj);
-        this.dateType = obj && obj.dateType || null;
-    }
+  constructor(obj?: any) {
+    super(obj);
+    this.dateType = (obj && obj.dateType) || null;
+  }
 }

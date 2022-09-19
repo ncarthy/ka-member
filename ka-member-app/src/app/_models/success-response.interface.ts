@@ -1,4 +1,4 @@
 export interface SuccessResponse {
-    message: string;
-    id?: number
-  }
+  message: string;
+  id?: number;
+}

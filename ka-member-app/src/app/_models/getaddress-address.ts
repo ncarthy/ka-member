@@ -1,4 +1,4 @@
-import { Country } from "./country";
+import { Country } from './country';
 
 /*
 AddressApiResponse holds the object received from https://getaddress.io
@@ -30,26 +30,26 @@ every address in the postcode:
 
 */
 export class GetAddressAddress {
-    line1?: string;    
-    line2?: string;
-    line3?: string;
-    town?: string;
-    county?: string;
-    country: Country = new Country();
-    postcode: string = '';
+  line1?: string;
+  line2?: string;
+  line3?: string;
+  town?: string;
+  county?: string;
+  country: Country = new Country();
+  postcode: string = '';
 
-    // Allow initialization of object even if not all properties are present
-    // From https://stackoverflow.com/a/37682352/6941165
-    public constructor(init?:Partial<GetAddressAddress>) {
-        Object.assign(this, init);
+  // Allow initialization of object even if not all properties are present
+  // From https://stackoverflow.com/a/37682352/6941165
+  public constructor(init?: Partial<GetAddressAddress>) {
+    Object.assign(this, init);
 
-        // Squash line 1 & 2 together and move line 3 to line2
-        // I do this to fit database model
-        if (this.line3) {
-            this.line1+=', ';
-            this.line1!+=this.line2;
-            this.line2 = this.line3!
-            this.line3='';
-        }
+    // Squash line 1 & 2 together and move line 3 to line2
+    // I do this to fit database model
+    if (this.line3) {
+      this.line1 += ', ';
+      this.line1! += this.line2;
+      this.line2 = this.line3!;
+      this.line3 = '';
     }
+  }
 }
