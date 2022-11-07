@@ -80,7 +80,7 @@
         [ngClass]="{ 'is-invalid': submitted && f.amount.errors }"
       />
       <div *ngIf="submitted && f.amount.errors" class="invalid-feedback">
-        <div *ngIf="f.amount.errors.required">Amount is equired</div>
+        <div *ngIf="f.amount.errors.required">Amount is required</div>
       </div>
     </div>
     <div class="input-group mb-1">
