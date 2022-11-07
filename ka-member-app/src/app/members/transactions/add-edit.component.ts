@@ -63,7 +63,8 @@ export class TransactionAddEditComponent
   saving: boolean = false;
   submitted: boolean = false;
 
-  onChange: any = (_: Transaction) => {};
+  // the underscore mean the function will be passed one argument, but that you don't care about it.
+  onChange: any = (_: Transaction) => {}; 
   onTouch: any = () => {};
   user!: User;
   banks?: BankAccount[];
