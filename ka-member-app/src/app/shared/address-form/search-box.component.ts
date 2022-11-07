@@ -72,21 +72,21 @@ export class SearchBoxComponent implements OnInit {
         switchMap((query: string) => this.addressSearchService.search(query))
       )
       // act on the return of the search
-      .subscribe(
-        (results: GetAddressIOAddress[]) => {
+      .subscribe({
+        next: (results: GetAddressIOAddress[]) => {
           // on sucesss
           this.loading.emit(false);
           this.results.emit(results);
         },
-        (err: any) => {
+        error: (err: any) => {
           // on error
           console.log(err);
           this.loading.emit(false);
         },
-        () => {
+        complete: () => {
           // on completion
           this.loading.emit(false);
-        }
-      );
+        },
+      });
   }
 }

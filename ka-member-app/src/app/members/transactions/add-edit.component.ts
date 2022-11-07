@@ -64,7 +64,7 @@ export class TransactionAddEditComponent
   submitted: boolean = false;
 
   // the underscore mean the function will be passed one argument, but that you don't care about it.
-  onChange: any = (_: Transaction) => {}; 
+  onChange: any = (_: Transaction) => {};
   onTouch: any = () => {};
   user!: User;
   banks?: BankAccount[];
@@ -210,19 +210,19 @@ export class TransactionAddEditComponent
   private createTransaction() {
     this.transactionService
       .create(this.transactionForm.value)
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: any) => {
           this.alertService.success('Transaction added', {
             keepAfterRouteChange: false,
           });
         },
-        (error) => {
+        error: (error) => {
           console.log(error);
           this.alertService.error('Unable to add new transaction', {
             keepAfterRouteChange: false,
           });
-        }
-      )
+        },
+      })
       .add(() => {
         this.reloadRequested.emit(this.transactionForm.value);
       });
@@ -235,19 +235,19 @@ export class TransactionAddEditComponent
 
     this.transactionService
       .update(this.transaction.id, this.transactionForm.value)
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: any) => {
           this.alertService.success('Transaction updated', {
             keepAfterRouteChange: false,
           });
         },
-        (error) => {
+        error: (error) => {
           console.log(error);
           this.alertService.error('Unable to update transaction.', {
             keepAfterRouteChange: false,
           });
-        }
-      )
+        },
+      })
       .add(() => {
         this.reloadRequested.emit(this.transaction);
       });

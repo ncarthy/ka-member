@@ -85,19 +85,19 @@ export class MemberRowComponent {
 
     from(this.modalService.open(MemberAnonymizeConfirmModalComponent).result)
       .subscribe((success) => {
-        this.memberService.anonymize(this.member.id).subscribe(
-          (result: any) => {
+        this.memberService.anonymize(this.member.id).subscribe({
+          next: (result: any) => {
             this.alertService.success('Member anonymized', {
               keepAfterRouteChange: true,
             });
             this.member.name = 'Anonymized';
             this.onMemberUpdated.emit(this.member);
           },
-          (error) =>
+          error: (error) =>
             this.alertService.error('Unable to anonymize member.', {
               keepAfterRouteChange: true,
-            })
-        );
+            }),
+        });
       })
       .add(() => (this.member.isUpdating = false));
   }
@@ -149,12 +149,12 @@ export class MemberRowComponent {
     );
 
     from(modalRef.result)
-      .subscribe(
-        (success) => {
+      .subscribe({
+        next: (success) => {
           /* save transaction */
         },
-        (error: any) => {}
-      )
+        error: (error: any) => {},
+      })
       .add(() => (this.member.isUpdating = false));
   }
 

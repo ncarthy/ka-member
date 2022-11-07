@@ -167,19 +167,19 @@ export class MemberListComponent implements OnInit {
 
     this.memberService
       .setToFormer(member.id)
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: any) => {
           this.alertService.success("Member set to 'Former Member'", {
             keepAfterRouteChange: true,
           });
 
           this.members = this.members?.filter((x) => x.id !== member.id);
         },
-        (error) =>
+        error: (error) =>
           this.alertService.error(`Unable to set to 'Former Member'`, {
             keepAfterRouteChange: true,
-          })
-      )
+          }),
+      })
       .add(() => (member.isUpdating = false));
 
     return false; // don't let click event propagate
@@ -191,8 +191,8 @@ export class MemberListComponent implements OnInit {
     const months = this.route.snapshot.params['months'];
     if (!months) return;
 
-    this.membersService.setLapsedCEMsToFormer(months).subscribe(
-      (result: any) => {
+    this.membersService.setLapsedCEMsToFormer(months).subscribe({
+      next: (result: any) => {
         this.alertService.success(
           result.count + " Members set to 'Former Member'",
           {
@@ -201,11 +201,11 @@ export class MemberListComponent implements OnInit {
         );
         this.location.back();
       },
-      (error) =>
+      error: (error) =>
         this.alertService.error(`Unable to set to 'Former Member'`, {
           keepAfterRouteChange: true,
-        })
-    );
+        }),
+    });
 
     return false; // don't let click event propagate
   }
@@ -217,19 +217,19 @@ export class MemberListComponent implements OnInit {
 
     this.memberService
       .anonymize(member.id)
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: any) => {
           this.alertService.success('Member anonymized', {
             keepAfterRouteChange: true,
           });
 
           this.members = this.members?.filter((x) => x.id !== member.id);
         },
-        (error) =>
+        error: (error) =>
           this.alertService.error(`Unable to anonymize member`, {
             keepAfterRouteChange: true,
-          })
-      )
+          }),
+      })
       .add(() => (member.isUpdating = false));
 
     return false; // don't let click event propagate
@@ -241,18 +241,18 @@ export class MemberListComponent implements OnInit {
     const months = this.route.snapshot.params['months'];
     if (!months) return;
 
-    this.membersService.anonymizeOldFormerMembers(months).subscribe(
-      (result: any) => {
+    this.membersService.anonymizeOldFormerMembers(months).subscribe({
+      next: (result: any) => {
         this.alertService.success(result.count + ' Members anonymized', {
           keepAfterRouteChange: true,
         });
         this.location.back();
       },
-      (error) =>
+      error: (error) =>
         this.alertService.error(`Unable to anonymize old former members`, {
           keepAfterRouteChange: true,
-        })
-    );
+        }),
+    });
 
     return false; // don't let click event propagate
   }
@@ -264,19 +264,19 @@ export class MemberListComponent implements OnInit {
 
     this.memberService
       .delete(member.id)
-      .subscribe(
-        (result: any) => {
+      .subscribe({
+        next: (result: any) => {
           this.alertService.success('Member deleted', {
             keepAfterRouteChange: true,
           });
 
           this.members = this.members?.filter((x) => x.id !== member.id);
         },
-        (error) =>
+        error: (error) =>
           this.alertService.error(`Unable to delete member`, {
             keepAfterRouteChange: true,
-          })
-      )
+          }),
+      })
       .add(() => (member.isDeleting = false));
 
     return false; // don't let click event propagate
@@ -290,8 +290,8 @@ export class MemberListComponent implements OnInit {
     });
     modalRef.componentInstance.member = member;
 
-    from(modalRef.result).subscribe(
-      (success) => {
+    from(modalRef.result).subscribe({
+      next: (success) => {
         this.memberService
           .setReminderDate(member.id)
           .subscribe((response: any) => {
@@ -301,14 +301,14 @@ export class MemberListComponent implements OnInit {
           keepAfterRouteChange: true,
         });
       },
-      (error: any) => {
+      error: (error: any) => {
         if (error == 'Fail') {
           this.alertService.error(`Unable to send email`, {
             keepAfterRouteChange: true,
           });
         }
-      }
-    );
+      },
+    });
 
     return false; // don't let click event propagate
   }
@@ -322,20 +322,20 @@ export class MemberListComponent implements OnInit {
     modalRef.componentInstance.member = member;
     modalRef.componentInstance.email_type = EmailTypeEnum.SWITCH_TO_GOCARDLESS;
 
-    from(modalRef.result).subscribe(
-      (success) => {
+    from(modalRef.result).subscribe({
+      next: (success) => {
         this.alertService.success(`Email sent.`, {
           keepAfterRouteChange: true,
         });
       },
-      (error: any) => {
+      error: (error: any) => {
         if (error == 'Fail') {
           this.alertService.error(`Unable to send email`, {
             keepAfterRouteChange: true,
           });
         }
-      }
-    );
+      },
+    });
 
     return false; // don't let click event propagate
   }

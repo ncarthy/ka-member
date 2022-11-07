@@ -91,22 +91,22 @@ export class TransactionRowComponent implements OnInit {
     this.transaction.isUpdating = true;
     this.transactionService
       .update(this.transaction.id, this.transaction)
-      .subscribe(
-        (result) => {
+      .subscribe({
+        next: (result) => {
           this.alertService.success('Transaction Updated', {
             keepAfterRouteChange: false,
           });
           this.onTransactionUpdated.emit(this.transaction);
         },
-        (error: any) =>
+        error: (error: any) =>
           this.alertService.error('Transaction not Updated', {
             keepAfterRouteChange: false,
           }),
-        () => {
+        complete: () => {
           this.showSaveButton = false;
           this.transaction.isUpdating = false;
-        }
-      );
+        },
+      });
   }
 
   onTransactionDelete() {
