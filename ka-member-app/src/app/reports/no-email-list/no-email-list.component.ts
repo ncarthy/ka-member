@@ -38,7 +38,7 @@ export class NoEmailListComponent implements OnInit, OnChanges {
 
       // Exclude the id and country properties from what will be outputted to CSV
       this.members.forEach((element) => {
-        const { id, countryID, ...csvMember } = element;
+        const { id, countryID, ...csvMember } = element; // '...' is JS spread syntax
         csvMember.country = ''; // blank country
         this.csvMembers.push(csvMember);
       });
@@ -58,7 +58,7 @@ export class NoEmailListComponent implements OnInit, OnChanges {
 
       this.csvMembers = new Array();
       this.members.forEach((element) => {
-        const { id, countryID, ...csvMember } = element;
+        const { id, countryID, ...csvMember } = element; // '...' is JS spread syntax
         csvMember.country = ''; // blank country
         this.csvMembers.push(csvMember);
       });
@@ -81,7 +81,7 @@ export class NoEmailListComponent implements OnInit, OnChanges {
       useTextFile: false,
       useBom: true,
       useKeysAsHeaders: true,
-      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+      // headers: ['Column 1', 'Column 2', etc.] <-- Won't work with useKeysAsHeaders present!
     };
 
     const csvExporter = new ExportToCsv(options);

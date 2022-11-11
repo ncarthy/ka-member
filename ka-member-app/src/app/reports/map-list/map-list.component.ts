@@ -53,7 +53,7 @@ export class MapListComponent implements OnInit {
         const obs = memberAddresses.map((x) => {
           return of(x);
         });
-        return merge(...obs);
+        return merge(...obs); // '...' is JS spread syntax
       })
     );
   }

@@ -36,7 +36,7 @@ export class MemberNameService {
         const obs = names.map((x) => {
           return of(this.concatName(x));
         });
-        return merge(...obs);
+        return merge(...obs); // '...' is JS spread syntax
       })
     );
   }
@@ -52,7 +52,7 @@ export class MemberNameService {
         const obs = names.map((x) => {
           return of(this.concatName(x));
         });
-        return merge(...obs);
+        return merge(...obs); // '...' is JS spread syntax
       })
     );
     return x$.pipe(

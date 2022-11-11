@@ -77,7 +77,7 @@ export class EmailListComponent implements OnInit, OnChanges {
       useTextFile: false,
       useBom: true,
       useKeysAsHeaders: false,
-      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+      // headers: ['Column 1', 'Column 2', etc.] <-- Won't work with useKeysAsHeaders present!
     };
 
     const csvExporter = new ExportToCsv(options);
