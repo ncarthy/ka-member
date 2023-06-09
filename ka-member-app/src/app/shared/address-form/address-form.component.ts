@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
+  FormGroup,
   UntypedFormBuilder,
   NG_VALUE_ACCESSOR, // Example: https://github.com/xiongemi/angular-form-ngxs/
   Validators,
@@ -45,16 +46,7 @@ export class AddressFormComponent
   submitted: boolean = false;
   showFormFields: boolean = false;
 
-  addressForm = this.fb.group({
-    addressfirstline: [null, Validators.required],
-    addresssecondline: [null],
-    city: [null, Validators.required],
-    county: [null],
-    country: [null, Validators.required],
-    postcode: [null, Validators.required],
-    lat: [null],
-    lng: [null],
-  });
+  addressForm!: FormGroup<any>;
 
   private subscription = new Subscription();
 
@@ -70,6 +62,17 @@ export class AddressFormComponent
   }
 
   ngOnInit(): void {
+    this.addressForm = this.fb.group({
+      addressfirstline: [null, Validators.required],
+      addresssecondline: [null],
+      city: [null, Validators.required],
+      county: [null],
+      country: [null, Validators.required],
+      postcode: [null, Validators.required],
+      lat: [null],
+      lng: [null],
+    });
+
     this.countryService.getAll().subscribe((countryArray) => {
       this.countries = countryArray;
       this.uk = countryArray.filter(

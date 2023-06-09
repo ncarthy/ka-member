@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormBuilder,
+  FormGroup,
   UntypedFormBuilder,
   NG_VALUE_ACCESSOR, // Example: https://github.com/xiongemi/angular-form-ngxs/
   Validators,
@@ -72,14 +72,7 @@ export class TransactionAddEditComponent
 
   private subscription = new Subscription();
 
-  transactionForm = this.fb.group({
-    date: [null, Validators.required],
-    amount: [null, [Validators.required]],
-    paymenttypeID: [null, [Validators.required]],
-    bankID: [null, [Validators.required]],
-    note: [null],
-    idmember: [null, Validators.required],
-  });
+  transactionForm!: FormGroup<any>;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -96,6 +89,15 @@ export class TransactionAddEditComponent
   ngOnInit(): void {
     this.loading = true;
     this.formMode = FormMode.Add;
+
+    this.transactionForm = this.fb.group({
+      date: [null, Validators.required],
+      amount: [null, [Validators.required]],
+      paymenttypeID: [null, [Validators.required]],
+      bankID: [null, [Validators.required]],
+      note: [null],
+      idmember: [null, Validators.required],
+    });
 
     this.bankAccountService
       .getAll()

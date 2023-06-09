@@ -1,4 +1,4 @@
 ﻿import { Component } from '@angular/core';
 
-@Component({ templateUrl: 'layout.component.html' })
+@Component({ selector: 'reports-layout-component', templateUrl: 'layout.component.html' })
 export class ReportsLayoutComponent {}

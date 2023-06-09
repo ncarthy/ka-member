@@ -3,6 +3,7 @@ import { MemberInvalidEmail } from '@app/_models';
 import { MembersService } from '@app/_services';
 
 @Component({
+  selector: 'invalid-emails-component',
   templateUrl: './invalid-emails.component.html',
 })
 export class InvalidEmailsComponent implements OnInit {
