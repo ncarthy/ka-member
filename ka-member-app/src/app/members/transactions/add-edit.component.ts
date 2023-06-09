@@ -193,7 +193,9 @@ export class TransactionAddEditComponent
     this.submitted = false;
     this.formMode = FormMode.Add;
     this.alertService.clear();
-    this.transactionForm.reset();
+    if (this.transactionForm) {
+      this.transactionForm.reset();
+    }
     if (this.member) {
       this.f['idmember'].setValue(this.member.id);
     }
