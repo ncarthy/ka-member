@@ -16,13 +16,14 @@ class MemberFilter{
     }
 
     private $tablename = '_Members';
+    private $copytablename = '_Members_Copy';
 
     /* rest the filter for this user */
     public function reset(){
 
-        $this->dropTemporaryMemberTable($this->tablename);
+        $this->dropTemporaryMemberTables();
 
-        $this->createTemporaryMemberTable($this->tablename);        
+        $this->createTemporaryMemberTable();        
     }
 
 
@@ -39,8 +40,8 @@ class MemberFilter{
     /* This is a giant query because I cannot use views with prepared statements */
     public function execute() {
 
-        $query = "SELECT temp.idmember, temp.expirydate,temp.joindate,temp.reminderdate,
-                        temp.updatedate,temp.deletedate, temp.lasttransactiondate,
+        $query = "SELECT temp.idmember, `m`.expirydate,`m`.joindate,`m`.reminderdate,
+                        `m`.updatedate,`m`.deletedate, temp.lasttransactiondate,
                         IFNULL(`m`.`membership_fee`,
                             `ms`.`membershipfee`) AS `membershipfee`,
                         IFNULL(GROUP_CONCAT( CONCAT(CASE
@@ -149,6 +150,7 @@ class MemberFilter{
                     "bankaccount" => $bankaccount,
                     "lasttransactiondate" => $lasttransactiondate,
                     "email" => $email1,
+                    "email2" => $email2,
                     "postonhold" => $postonhold?true:false,
                 );
         
@@ -169,14 +171,16 @@ class MemberFilter{
     */
 
     public function setSurname($surname){      
-        $query = " DELETE FROM " . $this->tablename . "
-        WHERE idmember NOT IN (
-            SELECT DISTINCT(M.idmember) FROM _Members M
+        $this->createCopyOfTemporaryMemberTable();
+        $query = "DELETE FROM " . $this->tablename . "
+            WHERE idmember NOT IN (
+            SELECT DISTINCT(M.idmember) FROM " . $this->copytablename . " M
             JOIN member m ON M.idmember = m.idmember
             LEFT JOIN membername mn ON m.idmember = mn.member_idmember
             WHERE mn.surname LIKE :param AND mn.surname IS NOT NULL
         );";
         $this->executeDeleteStringParam($surname, $query);        
+        $this->dropCopyOfTemporaryMemberTable();
     }
     public function setNotSurname($surname){      
         $query = " DELETE M
@@ -196,10 +200,11 @@ class MemberFilter{
         $this->executeDeleteStringParam($businessname, $query);        
     }
 
-    public function setBusinessOrSurname($name){    
+    public function setBusinessOrSurname($name){  
+        $this->createCopyOfTemporaryMemberTable();  
         $query = " DELETE FROM " . $this->tablename . "
         WHERE idmember NOT IN (
-            SELECT DISTINCT(M.idmember) FROM _Members M
+            SELECT DISTINCT(M.idmember) FROM " . $this->copytablename . " M
             JOIN member m ON M.idmember = m.idmember
             LEFT JOIN membername mn ON m.idmember = mn.member_idmember
             WHERE m.businessname LIKE :param1 OR 
@@ -211,6 +216,7 @@ class MemberFilter{
         $stmt->bindParam (":param1", $param_clean, PDO::PARAM_STR);
         $stmt->bindParam (":param2", $param_clean, PDO::PARAM_STR);
         $stmt->execute();
+        $this->dropCopyOfTemporaryMemberTable();
     }
 
     public function setMemberTypeID($membertypeID){      
@@ -260,10 +266,11 @@ class MemberFilter{
         $stmt->execute();    
     }
 
-    public function setEmail($email){    
+    public function setEmail($email){   
+        $this->createCopyOfTemporaryMemberTable(); 
         $query = " DELETE FROM " . $this->tablename . "
         WHERE idmember NOT IN (
-            SELECT DISTINCT(M.idmember) FROM _Members M
+            SELECT DISTINCT(M.idmember) FROM " . $this->copytablename . " M
             JOIN member m ON M.idmember = m.idmember
             WHERE (m.email1 IS NOT NULL AND m.email1 LIKE :param1) OR 
                 (m.email2 IS NOT NULL AND m.email2 LIKE :param2)
@@ -274,6 +281,7 @@ class MemberFilter{
         $stmt->bindParam (":param1", $param_clean, PDO::PARAM_STR);
         $stmt->bindParam (":param2", $param_clean, PDO::PARAM_STR);
         $stmt->execute();
+        $this->dropCopyOfTemporaryMemberTable();
     }
 
     public function setPaymentTypeID($paymenttypeid){      
@@ -447,12 +455,14 @@ class MemberFilter{
         $stmt->execute();       
     }
 
-        /* DROP the given temporary table */
-      private function dropTemporaryMemberTable($tablename){
+        /* DROP the temporary tables */
+      private function dropTemporaryMemberTables(){
 
-        $query = "DROP TEMPORARY TABLE IF EXISTS `".$tablename."`;";
+        $query = "DROP TEMPORARY TABLE IF EXISTS `".$this->tablename."`;";
         $stmt = $this->conn->prepare($query);  
         $stmt->execute();  
+
+        $this->dropCopyOfTemporaryMemberTable();
     }
 
     /* Create a list of ALL members in the database and with following additional columns:
@@ -464,9 +474,9 @@ class MemberFilter{
     This list of all memberIDs is then whittled down by application of filters until only
     the required members are left. Then a new join is done with this reduced list and the 
     results resturned to the app. */
-    private function createTemporaryMemberTable($tablename){
+    private function createTemporaryMemberTable(){
 
-        $query = "CREATE TEMPORARY TABLE IF NOT EXISTS `".$tablename."` ENGINE=MEMORY AS ( 
+        $query = "CREATE TEMPORARY TABLE IF NOT EXISTS `" . $this->tablename . "` ENGINE=MEMORY AS ( 
                         SELECT `idmember`, deletedate, joindate, expirydate,
                         reminderdate, updatedate, membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
@@ -478,7 +488,7 @@ class MemberFilter{
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
-        $query = "UPDATE `".$tablename."` M, transaction T
+        $query = "UPDATE `" . $this->tablename . "` M, transaction T
                         SET M.lasttransactionid = T.idtransaction,
                             M.paymenttypeID = T.paymenttypeID,
                             M.bankaccountID = T.bankID
@@ -486,6 +496,20 @@ class MemberFilter{
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
+    }
+
+    private function createCopyOfTemporaryMemberTable(){
+
+        $query = "CREATE TEMPORARY TABLE `" . $this->copytablename . "` AS SELECT * FROM `" . $this->tablename . "`;";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+    }
+    private function dropCopyOfTemporaryMemberTable(){
+
+        $query = "DROP TEMPORARY TABLE IF EXISTS `".$this->copytablename."`;";
+        $stmt = $this->conn->prepare($query);  
+        $stmt->execute(); 
+
     }
 
     public function anonymize()

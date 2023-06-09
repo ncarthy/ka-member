@@ -256,8 +256,7 @@ class Member{
                     membership_idmembership=:statusID, 
                     expirydate=:expirydate, 
                     joindate=:joindate, 
-                    reminderdate=:reminderdate,
-                    updatedate=:updatedate, 
+                    reminderdate=:reminderdate, 
                     deletedate=:deletedate, 
                     repeatpayment=:repeatpayment, 
                     recurringpayment=:recurringpayment, 
@@ -314,7 +313,6 @@ class Member{
         $stmt->bindParam(":expirydate", $this->expirydate);
         $stmt->bindParam(":joindate", $this->joindate);
         $stmt->bindParam(":reminderdate", $this->reminderdate);
-        $stmt->bindParam(":updatedate", $this->updatedate);
         $stmt->bindParam(":deletedate", $this->deletedate);
         $stmt->bindParam(":repeatpayment", $this->repeatpayment);
         $stmt->bindParam(":recurringpayment", $this->recurringpayment);
@@ -374,7 +372,6 @@ class Member{
                     expirydate=:expirydate, 
                     joindate=:joindate, 
                     reminderdate=:reminderdate,
-                    updatedate=:updatedate, 
                     deletedate=:deletedate, 
                     repeatpayment=:repeatpayment, 
                     recurringpayment=:recurringpayment, 
@@ -432,7 +429,6 @@ class Member{
         $stmt->bindParam(":expirydate", $this->expirydate);
         $stmt->bindParam(":joindate", $this->joindate);
         $stmt->bindParam(":reminderdate", $this->reminderdate);
-        $stmt->bindParam(":updatedate", $this->updatedate);
         $stmt->bindParam(":deletedate", $this->deletedate);
         $stmt->bindParam(":repeatpayment", $this->repeatpayment);
         $stmt->bindParam(":recurringpayment", $this->recurringpayment);
@@ -498,7 +494,6 @@ class Member{
                     country2ID=NULL, 
                     email2='', 
                     phone2='', 
-                    updatedate= NULL, 
                     username=:username,
                     gpslat1=NULL,                  
                     gpslat2=NULL,
@@ -534,7 +529,6 @@ class Member{
                     " . $this->table_name . "
                     SET `membership_idmembership` = 
                         (SELECT idmembership FROM `membershipstatus` WHERE name LIKE 'former%'),
-                        updatedate= NULL, 
                         deletedate=CASE WHEN deletedate IS NULL THEN CURDATE() ELSE deletedate END,
                         username=:username  
                     WHERE idmember=:id; ";
@@ -564,8 +558,7 @@ class Member{
 
         $query = "UPDATE
                     " . $this->table_name . "
-                    SET reminderdate=CURDATE(),
-                        updatedate= NULL,                         
+                    SET reminderdate=CURDATE(),                        
                         username=:username  
                     WHERE idmember=:id; ";
         
@@ -605,8 +598,7 @@ class Member{
                 $this->gpslng1 = $lng;
             }
             
-            $query .= "     updatedate= NULL, 
-                            username=:username  
+            $query .= "     username=:username  
                         WHERE idmember=:id; ";
             
             // prepare query
@@ -695,7 +687,6 @@ class Member{
         $this->expirydate=htmlspecialchars(strip_tags($this->expirydate));
         $this->joindate=htmlspecialchars(strip_tags($this->joindate));
         $this->reminderdate=htmlspecialchars(strip_tags($this->reminderdate));
-        $this->updatedate=htmlspecialchars(strip_tags($this->updatedate));
         $this->deletedate=htmlspecialchars(strip_tags($this->deletedate));
         $this->repeatpayment=htmlspecialchars(strip_tags($this->repeatpayment));
         $this->recurringpayment=htmlspecialchars(strip_tags($this->recurringpayment));
@@ -707,7 +698,6 @@ class Member{
         $this->expirydate = !empty($this->expirydate) ? $this->expirydate : NULL;
         $this->joindate = !empty($this->joindate) ? $this->joindate : NULL;
         $this->reminderdate = !empty($this->reminderdate) ? $this->reminderdate : NULL;
-        $this->updatedate = !empty($this->updatedate) ? $this->updatedate : NULL;
         $this->deletedate = !empty($this->deletedate) ? $this->deletedate : NULL;        
         $this->countryID = !empty($this->countryID) ? $this->countryID : NULL;
         $this->country2ID = !empty($this->country2ID) ? $this->country2ID : NULL;
