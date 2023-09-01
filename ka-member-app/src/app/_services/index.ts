@@ -4,6 +4,7 @@ export * from './bank-account.service';
 export * from './authentication.service';
 export * from './country.service';
 export * from './email.service';
+export * from './export-to-csv.service';
 export * from './geocode.service';
 export * from './member-filter.service';
 export * from './member-name.service';

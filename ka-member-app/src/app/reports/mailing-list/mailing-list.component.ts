@@ -7,8 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { ExportToCsv } from 'ts-export-to-csv';
-import { MembersService } from '@app/_services';
+import { ExportToCsvService, MembersService } from '@app/_services';
 
 @Component({
   selector: 'mailing-list',
@@ -22,7 +21,8 @@ export class MailingListComponent implements OnInit, OnChanges {
   csvMembers: any[] = new Array();
   loading: boolean = false;
 
-  constructor(private membersService: MembersService) {}
+  constructor(private membersService: MembersService,
+    private exportToCsvService: ExportToCsvService) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -65,27 +65,18 @@ export class MailingListComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+  * Output the id of a selected member
+  */
   memberSelected(member_address: any) {
     this.idSelected.emit(member_address.id);
+    this.exportToCsvService.exportToCSV(member_address);
   }
 
+  /**
+  * Export the csvMembers array to a CSV file
+  */
   exportToCSV(): void {
-    //From https://www.npmjs.com/package/export-to-csv
-    const options = {
-      fieldSeparator: ',',
-      //quoteStrings: '"',
-      decimalSeparator: '.',
-      showLabels: false,
-      showTitle: false,
-      title: 'My Awesome CSV',
-      useTextFile: false,
-      useBom: true,
-      useKeysAsHeaders: true,
-      // headers: ['Column 1', 'Column 2', etc.] <-- Won't work with useKeysAsHeaders present!
-    };
-
-    const csvExporter = new ExportToCsv(options);
-
-    csvExporter.generateCsv(this.csvMembers);
+    this.exportToCsvService.exportToCSV(this.csvMembers);
   }
 }
