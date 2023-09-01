@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {} from 'googlemaps';
-
 import { Address } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
@@ -13,17 +11,17 @@ export class GeocodeService {
   }
 
   geocode(address: Address): Observable<Address> {
-    return new Observable((observer) =>
+    return new Observable((observer) => {
       this.geocoder.geocode(
         { address: address.toString() },
         (
-          results: google.maps.GeocoderResult[],
+          results: google.maps.GeocoderResult[] | null,
           status: google.maps.GeocoderStatus
         ) => {
-          if ((status = google.maps.GeocoderStatus.OK)) {
-            let ll = results[0].geometry.location;
-            address.lat = ll.lat();
-            address.lng = ll.lng();
+          if ((status == google.maps.GeocoderStatus.OK && results && results[0])) {
+            let location = results[0].geometry.location;
+            address.lat = location.lat();
+            address.lng = location.lng();
           } else {
             console.log(
               'Geocode was not successful: ' +
@@ -35,6 +33,6 @@ export class GeocodeService {
           observer.next(address);
         }
       )
-    );
+    });
   }
 }

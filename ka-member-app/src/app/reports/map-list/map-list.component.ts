@@ -1,12 +1,10 @@
 import {
   Component,
-  AfterViewInit,
   ViewChild,
   ElementRef,
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {} from 'googlemaps';
 import { MembersService } from '@app/_services';
 import { map, switchMap } from 'rxjs/operators';
 import { Address } from '@app/_models';
@@ -156,13 +154,16 @@ export class MapListComponent implements OnInit {
   }
 
   drawCircleOnDragend(event: google.maps.MapMouseEvent) {
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
-    const radius = parseInt(this.f.radius.value);
+    if (event.latLng) {      
 
-    this.replaceCircle(lat, lng, radius);
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
+      const radius = parseInt(this.f.radius.value);
 
-    this.map.setCenter(event.latLng);
+      this.replaceCircle(lat, lng, radius);
+
+      this.map.setCenter(event.latLng);
+    }
   }
 
   replaceCircle(lat: number, lng: number, radius: number) {
@@ -191,7 +192,7 @@ export class MapListComponent implements OnInit {
           });
         }
       } else if (
-        (element[1].getIcon() as google.maps.ReadonlySymbol).strokeColor !=
+        (element[1].getIcon() as google.maps.Symbol).strokeColor !=
         'grey'
       ) {
         element[1].setIcon({
@@ -204,8 +205,11 @@ export class MapListComponent implements OnInit {
   }
 
   onRadiusChange(radius: number | string) {
-    let centre: google.maps.LatLng = this.circle.getCenter();
-    this.replaceCircle(centre.lat(), centre.lng(), parseInt(radius.toString()));
+    let centre: google.maps.LatLng = this.circle.getCenter()!;
+    if (centre) {
+      this.replaceCircle(centre.lat(), 
+              centre.lng(), parseInt(radius.toString()));
+    }
   }
 
   onIdSelected(idmember: number) {
