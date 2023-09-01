@@ -15,7 +15,7 @@ import { map, filter, debounceTime, tap, switchMap } from 'rxjs/operators';
 import { postcodeRegex } from '../regexes.const';
 
 import { AddressSearchService } from '@app/_services';
-import { Address, GetAddressIOAddress } from '@app/_models';
+import { GetAddressIOAddress } from '@app/_models';
 
 @Component({
   selector: 'address-search-box',
@@ -43,13 +43,13 @@ export class SearchBoxComponent implements OnInit {
 
   constructor(
     private addressSearchService: AddressSearchService,
-    private el: ElementRef
+    private el: ElementRef,
   ) {}
 
-  // Create an observable from the stream of characters being entered in the search box
-  // and convert those values into an array of MemberSearchResult objects
-
-  // See https://rxjs-dev.firebaseapp.com/guide/v6/migration for pipe format.
+  /**
+   * Create an observable from the stream of characters being entered in the search box
+   * and convert those values into an array of GetAddressIOAddress objects
+   */
   ngOnInit(): void {
     if (this.disable) {
       return;
@@ -69,7 +69,7 @@ export class SearchBoxComponent implements OnInit {
         tap((query: string) => this.loading.emit(true)), // enable loading
 
         // search, discarding old events if new input comes in
-        switchMap((query: string) => this.addressSearchService.search(query))
+        switchMap((query: string) => this.addressSearchService.search(query)),
       )
       // act on the return of the search
       .subscribe({

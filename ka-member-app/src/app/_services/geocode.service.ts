@@ -16,9 +16,13 @@ export class GeocodeService {
         { address: address.toString() },
         (
           results: google.maps.GeocoderResult[] | null,
-          status: google.maps.GeocoderStatus
+          status: google.maps.GeocoderStatus,
         ) => {
-          if ((status == google.maps.GeocoderStatus.OK && results && results[0])) {
+          if (
+            status == google.maps.GeocoderStatus.OK &&
+            results &&
+            results[0]
+          ) {
             let location = results[0].geometry.location;
             address.lat = location.lat();
             address.lng = location.lng();
@@ -27,12 +31,12 @@ export class GeocodeService {
               'Geocode was not successful: ' +
                 status +
                 ', idmember=' +
-                address.idmember
+                address.idmember,
             );
           }
           observer.next(address);
-        }
-      )
+        },
+      );
     });
   }
 }

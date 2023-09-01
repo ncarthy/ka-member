@@ -1,9 +1,4 @@
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  OnInit,
-} from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MembersService } from '@app/_services';
 import { map, switchMap } from 'rxjs/operators';
@@ -41,7 +36,7 @@ export class MapListComponent implements OnInit {
 
   constructor(
     private membersService: MembersService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.geocoder = new google.maps.Geocoder();
 
@@ -52,7 +47,7 @@ export class MapListComponent implements OnInit {
           return of(x);
         });
         return merge(...obs); // '...' is JS spread syntax
-      })
+      }),
     );
   }
 
@@ -92,7 +87,7 @@ export class MapListComponent implements OnInit {
     google.maps.event.addListener(
       this.mapCentreMarker,
       'dragend',
-      (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event)
+      (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event),
     );
     this.mapCentreMarker.setMap(this.map);
 
@@ -118,7 +113,7 @@ export class MapListComponent implements OnInit {
           if (!pos) return;
           let d = this.ruler.distance(
             [pos.lng(), pos.lat()],
-            [this.lng, this.lat]
+            [this.lng, this.lat],
           );
           if (d <= radius) {
             ids.push(address.idmember);
@@ -128,7 +123,7 @@ export class MapListComponent implements OnInit {
           }
           m.setMap(this.map);
           this.markers.push([address.idmember, m]);
-        })
+        }),
       )
       .subscribe()
       .add(() => {
@@ -154,8 +149,7 @@ export class MapListComponent implements OnInit {
   }
 
   drawCircleOnDragend(event: google.maps.MapMouseEvent) {
-    if (event.latLng) {      
-
+    if (event.latLng) {
       const lat = event.latLng.lat();
       const lng = event.latLng.lng();
       const radius = parseInt(this.f.radius.value);
@@ -192,8 +186,7 @@ export class MapListComponent implements OnInit {
           });
         }
       } else if (
-        (element[1].getIcon() as google.maps.Symbol).strokeColor !=
-        'grey'
+        (element[1].getIcon() as google.maps.Symbol).strokeColor != 'grey'
       ) {
         element[1].setIcon({
           path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
@@ -207,8 +200,11 @@ export class MapListComponent implements OnInit {
   onRadiusChange(radius: number | string) {
     let centre: google.maps.LatLng = this.circle.getCenter()!;
     if (centre) {
-      this.replaceCircle(centre.lat(), 
-              centre.lng(), parseInt(radius.toString()));
+      this.replaceCircle(
+        centre.lat(),
+        centre.lng(),
+        parseInt(radius.toString()),
+      );
     }
   }
 

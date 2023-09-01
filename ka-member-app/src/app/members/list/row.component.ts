@@ -39,7 +39,7 @@ export class MemberRowComponent {
     private memberService: MemberService,
     private alertService: AlertService,
     private modalService: NgbModal,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
   ) {
     this.onMemberDeleted = new EventEmitter();
     this.onMemberUpdated = new EventEmitter();
@@ -54,7 +54,7 @@ export class MemberRowComponent {
     this.member.isDeleting = true;
 
     from(
-      this.modalService.open(MemberDeleteConfirmModalComponent).result
+      this.modalService.open(MemberDeleteConfirmModalComponent).result,
     ).subscribe(
       (success) => {
         this.memberService.delete(this.member.id).subscribe(
@@ -67,12 +67,12 @@ export class MemberRowComponent {
           (error) =>
             this.alertService.error('Unable to delete member.', {
               keepAfterRouteChange: true,
-            })
+            }),
         );
       },
       (error) => {
         this.member.isDeleting = false;
-      }
+      },
     );
   }
 
@@ -126,7 +126,7 @@ export class MemberRowComponent {
         (error) =>
           this.alertService.error(`Unable to set to 'Former Member'`, {
             keepAfterRouteChange: true,
-          })
+          }),
       )
       .add(() => (this.member.isUpdating = false));
   }
@@ -145,7 +145,7 @@ export class MemberRowComponent {
         // Convert date to UK format
         const d = new Date(receivedTransaction.date);
         this.member.lasttransactiondate = d.toLocaleDateString('en-GB');
-      }
+      },
     );
 
     from(modalRef.result)

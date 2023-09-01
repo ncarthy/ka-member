@@ -45,14 +45,14 @@ export class MemberService {
   setPrimaryGeometry(id: number, lat: number, lng: number) {
     return this.http.patch(
       `${baseUrl}/${id}`,
-      `{"method": "setPrimaryGeometry", "gpslat":${lat}, "gpslng":${lng} }`
+      `{"method": "setPrimaryGeometry", "gpslat":${lat}, "gpslng":${lng} }`,
     );
   }
 
   setSecondaryGeometry(id: number, lat: number, lng: number) {
     return this.http.patch(
       `${baseUrl}/${id}`,
-      `{"method": "setSecondaryGeometry", "gpslat":${lat}, "gpslng":${lng} }`
+      `{"method": "setSecondaryGeometry", "gpslat":${lat}, "gpslng":${lng} }`,
     );
   }
 }

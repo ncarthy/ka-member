@@ -45,7 +45,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new Address(item);
         });
-      })
+      }),
     );
   }
 
@@ -57,7 +57,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -67,7 +67,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -77,7 +77,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -87,7 +87,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -97,7 +97,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -107,7 +107,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -117,7 +117,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberInvalidEmail(item);
         });
-      })
+      }),
     );
   }
 
@@ -127,7 +127,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberInvalidPostcode(item);
         });
-      })
+      }),
     );
   }
 
@@ -137,7 +137,7 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -147,26 +147,26 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
   setLapsedCEMsToFormer(months: number) {
     return this.http.patch(
       `${baseUrl}/lapsedcem/${months}`,
-      `{"method": "setToFormer"}`
+      `{"method": "setToFormer"}`,
     );
   }
 
   getFormerMembersWithRecentPayment(
-    months: number
+    months: number,
   ): Observable<MemberSearchResult[]> {
     return this.http.get(`${baseUrl}/formermember/${months}`).pipe(
       map((response: any) => {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
@@ -176,14 +176,14 @@ export class MembersService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 
   anonymizeOldFormerMembers(months: number) {
     return this.http.patch(
       `${baseUrl}/oldformermember/${months}`,
-      `{"method": "Anonymize"}`
+      `{"method": "Anonymize"}`,
     );
   }
 }

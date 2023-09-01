@@ -35,7 +35,7 @@ export class EmailClientComponent implements OnInit {
     private formBuilder: FormBuilder,
     private memberService: MemberService,
     private emailService: EmailService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {
     this.loading = true;
     this.form = this.formBuilder.group({
@@ -57,7 +57,7 @@ export class EmailClientComponent implements OnInit {
           } else {
             return this.emailService.prepareReminderEmail(this.form.value);
           }
-        })
+        }),
       )
       .subscribe((response: any) => {
         if (response.html) {
@@ -77,9 +77,9 @@ export class EmailClientComponent implements OnInit {
           this.f['toEmail'].setValue(email);
           this.f['salutation'].setValue('Dear ' + this.member!.name + ',');
           return this.userService.getById(
-            this.authenticationService.userValue.id
+            this.authenticationService.userValue.id,
           );
-        })
+        }),
       )
       .subscribe((u: User) => {
         this.user = u;
@@ -107,12 +107,12 @@ export class EmailClientComponent implements OnInit {
     if (this.email_type == EmailTypeEnum.SWITCH_TO_GOCARDLESS) {
       this.emailService.sendSwitchRequestEmail(this.form.value).subscribe(
         () => this.modal.close('OK'),
-        () => this.modal.dismiss('Fail')
+        () => this.modal.dismiss('Fail'),
       );
     } else {
       this.emailService.sendReminderEmail(this.form.value).subscribe(
         () => this.modal.close('OK'),
-        () => this.modal.dismiss('Fail')
+        () => this.modal.dismiss('Fail'),
       );
     }
   }

@@ -21,8 +21,10 @@ export class MailingListComponent implements OnInit, OnChanges {
   csvMembers: any[] = new Array();
   loading: boolean = false;
 
-  constructor(private membersService: MembersService,
-    private exportToCsvService: ExportToCsvService) {}
+  constructor(
+    private membersService: MembersService,
+    private exportToCsvService: ExportToCsvService,
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -66,16 +68,16 @@ export class MailingListComponent implements OnInit, OnChanges {
   }
 
   /**
-  * Output the id of a selected member
-  */
+   * Output the id of a selected member
+   */
   memberSelected(member_address: any) {
     this.idSelected.emit(member_address.id);
     this.exportToCsvService.exportToCSV(member_address);
   }
 
   /**
-  * Export the csvMembers array to a CSV file
-  */
+   * Export the csvMembers array to a CSV file
+   */
   exportToCSV(): void {
     this.exportToCsvService.exportToCSV(this.csvMembers);
   }

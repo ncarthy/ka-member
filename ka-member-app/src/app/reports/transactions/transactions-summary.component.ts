@@ -28,7 +28,7 @@ export class TransactionsSummaryComponent implements OnInit {
     private bankAccountService: BankAccountService,
     private transactionsService: TransactionsService,
     private dateRangeAdapter: DateRangeAdapter,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class TransactionsSummaryComponent implements OnInit {
   /* From https://stackoverflow.com/a/52794221/6941165 */
   originalOrder = (
     a: KeyValue<number, string>,
-    b: KeyValue<number, string>
+    b: KeyValue<number, string>,
   ): number => {
     return 0;
   };
@@ -99,7 +99,7 @@ export class TransactionsSummaryComponent implements OnInit {
     this.refreshSummary(
       this.f['startDate'].value,
       this.f['endDate'].value,
-      value
+      value,
     );
   }
 

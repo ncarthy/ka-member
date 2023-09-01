@@ -37,7 +37,7 @@ export class TransactionRowComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private transactionService: TransactionService,
     private alertService: AlertService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {
     this.onTransactionDeleted = new EventEmitter();
     this.onTransactionUpdated = new EventEmitter();
@@ -113,7 +113,7 @@ export class TransactionRowComponent implements OnInit {
     if (!this.transaction || !this.transaction.id || !this.user.isAdmin) return;
 
     const modalRef = this.modalService.open(
-      TransactionDeleteConfirmModalComponent
+      TransactionDeleteConfirmModalComponent,
     );
     modalRef.componentInstance.transaction = this.transaction;
 
@@ -128,8 +128,8 @@ export class TransactionRowComponent implements OnInit {
         (error) =>
           this.alertService.error('Unable to delete Transaction.', {
             keepAfterRouteChange: false,
-          })
-      )
+          }),
+      ),
     );
   }
 }

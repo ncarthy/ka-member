@@ -37,7 +37,7 @@ export class MemberNameService {
           return of(this.concatName(x));
         });
         return merge(...obs); // '...' is JS spread syntax
-      })
+      }),
     );
   }
 
@@ -53,12 +53,12 @@ export class MemberNameService {
           return of(this.concatName(x));
         });
         return merge(...obs); // '...' is JS spread syntax
-      })
+      }),
     );
     return x$.pipe(
       reduce((finalString: string, value: string, idx: number) => {
         return idx == 0 ? value : finalString + ' and ' + value;
-      })
+      }),
     );
   }
 
@@ -66,7 +66,7 @@ export class MemberNameService {
   concatName(x: MemberName): string {
     return (x.honorific ? x.honorific + ' ' : '').concat(
       x.firstname ? x.firstname + ' ' : '',
-      x.surname
+      x.surname,
     );
   }
 }

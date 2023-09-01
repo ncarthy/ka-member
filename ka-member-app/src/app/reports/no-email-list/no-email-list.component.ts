@@ -21,8 +21,10 @@ export class NoEmailListComponent implements OnInit, OnChanges {
   csvMembers: any[] = new Array();
   loading: boolean = false;
 
-  constructor(private membersService: MembersService,
-    private exportToCsvService: ExportToCsvService) {}
+  constructor(
+    private membersService: MembersService,
+    private exportToCsvService: ExportToCsvService,
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -70,8 +72,8 @@ export class NoEmailListComponent implements OnInit, OnChanges {
   }
 
   /**
-  * Export the csvMembers array to a CSV file
-  */
+   * Export the csvMembers array to a CSV file
+   */
   exportToCSV(): void {
     this.exportToCsvService.exportToCSV(this.csvMembers);
   }

@@ -66,7 +66,7 @@ export class MemberAddEditComponent implements OnInit {
     private memberService: MemberService,
     private memberNameService: MemberNameService,
     private membershipStatusService: MembershipStatusService,
-    public modalService: NgbModal
+    public modalService: NgbModal,
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -152,7 +152,7 @@ export class MemberAddEditComponent implements OnInit {
             for (let name of names) {
               this.onAddName(name.honorific, name.firstname, name.surname);
             }
-          })
+          }),
         )
         .subscribe();
     }
@@ -161,7 +161,7 @@ export class MemberAddEditComponent implements OnInit {
       // Initialize the 'Join Date' field with today's date for New Members
       // From https://stackoverflow.com/a/35922073/6941165
       this.form.controls['joindate'].setValue(
-        new Date().toISOString().slice(0, 10)
+        new Date().toISOString().slice(0, 10),
       );
     }
 
@@ -204,7 +204,7 @@ export class MemberAddEditComponent implements OnInit {
         honorific: [honorific],
         firstname: [firstname],
         surname: [surname, [Validators.required]],
-      })
+      }),
     );
   }
 
@@ -273,10 +273,10 @@ export class MemberAddEditComponent implements OnInit {
             // Use of non-null assertion operator
             // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
             success.id!,
-            this.form.value.names
+            this.form.value.names,
           );
         }),
-        catchError((err) => throwError(err))
+        catchError((err) => throwError(err)),
       )
       .subscribe({
         next: () => {
@@ -305,10 +305,10 @@ export class MemberAddEditComponent implements OnInit {
             // Use of non-null assertion operator
             // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator
             success.id!,
-            this.form.value.names
+            this.form.value.names,
           );
         }),
-        catchError((err) => throwError(err))
+        catchError((err) => throwError(err)),
       )
       .subscribe({
         next: (v) => {
@@ -329,7 +329,7 @@ export class MemberAddEditComponent implements OnInit {
 
   onAnonymize() {
     from(
-      this.modalService.open(MemberAnonymizeConfirmModalComponent).result
+      this.modalService.open(MemberAnonymizeConfirmModalComponent).result,
     ).subscribe((success) => {
       this.memberService.anonymize(this.id).subscribe({
         next: () => {
@@ -363,7 +363,7 @@ export class MemberAddEditComponent implements OnInit {
 
   onDelete() {
     from(
-      this.modalService.open(MemberDeleteConfirmModalComponent).result
+      this.modalService.open(MemberDeleteConfirmModalComponent).result,
     ).subscribe((success) => {
       this.memberService.delete(this.id).subscribe({
         next: () => {

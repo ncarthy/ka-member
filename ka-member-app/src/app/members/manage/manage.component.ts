@@ -50,7 +50,7 @@ export class MemberManageComponent implements OnInit {
     private transactionService: TransactionService,
     private memberNameService: MemberNameService,
     private authenticationService: AuthenticationService,
-    private membershipStatusService: MembershipStatusService
+    private membershipStatusService: MembershipStatusService,
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -95,13 +95,13 @@ export class MemberManageComponent implements OnInit {
         switchMap((txs: Transaction[]) => {
           this.transactions = txs;
           return this.memberNameService.getNamesStringForMember(
-            this.member!.id
+            this.member!.id,
           );
         }),
         switchMap((mn: string) => {
           this.f['name'].setValue(mn);
           return this.membershipStatusService.getAll();
-        })
+        }),
       )
       .subscribe((statuses: MembershipStatus[]) => {
         this.statuses = statuses;
@@ -177,7 +177,7 @@ export class MemberManageComponent implements OnInit {
       // Initialize the 'Join Date' field with today's date for New Members
       // From https://stackoverflow.com/a/35922073/6941165
       this.form.controls['deletedate'].setValue(
-        new Date().toISOString().slice(0, 10)
+        new Date().toISOString().slice(0, 10),
       );
     }
   }

@@ -101,7 +101,7 @@ export class MemberFilter {
               '&',
               dateRangeFilter.dateType,
               'start=',
-              dateRangeFilter.startDate
+              dateRangeFilter.startDate,
             );
           }
           if (dateRangeFilter.endDate) {
@@ -109,7 +109,7 @@ export class MemberFilter {
               '&',
               dateRangeFilter.dateType,
               'end=',
-              dateRangeFilter.endDate
+              dateRangeFilter.endDate,
             );
           }
         }

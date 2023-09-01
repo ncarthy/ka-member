@@ -21,8 +21,10 @@ export class EmailListComponent implements OnInit, OnChanges {
   csvEmails: any[] = new Array();
   loading: boolean = false;
 
-  constructor(private membersService: MembersService,
-    private exportToCsvService: ExportToCsvService) {}
+  constructor(
+    private membersService: MembersService,
+    private exportToCsvService: ExportToCsvService,
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -32,7 +34,7 @@ export class EmailListComponent implements OnInit, OnChanges {
       this.all_member_emails = response.records;
       if (this.ids && this.ids.length) {
         this.member_emails = this.all_member_emails.filter((x) =>
-          this.ids.includes(x[0])
+          this.ids.includes(x[0]),
         );
       } else {
         this.member_emails = response.records;
@@ -50,7 +52,7 @@ export class EmailListComponent implements OnInit, OnChanges {
     // only run when property "ids" changed
     if (changes['ids'] && this.all_member_emails && this.ids) {
       this.member_emails = this.all_member_emails.filter((x) =>
-        this.ids.includes(x[0])
+        this.ids.includes(x[0]),
       );
 
       // Exclude the id and country properties from what will be outputted to CSV
@@ -66,8 +68,8 @@ export class EmailListComponent implements OnInit, OnChanges {
   }
 
   /**
-  * Export the csvEmails array to a CSV file
-  */
+   * Export the csvEmails array to a CSV file
+   */
   exportToCSV(): void {
     this.exportToCsvService.exportToCSV(this.csvEmails);
   }

@@ -38,7 +38,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
     private authenticationService: AuthenticationService,
     private transactionService: TransactionService,
     private bankAccountService: BankAccountService,
-    private paymentTypeService: PaymentTypeService
+    private paymentTypeService: PaymentTypeService,
   ) {
     this.reloadRequested = new EventEmitter();
     this.editRequested = new EventEmitter();
@@ -54,7 +54,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
         switchMap((banks: BankAccount[]) => {
           this.bankAccounts = banks;
           return this.paymentTypeService.getAll();
-        })
+        }),
       )
       .subscribe((types: PaymentType[]) => {
         this.paymentTypes = types;
@@ -76,7 +76,7 @@ export class TransactionListComponent implements OnInit, OnChanges {
       return;
     }
     this.transactions = this.transactions.filter(
-      (x) => x.id !== transaction.id
+      (x) => x.id !== transaction.id,
     );
   }
 

@@ -80,7 +80,7 @@ export class TransactionAddEditComponent
     private transactionService: TransactionService,
     private bankAccountService: BankAccountService,
     private paymentTypeService: PaymentTypeService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {
     this.user = this.authenticationService.userValue;
     this.reloadRequested = new EventEmitter();
@@ -105,7 +105,7 @@ export class TransactionAddEditComponent
         switchMap((banks: BankAccount[]) => {
           this.banks = banks;
           return this.paymentTypeService.getAll();
-        })
+        }),
       )
       .subscribe((types: PaymentType[]) => {
         this.paymentTypes = types;
@@ -115,7 +115,7 @@ export class TransactionAddEditComponent
     this.subscription.add(
       this.transactionForm.valueChanges.subscribe((value: Transaction) => {
         this.onChange(value);
-      })
+      }),
     );
   }
 

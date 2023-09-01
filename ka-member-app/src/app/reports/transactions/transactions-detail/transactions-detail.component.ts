@@ -34,7 +34,7 @@ export class TransactionsDetailComponent implements OnInit, OnChanges {
   constructor(
     private authenticationService: AuthenticationService,
     private transactionsService: TransactionsService,
-    private paymentTypeService: PaymentTypeService
+    private paymentTypeService: PaymentTypeService,
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -48,7 +48,7 @@ export class TransactionsDetailComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['summaryRow']) {
       console.log(
-        `index: ${this.summaryRow?.index}, bank: ${this.summaryRow?.bankID}`
+        `index: ${this.summaryRow?.index}, bank: ${this.summaryRow?.bankID}`,
       );
       let index = this.summaryRow?.index.split('-');
       if (!index) {

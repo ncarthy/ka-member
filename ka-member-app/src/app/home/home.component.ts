@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private toastService: ToastService,
-    private membersService: MembersService
+    private membersService: MembersService,
   ) {
     this.user = this.authenticationService.userValue;
   }

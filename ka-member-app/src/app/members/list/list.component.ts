@@ -14,7 +14,7 @@ export class MemberListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
   ) {
     this.user = this.authenticationService.userValue;
   }

@@ -53,7 +53,7 @@ export class AddressFormComponent
   constructor(
     private fb: UntypedFormBuilder,
     private countryService: CountryService,
-    private geocodeService: GeocodeService
+    private geocodeService: GeocodeService,
   ) {}
 
   // convenience getter for easy access to form fields
@@ -76,14 +76,14 @@ export class AddressFormComponent
     this.countryService.getAll().subscribe((countryArray) => {
       this.countries = countryArray;
       this.uk = countryArray.filter(
-        (c: Country) => c.name === 'United Kingdom'
+        (c: Country) => c.name === 'United Kingdom',
       )[0];
       if (this.address && this.address.addressfirstline) {
         this.addressForm.controls['addressfirstline'].setValue(
-          this.address.addressfirstline
+          this.address.addressfirstline,
         );
         this.addressForm.controls['addresssecondline'].setValue(
-          this.address.addresssecondline
+          this.address.addresssecondline,
         );
         this.addressForm.controls['city'].setValue(this.address.city);
         this.addressForm.controls['county'].setValue(this.address.county);
@@ -100,7 +100,7 @@ export class AddressFormComponent
     this.subscription.add(
       this.addressForm.valueChanges.subscribe((value: Address) => {
         this.onChange(value);
-      })
+      }),
     );
   }
   ngOnDestroy() {

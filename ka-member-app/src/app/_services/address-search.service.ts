@@ -19,7 +19,7 @@ export class AddressSearchService {
   constructor(
     private http: HttpClient,
     @Inject(ADDRESS_API_KEY) private apiKey: string,
-    @Inject(ADDRESS_API_URL) private apiUrl: string
+    @Inject(ADDRESS_API_URL) private apiUrl: string,
   ) {}
 
   search(postcode: string): Observable<GetAddressIOAddress[]> {
@@ -52,9 +52,9 @@ export class AddressSearchService {
                 postcode: this.restoreSpace(postcode.toUpperCase()),
                 country: { id: 186, name: 'United Kingdom' },
               });
-            }
+            },
           );
-        })
+        }),
       );
 
     return addresses$;

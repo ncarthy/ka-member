@@ -30,7 +30,7 @@ export class TransactionManagerComponent implements OnInit {
     private memberService: MemberService,
     private transactionService: TransactionService,
     private memberNameService: MemberNameService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -48,9 +48,9 @@ export class TransactionManagerComponent implements OnInit {
         switchMap((txs: Transaction[]) => {
           this.transactions = txs;
           return this.memberNameService.getNamesStringForMember(
-            this.member!.id
+            this.member!.id,
           );
-        })
+        }),
       )
       .subscribe((mn: string) => {
         this.memberName = mn;

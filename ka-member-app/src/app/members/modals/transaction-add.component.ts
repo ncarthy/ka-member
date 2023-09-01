@@ -16,7 +16,7 @@ export class TransactionAddModalComponent implements OnInit {
 
   constructor(
     public modal: NgbActiveModal,
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
   ) {}
 
   ngOnInit() {
@@ -27,7 +27,7 @@ export class TransactionAddModalComponent implements OnInit {
       .pipe(
         switchMap((txs: Transaction[]) => {
           return of(txs[0]);
-        })
+        }),
       )
       .subscribe((tx: Transaction) => (this.lastTransaction = tx));
   }

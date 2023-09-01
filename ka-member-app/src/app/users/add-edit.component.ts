@@ -33,7 +33,7 @@ export class UserAddEditComponent implements OnInit {
     private userService: UserService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
-    private location: Location
+    private location: Location,
   ) {
     this.apiUser = this.authenticationService.userValue;
   }
@@ -82,7 +82,7 @@ export class UserAddEditComponent implements OnInit {
             : Validators.nullValidator,
         ],
       },
-      formOptions
+      formOptions,
     );
 
     if (this.formMode != UserFormMode.Add) {

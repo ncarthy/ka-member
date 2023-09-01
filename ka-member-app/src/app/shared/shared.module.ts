@@ -11,6 +11,7 @@ import {
 import { AlertComponent } from './alert-component/alert.component';
 import { AddressFormComponent } from './address-form/address-form.component';
 import { SearchBoxComponent } from './address-form/search-box.component';
+import { SearchBox2Component } from './address-form/search-box2.component';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
 
 @NgModule({
@@ -19,6 +20,7 @@ import { ToastContainerComponent } from './toast-container/toast-container.compo
     AlertComponent,
     AddressFormComponent,
     SearchBoxComponent,
+    SearchBox2Component,
     ToastContainerComponent,
   ],
   exports: [
@@ -28,6 +30,7 @@ import { ToastContainerComponent } from './toast-container/toast-container.compo
     FormsModule,
     ReactiveFormsModule,
     SearchBoxComponent,
+    SearchBox2Component,
     ToastContainerComponent,
   ],
   providers: [

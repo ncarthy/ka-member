@@ -38,7 +38,7 @@ export class MemberListComponent implements OnInit {
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private location: Location,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -197,7 +197,7 @@ export class MemberListComponent implements OnInit {
           result.count + " Members set to 'Former Member'",
           {
             keepAfterRouteChange: true,
-          }
+          },
         );
         this.location.back();
       },

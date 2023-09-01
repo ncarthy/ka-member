@@ -19,7 +19,7 @@ export class MemberFilterService {
         return <any>response['records'].map((item: any) => {
           return new MemberSearchResult(item);
         });
-      })
+      }),
     );
   }
 }

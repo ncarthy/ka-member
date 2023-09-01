@@ -47,7 +47,7 @@ export class MemberFilterComponent implements OnInit {
   paymentTypes$!: Observable<PaymentType[]>;
   filterSubject: BehaviorSubject<MemberFilter> =
     new BehaviorSubject<MemberFilter>(
-      new MemberFilter({ removed: YesNoAny.NO })
+      new MemberFilter({ removed: YesNoAny.NO }),
     );
   filter$: Observable<MemberFilter> = this.filterSubject.asObservable();
   working: boolean = false;
@@ -61,7 +61,7 @@ export class MemberFilterComponent implements OnInit {
     private paymentTypeService: PaymentTypeService,
     private route: ActivatedRoute,
     private router: Router,
-    private dateRangeAdapter: DateRangeAdapter
+    private dateRangeAdapter: DateRangeAdapter,
   ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
@@ -115,7 +115,7 @@ export class MemberFilterComponent implements OnInit {
     this.form.valueChanges
       .pipe(
         debounceTime(500),
-        map(() => new MemberFilter(this.form.value))
+        map(() => new MemberFilter(this.form.value)),
       )
       .subscribe((filter: MemberFilter) => this.filterSubject.next(filter));
 
@@ -128,8 +128,8 @@ export class MemberFilterComponent implements OnInit {
           this.working = true;
         }),
         switchMap((urlParameters: string) =>
-          this.MemberFilterService.filter(urlParameters)
-        )
+          this.MemberFilterService.filter(urlParameters),
+        ),
       )
       .subscribe((results: MemberSearchResult[]) => {
         this.filteredMembers.emit(results);
@@ -144,14 +144,14 @@ export class MemberFilterComponent implements OnInit {
         new MemberFilter({
           removed: YesNoAny.NO,
           membertypeid: this.route.snapshot.params['id'],
-        })
+        }),
       );
     } else if (this.router.url.substring(0, 16) === '/members/country') {
       this.filterSubject.next(
         new MemberFilter({
           removed: YesNoAny.NO,
           countryid: this.route.snapshot.params['countryid'],
-        })
+        }),
       );
     } else if (this.router.url.includes('postonhold')) {
       this.filterSubject.next(
@@ -161,7 +161,7 @@ export class MemberFilterComponent implements OnInit {
             this.route.snapshot.params['postonhold'] == 'true'
               ? YesNoAny.YES
               : YesNoAny.NO,
-        })
+        }),
       );
     } else if (this.router.url.includes('emailonhold')) {
       this.filterSubject.next(
@@ -171,7 +171,7 @@ export class MemberFilterComponent implements OnInit {
             this.route.snapshot.params['emailonhold'] == 'true'
               ? YesNoAny.YES
               : YesNoAny.NO,
-        })
+        }),
       );
     }
   }
@@ -183,7 +183,7 @@ export class MemberFilterComponent implements OnInit {
         startDate: [startDate],
         endDate: [endDate],
         dateType: [dateType],
-      })
+      }),
     );
 
     return false; // Must return false from click event to stop it reloading the page
@@ -217,7 +217,7 @@ export class MemberFilterComponent implements OnInit {
   /* From https://stackoverflow.com/a/52794221/6941165 */
   originalOrder = (
     a: KeyValue<number, string>,
-    b: KeyValue<number, string>
+    b: KeyValue<number, string>,
   ): number => {
     return 0;
   };
