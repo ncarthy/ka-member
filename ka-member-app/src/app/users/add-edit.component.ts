@@ -1,6 +1,8 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
 import {
   AbstractControlOptions,
   FormBuilder,
@@ -16,11 +18,21 @@ import {
 import { MustMatch } from '@app/_helpers';
 import { User, UserFormMode } from '@app/_models';
 
-@Component({ templateUrl: 'add-edit.component.html' })
+@Component({ 
+  templateUrl: 'add-edit.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    NgClass,
+    NgIf,
+    ReactiveFormsModule,
+    RouterLink,
+  ],
+})
 export class UserAddEditComponent implements OnInit {
   form!: FormGroup;
   id!: number;
-  //isAddMode!: boolean;
+
   formMode!: UserFormMode;
   loading = false;
   submitted = false;
