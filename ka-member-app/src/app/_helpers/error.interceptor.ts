@@ -5,7 +5,7 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationService, AlertService } from '@app/_services';
@@ -37,8 +37,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.alertService.error(error);
         }
 
-        console.error(err);
-        return throwError(error);
+        return throwError(() => new Error(error));        
       }),
     );
   }
