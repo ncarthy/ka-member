@@ -25,16 +25,12 @@ final class MicrosecondBasedDateConversion implements ClaimsFormatter
         return $claims;
     }
 
-    /** @return int|string */
-    private function convertDate(DateTimeImmutable $date)
+    private function convertDate(DateTimeImmutable $date): int|float
     {
-        $seconds      = $date->format('U');
-        $microseconds = $date->format('u');
-
-        if ((int) $microseconds === 0) {
-            return (int) $seconds;
+        if ($date->format('u') === '000000') {
+            return (int) $date->format('U');
         }
 
-        return $seconds . '.' . $microseconds;
+        return (float) $date->format('U.u');
     }
 }

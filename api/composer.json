@@ -1,7 +1,8 @@
 {
     "require": {
-        "lcobucci/jwt": "^4.1",
-        "bramus/router": "~1.5",
-        "pear/net_dns2": "^1.5"
+        "lcobucci/jwt": "^5.3",
+        "lcobucci/clock": "^3.1",
+        "bramus/router": "~1.6",
+        "pear/net_dns2": "^1.5.4"
     }
 }

@@ -1,6 +1,6 @@
 # bramus/router
 
-[![Build Status](https://img.shields.io/travis/bramus/router.svg?style=flat-square)](http://travis-ci.org/bramus/router) [![Source](http://img.shields.io/badge/source-bramus/router-blue.svg?style=flat-square)](https://github.com/bramus/router) [![Version](https://img.shields.io/packagist/v/bramus/router.svg?style=flat-square)](https://packagist.org/packages/bramus/router) [![Downloads](https://img.shields.io/packagist/dt/bramus/router.svg?style=flat-square)](https://packagist.org/packages/bramus/router/stats) [![License](https://img.shields.io/packagist/l/bramus/router.svg?style=flat-square)](https://github.com/bramus/router/blob/master/LICENSE)
+[![Build Status](https://github.com/bramus/router/workflows/CI/badge.svg)](https://github.com/bramus/router/actions) [![Source](http://img.shields.io/badge/source-bramus/router-blue.svg?style=flat-square)](https://github.com/bramus/router) [![Version](https://img.shields.io/packagist/v/bramus/router.svg?style=flat-square)](https://packagist.org/packages/bramus/router) [![Downloads](https://img.shields.io/packagist/dt/bramus/router.svg?style=flat-square)](https://packagist.org/packages/bramus/router/stats) [![License](https://img.shields.io/packagist/l/bramus/router.svg?style=flat-square)](https://github.com/bramus/router/blob/master/LICENSE)
 
 A lightweight and simple object oriented PHP Router.
 Built by Bram(us) Van Damme _([https://www.bram.us](https://www.bram.us))_ and [Contributors](https://github.com/bramus/router/graphs/contributors)
@@ -36,7 +36,7 @@ Built by Bram(us) Van Damme _([https://www.bram.us](https://www.bram.us))_ and [
 Installation is possible using Composer
 
 ```
-composer require bramus/router ~1.5
+composer require bramus/router ~1.6
 ```
 
 
@@ -143,7 +143,7 @@ Commonly used PCRE-based subpatterns within Dynamic Route Patterns are:
 - `.*` = Any character (including `/`), zero or more
 - `[^/]+` = Any character but `/`, one or more
 
-Note: The [PHP PCRE Cheat Sheet](https://www.cs.washington.edu/education/courses/190m/12sp/cheat-sheets/php-regex-cheat-sheet.pdf) might come in handy.
+Note: The [PHP PCRE Cheat Sheet](https://courses.cs.washington.edu/courses/cse154/15sp/cheat-sheets/php-regex-cheat-sheet.pdf) might come in handy.
 
 The __subpatterns__ defined in Dynamic PCRE-based Route Patterns are converted to parameters which are passed into the route handling function. Prerequisite is that these subpatterns need to be defined as __parenthesized subpatterns__, which means that they should be wrapped between parens:
 
@@ -286,6 +286,21 @@ The default 404 handler sets a 404 status code and exits. You can override this 
 $router->set404(function() {
     header('HTTP/1.1 404 Not Found');
     // ... do something special here
+});
+```
+
+You can also define multiple custom routes e.x. you want to define an `/api` route, you can print a custom 404 page:
+
+```php
+$router->set404('/api(/.*)?', function() {
+    header('HTTP/1.1 404 Not Found');
+    header('Content-Type: application/json');
+
+    $jsonArray = array();
+    $jsonArray['status'] = "404";
+    $jsonArray['status_text'] = "route not defined";
+
+    echo json_encode($jsonArray);
 });
 ```
 

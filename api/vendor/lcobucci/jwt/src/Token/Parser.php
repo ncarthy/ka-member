@@ -12,32 +12,46 @@ use function array_key_exists;
 use function count;
 use function explode;
 use function is_array;
-use function strpos;
+use function is_numeric;
+use function number_format;
 
 final class Parser implements ParserInterface
 {
-    private Decoder $decoder;
+    private const MICROSECOND_PRECISION = 6;
 
-    public function __construct(Decoder $decoder)
+    public function __construct(private readonly Decoder $decoder)
     {
-        $this->decoder = $decoder;
     }
 
     public function parse(string $jwt): TokenInterface
     {
         [$encodedHeaders, $encodedClaims, $encodedSignature] = $this->splitJwt($jwt);
 
+        if ($encodedHeaders === '') {
+            throw InvalidTokenStructure::missingHeaderPart();
+        }
+
+        if ($encodedClaims === '') {
+            throw InvalidTokenStructure::missingClaimsPart();
+        }
+
+        if ($encodedSignature === '') {
+            throw InvalidTokenStructure::missingSignaturePart();
+        }
+
         $header = $this->parseHeader($encodedHeaders);
 
         return new Plain(
             new DataSet($header, $encodedHeaders),
             new DataSet($this->parseClaims($encodedClaims), $encodedClaims),
-            $this->parseSignature($header, $encodedSignature)
+            $this->parseSignature($encodedSignature),
         );
     }
 
     /**
      * Splits the JWT string into an array
+     *
+     * @param non-empty-string $jwt
      *
      * @return string[]
      *
@@ -57,7 +71,9 @@ final class Parser implements ParserInterface
     /**
      * Parses the header from a string
      *
-     * @return mixed[]
+     * @param non-empty-string $data
+     *
+     * @return array<non-empty-string, mixed>
      *
      * @throws UnsupportedHeaderFound When an invalid header is informed.
      * @throws InvalidTokenStructure  When parsed content isn't an array.
@@ -69,6 +85,8 @@ final class Parser implements ParserInterface
         if (! is_array($header)) {
             throw InvalidTokenStructure::arrayExpected('headers');
         }
+
+        $this->guardAgainstEmptyStringKeys($header, 'headers');
 
         if (array_key_exists('enc', $header)) {
             throw UnsupportedHeaderFound::encryption();
@@ -84,7 +102,9 @@ final class Parser implements ParserInterface
     /**
      * Parses the claim set from a string
      *
-     * @return mixed[]
+     * @param non-empty-string $data
+     *
+     * @return array<non-empty-string, mixed>
      *
      * @throws InvalidTokenStructure When parsed content isn't an array or contains non-parseable dates.
      */
@@ -96,6 +116,8 @@ final class Parser implements ParserInterface
             throw InvalidTokenStructure::arrayExpected('claims');
         }
 
+        $this->guardAgainstEmptyStringKeys($claims, 'claims');
+
         if (array_key_exists(RegisteredClaims::AUDIENCE, $claims)) {
             $claims[RegisteredClaims::AUDIENCE] = (array) $claims[RegisteredClaims::AUDIENCE];
         }
@@ -105,23 +127,40 @@ final class Parser implements ParserInterface
                 continue;
             }
 
-            $claims[$claim] = $this->convertDate((string) $claims[$claim]);
+            $claims[$claim] = $this->convertDate($claims[$claim]);
         }
 
         return $claims;
     }
 
-    /** @throws InvalidTokenStructure */
-    private function convertDate(string $value): DateTimeImmutable
+    /**
+     * @param array<string, mixed> $array
+     * @param non-empty-string     $part
+     *
+     * @phpstan-assert array<non-empty-string, mixed> $array
+     */
+    private function guardAgainstEmptyStringKeys(array $array, string $part): void
     {
-        if (strpos($value, '.') === false) {
-            return new DateTimeImmutable('@' . $value);
+        foreach ($array as $key => $value) {
+            if ($key === '') {
+                throw InvalidTokenStructure::arrayExpected($part);
+            }
+        }
+    }
+
+    /** @throws InvalidTokenStructure */
+    private function convertDate(int|float|string $timestamp): DateTimeImmutable
+    {
+        if (! is_numeric($timestamp)) {
+            throw InvalidTokenStructure::dateIsNotParseable($timestamp);
         }
 
-        $date = DateTimeImmutable::createFromFormat('U.u', $value);
+        $normalizedTimestamp = number_format((float) $timestamp, self::MICROSECOND_PRECISION, '.', '');
+
+        $date = DateTimeImmutable::createFromFormat('U.u', $normalizedTimestamp);
 
         if ($date === false) {
-            throw InvalidTokenStructure::dateIsNotParseable($value);
+            throw InvalidTokenStructure::dateIsNotParseable($normalizedTimestamp);
         }
 
         return $date;
@@ -130,14 +169,10 @@ final class Parser implements ParserInterface
     /**
      * Returns the signature from given data
      *
-     * @param mixed[] $header
+     * @param non-empty-string $data
      */
-    private function parseSignature(array $header, string $data): Signature
+    private function parseSignature(string $data): Signature
     {
-        if ($data === '' || ! array_key_exists('alg', $header) || $header['alg'] === 'none') {
-            return Signature::fromEmptyData();
-        }
-
         $hash = $this->decoder->base64UrlDecode($data);
 
         return new Signature($hash, $data);

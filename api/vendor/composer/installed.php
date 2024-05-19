@@ -1,60 +1,74 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-master',
-    'version' => 'dev-master',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'd8e0ade8f5907480422a5281bd20cab9f8c5dfac',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
     ),
-    'reference' => '5bb0d8070ad9e5bc903550ec099b0173f3356acf',
-    'name' => '__root__',
-  ),
-  'versions' => 
-  array (
-    '__root__' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '5bb0d8070ad9e5bc903550ec099b0173f3356acf',
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'd8e0ade8f5907480422a5281bd20cab9f8c5dfac',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'bramus/router' => array(
+            'pretty_version' => '1.6.1',
+            'version' => '1.6.1.0',
+            'reference' => '55657b76da8a0a509250fb55b9dd24e1aa237eba',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../bramus/router',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'lcobucci/clock' => array(
+            'pretty_version' => '3.2.0',
+            'version' => '3.2.0.0',
+            'reference' => '6f28b826ea01306b07980cb8320ab30b966cd715',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lcobucci/clock',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'lcobucci/jwt' => array(
+            'pretty_version' => '5.3.0',
+            'version' => '5.3.0.0',
+            'reference' => '08071d8d2c7f4b00222cc4b1fb6aa46990a80f83',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lcobucci/jwt',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'pear/net_dns2' => array(
+            'pretty_version' => 'v1.5.4',
+            'version' => '1.5.4.0',
+            'reference' => 'c4a167ff1bc93aaae95601ebc86099376c994581',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../pear/net_dns2',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/clock' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'reference' => 'e41a24703d4560fd0acb709162f73b8adfc3aa0d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/clock',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/clock-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
     ),
-    'bramus/router' => 
-    array (
-      'pretty_version' => '1.5',
-      'version' => '1.5.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '6adc0182dc6b0ebc22fd10543f65a36de10d8c05',
-    ),
-    'lcobucci/clock' => 
-    array (
-      'pretty_version' => '2.0.0',
-      'version' => '2.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '353d83fe2e6ae95745b16b3d911813df6a05bfb3',
-    ),
-    'lcobucci/jwt' => 
-    array (
-      'pretty_version' => '4.1.2',
-      'version' => '4.1.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'c544710aa18e079baf0027ca4c8236913f46945b',
-    ),
-    'pear/net_dns2' => 
-    array (
-      'pretty_version' => 'v1.5.2',
-      'version' => '1.5.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd5dbae0b0c0567923d25b3ae5e2bf1e9cbcedf76',
-    ),
-  ),
 );
