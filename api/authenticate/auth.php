@@ -1,4 +1,13 @@
 <?php
+ /**
+ * Check if the user credentials provided via POST match
+ * any of the credentials saved in the database.
+ * 
+ * If success then respond with user and token data
+ * If failure reply with 410 http code and error message 
+ * 
+ * Called when logging in.
+ */
 
 header("Access-Control-Allow-Credentials: true");
 
@@ -19,7 +28,8 @@ if (isset($data)) {
 }
 
 // query database for a user with that username
-$stmt = $user->readOneRaw(strtolower($usernm));
+$user->username = strtolower($usernm);
+$stmt = $user->readOneByUsername();
 $num = $stmt->rowCount();
 
 // check if more than 0 records found
@@ -43,9 +53,9 @@ if($num>0){
             array("message" => "User is suspended.")
         );
     }
-    else if (password_verify($pass, $password)){
+    else if (password_verify($pass, $new_pass)){
 
-        $user->id = $id;
+        $user->id = $iduser;
         $user->username = $username;
         $user->role = $role;
         $user->fullname = $name;
@@ -53,18 +63,17 @@ if($num>0){
         // Create a new access and refresh JWT pair, with claims of username and isAdmin  
         // Suspended is not a claim because you can't get to this point if user is suspended
         $jwt = new \Models\JWTWrapper();
-        $user_with_token = $jwt->getAccessToken($user);
+        $user_with_token = $jwt->getUserWithAccessToken($user);
         $jwt->setRefreshTokenCookieFor($user_with_token);
 
-        $user->updateFailedAttempts($id, 0, false);
+        $user->updateFailedAttempts($iduser, 0, false);
 
-        // echo json_encode($user_with_token, JSON_PRETTY_PRINT);
         echo json_encode($user_with_token);
     }
     else{
         $failedloginattempts++;
 
-        $user->updateFailedAttempts($id, $failedloginattempts, ($failedloginattempts>=$numberPasswordAttempts));
+        $user->updateFailedAttempts($iduser, $failedloginattempts, ($failedloginattempts>=$numberPasswordAttempts));
 
         http_response_code(401);
         echo json_encode(

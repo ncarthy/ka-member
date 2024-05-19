@@ -12,7 +12,11 @@ namespace Controllers;
  * @author    Neil Carthy <neil.carthy42@gmail.com>
 */
 class UserCtl{
-
+  /**
+   * Return details of all Users
+   * 
+   * @return void Output is echo'd directly to response 
+   */
   public static function read_all(){  
 
     $model = new \Models\User();
@@ -20,12 +24,20 @@ class UserCtl{
     echo json_encode($model->read(), JSON_NUMERIC_CHECK);
   }
 
+  /**
+   * Return details of the User identified by $id
+   *
+   * @param int $id
+   * 
+   * @return void Output is echo'd directly to response 
+   * 
+   */
   public static function read_one($id){  
 
     $model = new \Models\User();
     $model->id = $id;
 
-    $model->readOne();
+    $model->readOneByUserID();
 
     if (empty($model->username) ) {
       http_response_code(422);   
@@ -48,6 +60,12 @@ class UserCtl{
     echo json_encode($user, JSON_NUMERIC_CHECK);
   }
 
+  /**
+   * Add a new User to the database. Parameters are supplied via POST data.
+   * 
+   * @return void Output is echo'd directly to response
+   * 
+   */  
   public static function create(){
     $model = new \Models\User();
 
@@ -57,8 +75,8 @@ class UserCtl{
     $model->role = $data->role;
     $model->suspended = $data->suspended;
     $model->fullname = $data->fullname;
-    $model->email = $data->email;
-    $model->title = $data->title;
+    $model->email = $data->email??'';
+    $model->title = $data->title??'';
     $model->failedloginattempts = isset($data->failedloginattempts)?$data->failedloginattempts:0;
     $model->password = password_hash($data->password, PASSWORD_DEFAULT);
 
@@ -84,6 +102,12 @@ class UserCtl{
     }
   }
 
+  /**
+   * Update an existing User in the database with new data. Parameters are supplied via POST data.
+   * 
+   * @return void Output is echo'd directly to response
+   * 
+   */  
   public static function update($id){
     $model = new \Models\User();
 
@@ -93,9 +117,9 @@ class UserCtl{
     $model->username = $data->username;
     $model->role = $data->role;
     $model->suspended = $data->suspended;
-    $model->email = $data->email;
-    $model->title = $data->title;
-    $model->fullname = $data->fullname;    
+    $model->email = $data->email??'';
+    $model->title = $data->title??'';
+    $model->fullname = $data->fullname??'';    
     if (isset($data->password) && !empty($data->password)) {
       $model->password = password_hash($data->password, PASSWORD_DEFAULT);
       $model->checkPassword($data->password, $errors);
@@ -130,7 +154,14 @@ class UserCtl{
     }
   }
 
-
+  /**
+   * Delete the user from the database that matches the given $id.
+   *
+   * @param int $id
+   * 
+   * @return void Output is echo'd directly to response
+   * 
+   */
   public static function delete($id){
     $model = new \Models\User();
 

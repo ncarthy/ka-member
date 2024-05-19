@@ -63,8 +63,8 @@ class User{
                         "fullname" => html_entity_decode($name),
                         "role" => $isAdmin?'Admin':'User',
                         "suspended" => $suspended?true:false,
-                        "email" => html_entity_decode($email),
-                        "title" => html_entity_decode($title)
+                        "email" => html_entity_decode($email??''),
+                        "title" => html_entity_decode($title??'')
                     );
         
                     // create nonindexed array
@@ -76,44 +76,29 @@ class User{
         return $users_arr;
     }
 
-    // find the details of one user using $id
-    public function readOne(){
+    /**
+     * Query for the details of one user using $username but return the results as a 
+     * MySQLi statement rather than a JSON string or an object
+     * 
+     * @return object Returns a MySQLi statement
+     */
+    public function readOneByUsername(){
+        return User::prepareAndExecuteSelectStatement('BY_USERNAME');
+    }
 
-        //select all data
-        $query = "SELECT
-                    u.`iduser` as id, u.`username`, u.`new_pass` as `password`,
-                    u.isAdmin, u.suspended, u.`name`, u.`failedloginattempts`,
-                    u.`email`, u.`title`
-                    FROM
-                    " . $this->table_name . " u
-                    WHERE u.iduser = :id
-                    LIMIT 0,1";
-                
-        // prepare query statement
-        $stmt = $this->conn->prepare( $query );
-
-        // bind id of product to be updated
-        $id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
-        $stmt->bindParam (":id", $id, PDO::PARAM_INT);
+    /**
+     * Retrieve from the database details of a User, queried using the 
+     * model property $id
+     * 
+     * @return void
+     * 
+     */
+    public function readOneByUserID(){
 
         // execute query
-        $stmt->execute();
+        $stmt = User::prepareAndExecuteSelectStatement('BY_USERID');
 
-        // get retrieved row
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // set values to object properties
-        if ( !empty($row) ) {
-            $this->id = $row['id'];
-            $this->username = $row['username'];
-            $this->fullname = $row['name'];
-            $this->password = $row['password'];
-            $this->email = $row['email'];
-            $this->title = $row['title'];
-            $this->role = $row['isAdmin'] ? 'Admin' : 'User';
-            $this->suspended = $row['suspended']?true:false;
-            $this->failedloginattempts = $row['failedloginattempts'];
-        }
+        $this->transferPropertiestoModel($stmt);
     }
 
     // find the details of one user using $username
@@ -137,6 +122,12 @@ class User{
         return $stmt;
     }
 
+    /**
+     * Add a new User to the database.
+     * 
+     * @return bool 'true' if database insert succeeded.
+     * 
+     */
     function create(){
         $query = "INSERT INTO
                     " . $this->table_name . "
@@ -186,6 +177,12 @@ class User{
         return false;
     }
 
+     /**
+     * Update an existing User in the database with new data.
+     * 
+     * @return bool 'true' if database update succeeded.
+     * 
+     */   
     function update(){
         $query = "UPDATE
                     " . $this->table_name . "
@@ -239,6 +236,13 @@ class User{
         return false;
     }
 
+    /**
+     * Delete the user from the database that matches the id property 
+     * of the user.
+     * 
+     * @return bool 'true' if database delete succeeded.
+     * 
+     */
     function delete(){
         $query = "DELETE FROM " . $this->table_name . " WHERE iduser = ?";
 
@@ -254,6 +258,17 @@ class User{
         return false;
     }
 
+    /**
+     * Update 2 fields of the user: failedloginattempts and suspended.
+     *
+     * @param int $id The id of the user to update.
+     * @param int $failedloginattempts The number of failed attempts to login.
+     * @param bool $suspendUser If 'true' then the user will be set to 'suspended'. 
+     * If 'false' then 'suspended' is unset.
+     * 
+     * @return bool 'true' if database update succeeded.
+     * 
+     */
     function updateFailedAttempts($id, $failedloginattempts, bool $suspended){
         $query = "UPDATE
                     " . $this->table_name . "
@@ -279,7 +294,18 @@ class User{
         return false;
     }
 
-    
+    /**
+     * Check the supplied password meets minimum standards:
+     *  - 8 or more characters
+     *  - Must include at least one number
+     *  - Must include ast least one letter
+     *
+     * @param string $pwd The password to test
+     * @param array $errors An array of errors. Empty if no errors.
+     * 
+     * @return bool 'true' if password passess the tests
+     * 
+     */
     public function checkPassword($pwd, &$errors) {
         $errors_init = $errors;
     
@@ -296,5 +322,78 @@ class User{
         }     
     
         return ($errors == $errors_init);
+    }
+
+ /**
+     * Build and execute a MySQLi statement to query the database for a user or users. The
+     * query is customised by the where query specifier. This method was written to reduce
+     * code re-use in the various read... methods.
+     * 
+     * @param string $whereQuery One of '','BY_USERID', 'BY_USERNAME','BY_SUSPENDED'
+     * 
+     * @return object Returns a MySQLi statement
+     */
+    private function prepareAndExecuteSelectStatement(string $whereQuery) {
+        
+        $query = "SELECT
+                    u.`iduser`, u.`username`, u.`new_pass`, u.`name`,
+                    u.isAdmin, u.suspended, u.`failedloginattempts`,
+                    CASE WHEN u.isAdmin THEN 'Admin' ELSE 'User' END as `role`,
+                    u.`email`, u.`title`
+                    FROM
+                    " . $this->table_name . " u";
+                
+        switch ($whereQuery) {
+            case 'BY_USERID':
+                $query .= " WHERE u.iduser = :id";
+                break;
+            case 'BY_USERNAME':
+                $query .= " WHERE u.username = :username";
+                break;             
+            case 'BY_SUSPENDED':
+                $query .= 
+                    (isset($this->suspended)?' WHERE suspended = '.$this->suspended.' ':'');   
+                break;            
+        }             
+
+        $stmt = $this->conn->prepare( $query );
+
+        switch ($whereQuery) {
+            case 'BY_USERID':
+                $id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
+                $stmt->bindParam (":id", $id, PDO::PARAM_INT);
+                break;
+            case 'BY_USERNAME':
+                $this->username=htmlspecialchars(strip_tags($this->username));
+                $stmt->bindParam(":username", $this->username);
+                break;                          
+        }   
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    /**
+     * Update the properties of the user model with the data from the database
+     * 
+     * @return void
+     */
+    private function transferPropertiestoModel($stmt) {
+        // get retrieved row
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // set values to object properties
+        if ( !empty($row) ) {
+            $this->id = $row['iduser'];
+            $this->username = $row['username'];
+            $this->fullname = $row['name'];
+            $this->password = $row['new_pass'];
+            $this->email = $row['email'];
+            $this->title = $row['title'];
+            $this->role = $row['isAdmin'] ? 'Admin' : 'User';
+            $this->suspended = $row['suspended']?true:false;
+            $this->failedloginattempts = $row['failedloginattempts'];
+        }
     }
 }

@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Generate a new access token from a refresh token.
+ * 
+ * The refresh token is in a cookie
+ * 
+ * Called at very start of application
+ */
+
 // instantiate JWT and user object
 $jwt = new \Models\JWTWrapper();
 $user = new \Models\User();
@@ -7,13 +15,13 @@ $token = $jwt->validateRefreshToken();
 
 if ($token && $token['id']) {
 
-    $jwt->disableOldToken($token);
+    $jwt->disableRefreshToken($token);
 
     // read the details of user to be edited
     $user->id = $token['id'];
-    $user->readOne();
+    $user->readOneByUserID();
     if (empty($user->username) ) {
-        http_response_code(422);   
+        http_response_code(400);   
         echo json_encode(
             array("message" => "No User found with id = " . $user->id)
         );
@@ -21,7 +29,7 @@ if ($token && $token['id']) {
     }
     
 
-    $user_with_token = $jwt->getAccessToken($user);    
+    $user_with_token = $jwt->getUserWithAccessToken($user);    
 
     $jwt->setRefreshTokenCookieFor($user_with_token, $token['expiry']);
 

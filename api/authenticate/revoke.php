@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * If logged in then disable all tokens for the logged-in user
+ * and delete the refresh token cookie.
+ * 
+ * Called when logging out.
+ * 
+ */
 $jwt = new \Models\JWTWrapper();
 
 if(!$jwt->loggedIn){    

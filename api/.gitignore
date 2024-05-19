@@ -1,1 +1,4 @@
 /vendor/
+
+# Add these to the repo
+!/vendor/ultimate-email/
