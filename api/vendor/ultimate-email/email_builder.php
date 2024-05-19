@@ -1,7 +1,6 @@
 <?php
 	// Email builder/designer class.
 	// (C) 2019 CubicleSoft.  All Rights Reserved.
-	// https://github.com/cubiclesoft/ultimate-email
 
 	class EmailBuilder
 	{

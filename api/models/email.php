@@ -17,6 +17,7 @@ class Email{
     public $fromTitle;
     public $goCardlessLink;
     public $subject;
+    public $body;
 
     // constructor
     public function __construct(){

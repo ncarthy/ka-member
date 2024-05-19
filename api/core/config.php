@@ -53,7 +53,7 @@ Config::write('token.cookiepath', Config::read('api.path') . 'auth');
 Config::write('token.cookiesecure', false);
 
 // email
-Config::write('em.host', 'uk1.cp.netnerd.com');
+Config::write('em.host', 'cp1.uk.netnerd.com');
 Config::write('em.port', '465');
 Config::write('em.user', 'member_admin+knightsbridgeassociation.com');
 Config::write('em.replyto', 'membership@knightsbridgeassociation.com');

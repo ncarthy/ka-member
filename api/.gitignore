@@ -2,3 +2,4 @@
 
 # Add these to the repo
 !/vendor/ultimate-email/
+!/vendor/ultimate-email/**
