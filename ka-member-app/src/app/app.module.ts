@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AuthenticationService } from './_services';
 
-import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -27,7 +26,7 @@ import { SharedModule } from '@app/shared/shared.module';
     MembersModule,
     SharedModule,
   ],
-  declarations: [AppComponent, HomeComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent],
   providers: [
     {
       provide: APP_INITIALIZER,

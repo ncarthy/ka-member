@@ -1,23 +1,32 @@
 ﻿import { Component, OnInit } from '@angular/core';
-
-import { User, MemberCount, MemberName } from '@app/_models';
+import { NgFor, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { User, MemberCount } from '@app/_models';
 import {
   AuthenticationService,
-  ToastService,
   MembersService,
 } from '@app/_services';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
-@Component({ templateUrl: 'home.component.html' })
+@Component({ 
+  templateUrl: 'home.component.html',
+  standalone: true,
+  imports: [
+    RouterLink,
+    NgFor,
+    NgIf,
+    NgbTooltipModule,
+  ],
+})
 export class HomeComponent implements OnInit {
   loading = false;
   user: User;
-  membersByType!: MemberCount[];
+  membersByType: MemberCount[] = [];
   total!: number; // Estimated number of members, adjusted by contribution
   count!: number; // Actual number of members
 
   constructor(
     private authenticationService: AuthenticationService,
-    private toastService: ToastService,
     private membersService: MembersService,
   ) {
     this.user = this.authenticationService.userValue;
