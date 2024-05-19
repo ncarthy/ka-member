@@ -10,10 +10,19 @@ import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { AuthenticationService } from '@app/_services';
 
+/**
+ *  Add auth header with jwt if user is logged in and request is to the api url
+ */
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
   constructor(private authenticationService: AuthenticationService) {}
 
+  /**
+   * 
+   * @param request 
+   * @param next 
+   * @returns 
+   */
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler,
