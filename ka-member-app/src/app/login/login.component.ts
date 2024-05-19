@@ -1,12 +1,16 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, inject, OnInit } from '@angular/core';
+import { NgIf, NgClass } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AuthenticationService } from '@app/_services';
 
 @Component({
   templateUrl: 'login.component.html',
   styles: ['img { max-width:340px; max-height:240px;}'],
+  standalone: true,
+  imports: [FormsModule, NgIf, NgClass, ReactiveFormsModule],
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
@@ -15,12 +19,12 @@ export class LoginComponent implements OnInit {
   returnUrl!: string;
   error = '';
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private authenticationService: AuthenticationService,
-  ) {
+  private formBuilder = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private authenticationService = inject(AuthenticationService);
+
+  constructor() {
     // redirect to home if already logged in
     if (this.authenticationService.userValue) {
       this.router.navigate(['/']);
