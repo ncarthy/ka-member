@@ -3,14 +3,25 @@
 namespace Models;
 
 use \PDO;
-use DateTime;
+use Models\JWTWrapper;
 
 class MemberFilter{
-    // database conn 
+    /**
+     * Database connection
+     * @var PDO|null
+     */  
     private $conn;
+
+    /**
+     * The access token of the currently logged in user
+     * @var JWTWrapper
+     */
+    private JWTWrapper $jwt;
 
     public function __construct(){
         $this->conn = \Core\Database::getInstance()->conn;
+
+        $this->jwt = new JWTWrapper();
 
         $this->reset();
     }
@@ -514,7 +525,8 @@ class MemberFilter{
 
     public function anonymize()
     {
-        $username = $this->username;
+        /* Determine username */
+        $username = $this->jwt->user;
 
         /* Remove names of all members to be anonymized */
         $query = "DELETE MN

@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use Lcobucci\Clock\FrozenClock;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Validation\Constraint;
@@ -135,6 +136,10 @@ class JWTWrapper{
         $token = $parser->parse((string) $token);
 
         $token->headers(); // Retrieves the token headers
+
+        // Had problem with claims not being exposed on public interface
+        // https://github.com/lcobucci/jwt/issues/228
+        assert($token instanceof Plain);
         $claims = $token->claims(); // Retrieves the token claims
 
         $constraints = $this->config->validationConstraints();      
@@ -182,6 +187,10 @@ class JWTWrapper{
             $token = $parser->parse((string) $token);
     
             $token->headers(); // Retrieves the token headers
+
+            // Had problem with claims not being exposed on public interface
+            // https://github.com/lcobucci/jwt/issues/228
+            assert($token instanceof Plain);
             $claims = $token->claims(); // Retrieves the token claims
     
             $constraints = $this->config->validationConstraints();      
