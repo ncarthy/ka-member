@@ -6,13 +6,13 @@ import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { MembersRoutingModule } from './members-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { NgbUTCStringAdapter } from '@app/_helpers';
-import { MemberFilterService } from '@app/_services';
 
 import { MemberLayoutComponent } from './layout.component';
 import { MemberListComponent, MemberRowComponent } from './list';
 import { MemberAddEditComponent } from './add-edit/add-edit.component';
 import { MemberManageComponent } from './manage/manage.component';
 import { MemberFilterComponent } from './filter/filter.component';
+import { MemberFilterService } from '@app/_services';
 import {
   TransactionAddEditComponent,
   TransactionListComponent,
@@ -33,12 +33,12 @@ import { TransactionManagerComponent } from './transaction-manager/transaction-m
     MembersRoutingModule,
     NgbModule,
     SharedModule,
+    MemberFilterComponent,
   ],
   declarations: [
     MemberLayoutComponent,
     MemberListComponent,
     MemberRowComponent,
-    MemberFilterComponent,
     MemberAddEditComponent,
     MemberManageComponent,
     TransactionListComponent,

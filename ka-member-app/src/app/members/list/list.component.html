@@ -2,14 +2,23 @@
   <div class="col-sm-6">
     <h1>{{ members && members.length }} Members Found</h1>
   </div>
-  <div class="col-sm-2">
-    <button
-      routerLink="/members/add"
-      class="btn btn-sm btn-success m-1 mt-1"
-      *ngIf="user.isAdmin"
-    >
-      Add New Member
-    </button>
+  <div class="col-sm-4">
+    <div class="d-flex flex-row">
+      <div>
+        <button class="btn btn-primary me-2" (click)="exportToCSV()">
+          Export To CSV
+        </button>
+      </div>
+      <div>
+        <button
+        routerLink="/members/add"
+        class="btn btn-success"
+        *ngIf="user.isAdmin"
+      >
+        Add New Member
+      </button>
+    </div>
+  </div>
   </div>
 </div>
 <member-filter

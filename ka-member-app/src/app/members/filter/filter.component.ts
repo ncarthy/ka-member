@@ -1,8 +1,25 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import {
+  NgFor,
+  NgIf,
+  AsyncPipe,
+  KeyValue,
+  KeyValuePipe,
+} from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { KeyValue } from '@angular/common';
-import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbAccordionModule,
+  NgbDatepickerModule,
+  NgbDropdownModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 import {
@@ -15,6 +32,7 @@ import {
 
 import {
   CountryService,
+  ExportToCsvService,
   MemberFilterService,
   MembershipStatusService,
   PaymentTypeService,
@@ -33,6 +51,19 @@ import { DateRangeAdapter } from '@app/_helpers';
 @Component({
   selector: 'member-filter',
   templateUrl: './filter.component.html',
+  styleUrls: ['./filter.component.css'],
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    KeyValuePipe,
+    NgbAccordionModule,
+    NgbDatepickerModule,
+    NgbDropdownModule,
+    NgbTooltipModule,
+    NgFor,
+    NgIf,
+    ReactiveFormsModule,
+  ],
 })
 export class MemberFilterComponent implements OnInit {
   @Output()
@@ -77,10 +108,6 @@ export class MemberFilterComponent implements OnInit {
   }
   get dateRangesFormGroups() {
     return this.dr.controls as FormGroup[];
-  }
-
-  beforeChange($event: NgbPanelChangeEvent) {
-    this.panelOpen = $event.nextState;
   }
 
   ngOnInit(): void {

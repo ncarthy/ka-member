@@ -1,30 +1,24 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from '@app/_services';
+import { AuthenticationService, ExportToCsvService } from '@app/_services';
 import { MemberFilter, MemberSearchResult, User } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
-export class MemberListComponent implements OnInit {
+export class MemberListComponent {
   members!: MemberSearchResult[];
   user!: User;
   loading: boolean = false;
   filter!: MemberFilter;
 
-  constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService,
-  ) {
-    this.user = this.authenticationService.userValue;
-  }
+  
+  private exportToCsvService = inject(ExportToCsvService);
+  private router = inject(Router);
+  private authenticationService = inject(AuthenticationService);
 
-  ngOnInit() {
-    // Checks if screen size is less than 768 pixels
-    // Is used to show/hide table columns
-    const checkScreenSize = () => {
-      return document.body.offsetWidth <= 768;
-    };
+  constructor() {
+    this.user = this.authenticationService.userValue;
   }
 
   /* remove member from visible list */
@@ -54,4 +48,11 @@ export class MemberListComponent implements OnInit {
   filterIsLoading(value: boolean) {
     this.loading = value;
   }
+
+    /**
+   * Export the csvEmails array to a CSV file
+   */
+    exportToCSV(): void {
+      this.exportToCsvService.exportToCSV(this.members);
+    }
 }

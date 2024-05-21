@@ -20,436 +20,415 @@
     </div>
   </div>
 
-  <!--<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">-->
-  <ngb-accordion #acc="ngbAccordion" (panelChange)="beforeChange($event)">
-    <ngb-panel title="Filter">
-      <ng-template ngbPanelHeader let-opened="opened">
-        <div class="d-flex align-items-center justify-content-between">
+  <div ngbAccordion>
+    <div ngbAccordionItem="filter" #filter="ngbAccordionItem" [collapsed]="true" class="mb-2 col-sm">
+      <div
+        ngbAccordionHeader
+        class="accordion-button custom-header justify-content-between"
+      >
+        <div class="d-flex flex-row">
+          <button
+            ngbAccordionToggle
+            class="btn btn-link mb-2"
+            *ngIf="!working"
+            placement="bottom"
+            ngbTooltip="Show/Hide Filter Options"
+            container="body"
+          >
+            <i class="fas fa-chevron-down" *ngIf="filter.collapsed"></i>
+            <i class="fas fa-chevron-up" *ngIf="!filter.collapsed"></i>
+          </button>
           <div>
-            <button
-              ngbPanelToggle
-              class="btn btn-link mb-2"
-              *ngIf="!working"
-              placement="bottom"
-              ngbTooltip="Show/Hide Filter Options"
-              container="body"
-            >
-              <i class="fas fa-chevron-down" *ngIf="!panelOpen"></i>
-              <i class="fas fa-chevron-up" *ngIf="panelOpen"></i>
-            </button>
-            <span>Member Filter</span>
+            <h4>Member Filter</h4>
           </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
           <span *ngIf="working" class="spinner-border spinner-border-sm"></span>
-          <div class="row justify-content-end mb-2 mr-2">
+          <div class="row justify-content-end mb-2 me-2">
             <div class="col">
               <a class="btn btn-link" (click)="onReset()">Reset</a>
             </div>
-            <div class="col" *ngIf="false">
-              <!-- 'container="body"'' allows dropdown to overflow parent container into body-->
-              <div ngbDropdown container="body">
-                <a
-                  class="btn btn-link"
-                  id="filterSettings"
-                  ngbDropdownToggle
-                  placement="bottom"
-                  ngbTooltip="Settings"
-                  container="body"
-                  ><i class="fas fa-cog"></i
-                ></a>
-                <div ngbDropdownMenu>
-                  <button ngbDropdownItem>Edit</button>
-                  <button ngbDropdownItem>Duplicate</button>
-                  <button ngbDropdownItem>Move</button>
-                  <div class="dropdown-divider"></div>
-                  <button ngbDropdownItem>Delete</button>
-                </div>
-              </div>
-              <div ngbDropdown container="body">
-                <a
-                  class="btn btn-link"
-                  id="filterShare"
-                  ngbDropdownToggle
-                  placement="bottom"
-                  ngbTooltip="Export"
-                  container="body"
-                  >Export</a
-                >
-                <div ngbDropdownMenu>
-                  <button ngbDropdownItem>CSV</button>
-                  <button ngbDropdownItem>Excel</button>
-                  <button ngbDropdownItem>PDF</button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-      </ng-template>
-      <ng-template ngbPanelContent>
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="input-group">
-              <span class="input-group-text col-6" id="status-label">Type</span>
-              <select
-                formControlName="membertypeid"
-                id="statusSelect"
-                name="statusSelect"
-                class="form-control"
-              >
-                <option selected [ngValue]="null">Any</option>
-                <option
-                  *ngFor="let status of membershipStatuses$ | async"
-                  [ngValue]="status.id"
-                >
-                  {{ status.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <!--End of Member Type seelect-->
-          <div class="col-sm-4">
-            <div class="input-group">
-              <span class="input-group-text" id="address-label"
-                ><i class="fas fa-search"></i
-              ></span>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search Primary Address"
-                id="addressInput"
-                name="addressInput"
-                formControlName="address"
-              />
-            </div>
-          </div>
-          <!-- End of 1st line of address -->
-          <div class="col-sm-4 mb-1">
-            <div class="input-group mb-1">
-              <span class="input-group-text col-5" id="country-label"
-                >Country</span
-              >
-              <select
-                formControlName="countryid"
-                id="countrySelect"
-                name="countrySelect"
-                class="form-control"
-              >
-                <option selected [ngValue]="null">Any</option>
-                <option
-                  *ngFor="let country of countries$ | async"
-                  [ngValue]="country.id"
-                >
-                  {{ country.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <!-- End of country select-->
-        </div>
-
-        <div class="w-100"><hr /></div>
-        <!-- Divider -->
-
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="input-group mb-1">
-              <span class="input-group-text col-6" id="removed-label"
-                >Past Members?</span
-              >
-              <div class="card p-2 col-6">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="removed_yes"
-                    formControlName="removed"
-                    [value]="YesNoAny.YES"
-                  />
-                  <label class="form-check-label" for="removed_yes">
-                    Yes
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="removed_no"
-                    formControlName="removed"
-                    [value]="YesNoAny.NO"
-                  />
-                  <label class="form-check-label" for="removed_no"> No </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="removed_any"
-                    formControlName="removed"
-                    [value]="YesNoAny.ANY"
-                    checked
-                  />
-                  <label class="form-check-label" for="removed_any">
-                    Either
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4 mb-1">
-            <div class="input-group mb-1">
-              <span class="input-group-text col-5" id="email-label"
-                >Have Email?</span
-              >
-              <div class="card p-2 col-7">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="email_yes"
-                    formControlName="hasemail"
-                    [value]="YesNoAny.YES"
-                  />
-                  <label class="form-check-label" for="email_yes"> Yes </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="email_no"
-                    formControlName="hasemail"
-                    [value]="YesNoAny.NO"
-                  />
-                  <label class="form-check-label" for="email_no"> No </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="email_any"
-                    formControlName="hasemail"
-                    [value]="YesNoAny.ANY"
-                    checked
-                  />
-                  <label class="form-check-label" for="email_any">
-                    Either
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-4 mb-1">
-            <div class="input-group mb-1">
-              <span class="input-group-text col-5" id="postonhold-label"
-                >Post On Hold</span
-              >
-              <div class="card p-2 col-7">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="postonholdyes"
-                    formControlName="postonhold"
-                    [value]="YesNoAny.YES"
-                  />
-                  <label class="form-check-label" for="postonholdyes">
-                    Yes
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="postonholdno"
-                    formControlName="postonhold"
-                    [value]="YesNoAny.NO"
-                  />
-                  <label class="form-check-label" for="postonholdno">
-                    No
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    id="postonholdany"
-                    formControlName="postonhold"
-                    [value]="YesNoAny.ANY"
-                    checked
-                  />
-                  <label class="form-check-label" for="postonholdany">
-                    Either
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- End of Row-->
-        </div>
-
-        <div class="w-100"><hr /></div>
-        <!-- Divider -->
-
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="input-group">
-              <span class="input-group-text col-6" id="pmttype-label"
-                >Payment Type</span
-              >
-              <select
-                formControlName="paymenttypeid"
-                id="paymentTypeSelect"
-                name="paymentTypeSelect"
-                class="form-control"
-              >
-                <option selected [ngValue]="null">Any</option>
-                <option
-                  *ngFor="let pmtType of paymentTypes$ | async"
-                  [ngValue]="pmtType.id"
-                >
-                  {{ pmtType.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <!--End of Payment Type select-->
-          <div class="col-sm-4">
-            <div class="input-group">
-              <span class="input-group-text" id="email-label"
-                ><i class="fas fa-search"></i
-              ></span>
-
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search Email Address"
-                id="emailInput"
-                name="emailInput"
-                formControlName="email"
-              />
-            </div>
-          </div>
-          <!-- End of Email search -->
-        </div>
-
-        <div class="w-100"><hr /></div>
-        <!-- Divider -->
-
-        <!-- array of Date range filters -->
-        <div
-          *ngFor="let date of dateRangesFormGroups; let i = index"
-          class="list-group list-group-flush col"
-        >
-          <div [formGroup]="date" class="form-row">
+      </div>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody>
+          <ng-template>
             <div class="row">
-              <div class="col-sm-auto">
-                <div class="input-group col p-0 mb-1">
-                  <select formControlName="dateType" class="form-control">
-                    <option value="Date Type"></option>
-                    <option value="joindate">Joining</option>
-                    <option value="expirydate">Expiring</option>
-                    <option value="updatedate">Updated</option>
-                    <option value="reminderdate">Reminder send</option>
-                    <option value="lasttransactiondate">
-                      Last Transaction
+              <div class="col-sm-4">
+                <div class="input-group">
+                  <span class="input-group-text col-6" id="status-label"
+                    >Type</span
+                  >
+                  <select
+                    formControlName="membertypeid"
+                    id="statusSelect"
+                    name="statusSelect"
+                    class="form-control"
+                  >
+                    <option selected [ngValue]="null">Any</option>
+                    <option
+                      *ngFor="let status of membershipStatuses$ | async"
+                      [ngValue]="status.id"
+                    >
+                      {{ status.name }}
                     </option>
-                    <option value="deletedate">Deleted</option>
                   </select>
                 </div>
               </div>
-              <div class="col-sm-auto pl-2">
-                <select
-                  class="form-control"
-                  #selectList
-                  (change)="onDateRangeChanged(i, selectList.value)"
-                >
-                  <option disabled selected [ngValue]="null">
-                    -- select --
-                  </option>
-                  <option
-                    *ngFor="let item of DateRange | keyvalue: originalOrder"
-                    value="{{ item.value }}"
+              <!--End of Member Type seelect-->
+              <div class="col-sm-4">
+                <div class="input-group">
+                  <span class="input-group-text" id="address-label"
+                    ><i class="fas fa-search"></i
+                  ></span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search Primary Address"
+                    id="addressInput"
+                    name="addressInput"
+                    formControlName="address"
+                  />
+                </div>
+              </div>
+              <!-- End of 1st line of address -->
+              <div class="col-sm-4 mb-1">
+                <div class="input-group mb-1">
+                  <span class="input-group-text col-5" id="country-label"
+                    >Country</span
                   >
-                    {{ item.value }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-auto pl-2 pt-2">between</div>
-              <div class="col-sm-auto">
-                <div class="input-group col p-0 mb-1">
-                  <input
+                  <select
+                    formControlName="countryid"
+                    id="countrySelect"
+                    name="countrySelect"
                     class="form-control"
-                    placeholder="Start"
-                    name="dp1"
-                    ngbDatepicker
-                    #d1="ngbDatepicker"
-                    formControlName="startDate"
-                    id="inputStartDate"
-                    placement="top"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      class="btn btn-outline-secondary"
-                      (click)="d1.toggle()"
-                      type="button"
+                  >
+                    <option selected [ngValue]="null">Any</option>
+                    <option
+                      *ngFor="let country of countries$ | async"
+                      [ngValue]="country.id"
                     >
-                      <i class="far fa-calendar-alt"></i>
-                    </button>
+                      {{ country.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <!-- End of country select-->
+            </div>
+
+            <div class="w-100"><hr /></div>
+            <!-- Divider -->
+
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="input-group mb-1">
+                  <span class="input-group-text col-6" id="removed-label"
+                    >Past Members?</span
+                  >
+                  <div class="card p-2 col-6">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="removed_yes"
+                        formControlName="removed"
+                        [value]="YesNoAny.YES"
+                      />
+                      <label class="form-check-label" for="removed_yes">
+                        Yes
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="removed_no"
+                        formControlName="removed"
+                        [value]="YesNoAny.NO"
+                      />
+                      <label class="form-check-label" for="removed_no">
+                        No
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="removed_any"
+                        formControlName="removed"
+                        [value]="YesNoAny.ANY"
+                        checked
+                      />
+                      <label class="form-check-label" for="removed_any">
+                        Either
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-sm-auto pl-2 pt-2">and</div>
-              <div class="col-sm-auto">
-                <div class="input-group col p-0 mb-1">
-                  <input
-                    class="form-control"
-                    placeholder="End"
-                    name="dp2"
-                    ngbDatepicker
-                    #d2="ngbDatepicker"
-                    formControlName="endDate"
-                    id="inputEndDate"
-                    placement="top"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      class="btn btn-outline-secondary"
-                      (click)="d2.toggle()"
-                      type="button"
-                    >
-                      <i class="far fa-calendar-alt"></i>
-                    </button>
+              <div class="col-sm-4 mb-1">
+                <div class="input-group mb-1">
+                  <span class="input-group-text col-5" id="email-label"
+                    >Have Email?</span
+                  >
+                  <div class="card p-2 col-7">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="email_yes"
+                        formControlName="hasemail"
+                        [value]="YesNoAny.YES"
+                      />
+                      <label class="form-check-label" for="email_yes">
+                        Yes
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="email_no"
+                        formControlName="hasemail"
+                        [value]="YesNoAny.NO"
+                      />
+                      <label class="form-check-label" for="email_no">
+                        No
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="email_any"
+                        formControlName="hasemail"
+                        [value]="YesNoAny.ANY"
+                        checked
+                      />
+                      <label class="form-check-label" for="email_any">
+                        Either
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-              <!-- Dates buttons -->
-              <div class="col-sm-1 mt-1 mr-1">
-                <button
-                  type="button"
-                  class="mr-3"
-                  (click)="onAddDateRange()"
-                  placement="bottom"
-                  ngbTooltip="Add new date filter"
-                >
-                  +
-                </button>
-                <button
-                  *ngIf="i !== 0"
-                  type="button"
-                  class="close"
-                  (click)="onRemoveDateRange(i)"
-                  placement="bottom"
-                  ngbTooltip="Remove date filter"
-                >
-                  <span>&times;</span>
-                </button>
+
+              <div class="col-sm-4 mb-1">
+                <div class="input-group mb-1">
+                  <span class="input-group-text col-5" id="postonhold-label"
+                    >Post On Hold</span
+                  >
+                  <div class="card p-2 col-7">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="postonholdyes"
+                        formControlName="postonhold"
+                        [value]="YesNoAny.YES"
+                      />
+                      <label class="form-check-label" for="postonholdyes">
+                        Yes
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="postonholdno"
+                        formControlName="postonhold"
+                        [value]="YesNoAny.NO"
+                      />
+                      <label class="form-check-label" for="postonholdno">
+                        No
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        id="postonholdany"
+                        formControlName="postonhold"
+                        [value]="YesNoAny.ANY"
+                        checked
+                      />
+                      <label class="form-check-label" for="postonholdany">
+                        Either
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End of Row-->
+            </div>
+
+            <div class="w-100"><hr /></div>
+            <!-- Divider -->
+
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="input-group">
+                  <span class="input-group-text col-6" id="pmttype-label"
+                    >Payment Type</span
+                  >
+                  <select
+                    formControlName="paymenttypeid"
+                    id="paymentTypeSelect"
+                    name="paymentTypeSelect"
+                    class="form-control"
+                  >
+                    <option selected [ngValue]="null">Any</option>
+                    <option
+                      *ngFor="let pmtType of paymentTypes$ | async"
+                      [ngValue]="pmtType.id"
+                    >
+                      {{ pmtType.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <!--End of Payment Type select-->
+              <div class="col-sm-4">
+                <div class="input-group">
+                  <span class="input-group-text" id="email-label"
+                    ><i class="fas fa-search"></i
+                  ></span>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search Email Address"
+                    id="emailInput"
+                    name="emailInput"
+                    formControlName="email"
+                  />
+                </div>
+              </div>
+              <!-- End of Email search -->
+            </div>
+
+            <div class="w-100"><hr /></div>
+            <!-- Divider -->
+
+            <!-- array of Date range filters -->
+            <div
+              *ngFor="let date of dateRangesFormGroups; let i = index"
+              class="list-group list-group-flush col"
+            >
+              <div [formGroup]="date" class="form-row">
+                <div class="row">
+                  <div class="col-sm-auto">
+                    <div class="input-group col p-0 mb-1">
+                      <select formControlName="dateType" class="form-control">
+                        <option value="Date Type"></option>
+                        <option value="joindate">Joining</option>
+                        <option value="expirydate">Expiring</option>
+                        <option value="updatedate">Updated</option>
+                        <option value="reminderdate">Reminder send</option>
+                        <option value="lasttransactiondate">
+                          Last Transaction
+                        </option>
+                        <option value="deletedate">Deleted</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-auto pl-2">
+                    <select
+                      class="form-control"
+                      #selectList
+                      (change)="onDateRangeChanged(i, selectList.value)"
+                    >
+                      <option disabled selected [ngValue]="null">
+                        -- select --
+                      </option>
+                      <option
+                        *ngFor="let item of DateRange | keyvalue: originalOrder"
+                        value="{{ item.value }}"
+                      >
+                        {{ item.value }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-sm-auto pl-2 pt-2">between</div>
+                  <div class="col-sm-auto">
+                    <div class="input-group col p-0 mb-1">
+                      <input
+                        class="form-control"
+                        placeholder="Start"
+                        name="dp1"
+                        ngbDatepicker
+                        #d1="ngbDatepicker"
+                        formControlName="startDate"
+                        id="inputStartDate"
+                        placement="top"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-secondary"
+                          (click)="d1.toggle()"
+                          type="button"
+                        >
+                          <i class="far fa-calendar-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-auto pl-2 pt-2">and</div>
+                  <div class="col-sm-auto">
+                    <div class="input-group col p-0 mb-1">
+                      <input
+                        class="form-control"
+                        placeholder="End"
+                        name="dp2"
+                        ngbDatepicker
+                        #d2="ngbDatepicker"
+                        formControlName="endDate"
+                        id="inputEndDate"
+                        placement="top"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-secondary"
+                          (click)="d2.toggle()"
+                          type="button"
+                        >
+                          <i class="far fa-calendar-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Dates buttons -->
+                  <div class="col-sm-1 mt-1 mr-1">
+                    <button
+                      type="button"
+                      class="mr-3"
+                      (click)="onAddDateRange()"
+                      placement="bottom"
+                      ngbTooltip="Add new date filter"
+                    >
+                      +
+                    </button>
+                    <button
+                      *ngIf="i !== 0"
+                      type="button"
+                      class="close"
+                      (click)="onRemoveDateRange(i)"
+                      placement="bottom"
+                      ngbTooltip="Remove date filter"
+                    >
+                      <span>&times;</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- End of Dates buttons -->
               </div>
             </div>
-            <!-- End of Dates buttons -->
-          </div>
+          </ng-template>
         </div>
-      </ng-template>
-    </ngb-panel>
-  </ngb-accordion>
+      </div>
+    </div>
+  </div>
   <div *ngIf="false">
     <p>Form Value: {{ form.value | json }}</p>
     <p>Form Status: {{ form.status }}</p>
