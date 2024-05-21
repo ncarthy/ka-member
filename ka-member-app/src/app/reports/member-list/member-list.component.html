@@ -6,14 +6,14 @@
   <div class="col-sm-3 mb-2">
     <button
       (click)="setAllToFormer()"
-      class="btn btn-danger mr-2"
+      class="btn btn-danger me-2"
       *ngIf="user.isAdmin && title == 'Lapsed Contributing Ex-Members'"
     >
       Set All To Former
     </button>
     <button
       (click)="anonymizeAll()"
-      class="btn btn-danger mr-2"
+      class="btn btn-danger me-2"
       *ngIf="user.isAdmin && title == 'Former Members Not Anonymized'"
     >
       Anonymize All
