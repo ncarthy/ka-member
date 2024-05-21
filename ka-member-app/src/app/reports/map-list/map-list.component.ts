@@ -1,5 +1,13 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  Component,
+  inject,
+  ViewChild,
+  ElementRef,
+  OnInit,
+} from '@angular/core';
+import { NgIf } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { MembersService } from '@app/_services';
 import { map, switchMap } from 'rxjs/operators';
 import { Address } from '@app/_models';
@@ -13,6 +21,8 @@ import { ListType } from './list-type.enum';
 @Component({
   templateUrl: './map-list.component.html',
   styleUrls: ['./map-list.component.css'],
+  standalone: true,
+  imports: [NgIf, ReactiveFormsModule, RouterLink],
 })
 export class MapListComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) gmap!: ElementRef;
@@ -34,10 +44,10 @@ export class MapListComponent implements OnInit {
     zoom: 16,
   };
 
-  constructor(
-    private membersService: MembersService,
-    private formBuilder: FormBuilder,
-  ) {
+  private membersService = inject(MembersService);
+  private formBuilder = inject(FormBuilder);
+
+  constructor() {
     this.geocoder = new google.maps.Geocoder();
 
     // Create an Observable of Address

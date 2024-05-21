@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { NgFor, NgIf, Location } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { from } from 'rxjs';
 import {
@@ -20,6 +20,8 @@ import { EmailClientComponent } from '@app/email/modals/email-client.component';
 @Component({
   templateUrl: './member-list.component.html',
   styleUrls: ['member-list.component.css'],
+  standalone: true,
+  imports: [NgFor, NgIf, RouterLink],
 })
 export class MemberListComponent implements OnInit {
   @Input() title!: string;
@@ -30,16 +32,16 @@ export class MemberListComponent implements OnInit {
   loading: boolean = false;
   showDeleteDate: boolean = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private membersService: MembersService,
-    private memberService: MemberService,
-    private alertService: AlertService,
-    private authenticationService: AuthenticationService,
-    private location: Location,
-    private modalService: NgbModal,
-  ) {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private membersService = inject(MembersService);
+  private memberService = inject(MemberService);
+  private alertService = inject(AlertService);
+  private authenticationService = inject(AuthenticationService);
+  private location = inject(Location);
+  private modalService = inject(NgbModal);
+
+  constructor() {
     this.user = this.authenticationService.userValue;
   }
 

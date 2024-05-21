@@ -1,21 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import { Component, inject, OnInit } from '@angular/core';
+import { Location, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import {
+  NgbAccordionModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '@app/_services';
 import { User } from '@app/_models';
 
 @Component({
-  selector: 'app-reports',
   templateUrl: './reports.component.html',
+  standalone: true,
+  imports: [NgbAccordionModule, NgbTooltipModule, NgIf, RouterLink],
 })
 export class ReportsComponent implements OnInit {
   user: User;
-  panelOpen: boolean[] = [false, false, false, false]; // 4 Accordians
 
-  constructor(
-    private location: Location,
-    private authenticationService: AuthenticationService,
-  ) {
+  private location = inject(Location);
+  private authenticationService = inject(AuthenticationService);
+
+  constructor() {
     this.user = this.authenticationService.userValue;
   }
 
@@ -24,13 +28,5 @@ export class ReportsComponent implements OnInit {
   goBack() {
     this.location.back();
     return false; // don't propagate event
-  }
-
-  beforeChange(event: NgbPanelChangeEvent) {
-    // panelID is one of 'static-1', 'static-2','static-3','static-4'
-    let panelId =
-      parseInt(event.panelId.substring(event.panelId.length - 1)) - 1;
-
-    this.panelOpen[panelId] = event.nextState;
   }
 }

@@ -1,10 +1,12 @@
 import {
   Component,
+  inject,
   Input,
   OnChanges,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { CommonModule, NgFor } from '@angular/common';
 import {
   AuthenticationService,
   PaymentTypeService,
@@ -21,6 +23,8 @@ import {
 @Component({
   selector: 'transactions-detail',
   templateUrl: './transactions-detail.component.html',
+  standalone: true,
+  imports: [CommonModule, NgFor],
 })
 export class TransactionsDetailComponent implements OnInit, OnChanges {
   @Input() bankAccounts?: BankAccount[];
@@ -31,11 +35,11 @@ export class TransactionsDetailComponent implements OnInit, OnChanges {
   transactions!: TransactionDetail[];
   paymentTypes?: PaymentType[];
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private transactionsService: TransactionsService,
-    private paymentTypeService: PaymentTypeService,
-  ) {
+  private authenticationService = inject(AuthenticationService);
+  private transactionsService = inject(TransactionsService);
+  private paymentTypeService = inject(PaymentTypeService);
+
+  constructor() {
     this.user = this.authenticationService.userValue;
   }
 

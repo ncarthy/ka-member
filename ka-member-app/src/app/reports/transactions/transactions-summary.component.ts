@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { KeyValue } from '@angular/common';
-import { switchMap } from 'rxjs/operators';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule, KeyValue, NgIf, NgFor } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { BankAccountService, TransactionsService } from '@app/_services';
 import {
@@ -11,9 +12,20 @@ import {
   TransactionSummary,
 } from '@app/_models';
 import { DateRangeAdapter } from '@app/_helpers';
+import { TransactionsDetailComponent } from './transactions-detail/transactions-detail.component';
 
 @Component({
   templateUrl: './transactions-summary.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    NgbDatepickerModule,
+    NgFor,
+    NgIf,
+    ReactiveFormsModule,
+    RouterLink,
+    TransactionsDetailComponent,
+  ],
 })
 export class TransactionsSummaryComponent implements OnInit {
   summary?: TransactionSummary[];
@@ -24,12 +36,10 @@ export class TransactionsSummaryComponent implements OnInit {
   detail: boolean = false;
   selectedRow?: TransactionSummary;
 
-  constructor(
-    private bankAccountService: BankAccountService,
-    private transactionsService: TransactionsService,
-    private dateRangeAdapter: DateRangeAdapter,
-    private formBuilder: FormBuilder,
-  ) {}
+  private bankAccountService = inject(BankAccountService);
+  private transactionsService = inject(TransactionsService);
+  private dateRangeAdapter = inject(DateRangeAdapter);
+  private formBuilder = inject(FormBuilder);
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

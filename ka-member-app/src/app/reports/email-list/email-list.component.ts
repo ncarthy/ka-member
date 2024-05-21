@@ -2,16 +2,21 @@ import {
   Component,
   EventEmitter,
   Input,
+  inject,
   OnChanges,
   OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { ExportToCsvService, MembersService } from '@app/_services';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'email-list',
   templateUrl: './email-list.component.html',
+  standalone: true,
+  imports: [NgFor, NgIf, RouterLink],
 })
 export class EmailListComponent implements OnInit, OnChanges {
   @Input() ids: number[] = new Array();
@@ -21,10 +26,8 @@ export class EmailListComponent implements OnInit, OnChanges {
   csvEmails: any[] = new Array();
   loading: boolean = false;
 
-  constructor(
-    private membersService: MembersService,
-    private exportToCsvService: ExportToCsvService,
-  ) {}
+  private membersService = inject(MembersService);
+  private exportToCsvService = inject(ExportToCsvService);
 
   ngOnInit(): void {
     this.loading = true;

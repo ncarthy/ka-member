@@ -10,8 +10,8 @@ const usersRoutes = () =>
   import('./users/users.routes').then((x) => x.USERS_ROUTES);
 const membersModule = () =>
   import('./members/members.module').then((x) => x.MembersModule);
-const reportsModule = () =>
-  import('./reports/reports.module').then((x) => x.ReportsModule);
+const reportsRoutes = () =>
+  import('./reports/reports.routes').then((x) => x.REPORTS_ROUTES);
 
 export const APP_ROUTES: Routes = [
   {
@@ -25,7 +25,7 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'reports',
-    loadChildren: reportsModule,
+    loadChildren: reportsRoutes,
     canActivate: [authGuard],
   },
   {
