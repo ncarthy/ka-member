@@ -15,7 +15,7 @@ import {
   MemberService,
   MembersService,
 } from '@app/_services';
-import { EmailClientComponent } from '@app/email/modals/email-client.component';
+import { EmailClientComponent } from '@app/email/email-client.component';
 
 @Component({
   templateUrl: './member-list.component.html',
