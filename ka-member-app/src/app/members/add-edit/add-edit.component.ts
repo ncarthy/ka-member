@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, inject, OnInit } from '@angular/core';
 import { Location, NgClass, NgFor, NgIf } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -38,12 +38,13 @@ import {
   MemberAnonymizeConfirmModalComponent,
   MemberDeleteConfirmModalComponent,
 } from '../modals';
+import { SharedModule } from '@app/shared/shared.module'
 
 @Component({
   templateUrl: 'add-edit.component.html',
   styleUrls: ['add-edit.component.css'],
   standalone: true,
-  imports: [ NgbDatepickerModule, NgbTooltipModule, NgClass, NgFor, NgIf, ReactiveFormsModule, RouterLink ],
+  imports: [ SharedModule, NgbDatepickerModule, NgbTooltipModule, NgClass, NgFor, NgIf, ReactiveFormsModule, RouterLink ],
 })
 export class MemberAddEditComponent implements OnInit {
   form!: FormGroup;
@@ -57,18 +58,20 @@ export class MemberAddEditComponent implements OnInit {
   primaryAddress!: Address;
   secondaryAddress!: Address;
 
+  private formBuilder = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private location = inject(Location);
+  private alertService = inject(AlertService);
+  private authenticationService = inject(AuthenticationService);
+  private countryService = inject(CountryService);
+  private memberService = inject(MemberService);
+  private memberNameService = inject(MemberNameService);
+  private membershipStatusService = inject(MembershipStatusService);
+  public modalService = inject(NgbModal);
+
   constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private location: Location,
-    private alertService: AlertService,
-    private authenticationService: AuthenticationService,
-    private countryService: CountryService,
-    private memberService: MemberService,
-    private memberNameService: MemberNameService,
-    private membershipStatusService: MembershipStatusService,
-    public modalService: NgbModal,
+
   ) {
     this.user = this.authenticationService.userValue;
   }
@@ -380,5 +383,14 @@ export class MemberAddEditComponent implements OnInit {
           }),
       });
     }); // If user dismisses the modal just ignore it
+  }
+
+  showAnonymizeButton() {
+    return this.user.isAdmin &&
+    this.f['statusID'] &&
+    this.f['statusID'].value === 9 &&
+    this.namesFormGroups &&
+    this.namesFormGroups[0] &&
+    this.namesFormGroups[0].value.surname !== 'Anonymized'
   }
 }

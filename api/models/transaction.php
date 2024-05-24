@@ -233,7 +233,7 @@ class Transaction{
                     $item = array(
                         "id" => $id,
                         "date" => $date,
-                        "note" => html_entity_decode($note),
+                        "note" => html_entity_decode($note ?? ''),
                         "amount" => $amount,
                         "idmember" => $idmember,
                         "bankID" => $bankID,

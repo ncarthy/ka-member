@@ -129,7 +129,7 @@ class Transactions{
                     "amount" => $amount,
                     "paymenttypeID" => $paymenttypeID,
                     "idmember" => $member_idmember,
-                    "note" => $note,
+                    "note" => $note ?? '',
                     "name" => $name,
                     "businessname" => $businessname
                 );

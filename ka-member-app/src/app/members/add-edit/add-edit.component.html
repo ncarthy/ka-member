@@ -59,12 +59,7 @@
         Set to 'Former'
       </button>
       <button
-        *ngIf="
-          user.isAdmin &&
-          f['statusID'].value === 9 &&
-          namesFormGroups &&
-          namesFormGroups[0].value.surname !== 'Anonymized'
-        "
+        *ngIf="showAnonymizeButton()"
         type="button"
         [disabled]="loading"
         class="btn btn-warning mr-1"
@@ -77,7 +72,7 @@
         Anonymize
       </button>
       <button
-        *ngIf="user.isAdmin && f['statusID'].value === 9"
+        *ngIf="user.isAdmin && f['statusID'] && f['statusID'].value === 9"
         type="button"
         [disabled]="loading"
         class="btn btn-danger"
@@ -560,12 +555,7 @@
           Set to 'Former'
         </button>
         <button
-          *ngIf="
-            user.isAdmin &&
-            f['statusID'].value === 9 &&
-            namesFormGroups &&
-            namesFormGroups[0].value.surname !== 'Anonymized'
-          "
+          *ngIf="showAnonymizeButton()"
           type="button"
           [disabled]="loading"
           class="btn btn-warning mr-1"
@@ -592,5 +582,9 @@
         </button>
       </div>
     </div>
+  </div>
+  <div *ngIf="false">
+    <p>Form Value: {{ form.value | json }}</p>
+    <p>Form Status: {{ form.status }}</p>
   </div>
 </form>
