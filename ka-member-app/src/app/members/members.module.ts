@@ -39,7 +39,6 @@ import { TransactionManagerComponent } from './transaction-manager/transaction-m
     MemberLayoutComponent,
     MemberListComponent,
     MemberRowComponent,
-    MemberAddEditComponent,
     MemberManageComponent,
     TransactionListComponent,
     TransactionRowComponent,

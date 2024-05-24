@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Location, NgClass, NgFor, NgIf } from '@angular/common';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -9,12 +9,12 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbDatepickerModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {} from 'googlemaps';
 
 import { from, throwError } from 'rxjs';
-import { first, map, concatMap, catchError } from 'rxjs/operators';
+import { map, concatMap, catchError } from 'rxjs/operators';
 
 import {
   AlertService,
@@ -42,6 +42,8 @@ import {
 @Component({
   templateUrl: 'add-edit.component.html',
   styleUrls: ['add-edit.component.css'],
+  standalone: true,
+  imports: [ NgbDatepickerModule, NgbTooltipModule, NgClass, NgFor, NgIf, ReactiveFormsModule, RouterLink ],
 })
 export class MemberAddEditComponent implements OnInit {
   form!: FormGroup;
