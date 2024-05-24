@@ -78,14 +78,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ka-member-app:build"
+            "buildTarget": "ka-member-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ka-member-app:build:production"
+              "buildTarget": "ka-member-app:build:production"
             },
             "development": {
-              "browserTarget": "ka-member-app:build:development"
+              "buildTarget": "ka-member-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -93,7 +93,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ka-member-app:build"
+            "buildTarget": "ka-member-app:build"
           }
         },
         "test": {
