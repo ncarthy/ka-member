@@ -14,11 +14,11 @@ import { GetAddressIOAddress } from '@app/_models';
   selector: 'address-search-box2',
   template: `
     <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1"
+
+        <span class="input-group-text col-4" id="basic-addon1"
           ><i class="fas fa-search"></i
         ></span>
-      </div>
+   
       <input
         type="text"
         class="form-control"

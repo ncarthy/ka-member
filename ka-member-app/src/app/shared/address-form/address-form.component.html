@@ -6,12 +6,12 @@
   </div>
   <div class="mb-3" *ngIf="!address || !address.postcode">
     <label class="form-label">Find address by postcode:</label>
-    <address-search-box2
+    <address-search-box
       (loading)="loading = $event"
       (results)="updateAddresses($event)"
       [disable]="false"
     >
-    </address-search-box2>
+    </address-search-box>
   </div>
   <select
     class="col mb-2"
