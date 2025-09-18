@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from './home';
@@ -8,7 +7,7 @@ import { Role } from './_models';
 
 const usersRoutes = () =>
   import('./users/users.routes').then((x) => x.USERS_ROUTES);
-const membersRoutes= () =>
+const membersRoutes = () =>
   import('./members/members.routes').then((x) => x.MEMBERS_ROUTES);
 const reportsRoutes = () =>
   import('./reports/reports.routes').then((x) => x.REPORTS_ROUTES);

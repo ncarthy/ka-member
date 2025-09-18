@@ -13,5 +13,5 @@ export const MEMBERS_ROUTES: Routes = [
   { path: 'transactions/:idmember', component: TransactionManagerComponent },
   { path: 'country/:countryid', component: MemberListComponent },
   { path: 'postonhold/:postonhold', component: MemberListComponent },
-  { path: 'emailonhold/:emailonhold', component: MemberListComponent }
+  { path: 'emailonhold/:emailonhold', component: MemberListComponent },
 ];

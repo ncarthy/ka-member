@@ -5,7 +5,7 @@ import { MailingListComponent } from './mailing-list';
 import { EmailListComponent } from './email-list';
 import { NoEmailListComponent } from './no-email-list';
 import { MapListComponent } from './map-list';
-import { MemberListComponent } from './member-list';
+import { MemberListReportComponent } from './member-list';
 import { InvalidEmailsComponent } from './invalid-emails';
 import { InvalidPostcodesComponent } from './invalid-postcodes';
 import { TransactionsSummaryComponent } from './transactions';
@@ -16,17 +16,17 @@ export const REPORTS_ROUTES: Routes = [
   { path: 'email-list', component: EmailListComponent },
   { path: 'no-email-list', component: NoEmailListComponent },
   { path: 'map-list', component: MapListComponent },
-  { path: 'lapsed/:months', component: MemberListComponent },
-  { path: 'cem', component: MemberListComponent },
-  { path: 'honlife', component: MemberListComponent },
-  { path: 'discount', component: MemberListComponent },
-  { path: 'duplicatepayers', component: MemberListComponent },
-  { path: 'noukaddress', component: MemberListComponent },
+  { path: 'lapsed/:months', component: MemberListReportComponent },
+  { path: 'cem', component: MemberListReportComponent },
+  { path: 'honlife', component: MemberListReportComponent },
+  { path: 'discount', component: MemberListReportComponent },
+  { path: 'duplicatepayers', component: MemberListReportComponent },
+  { path: 'noukaddress', component: MemberListReportComponent },
   { path: 'invalidemails', component: InvalidEmailsComponent },
   { path: 'invalidpostcodes', component: InvalidPostcodesComponent },
-  { path: 'deletedmembers', component: MemberListComponent },
-  { path: 'lapsedcem/:months', component: MemberListComponent },
-  { path: 'formermembers/:months', component: MemberListComponent },
-  { path: 'oldformermembers/:months', component: MemberListComponent },
+  { path: 'deletedmembers', component: MemberListReportComponent },
+  { path: 'lapsedcem/:months', component: MemberListReportComponent },
+  { path: 'formermembers/:months', component: MemberListReportComponent },
+  { path: 'oldformermembers/:months', component: MemberListReportComponent },
   { path: 'transactions', component: TransactionsSummaryComponent },
 ];

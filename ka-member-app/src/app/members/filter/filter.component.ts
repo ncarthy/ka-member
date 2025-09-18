@@ -26,7 +26,6 @@ import {
 
 import {
   CountryService,
-  ExportToCsvService,
   MemberFilterService,
   MembershipStatusService,
   PaymentTypeService,
@@ -44,10 +43,10 @@ import { DateRangeAdapter } from '@app/_helpers';
 
 @Component({
   standalone: true,
-    selector: 'member-filter',
-    templateUrl: './filter.component.html',
-    styleUrls: ['./filter.component.css'],
-    imports: [
+  selector: 'member-filter',
+  templateUrl: './filter.component.html',
+  styleUrls: ['./filter.component.css'],
+  imports: [
     AsyncPipe,
     JsonPipe,
     KeyValuePipe,
@@ -55,8 +54,8 @@ import { DateRangeAdapter } from '@app/_helpers';
     NgbDatepickerModule,
     NgbDropdownModule,
     NgbTooltipModule,
-    ReactiveFormsModule
-]
+    ReactiveFormsModule,
+  ],
 })
 export class MemberFilterComponent implements OnInit {
   @Output()
@@ -79,14 +78,14 @@ export class MemberFilterComponent implements OnInit {
 
   private formBuilder = inject(FormBuilder);
   private countryService = inject(CountryService);
-  private MemberFilterService = inject(MemberFilterService);
+  //private MemberFilterService = inject(MemberFilterService);
   private membershipStatusService = inject(MembershipStatusService);
   private paymentTypeService = inject(PaymentTypeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private dateRangeAdapter = inject(DateRangeAdapter);
 
-  constructor( ) {
+  constructor(private MemberFilterService: MemberFilterService) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
     this.paymentTypes$ = this.paymentTypeService.getAll();

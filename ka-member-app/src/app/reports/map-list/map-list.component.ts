@@ -21,9 +21,15 @@ import CheapRuler from 'cheap-ruler'; // Ruler 'points' are lng,lat. Opposite to
 import { ListType } from './list-type.enum';
 
 @Component({
-    templateUrl: './map-list.component.html',
-    styleUrls: ['./map-list.component.css'],
-    imports: [ReactiveFormsModule, RouterLink, JsonPipe, MailingListComponent, EmailListComponent]
+  templateUrl: './map-list.component.html',
+  styleUrls: ['./map-list.component.css'],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    JsonPipe,
+    MailingListComponent,
+    EmailListComponent,
+  ],
 })
 export class MapListComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) gmap!: ElementRef;
@@ -208,7 +214,7 @@ export class MapListComponent implements OnInit {
     });
   }
 
-  onRadiusChange(e : Event) {
+  onRadiusChange(e: Event) {
     let radius: number | string = (e.target as HTMLInputElement).value;
     let centre: google.maps.LatLng = this.circle.getCenter()!;
     if (centre) {

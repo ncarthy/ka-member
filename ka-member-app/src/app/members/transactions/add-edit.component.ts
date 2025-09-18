@@ -19,7 +19,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import {   
+import {
   NgbDateAdapter,
   NgbDateParserFormatter,
   NgbDatepickerModule,
@@ -48,19 +48,25 @@ import {
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'transaction-add-edit',
-    templateUrl: './add-edit.component.html',
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => TransactionAddEditComponent),
-            multi: true,
-        },
-        { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
-        { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
-    ],
-    standalone: true,
-    imports: [FormsModule, JsonPipe, NgbDatepickerModule, NgClass, ReactiveFormsModule]  
+  selector: 'transaction-add-edit',
+  templateUrl: './add-edit.component.html',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TransactionAddEditComponent),
+      multi: true,
+    },
+    { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
+  ],
+  standalone: true,
+  imports: [
+    FormsModule,
+    JsonPipe,
+    NgbDatepickerModule,
+    NgClass,
+    ReactiveFormsModule,
+  ],
 })
 export class TransactionAddEditComponent
   implements ControlValueAccessor, OnInit, OnDestroy, OnChanges
@@ -141,7 +147,11 @@ export class TransactionAddEditComponent
     if (simpleChanges['touched'] && simpleChanges['touched'].currentValue) {
       this.transactionForm.markAllAsTouched();
     }
-    if (simpleChanges['transaction'] && this.transaction && this.transaction.id) {
+    if (
+      simpleChanges['transaction'] &&
+      this.transaction &&
+      this.transaction.id
+    ) {
       this.formMode = FormMode.Edit;
       this.transactionForm.patchValue(this.transaction);
       this.onSetFocus();

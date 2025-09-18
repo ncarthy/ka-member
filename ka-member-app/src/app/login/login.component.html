@@ -5,62 +5,60 @@
   <!--<div class="alert alert-info">
   <strong>Please enter your username and password</strong><br/>
 </div>-->
-<div class="card">
-  <h4 class="card-header">KA Member Database</h4>
-  <div class="card-body">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="loginUsername">Username</label>
-        <!-- Autocomplete from https://developer.apple.com/documentation/security/password_autofill/enabling_password_autofill_on_an_html_input_element -->
-        <!-- Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete -->
-        <input
-          type="text"
-          formControlName="username"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
-          autocomplete="username"
-          id="loginUsername"
+  <div class="card">
+    <h4 class="card-header">KA Member Database</h4>
+    <div class="card-body">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="loginUsername">Username</label>
+          <!-- Autocomplete from https://developer.apple.com/documentation/security/password_autofill/enabling_password_autofill_on_an_html_input_element -->
+          <!-- Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete -->
+          <input
+            type="text"
+            formControlName="username"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
+            autocomplete="username"
+            id="loginUsername"
           />
-        @if (submitted && f['username'].errors) {
-          <div class="invalid-feedback">
-            @if (f['username'].errors['required']) {
-              <div>Username is required</div>
-            }
-          </div>
-        }
-      </div>
-      <div class="form-group">
-        <label for="loginPassword">Password</label>
-        <input
-          type="password"
-          formControlName="password"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
-          autocomplete="current-password"
-          id="loginPassword"
-          />
-        @if (submitted && f['password'].errors) {
-          <div class="invalid-feedback">
-            @if (f['password'].errors['required']) {
-              <div>Password is required</div>
-            }
-          </div>
-        }
-      </div>
-      <button [disabled]="loading" class="btn btn-primary">
-        @if (loading) {
-          <span
-            class="spinner-border spinner-border-sm mr-1"
-          ></span>
-        }
-        Login
-      </button>
-      @if (error) {
-        <div class="alert alert-danger mt-3 mb-0">
-          {{ error }}
+          @if (submitted && f["username"].errors) {
+            <div class="invalid-feedback">
+              @if (f["username"].errors["required"]) {
+                <div>Username is required</div>
+              }
+            </div>
+          }
         </div>
-      }
-    </form>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input
+            type="password"
+            formControlName="password"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+            autocomplete="current-password"
+            id="loginPassword"
+          />
+          @if (submitted && f["password"].errors) {
+            <div class="invalid-feedback">
+              @if (f["password"].errors["required"]) {
+                <div>Password is required</div>
+              }
+            </div>
+          }
+        </div>
+        <button [disabled]="loading" class="btn btn-primary">
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm mr-1"></span>
+          }
+          Login
+        </button>
+        @if (error) {
+          <div class="alert alert-danger mt-3 mb-0">
+            {{ error }}
+          </div>
+        }
+      </form>
+    </div>
   </div>
-</div>
 </div>

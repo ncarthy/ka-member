@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'member-delete-confirm',
-    template: `
+  selector: 'member-delete-confirm',
+  template: `
     <div class="modal-header">
       <h4 class="modal-title" id="modal-title">Delete Member</h4>
       <button
@@ -37,7 +37,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </button>
     </div>
   `,
-    standalone: true
+  standalone: true,
 })
 export class MemberDeleteConfirmModalComponent {
   constructor(public modal: NgbActiveModal) {}

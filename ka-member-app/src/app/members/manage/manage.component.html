@@ -7,14 +7,14 @@
       type="button"
       routerLink="/members/edit/{{ member && member.id }}"
       class="btn btn-primary mr-1"
-      >
+    >
       <span class="d-none d-sm-inline">Member </span>Details
     </button>
     <button
       type="button"
       routerLink="/members/transactions/{{ member && member.id }}"
       class="btn btn-secondary mr-1"
-      >
+    >
       Payments
     </button>
     <button (click)="goBack()" class="btn btn-outline-dark">
@@ -31,15 +31,9 @@
     }
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       @if (user.isAdmin) {
-        <button
-          type="submit"
-          [disabled]="loading"
-          class="btn btn-primary"
-          >
+        <button type="submit" [disabled]="loading" class="btn btn-primary">
           @if (loading) {
-            <span
-              class="spinner-border spinner-border-sm mr-1"
-            ></span>
+            <span class="spinner-border spinner-border-sm mr-1"></span>
           }
           Save
         </button>
@@ -55,259 +49,259 @@
               type="text"
               class="form-control text-left"
               formControlName="name"
-              />
+            />
           </div>
           <div class="input-group mb-1">
             <span class="input-group-text col-4" id="adress-addon1"
               >Address</span
-              >
-              <div
-                class="card col"
-                placement="top"
-                ngbTooltip="Edit the address via the 'Member Details' button"
-                >
-                <textarea
-                  id="addressTextarea"
-                  class="form-control"
-                  formControlName="address"
-                  rows="3"
-                ></textarea>
-                <div class="form-check ml-2">
-                  <input
-                    type="checkbox"
-                    formControlName="postonhold"
-                    class="form-check-input"
-                    />
-                  <label class="form-check-label" for="flexCheckChecked">
-                    Put post on hold?
-                  </label>
-                </div>
-                <div class="form-check ml-2">
-                  <input
-                    type="checkbox"
-                    formControlName="emailonhold"
-                    class="form-check-input"
-                    />
-                  <label class="form-check-label" for="flexCheckChecked">
-                    Put email on hold?
-                  </label>
-                </div>
+            >
+            <div
+              class="card col"
+              placement="top"
+              ngbTooltip="Edit the address via the 'Member Details' button"
+            >
+              <textarea
+                id="addressTextarea"
+                class="form-control"
+                formControlName="address"
+                rows="3"
+              ></textarea>
+              <div class="form-check ml-2">
+                <input
+                  type="checkbox"
+                  formControlName="postonhold"
+                  class="form-check-input"
+                />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Put post on hold?
+                </label>
               </div>
-            </div>
-          </div>
-          <div class="col-sm-5">
-            <div class="col p-0">
-              <div class="input-group mb-1">
-                <span class="input-group-text col-4" id="status-label">Type</span>
-                <select
-                  formControlName="statusID"
-                  id="statusSelect"
-                  name="statusSelect"
-                  class="form-control"
-                  (change)="onStatusChange($event)"
-                  >
-                  @for (status of statuses; track status) {
-                    <option [ngValue]="status.id">
-                      {{ status.name }}
-                    </option>
-                  }
-                </select>
-              </div>
-              <div class="input-group mb-1">
-                <span class="input-group-text col-4" id="note-addon1">Note</span>
-                <textarea
-                  id="noteTextarea"
-                  class="form-control"
-                  formControlName="note"
-                  rows="4"
-                ></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="w-100"></div>
-          <div class="col">
-            <div class="input-group mb-1">
-              <span class="input-group-text col-2" id="dates-label">Dates</span>
-              <div class="card p-3 col">
-                <div class="row">
-                  <div class="col-sm">
-                    <label for="inputExpiryDate" class="form-label">
-                      Expiry Date
-                    </label>
-                    <div class="input-group mb-1">
-                      <input
-                        class="form-control"
-                        placeholder="*not-set*"
-                        name="dp"
-                        ngbDatepicker
-                        #d="ngbDatepicker"
-                        formControlName="expirydate"
-                        id="inputExpiryDate"
-                        />
-                      <div class="input-group-append">
-                        <button
-                          class="btn btn-outline-secondary"
-                          (click)="d.toggle()"
-                          type="button"
-                          >
-                          <i class="far fa-calendar-alt"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <label for="inputReminderDate" class="form-label">
-                      Reminder Date
-                    </label>
-                    <div class="input-group mb-1">
-                      <input
-                        class="form-control"
-                        placeholder="*not-set*"
-                        name="dp"
-                        ngbDatepicker
-                        #d1="ngbDatepicker"
-                        formControlName="reminderdate"
-                        id="inputReminderDate"
-                        />
-                      <div class="input-group-append">
-                        <button
-                          class="btn btn-outline-secondary"
-                          (click)="d1.toggle()"
-                          type="button"
-                          >
-                          <i class="far fa-calendar-alt"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm">
-                    <label for="inputJoinDate" class="form-label">
-                      Join Date
-                    </label>
-                    <div class="input-group mb-1">
-                      <input
-                        class="form-control"
-                        placeholder="*not-set*"
-                        name="dp"
-                        ngbDatepicker
-                        #d2="ngbDatepicker"
-                        formControlName="joindate"
-                        id="inputJoinDate"
-                        />
-                      <div class="input-group-append">
-                        <button
-                          class="btn btn-outline-secondary"
-                          (click)="d2.toggle()"
-                          type="button"
-                          >
-                          <i class="far fa-calendar-alt"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <label for="inputDeleteDate" class="form-label">
-                      Delete Date
-                    </label>
-                    <div class="input-group mb-1">
-                      <input
-                        class="form-control"
-                        placeholder=""
-                        name="dp"
-                        ngbDatepicker
-                        #d3="ngbDatepicker"
-                        formControlName="deletedate"
-                        id="inputDeleteDate"
-                        />
-                      <div class="input-group-append">
-                        <button
-                          class="btn btn-outline-secondary"
-                          (click)="d3.toggle()"
-                          type="button"
-                          disabled
-                          >
-                          <i class="far fa-calendar-alt"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="form-check ml-2">
+                <input
+                  type="checkbox"
+                  formControlName="emailonhold"
+                  class="form-check-input"
+                />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Put email on hold?
+                </label>
               </div>
             </div>
           </div>
         </div>
-        <div class="col p-0">
-          <div class="input-group mb-1">
-            <span class="input-group-text col-4" id="status-label"
-              >No of Persons</span
+        <div class="col-sm-5">
+          <div class="col p-0">
+            <div class="input-group mb-1">
+              <span class="input-group-text col-4" id="status-label">Type</span>
+              <select
+                formControlName="statusID"
+                id="statusSelect"
+                name="statusSelect"
+                class="form-control"
+                (change)="onStatusChange($event)"
               >
-              <div class="card p-2 col">
-                <div class="row">
-                  <div class="col">
-                    <label for="defaultMultiplierInput" class="form-label">
-                      Default Value
-                    </label>
-                    <input
-                      id="defaultMultiplierInput"
-                      name="defaultMultiplierInput"
-                      type="number"
-                      class="form-control text-right"
-                      formControlName="defaultMultiplier"
-                      />
-                  </div>
-                  <div class="col">
-                    <label for="multiplierInput" class="form-label">
-                      Override
-                    </label>
-                    <input
-                      id="multiplierInput"
-                      name="multiplierInput"
-                      type="number"
-                      class="form-control text-right"
-                      formControlName="multiplier"
-                      />
-                  </div>
-                </div>
-              </div>
+                @for (status of statuses; track status) {
+                  <option [ngValue]="status.id">
+                    {{ status.name }}
+                  </option>
+                }
+              </select>
             </div>
             <div class="input-group mb-1">
-              <span class="input-group-text col-4" id="status-label"
-                >Annual Fee</span
-                >
-                <div class="card p-2 col">
-                  <div class="row">
-                    <div class="col">
-                      <label for="defaultMembershipfeeInput" class="form-label">
-                        Default Value
-                      </label>
-                      <input
-                        id="defaultMembershipfeeInput"
-                        name="defaultMembershipfeeInput"
-                        type="number"
-                        class="form-control text-right"
-                        formControlName="defaultMembershipfee"
-                        />
+              <span class="input-group-text col-4" id="note-addon1">Note</span>
+              <textarea
+                id="noteTextarea"
+                class="form-control"
+                formControlName="note"
+                rows="4"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+          <div class="input-group mb-1">
+            <span class="input-group-text col-2" id="dates-label">Dates</span>
+            <div class="card p-3 col">
+              <div class="row">
+                <div class="col-sm">
+                  <label for="inputExpiryDate" class="form-label">
+                    Expiry Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder="*not-set*"
+                      name="dp"
+                      ngbDatepicker
+                      #d="ngbDatepicker"
+                      formControlName="expirydate"
+                      id="inputExpiryDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d.toggle()"
+                        type="button"
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
                     </div>
-                    <div class="col">
-                      <label for="membershipfeeInput" class="form-label">
-                        Override
-                      </label>
-                      <input
-                        id="membershipfeeInput"
-                        name="membershipfeeInput"
-                        type="number"
-                        class="form-control text-right"
-                        formControlName="membershipfee"
-                        />
+                  </div>
+                  <label for="inputReminderDate" class="form-label">
+                    Reminder Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder="*not-set*"
+                      name="dp"
+                      ngbDatepicker
+                      #d1="ngbDatepicker"
+                      formControlName="reminderdate"
+                      id="inputReminderDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d1.toggle()"
+                        type="button"
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <label for="inputJoinDate" class="form-label">
+                    Join Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder="*not-set*"
+                      name="dp"
+                      ngbDatepicker
+                      #d2="ngbDatepicker"
+                      formControlName="joindate"
+                      id="inputJoinDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d2.toggle()"
+                        type="button"
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <label for="inputDeleteDate" class="form-label">
+                    Delete Date
+                  </label>
+                  <div class="input-group mb-1">
+                    <input
+                      class="form-control"
+                      placeholder=""
+                      name="dp"
+                      ngbDatepicker
+                      #d3="ngbDatepicker"
+                      formControlName="deletedate"
+                      id="inputDeleteDate"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="d3.toggle()"
+                        type="button"
+                        disabled
+                      >
+                        <i class="far fa-calendar-alt"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            @if (false) {
-              <div>
-                <!--Debug Information for Testing -->
-                <hr />
-                <p>Form Value: {{ form.value | json }}</p>
-                <p>Form Status: {{ form.status | json }}</p>
-              </div>
-            }
-          </form>
+          </div>
         </div>
       </div>
+      <div class="col p-0">
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="status-label"
+            >No of Persons</span
+          >
+          <div class="card p-2 col">
+            <div class="row">
+              <div class="col">
+                <label for="defaultMultiplierInput" class="form-label">
+                  Default Value
+                </label>
+                <input
+                  id="defaultMultiplierInput"
+                  name="defaultMultiplierInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="defaultMultiplier"
+                />
+              </div>
+              <div class="col">
+                <label for="multiplierInput" class="form-label">
+                  Override
+                </label>
+                <input
+                  id="multiplierInput"
+                  name="multiplierInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="multiplier"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="status-label"
+            >Annual Fee</span
+          >
+          <div class="card p-2 col">
+            <div class="row">
+              <div class="col">
+                <label for="defaultMembershipfeeInput" class="form-label">
+                  Default Value
+                </label>
+                <input
+                  id="defaultMembershipfeeInput"
+                  name="defaultMembershipfeeInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="defaultMembershipfee"
+                />
+              </div>
+              <div class="col">
+                <label for="membershipfeeInput" class="form-label">
+                  Override
+                </label>
+                <input
+                  id="membershipfeeInput"
+                  name="membershipfeeInput"
+                  type="number"
+                  class="form-control text-right"
+                  formControlName="membershipfee"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @if (false) {
+        <div>
+          <!--Debug Information for Testing -->
+          <hr />
+          <p>Form Value: {{ form.value | json }}</p>
+          <p>Form Status: {{ form.status | json }}</p>
+        </div>
+      }
+    </form>
+  </div>
+</div>

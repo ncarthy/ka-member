@@ -21,9 +21,9 @@ import {
 } from '@app/_models';
 
 @Component({
-    selector: 'transactions-detail',
-    templateUrl: './transactions-detail.component.html',
-    imports: [CommonModule]
+  selector: 'transactions-detail',
+  templateUrl: './transactions-detail.component.html',
+  imports: [CommonModule],
 })
 export class TransactionsDetailComponent implements OnInit, OnChanges {
   @Input() bankAccounts?: BankAccount[];
@@ -67,21 +67,20 @@ export class TransactionsDetailComponent implements OnInit, OnChanges {
     }
   }
 
-  bankAccountName(bankID: number | null): string {  
-    if (bankID==null || this.bankAccounts==undefined) { 
+  bankAccountName(bankID: number | null): string {
+    if (bankID == null || this.bankAccounts == undefined) {
       return '';
     } else {
-      const ba = this.bankAccounts.find(b => b.id==bankID);
+      const ba = this.bankAccounts.find((b) => b.id == bankID);
       return ba ? ba.name : '';
     }
   }
-    paymentTypeName(paymenttypeID: number | null): string {  
-    if (paymenttypeID==null || this.paymentTypes==undefined) { 
+  paymentTypeName(paymenttypeID: number | null): string {
+    if (paymenttypeID == null || this.paymentTypes == undefined) {
       return '';
     } else {
-      const ba = this.paymentTypes.find(b => b.id==paymenttypeID);
+      const ba = this.paymentTypes.find((b) => b.id == paymenttypeID);
       return ba ? ba.name : '';
     }
   }
-  
 }

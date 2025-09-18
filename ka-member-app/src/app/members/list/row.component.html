@@ -1,19 +1,19 @@
 <th scope="row" class="d-none d-sm-table-cell">
-  {{ member.name }}<br />@if (member.businessname) {
-  <span
-    >({{ member.businessname }})</span
-    >
+  {{ member.name }}<br />
+  @if (member.businessname) {
+    <span>({{ member.businessname }})</span>
   }
 </th>
 <th scope="row" class="d-sm-none">
-  {{ member.name }}<br />@if (member.businessname) {
-  <span
-    >({{ member.businessname }})<br /></span
-    >
-    }- {{ member.membershiptype }} -
-    <br />
-    {{ member.addressfirstline }}<br />
-    {{ member.addresssecondline }}@if (member.addresssecondline) {
+  {{ member.name }}<br />
+  @if (member.businessname) {
+    <span>({{ member.businessname }})<br /></span>
+  }
+  - {{ member.membershiptype }} -
+  <br />
+  {{ member.addressfirstline }}<br />
+  {{ member.addresssecondline }}
+  @if (member.addresssecondline) {
     <br />
   }
   {{ member.postcode }}
@@ -23,21 +23,12 @@
   <div>
     @if (member.email) {
       <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          checked
-          disabled
-          />
+        <input class="form-check-input" type="checkbox" checked disabled />
       </div>
     }
     @if (!member.email) {
       <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          disabled
-          />
+        <input class="form-check-input" type="checkbox" disabled />
       </div>
     }
   </div>
@@ -46,21 +37,12 @@
   <div>
     @if (member.postonhold) {
       <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          checked
-          disabled
-          />
+        <input class="form-check-input" type="checkbox" checked disabled />
       </div>
     }
     @if (!member.postonhold) {
       <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          disabled
-          />
+        <input class="form-check-input" type="checkbox" disabled />
       </div>
     }
   </div>
@@ -68,96 +50,90 @@
 <td class="w-15 d-none d-sm-table-cell">
   <small
     >{{ member.lasttransactiondate }}<br />{{ member.paymenttype }}<br />{{
-    member.bankaccount
+      member.bankaccount
     }}</small
-    >
-  </td>
-  <td class="d-none d-sm-table-cell w-25">
-    <small
-      >{{ member.addressfirstline }}<br />
-      {{ member.addresssecondline === "" ? "" : member.addresssecondline
-      }}@if (member.addresssecondline) {
+  >
+</td>
+<td class="d-none d-sm-table-cell w-25">
+  <small
+    >{{ member.addressfirstline }}<br />
+    {{ member.addresssecondline === "" ? "" : member.addresssecondline }}
+    @if (member.addresssecondline) {
       <br />
     }
     {{ member.city }}, {{ member.postcode }}</small
+  >
+</td>
+<td class="w-25">
+  @if (showButton(ButtonName.ADDTX)) {
+    <button
+      (click)="addTransaction($event)"
+      class="btn btn-sm btn-success mr-1 mb-1"
     >
-  </td>
-  <td class="w-25">
-    @if (showButton(ButtonName.ADDTX)) {
-      <button
-        (click)="addTransaction($event)"
-        class="btn btn-sm btn-success mr-1 mb-1"
-        >
-        <span>Add Pmt</span>
-      </button>
-    }
-    <button
-      routerLink="/members/edit/{{ member.id }}"
-      class="btn btn-sm btn-primary mr-1 mb-1"
-      [disabled]="member.isUpdating"
-      >
-      Member Details
+      <span>Add Pmt</span>
     </button>
+  }
+  <button
+    routerLink="/members/edit/{{ member.id }}"
+    class="btn btn-sm btn-primary mr-1 mb-1"
+    [disabled]="member.isUpdating"
+  >
+    Member Details
+  </button>
+  <button
+    routerLink="/members/manage/{{ member.id }}"
+    class="btn btn-sm btn-info mr-1 mb-1"
+    [disabled]="member.isUpdating"
+  >
+    <span>Subscription</span>
+  </button>
+  <button
+    routerLink="/members/transactions/{{ member.id }}"
+    class="btn btn-sm btn-secondary mr-1 mb-1"
+    [disabled]="member.isUpdating"
+  >
+    <span>Payments</span>
+  </button>
+  @if (showButton(ButtonName.ANONYMIZE)) {
     <button
-      routerLink="/members/manage/{{ member.id }}"
-      class="btn btn-sm btn-info mr-1 mb-1"
+      (click)="anonymizeMember($event)"
+      class="btn btn-sm btn-warning mr-1 mb-1"
       [disabled]="member.isUpdating"
-      >
-      <span>Subscription</span>
+    >
+      @if (member.isUpdating) {
+        <span class="spinner-border spinner-border-sm"></span>
+      }
+      @if (!member.isUpdating) {
+        <span>Anonymize</span>
+      }
     </button>
+  }
+  @if (showButton(ButtonName.SETTOFORMER)) {
     <button
-      routerLink="/members/transactions/{{ member.id }}"
-      class="btn btn-sm btn-secondary mr-1 mb-1"
+      (click)="setToFormer($event)"
+      class="btn btn-sm btn-warning mr-1 mb-1"
       [disabled]="member.isUpdating"
-      >
-      <span>Payments</span>
+    >
+      @if (member.isUpdating) {
+        <span class="spinner-border spinner-border-sm"></span>
+      }
+      @if (!member.isUpdating) {
+        <span>Set To Former</span>
+      }
     </button>
-    @if (showButton(ButtonName.ANONYMIZE)) {
-      <button
-        (click)="anonymizeMember($event)"
-        class="btn btn-sm btn-warning mr-1 mb-1"
-        [disabled]="member.isUpdating"
-        >
-        @if (member.isUpdating) {
-          <span
-            class="spinner-border spinner-border-sm"
-          ></span>
-        }
-        @if (!member.isUpdating) {
-          <span>Anonymize</span>
-        }
-      </button>
-    }
-    @if (showButton(ButtonName.SETTOFORMER)) {
-      <button
-        (click)="setToFormer($event)"
-        class="btn btn-sm btn-warning mr-1 mb-1"
-        [disabled]="member.isUpdating"
-        >
-        @if (member.isUpdating) {
-          <span
-            class="spinner-border spinner-border-sm"
-          ></span>
-        }
-        @if (!member.isUpdating) {
-          <span>Set To Former</span>
-        }
-      </button>
-    }
-    @if (showButton(ButtonName.DELETE)) {
-      <button
-        (click)="deleteMember($event)"
-        class="btn btn-sm btn-danger btn-delete-member mb-1"
-        [disabled]="member.isDeleting"
-        >
-        @if (member.isDeleting) {
-          <span
-            class="spinner-border spinner-border-sm"
-          ></span>
-        }
-        @if (!member.isDeleting) {
-          <span>{{ deleteButtonLabel() }}</span>
-        }
-      </button>
-    }
-  </td>
+  }
+  @if (showButton(ButtonName.DELETE)) {
+    <button
+      (click)="deleteMember($event)"
+      class="btn btn-sm btn-danger btn-delete-member mb-1"
+      [disabled]="member.isDeleting"
+    >
+      @if (member.isDeleting) {
+        <span class="spinner-border spinner-border-sm"></span>
+      }
+      @if (!member.isDeleting) {
+        <span>{{ deleteButtonLabel() }}</span>
+      }
+    </button>
+  }
+</td>

@@ -13,9 +13,9 @@ import { RouterLink } from '@angular/router';
 import { ExportToCsvService, MembersService } from '@app/_services';
 
 @Component({
-    selector: 'no-email-list',
-    templateUrl: './no-email-list.component.html',
-    imports: [RouterLink]
+  selector: 'no-email-list',
+  templateUrl: './no-email-list.component.html',
+  imports: [RouterLink],
 })
 export class NoEmailListComponent implements OnInit, OnChanges {
   @Input() ids: number[] = new Array();

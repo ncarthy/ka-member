@@ -7,13 +7,13 @@
       placement="bottom"
       [(ngModel)]="transaction.date"
       (ngModelChange)="onTransactionChange()"
-      />
+    />
     <div class="input-group-append">
       <button
         class="btn btn-outline-secondary"
         (click)="d1.toggle()"
         type="button"
-        >
+      >
         <i class="far fa-calendar-alt"></i>
       </button>
     </div>
@@ -33,7 +33,7 @@
     [(ngModel)]="transaction.paymenttypeID"
     (change)="onTransactionChange()"
     (click)="onClickEvent($event)"
-    >
+  >
     <option disabled selected [ngValue]="null">---- select ----</option>
     @for (pType of paymentTypes; track pType) {
       <option [ngValue]="pType.id">
@@ -50,7 +50,7 @@
     [(ngModel)]="transaction.bankID"
     (change)="onTransactionChange()"
     (click)="onClickEvent($event)"
-    >
+  >
     <option disabled selected [ngValue]="null">-- select --</option>
     @for (bank of banks; track bank) {
       <option [ngValue]="bank.id">
@@ -65,7 +65,7 @@
     class="form-control text-right"
     [ngModel]="transaction.amount | number: '1.2-2'"
     (ngModelChange)="onTransactionAmountChange($event)"
-    />
+  />
 </td>
 <td class="d-none d-sm-table-cell">
   <textarea
@@ -74,7 +74,7 @@
     [(ngModel)]="transaction.note"
     (ngModelChange)="onTransactionNoteChange()"
     (click)="onClickEvent($event)"
-    >
+  >
   </textarea>
 </td>
 <td style="width: 15%">
@@ -83,11 +83,9 @@
       (click)="onTransactionChange()"
       class="btn btn-sm btn-info mr-1 mb-1"
       [disabled]="transaction.isUpdating"
-      >
+    >
       @if (transaction.isUpdating) {
-        <span
-          class="spinner-border spinner-border-sm"
-        ></span>
+        <span class="spinner-border spinner-border-sm"></span>
       }
       @if (!transaction.isUpdating) {
         <span>Save</span>
@@ -99,11 +97,9 @@
       (click)="onTransactionUpdated.emit(this.transaction)"
       class="btn btn-sm btn-info mr-1 mb-1"
       [disabled]="transaction.isUpdating"
-      >
+    >
       @if (transaction.isUpdating) {
-        <span
-          class="spinner-border spinner-border-sm"
-        ></span>
+        <span class="spinner-border spinner-border-sm"></span>
       }
       @if (!transaction.isUpdating) {
         <span>Undo</span>
@@ -115,11 +111,9 @@
       (click)="editTransaction($event)"
       class="btn btn-sm btn-primary mr-1 mb-1"
       [disabled]="transaction.isUpdating"
-      >
+    >
       @if (transaction.isUpdating) {
-        <span
-          class="spinner-border spinner-border-sm"
-        ></span>
+        <span class="spinner-border spinner-border-sm"></span>
       }
       @if (!transaction.isUpdating) {
         <span>Edit</span>
@@ -131,11 +125,9 @@
       (click)="onTransactionDelete()"
       class="btn btn-sm btn-danger btn-delete-transaction mb-1"
       [disabled]="transaction.isDeleting"
-      >
+    >
       @if (transaction.isDeleting) {
-        <span
-          class="spinner-border spinner-border-sm"
-        ></span>
+        <span class="spinner-border spinner-border-sm"></span>
       }
       @if (!transaction.isDeleting) {
         <span>Delete</span>

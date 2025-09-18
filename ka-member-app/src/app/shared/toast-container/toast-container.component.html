@@ -4,7 +4,7 @@
     [autohide]="true"
     [delay]="toast.delay || 5000"
     (hidden)="toastService.remove(toast)"
-    >
+  >
     @if (isTemplate(toast)) {
       <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
     } @else {

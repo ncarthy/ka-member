@@ -19,12 +19,8 @@ import { MustMatch } from '@app/_helpers';
 import { User, UserFormMode } from '@app/_models';
 
 @Component({
-    templateUrl: 'add-edit.component.html',
-    imports: [
-    CommonModule,
-    NgClass,
-    ReactiveFormsModule
-]
+  templateUrl: 'add-edit.component.html',
+  imports: [CommonModule, NgClass, ReactiveFormsModule],
 })
 export class UserAddEditComponent implements OnInit {
   form!: FormGroup;
@@ -167,5 +163,9 @@ export class UserAddEditComponent implements OnInit {
   onCancel() {
     // use of location object taken from https://stackoverflow.com/a/41953992/6941165
     this.location.back(); // <-- go back to previous location on cancel
+  }
+
+  onSuspendedCheckboxClick() {
+    this.f['suspended'].setValue(!this.f['suspended'].value);
   }
 }

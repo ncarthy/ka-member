@@ -6,8 +6,8 @@ import { User } from '@app/_models';
 import { UserRowComponent } from './row.component';
 
 @Component({
-    templateUrl: 'list.component.html',
-    imports: [RouterLink, UserRowComponent]
+  templateUrl: 'list.component.html',
+  imports: [RouterLink, UserRowComponent],
 })
 export class UserListComponent implements OnInit {
   users!: User[];

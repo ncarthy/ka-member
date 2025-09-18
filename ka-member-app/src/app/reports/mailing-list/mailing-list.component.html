@@ -20,7 +20,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-    members && members.length
+      members && members.length
     }}
     members found
   </caption>
@@ -38,10 +38,7 @@
   </thead>
   <tbody>
     @for (member of members; track member) {
-      <tr
-        class="m-0"
-        (click)="memberSelected(member)"
-        >
+      <tr class="m-0" (click)="memberSelected(member)">
         <td>{{ member.name }}</td>
         <td>{{ member.title }}</td>
         <td>{{ member.businessname }}</td>

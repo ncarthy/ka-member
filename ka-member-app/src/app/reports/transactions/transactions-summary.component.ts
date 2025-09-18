@@ -15,14 +15,14 @@ import { DateRangeAdapter } from '@app/_helpers';
 import { TransactionsDetailComponent } from './transactions-detail/transactions-detail.component';
 
 @Component({
-    templateUrl: './transactions-summary.component.html',
-    imports: [
+  templateUrl: './transactions-summary.component.html',
+  imports: [
     CommonModule,
     NgbDatepickerModule,
     ReactiveFormsModule,
     RouterLink,
-    TransactionsDetailComponent
-]
+    TransactionsDetailComponent,
+  ],
 })
 export class TransactionsSummaryComponent implements OnInit {
   summary?: TransactionSummary[];
@@ -126,11 +126,11 @@ export class TransactionsSummaryComponent implements OnInit {
     this.detail = true;
   }
 
-  bankAccountName(bankID: number | null): string {  
-    if (bankID==null || this.bankAccounts==undefined) { 
+  bankAccountName(bankID: number | null): string {
+    if (bankID == null || this.bankAccounts == undefined) {
       return '';
     } else {
-      const ba = this.bankAccounts.find(b => b.id==bankID);
+      const ba = this.bankAccounts.find((b) => b.id == bankID);
       return ba ? ba.name : '';
     }
   }

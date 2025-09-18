@@ -9,7 +9,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { NgbModal, NgbDatepickerModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModal,
+  NgbDatepickerModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 
 import {} from 'googlemaps';
 
@@ -38,13 +42,20 @@ import {
   MemberAnonymizeConfirmModalComponent,
   MemberDeleteConfirmModalComponent,
 } from '../modals';
-import { SharedModule } from '@app/shared/shared.module'
+import { SharedModule } from '@app/shared/shared.module';
 
 @Component({
   standalone: true,
-    templateUrl: 'add-edit.component.html',
-    styleUrls: ['add-edit.component.css'],
-    imports: [SharedModule, NgbDatepickerModule, NgbTooltipModule, NgClass, ReactiveFormsModule, RouterLink]
+  templateUrl: 'add-edit.component.html',
+  styleUrls: ['add-edit.component.css'],
+  imports: [
+    SharedModule,
+    NgbDatepickerModule,
+    NgbTooltipModule,
+    NgClass,
+    ReactiveFormsModule,
+    RouterLink,
+  ],
 })
 export class MemberAddEditComponent implements OnInit {
   form!: FormGroup;
@@ -70,9 +81,7 @@ export class MemberAddEditComponent implements OnInit {
   private membershipStatusService = inject(MembershipStatusService);
   public modalService = inject(NgbModal);
 
-  constructor(
-
-  ) {
+  constructor() {
     this.user = this.authenticationService.userValue;
   }
 
@@ -386,11 +395,13 @@ export class MemberAddEditComponent implements OnInit {
   }
 
   showAnonymizeButton() {
-    return this.user.isAdmin &&
-    this.f['statusID'] &&
-    this.f['statusID'].value === 9 &&
-    this.namesFormGroups &&
-    this.namesFormGroups[0] &&
-    this.namesFormGroups[0].value.surname !== 'Anonymized'
+    return (
+      this.user.isAdmin &&
+      this.f['statusID'] &&
+      this.f['statusID'].value === 9 &&
+      this.namesFormGroups &&
+      this.namesFormGroups[0] &&
+      this.namesFormGroups[0].value.surname !== 'Anonymized'
+    );
   }
 }

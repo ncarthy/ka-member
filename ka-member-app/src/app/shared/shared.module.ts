@@ -8,24 +8,13 @@ import {
   ADDRESS_API_URL,
 } from '@app/_services';
 
-import { AddressFormComponent } from './address-form/address-form.component';
-import { SearchBoxComponent } from './address-form/search-box.component';
-import { SearchBox2Component } from './address-form/search-box2.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  declarations: [
-    AddressFormComponent,
-    SearchBoxComponent,
-    SearchBox2Component,
-  ],
   exports: [
-    AddressFormComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SearchBoxComponent,
-    SearchBox2Component,
   ],
   providers: [
     AddressSearchService,

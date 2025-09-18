@@ -2,19 +2,13 @@
 
 import { RouterLink } from '@angular/router';
 import { User, MemberCount } from '@app/_models';
-import {
-  AuthenticationService,
-  MembersService,
-} from '@app/_services';
+import { AuthenticationService, MembersService } from '@app/_services';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   standalone: true,
-    templateUrl: 'home.component.html',
-    imports: [
-    RouterLink,
-    NgbTooltipModule
-]
+  templateUrl: 'home.component.html',
+  imports: [RouterLink, NgbTooltipModule],
 })
 export class HomeComponent implements OnInit {
   loading = false;

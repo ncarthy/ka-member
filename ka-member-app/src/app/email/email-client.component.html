@@ -6,14 +6,14 @@
       class="btn btn-danger"
       (click)="onSend()"
       [disabled]="this.form.invalid"
-      >
+    >
       Send
     </button>
     <button
       type="button"
       class="btn btn-outline-secondary m-3"
       (click)="modal.dismiss('Cross click')"
-      >
+    >
       &times;
     </button>
   </div>
@@ -30,20 +30,16 @@
           class="form-control text-left col-sm-6"
           formControlName="fromEmail"
           [ngClass]="{
-            'is-invalid': !loading && submitted && f['fromEmail'].errors
+            'is-invalid': !loading && submitted && f['fromEmail'].errors,
           }"
-          />
-        @if (submitted && f['fromEmail'].errors) {
+        />
+        @if (submitted && f["fromEmail"].errors) {
           <div class="invalid-feedback">
-            @if (f['fromEmail'].errors['required']) {
-              <div>
-                Please enter an email address
-              </div>
+            @if (f["fromEmail"].errors["required"]) {
+              <div>Please enter an email address</div>
             }
-            @if (f['fromEmail'].errors['email']) {
-              <div>
-                This email address is not valid
-              </div>
+            @if (f["fromEmail"].errors["email"]) {
+              <div>This email address is not valid</div>
             }
           </div>
         }
@@ -59,15 +55,13 @@
           class="form-control text-left col-sm-6"
           formControlName="fromName"
           [ngClass]="{
-            'is-invalid': !loading && submitted && f['fromName'].errors
+            'is-invalid': !loading && submitted && f['fromName'].errors,
           }"
-          />
-        @if (submitted && f['fromName'].errors) {
+        />
+        @if (submitted && f["fromName"].errors) {
           <div class="invalid-feedback">
-            @if (f['fromName'].errors['required']) {
-              <div>
-                Must enter a name for the signature area of the email
-              </div>
+            @if (f["fromName"].errors["required"]) {
+              <div>Must enter a name for the signature area of the email</div>
             }
           </div>
         }
@@ -81,15 +75,13 @@
           class="form-control text-left col-sm-6"
           formControlName="fromTitle"
           [ngClass]="{
-            'is-invalid': !loading && submitted && f['fromTitle'].errors
+            'is-invalid': !loading && submitted && f['fromTitle'].errors,
           }"
-          />
-        @if (submitted && f['fromTitle'].errors) {
+        />
+        @if (submitted && f["fromTitle"].errors) {
           <div class="invalid-feedback">
-            @if (f['fromTitle'].errors['required']) {
-              <div>
-                Must enter a title for the signature area of the email
-              </div>
+            @if (f["fromTitle"].errors["required"]) {
+              <div>Must enter a title for the signature area of the email</div>
             }
           </div>
         }
@@ -107,20 +99,16 @@
             class="form-control text-left col"
             formControlName="toEmail"
             [ngClass]="{
-              'is-invalid': !loading && submitted && f['toEmail'].errors
+              'is-invalid': !loading && submitted && f['toEmail'].errors,
             }"
-            />
-          @if (submitted && f['toEmail'].errors) {
+          />
+          @if (submitted && f["toEmail"].errors) {
             <div class="invalid-feedback">
-              @if (f['toEmail'].errors['required']) {
-                <div>
-                  Please enter an email address
-                </div>
+              @if (f["toEmail"].errors["required"]) {
+                <div>Please enter an email address</div>
               }
-              @if (f['toEmail'].errors['email']) {
-                <div>
-                  This email address is not valid
-                </div>
+              @if (f["toEmail"].errors["email"]) {
+                <div>This email address is not valid</div>
               }
             </div>
           }
@@ -129,88 +117,82 @@
           <div class="input-group mb-1">
             <span class="input-group-text col-3" id="salutation-label"
               >Salutation</span
-              >
-              <input
-                id="salutationInput"
-                name="salutationInput"
-                type="text"
-                class="form-control text-left col"
-                formControlName="salutation"
-              [ngClass]="{
-                'is-invalid': !loading && submitted && f['salutation'].errors
-              }"
-                />
-              @if (submitted && f['salutation'].errors) {
-                <div
-                  class="invalid-feedback"
-                  >
-                  @if (f['salutation'].errors['required']) {
-                    <div>
-                      Must enter a salutation
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <p>
-            The text of the email is not editable, only the subject, the
-            salutation and your name and title.
-          </p>
-        </div>
-      </div>
-      <hr />
-      <div class="row">
-        <div class="col-sm">
-          <div class="input-group mb-1">
-            <span class="input-group-text col-3" id="subject-label">Subject</span>
+            >
             <input
-              id="subjectInput"
-              name="subjectInput"
+              id="salutationInput"
+              name="salutationInput"
               type="text"
               class="form-control text-left col"
-              formControlName="subject"
-            [ngClass]="{
-              'is-invalid': !loading && submitted && f['subject'].errors
-            }"
-              />
-            @if (submitted && f['subject'].errors) {
+              formControlName="salutation"
+              [ngClass]="{
+                'is-invalid': !loading && submitted && f['salutation'].errors,
+              }"
+            />
+            @if (submitted && f["salutation"].errors) {
               <div class="invalid-feedback">
-                @if (f['subject'].errors['required']) {
-                  <div>
-                    Must enter a subject line for the email
-                  </div>
+                @if (f["salutation"].errors["required"]) {
+                  <div>Must enter a salutation</div>
                 }
               </div>
             }
           </div>
         </div>
       </div>
-
-      @if (false) {
-        <div>
-          <!--Debug Information for Testing -->
-          <hr />
-          <p>Form Value: {{ form.value | json }}</p>
-          <p>Form Status: {{ form.status | json }}</p>
-          <hr />
-        </div>
-      }
-    </form>
+      <div class="col">
+        <p>
+          The text of the email is not editable, only the subject, the
+          salutation and your name and title.
+        </p>
+      </div>
+    </div>
     <hr />
-    @if (body) {
-      <div [innerHTML]="body"></div>
+    <div class="row">
+      <div class="col-sm">
+        <div class="input-group mb-1">
+          <span class="input-group-text col-3" id="subject-label">Subject</span>
+          <input
+            id="subjectInput"
+            name="subjectInput"
+            type="text"
+            class="form-control text-left col"
+            formControlName="subject"
+            [ngClass]="{
+              'is-invalid': !loading && submitted && f['subject'].errors,
+            }"
+          />
+          @if (submitted && f["subject"].errors) {
+            <div class="invalid-feedback">
+              @if (f["subject"].errors["required"]) {
+                <div>Must enter a subject line for the email</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (false) {
+      <div>
+        <!--Debug Information for Testing -->
+        <hr />
+        <p>Form Value: {{ form.value | json }}</p>
+        <p>Form Status: {{ form.status | json }}</p>
+        <hr />
+      </div>
     }
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      (click)="modal.dismiss('cancel click')"
-      >
-      Cancel
-    </button>
-    <button type="button" class="btn btn-danger" (click)="onSend()">Send</button>
-  </div>
+  </form>
+  <hr />
+  @if (body) {
+    <div [innerHTML]="body"></div>
+  }
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    (click)="modal.dismiss('cancel click')"
+  >
+    Cancel
+  </button>
+  <button type="button" class="btn btn-danger" (click)="onSend()">Send</button>
+</div>

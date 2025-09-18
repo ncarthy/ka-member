@@ -1,14 +1,10 @@
 <div class="row justify-content-between">
   <div class="col-sm-6">
     @if (ids && ids.length) {
-      <h4>
-        {{ member_emails && member_emails.length }} Emails After Filter
-      </h4>
+      <h4>{{ member_emails && member_emails.length }} Emails After Filter</h4>
     }
     @if (!ids || !ids.length) {
-      <h4>
-        {{ member_emails && member_emails.length }} Email Addresses Found
-      </h4>
+      <h4>{{ member_emails && member_emails.length }} Email Addresses Found</h4>
     }
   </div>
   <div class="col-sm-3 mb-2">
@@ -24,7 +20,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-    member_emails && member_emails.length
+      member_emails && member_emails.length
     }}
     email addresses found
   </caption>
@@ -36,10 +32,7 @@
   </thead>
   <tbody>
     @for (email of member_emails; track email) {
-      <tr
-        class="m-0"
-        (click)="emailSelected(email)"
-        >
+      <tr class="m-0" (click)="emailSelected(email)">
         <td>{{ email[1] }}</td>
       </tr>
     }

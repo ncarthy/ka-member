@@ -18,11 +18,11 @@ import {
 import { EmailClientComponent } from '@app/email/email-client.component';
 
 @Component({
-    templateUrl: './member-list.component.html',
-    styleUrls: ['member-list.component.css'],
-    imports: [RouterLink]
+  templateUrl: './member-list.component.html',
+  styleUrls: ['member-list.component.css'],
+  imports: [RouterLink],
 })
-export class MemberListComponent implements OnInit {
+export class MemberListReportComponent implements OnInit {
   @Input() title!: string;
   @Input() subtitle!: string;
 

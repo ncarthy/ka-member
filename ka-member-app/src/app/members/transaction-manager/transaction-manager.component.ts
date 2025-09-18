@@ -2,7 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Member, MemberSearchResult, MembershipStatus, Transaction, User } from '@app/_models';
+import {
+  Member,
+  MemberSearchResult,
+  MembershipStatus,
+  Transaction,
+  User,
+} from '@app/_models';
 import {
   AuthenticationService,
   MemberNameService,
@@ -14,10 +20,10 @@ import { TransactionAddEditComponent } from '../transactions';
 import { TransactionListComponent } from '../transactions/list.component';
 
 @Component({
-    selector: 'transaction-manager',
-    templateUrl: './transaction-manager.component.html',
-    standalone: true,
-    imports: [TransactionAddEditComponent, RouterLink, TransactionListComponent],
+  selector: 'transaction-manager',
+  templateUrl: './transaction-manager.component.html',
+  standalone: true,
+  imports: [TransactionAddEditComponent, RouterLink, TransactionListComponent],
 })
 export class TransactionManagerComponent implements OnInit {
   loading: boolean = false;

@@ -3,8 +3,8 @@ import { Member } from '@app/_models';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'member-anonymize-confirm',
-    template: `
+  selector: 'member-anonymize-confirm',
+  template: `
     <div class="modal-header">
       <h4 class="modal-title" id="modal-title">Member Anonymization</h4>
       <button
@@ -41,7 +41,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </button>
     </div>
   `,
-    standalone: true
+  standalone: true,
 })
 export class MemberAnonymizeConfirmModalComponent {
   @Input() member!: Member;

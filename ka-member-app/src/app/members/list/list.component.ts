@@ -8,9 +8,9 @@ import { MemberFilterComponent } from '../filter/filter.component';
 import { MemberRowComponent } from './row.component';
 
 @Component({
-    templateUrl: 'list.component.html',
-    standalone: true,
-    imports: [MemberFilterComponent, MemberRowComponent],
+  templateUrl: 'list.component.html',
+  standalone: true,
+  imports: [MemberFilterComponent, MemberRowComponent],
 })
 export class MemberListComponent {
   members!: MemberSearchResult[];
@@ -18,7 +18,6 @@ export class MemberListComponent {
   loading: boolean = false;
   filter!: MemberFilter;
 
-  
   private exportToCsvService = inject(ExportToCsvService);
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
@@ -55,10 +54,10 @@ export class MemberListComponent {
     this.loading = value;
   }
 
-    /**
+  /**
    * Export the csvEmails array to a CSV file
    */
-    exportToCSV(): void {
-      this.exportToCsvService.exportToCSV(this.members);
-    }
+  exportToCSV(): void {
+    this.exportToCsvService.exportToCSV(this.members);
+  }
 }

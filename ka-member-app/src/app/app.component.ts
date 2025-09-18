@@ -9,21 +9,21 @@ import {
 
 import { AuthenticationService } from './_services';
 import { User } from './_models';
-import { AlertComponent } from './shared/alert-component'
+import { AlertComponent } from './shared/alert-component';
 import { ToastContainerComponent } from './shared/toast-container/toast-container.component';
 
 @Component({
-    selector: 'app',
-    templateUrl: 'app.component.html',
-    imports: [
+  selector: 'app',
+  templateUrl: 'app.component.html',
+  imports: [
     AlertComponent,
     NgbCollapseModule,
     NgbDropdownModule,
     NgbNavModule,
     RouterLink,
     RouterOutlet,
-    ToastContainerComponent
-]
+    ToastContainerComponent,
+  ],
 })
 export class AppComponent {
   user?: User;

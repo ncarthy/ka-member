@@ -11,10 +11,7 @@
       </div>
       <div>
         @if (user.isAdmin) {
-          <button
-            routerLink="/members/add"
-            class="btn btn-success"
-            >
+          <button routerLink="/members/add" class="btn btn-success">
             Add New Member
           </button>
         }
@@ -31,7 +28,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-    members && members.length
+      members && members.length
     }}
     members found
   </caption>

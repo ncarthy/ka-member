@@ -5,8 +5,8 @@ import { MemberInvalidPostcode } from '@app/_models';
 import { MembersService } from '@app/_services';
 
 @Component({
-    templateUrl: './invalid-postcodes.component.html',
-    imports: [RouterLink]
+  templateUrl: './invalid-postcodes.component.html',
+  imports: [RouterLink],
 })
 export class InvalidPostcodesComponent implements OnInit {
   members!: MemberInvalidPostcode[];

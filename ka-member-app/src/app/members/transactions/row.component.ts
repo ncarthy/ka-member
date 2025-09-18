@@ -14,8 +14,8 @@ import {
   AuthenticationService,
   TransactionService,
 } from '@app/_services';
-import { 
-  NgbModal, 
+import {
+  NgbModal,
   NgbDateAdapter,
   NgbDateParserFormatter,
   NgbDatepickerModule,
@@ -26,14 +26,14 @@ import { TransactionDeleteConfirmModalComponent } from '../modals';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-    selector: 'tr[transaction-row]',
-    templateUrl: './row.component.html',
-    standalone: true,
-    imports: [DecimalPipe, FormsModule, NgbDatepickerModule, ReactiveFormsModule],
-    providers: [
-        { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
-        { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
-    ],
+  selector: 'tr[transaction-row]',
+  templateUrl: './row.component.html',
+  standalone: true,
+  imports: [DecimalPipe, FormsModule, NgbDatepickerModule, ReactiveFormsModule],
+  providers: [
+    { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
+  ],
 })
 export class TransactionRowComponent implements OnInit {
   @Input() transaction!: Transaction;

@@ -5,14 +5,12 @@
       placement="bottom"
       ngbTooltip="Reload Transactions"
       (click)="onReloadClick()"
-      >
+    >
       @if (!loading) {
         <i class="fas fa-redo"></i>
       }
       @if (loading) {
-        <span
-          class="spinner-border spinner-border-lg align-center"
-        ></span>
+        <span class="spinner-border spinner-border-lg align-center"></span>
       }
     </button>
   </div>

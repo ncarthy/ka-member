@@ -12,7 +12,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-    members && members.length
+      members && members.length
     }}
     invalid UK postcodes found
   </caption>
@@ -29,10 +29,9 @@
     @for (member of members; track member) {
       <tr class="m-0">
         <th scope="row">
-          {{ member.name }}<br />@if (member.businessname) {
-          <span
-            >({{ member.businessname }})</span
-            >
+          {{ member.name }}<br />
+          @if (member.businessname) {
+            <span>({{ member.businessname }})</span>
           }
         </th>
         <td>{{ member.postcode1 }}</td>
@@ -41,7 +40,7 @@
           <button
             routerLink="/members/edit/{{ member.id }}"
             class="btn btn-sm btn-primary mr-1 mb-1"
-            >
+          >
             Member Details
           </button>
         </td>

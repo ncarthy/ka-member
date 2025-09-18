@@ -26,9 +26,10 @@ import {
 import { TransactionRowComponent } from './row.component';
 
 @Component({
-    selector: 'transaction-list', templateUrl: 'list.component.html',
-    standalone: true,
-    imports: [TransactionRowComponent],
+  selector: 'transaction-list',
+  templateUrl: 'list.component.html',
+  standalone: true,
+  imports: [TransactionRowComponent],
 })
 export class TransactionListComponent implements OnInit, OnChanges {
   @Output() reloadRequested: EventEmitter<any>;

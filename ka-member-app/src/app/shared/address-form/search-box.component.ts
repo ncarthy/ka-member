@@ -14,18 +14,21 @@ import { map, filter, debounceTime, tap, switchMap } from 'rxjs/operators';
 
 import { postcodeRegex } from '../regexes.const';
 
-import { AddressSearchService } from '@app/_services';
+import {
+  AddressSearchService,
+  ADDRESS_API_KEY,
+  ADDRESS_API_URL,
+} from '@app/_services';
 import { GetAddressIOAddress } from '@app/_models';
 
 @Component({
-    selector: 'address-search-box',
-    template: `
+  selector: 'address-search-box',
+  template: `
     <div class="input-group">
-      
-        <span class="input-group-text" id="basic-addon1"
-          ><i class="fas fa-search"></i
-        ></span>
-      
+      <span class="input-group-text" id="basic-addon1"
+        ><i class="fas fa-search"></i
+      ></span>
+
       <input
         type="text"
         class="form-control"
@@ -33,7 +36,12 @@ import { GetAddressIOAddress } from '@app/_models';
       />
     </div>
   `,
-    standalone: false
+  standalone: true,
+    providers: [
+      AddressSearchService,
+      { provide: ADDRESS_API_KEY, useValue: ADDRESS_API_KEY },
+      { provide: ADDRESS_API_URL, useValue: ADDRESS_API_URL },
+    ],
 })
 export class SearchBoxComponent implements OnInit {
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();
