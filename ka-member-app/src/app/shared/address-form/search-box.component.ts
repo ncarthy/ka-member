@@ -37,11 +37,11 @@ import { GetAddressIOAddress } from '@app/_models';
     </div>
   `,
   standalone: true,
-    providers: [
-      AddressSearchService,
-      { provide: ADDRESS_API_KEY, useValue: ADDRESS_API_KEY },
-      { provide: ADDRESS_API_URL, useValue: ADDRESS_API_URL },
-    ],
+  providers: [
+    AddressSearchService,
+    { provide: ADDRESS_API_KEY, useValue: ADDRESS_API_KEY },
+    { provide: ADDRESS_API_URL, useValue: ADDRESS_API_URL },
+  ],
 })
 export class SearchBoxComponent implements OnInit {
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();

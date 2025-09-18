@@ -27,7 +27,7 @@ import { SearchBoxComponent } from './search-box.component';
 @Component({
   selector: 'address-form',
   templateUrl: './address-form.component.html',
-  imports: [ FormsModule, NgClass,ReactiveFormsModule, SearchBoxComponent ],
+  imports: [FormsModule, NgClass, ReactiveFormsModule, SearchBoxComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
