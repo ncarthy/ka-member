@@ -18,7 +18,7 @@ import { DateFormatHelper } from '@app/_services';
 /**
  * This Service handles how the date is rendered and parsed from keyboard i.e. in the bound input field.
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CustomDateParserFormatter extends NgbDateParserFormatter {
   private dateFormatHelper = inject(DateFormatHelper);
 

@@ -12,7 +12,7 @@ import { NgbDateAdapter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
  *  Further information at {@link https://ng-bootstrap.github.io/#/components/datepicker/overview#date-model}
  *  Example at {@linkhttps://ng-bootstrap.github.io/#/components/datepicker/examples#adapter}
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NgbUTCStringAdapter extends NgbDateAdapter<string> {
   fromModel(date: string): NgbDateStruct | null {
     return date &&

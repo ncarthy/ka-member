@@ -8,21 +8,26 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { NgClass } from '@angular/common';
 import {
+  FormsModule,
   ControlValueAccessor,
   FormGroup,
   UntypedFormBuilder,
   NG_VALUE_ACCESSOR, // Example: https://github.com/xiongemi/angular-form-ngxs/
+  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { CountryService, GeocodeService } from '@app/_services';
 import { Address, Country, GetAddressIOAddress } from '@app/_models';
+import { SearchBoxComponent } from './search-box.component';
 
 @Component({
   selector: 'address-form',
   templateUrl: './address-form.component.html',
+  imports: [ FormsModule, NgClass,ReactiveFormsModule, SearchBoxComponent ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

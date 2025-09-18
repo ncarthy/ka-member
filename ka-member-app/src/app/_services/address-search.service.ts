@@ -14,7 +14,7 @@ export const ADDRESS_API_URL = 'https://api.getAddress.io/find/';
  *
  * Another provider is https://ideal-postcodes.co.uk/
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AddressSearchService {
   constructor(
     private http: HttpClient,

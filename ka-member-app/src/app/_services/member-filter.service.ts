@@ -7,7 +7,7 @@ import { MemberSearchResult, MemberFilter } from '@app/_models';
 
 import { environment } from '@environments/environment';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MemberFilterService {
   constructor(private http: HttpClient) {}
 

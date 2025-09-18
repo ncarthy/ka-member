@@ -1,5 +1,5 @@
 ﻿import { Component, inject, OnInit } from '@angular/core';
-import { Location, NgClass } from '@angular/common';
+import { JsonPipe, Location, NgClass } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import {
   FormBuilder,
@@ -42,14 +42,15 @@ import {
   MemberAnonymizeConfirmModalComponent,
   MemberDeleteConfirmModalComponent,
 } from '../modals';
-import { SharedModule } from '@app/shared/shared.module';
+import { AddressFormComponent } from '@app/shared/address-form/address-form.component';
 
 @Component({
   standalone: true,
   templateUrl: 'add-edit.component.html',
   styleUrls: ['add-edit.component.css'],
   imports: [
-    SharedModule,
+    AddressFormComponent,
+    JsonPipe,
     NgbDatepickerModule,
     NgbTooltipModule,
     NgClass,
