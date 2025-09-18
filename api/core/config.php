@@ -33,9 +33,9 @@ Config::write('server', 'http://localhost:4200');
 Config::write('api.path', '/api/');
 
 // db
-Config::write('db.host', '192.168.1.146');
+Config::write('db.host', '192.168.1.214');
 Config::write('db.port', '3306');
-Config::write('db.name', 'knightsb_membership2');
+Config::write('db.name', 'knightsb_membership');
 Config::write('db.user', 'knightsb_member');
 Config::write('db.password', 'SsP4qIm4omu4M');
 
@@ -47,7 +47,7 @@ Config::write('token.accessExpiry', '+15 minute');
 Config::write('token.refreshExpiry', '+7 day');
 Config::write('token.iss', 'https://knightsbridgeassociation.com');
 Config::write('token.aud', 'https://member.knightsbridgeassociation.com');
-Config::write('token.envkeyname', 'KA_MEMBER_KEY');
+Config::write('token.envkeyname', 'KA_MEMBER_KEY'); // Make sure this is a 32 character length string
 Config::write('token.cookiename', 'refreshToken');
 Config::write('token.cookiepath', Config::read('api.path') . 'auth');
 Config::write('token.cookiesecure', false);
