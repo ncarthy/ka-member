@@ -8,7 +8,7 @@ import { switchMap } from 'rxjs/operators';
 @Component({
     selector: 'transaction-edit-modal',
     templateUrl: './transaction-add.component.html',
-    standalone: false
+    standalone: true
 })
 export class TransactionAddModalComponent implements OnInit {
   @Input() member!: MemberSearchResult;

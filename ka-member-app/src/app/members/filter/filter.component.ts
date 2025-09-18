@@ -1,11 +1,5 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import {
-  NgFor,
-  NgIf,
-  AsyncPipe,
-  KeyValue,
-  KeyValuePipe,
-} from '@angular/common';
+import { AsyncPipe, KeyValue, KeyValuePipe } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -49,20 +43,19 @@ import {
 import { DateRangeAdapter } from '@app/_helpers';
 
 @Component({
+  standalone: true,
     selector: 'member-filter',
     templateUrl: './filter.component.html',
     styleUrls: ['./filter.component.css'],
     imports: [
-        AsyncPipe,
-        KeyValuePipe,
-        NgbAccordionModule,
-        NgbDatepickerModule,
-        NgbDropdownModule,
-        NgbTooltipModule,
-        NgFor,
-        NgIf,
-        ReactiveFormsModule,
-    ]
+    AsyncPipe,
+    KeyValuePipe,
+    NgbAccordionModule,
+    NgbDatepickerModule,
+    NgbDropdownModule,
+    NgbTooltipModule,
+    ReactiveFormsModule
+]
 })
 export class MemberFilterComponent implements OnInit {
   @Output()

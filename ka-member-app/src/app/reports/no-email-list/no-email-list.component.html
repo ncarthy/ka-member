@@ -2,7 +2,9 @@
   <div class="col-sm-6">
     <h4>
       {{ members && members.length }} UK Members With No Email
-      <span *ngIf="ids && ids.length">(Filtered)</span>
+      @if (ids && ids.length) {
+        <span>(Filtered)</span>
+      }
     </h4>
   </div>
   <div class="col-sm-3 mb-2">
@@ -18,7 +20,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-      members && members.length
+    members && members.length
     }}
     members found
   </caption>
@@ -35,24 +37,27 @@
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let member of members"
-      class="m-0"
-      (click)="memberSelected(member)"
-    >
-      <td>{{ member.name }}</td>
-      <td>{{ member.title }}</td>
-      <td>{{ member.businessname }}</td>
-      <td>{{ member.addressfirstline }}</td>
-      <td>{{ member.addresssecondline }}</td>
-      <td>{{ member.city }}</td>
-      <td>{{ member.postcode }}</td>
-      <td></td>
-    </tr>
-    <tr *ngIf="!members">
-      <td colspan="1" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
+    @for (member of members; track member) {
+      <tr
+        class="m-0"
+        (click)="memberSelected(member)"
+        >
+        <td>{{ member.name }}</td>
+        <td>{{ member.title }}</td>
+        <td>{{ member.businessname }}</td>
+        <td>{{ member.addressfirstline }}</td>
+        <td>{{ member.addresssecondline }}</td>
+        <td>{{ member.city }}</td>
+        <td>{{ member.postcode }}</td>
+        <td></td>
+      </tr>
+    }
+    @if (!members) {
+      <tr>
+        <td colspan="1" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>

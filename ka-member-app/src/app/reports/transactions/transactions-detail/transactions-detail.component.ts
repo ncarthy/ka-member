@@ -6,7 +6,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   AuthenticationService,
   PaymentTypeService,
@@ -23,7 +23,7 @@ import {
 @Component({
     selector: 'transactions-detail',
     templateUrl: './transactions-detail.component.html',
-    imports: [CommonModule, NgFor]
+    imports: [CommonModule]
 })
 export class TransactionsDetailComponent implements OnInit, OnChanges {
   @Input() bankAccounts?: BankAccount[];

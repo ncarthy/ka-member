@@ -10,15 +10,16 @@
         </button>
       </div>
       <div>
-        <button
-        routerLink="/members/add"
-        class="btn btn-success"
-        *ngIf="user.isAdmin"
-      >
-        Add New Member
-      </button>
+        @if (user.isAdmin) {
+          <button
+            routerLink="/members/add"
+            class="btn btn-success"
+            >
+            Add New Member
+          </button>
+        }
+      </div>
     </div>
-  </div>
   </div>
 </div>
 <member-filter
@@ -30,7 +31,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-      members && members.length
+    members && members.length
     }}
     members found
   </caption>
@@ -49,20 +50,23 @@
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let myMember of members"
-      member-row
-      [member]="myMember"
-      [filter]="filter"
-      (onMemberDeleted)="memberWasDeleted($event)"
-      (onMemberUpdated)="memberWasUpdated($event)"
-      (click)="memberSelected(myMember)"
-      class="m-0"
-    ></tr>
-    <tr *ngIf="!members">
-      <td colspan="8" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
+    @for (myMember of members; track myMember) {
+      <tr
+        member-row
+        [member]="myMember"
+        [filter]="filter"
+        (onMemberDeleted)="memberWasDeleted($event)"
+        (onMemberUpdated)="memberWasUpdated($event)"
+        (click)="memberSelected(myMember)"
+        class="m-0"
+      ></tr>
+    }
+    @if (!members) {
+      <tr>
+        <td colspan="8" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>

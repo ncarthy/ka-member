@@ -1,5 +1,5 @@
 import { Component, TemplateRef } from '@angular/core';
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { ToastService } from '@app/_services';
@@ -9,7 +9,7 @@ import { ToastService } from '@app/_services';
     templateUrl: './toast-container.component.html',
     styleUrls: ['./toast-container.component.css'],
     host: { '[class.ngb-toasts]': 'true' },
-    imports: [NgFor, NgIf, NgTemplateOutlet, NgbToastModule]
+    imports: [NgTemplateOutlet, NgbToastModule]
 })
 export class ToastContainerComponent {
   constructor(public toastService: ToastService) {}

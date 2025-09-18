@@ -1,11 +1,15 @@
 <div class="row justify-content-between">
   <div class="col-sm-6">
-    <h4 *ngIf="ids && ids.length">
-      {{ member_emails && member_emails.length }} Emails After Filter
-    </h4>
-    <h4 *ngIf="!ids || !ids.length">
-      {{ member_emails && member_emails.length }} Email Addresses Found
-    </h4>
+    @if (ids && ids.length) {
+      <h4>
+        {{ member_emails && member_emails.length }} Emails After Filter
+      </h4>
+    }
+    @if (!ids || !ids.length) {
+      <h4>
+        {{ member_emails && member_emails.length }} Email Addresses Found
+      </h4>
+    }
   </div>
   <div class="col-sm-3 mb-2">
     <button class="btn btn-primary me-2" (click)="exportToCSV()">
@@ -20,7 +24,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-      member_emails && member_emails.length
+    member_emails && member_emails.length
     }}
     email addresses found
   </caption>
@@ -31,17 +35,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let email of member_emails"
-      class="m-0"
-      (click)="emailSelected(email)"
-    >
-      <td>{{ email[1] }}</td>
-    </tr>
-    <tr *ngIf="!member_emails">
-      <td colspan="1" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
+    @for (email of member_emails; track email) {
+      <tr
+        class="m-0"
+        (click)="emailSelected(email)"
+        >
+        <td>{{ email[1] }}</td>
+      </tr>
+    }
+    @if (!member_emails) {
+      <tr>
+        <td colspan="1" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>

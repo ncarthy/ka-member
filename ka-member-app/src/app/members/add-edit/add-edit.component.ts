@@ -1,5 +1,5 @@
 ﻿import { Component, inject, OnInit } from '@angular/core';
-import { Location, NgClass, NgFor, NgIf } from '@angular/common';
+import { Location, NgClass } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import {
   FormBuilder,
@@ -41,9 +41,10 @@ import {
 import { SharedModule } from '@app/shared/shared.module'
 
 @Component({
+  standalone: true,
     templateUrl: 'add-edit.component.html',
     styleUrls: ['add-edit.component.css'],
-    imports: [SharedModule, NgbDatepickerModule, NgbTooltipModule, NgClass, NgFor, NgIf, ReactiveFormsModule, RouterLink]
+    imports: [SharedModule, NgbDatepickerModule, NgbTooltipModule, NgClass, ReactiveFormsModule, RouterLink]
 })
 export class MemberAddEditComponent implements OnInit {
   form!: FormGroup;

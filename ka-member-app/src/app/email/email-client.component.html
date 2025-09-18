@@ -6,14 +6,14 @@
       class="btn btn-danger"
       (click)="onSend()"
       [disabled]="this.form.invalid"
-    >
+      >
       Send
     </button>
     <button
       type="button"
       class="btn btn-outline-secondary m-3"
       (click)="modal.dismiss('Cross click')"
-    >
+      >
       &times;
     </button>
   </div>
@@ -32,15 +32,21 @@
           [ngClass]="{
             'is-invalid': !loading && submitted && f.fromEmail.errors
           }"
-        />
-        <div *ngIf="submitted && f.fromEmail.errors" class="invalid-feedback">
-          <div *ngIf="f.fromEmail.errors.required">
-            Please enter an email address
+          />
+        @if (submitted && f.fromEmail.errors) {
+          <div class="invalid-feedback">
+            @if (f.fromEmail.errors.required) {
+              <div>
+                Please enter an email address
+              </div>
+            }
+            @if (f.fromEmail.errors.email) {
+              <div>
+                This email address is not valid
+              </div>
+            }
           </div>
-          <div *ngIf="f.fromEmail.errors.email">
-            This email address is not valid
-          </div>
-        </div>
+        }
       </div>
     </div>
     <div class="row">
@@ -55,12 +61,16 @@
           [ngClass]="{
             'is-invalid': !loading && submitted && f.fromName.errors
           }"
-        />
-        <div *ngIf="submitted && f.fromName.errors" class="invalid-feedback">
-          <div *ngIf="f.fromName.errors.required">
-            Must enter a name for the signature area of the email
+          />
+        @if (submitted && f.fromName.errors) {
+          <div class="invalid-feedback">
+            @if (f.fromName.errors.required) {
+              <div>
+                Must enter a name for the signature area of the email
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
       <div class="col-sm input-group mb-1">
         <span class="input-group-text col-4" id="fromTitle-label">Title</span>
@@ -73,12 +83,16 @@
           [ngClass]="{
             'is-invalid': !loading && submitted && f.fromTitle.errors
           }"
-        />
-        <div *ngIf="submitted && f.fromTitle.errors" class="invalid-feedback">
-          <div *ngIf="f.fromTitle.errors.required">
-            Must enter a title for the signature area of the email
+          />
+        @if (submitted && f.fromTitle.errors) {
+          <div class="invalid-feedback">
+            @if (f.fromTitle.errors.required) {
+              <div>
+                Must enter a title for the signature area of the email
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
     <hr />
@@ -95,91 +109,108 @@
             [ngClass]="{
               'is-invalid': !loading && submitted && f.toEmail.errors
             }"
-          />
-          <div *ngIf="submitted && f.toEmail.errors" class="invalid-feedback">
-            <div *ngIf="f.toEmail.errors.required">
-              Please enter an email address
+            />
+          @if (submitted && f.toEmail.errors) {
+            <div class="invalid-feedback">
+              @if (f.toEmail.errors.required) {
+                <div>
+                  Please enter an email address
+                </div>
+              }
+              @if (f.toEmail.errors.email) {
+                <div>
+                  This email address is not valid
+                </div>
+              }
             </div>
-            <div *ngIf="f.toEmail.errors.email">
-              This email address is not valid
-            </div>
-          </div>
+          }
         </div>
         <div class="col-sm">
           <div class="input-group mb-1">
             <span class="input-group-text col-3" id="salutation-label"
               >Salutation</span
-            >
-            <input
-              id="salutationInput"
-              name="salutationInput"
-              type="text"
-              class="form-control text-left col"
-              formControlName="salutation"
+              >
+              <input
+                id="salutationInput"
+                name="salutationInput"
+                type="text"
+                class="form-control text-left col"
+                formControlName="salutation"
               [ngClass]="{
                 'is-invalid': !loading && submitted && f.salutation.errors
               }"
-            />
-            <div
-              *ngIf="submitted && f.salutation.errors"
-              class="invalid-feedback"
-            >
-              <div *ngIf="f.to.salutation.required">
-                Must enter a salutation
-              </div>
+                />
+              @if (submitted && f.salutation.errors) {
+                <div
+                  class="invalid-feedback"
+                  >
+                  @if (f.to.salutation.required) {
+                    <div>
+                      Must enter a salutation
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
+        <div class="col">
+          <p>
+            The text of the email is not editable, only the subject, the
+            salutation and your name and title.
+          </p>
+        </div>
       </div>
-      <div class="col">
-        <p>
-          The text of the email is not editable, only the subject, the
-          salutation and your name and title.
-        </p>
-      </div>
-    </div>
-    <hr />
-    <div class="row">
-      <div class="col-sm">
-        <div class="input-group mb-1">
-          <span class="input-group-text col-3" id="subject-label">Subject</span>
-          <input
-            id="subjectInput"
-            name="subjectInput"
-            type="text"
-            class="form-control text-left col"
-            formControlName="subject"
+      <hr />
+      <div class="row">
+        <div class="col-sm">
+          <div class="input-group mb-1">
+            <span class="input-group-text col-3" id="subject-label">Subject</span>
+            <input
+              id="subjectInput"
+              name="subjectInput"
+              type="text"
+              class="form-control text-left col"
+              formControlName="subject"
             [ngClass]="{
               'is-invalid': !loading && submitted && f.subject.errors
             }"
-          />
-          <div *ngIf="submitted && f.subject.errors" class="invalid-feedback">
-            <div *ngIf="f.to.subject.required">
-              Must enter a subject line for the email
-            </div>
+              />
+            @if (submitted && f.subject.errors) {
+              <div class="invalid-feedback">
+                @if (f.to.subject.required) {
+                  <div>
+                    Must enter a subject line for the email
+                  </div>
+                }
+              </div>
+            }
           </div>
         </div>
       </div>
-    </div>
 
-    <div *ngIf="false">
-      <!--Debug Information for Testing -->
-      <hr />
-      <p>Form Value: {{ form.value | json }}</p>
-      <p>Form Status: {{ form.status | json }}</p>
-      <hr />
-    </div>
-  </form>
-  <hr />
-  <div *ngIf="body" [innerHTML]="body"></div>
-</div>
-<div class="modal-footer">
-  <button
-    type="button"
-    class="btn btn-outline-secondary"
-    (click)="modal.dismiss('cancel click')"
-  >
-    Cancel
-  </button>
-  <button type="button" class="btn btn-danger" (click)="onSend()">Send</button>
-</div>
+      @if (false) {
+        <div>
+          <!--Debug Information for Testing -->
+          <hr />
+          <p>Form Value: {{ form.value | json }}</p>
+          <p>Form Status: {{ form.status | json }}</p>
+          <hr />
+        </div>
+      }
+    </form>
+    <hr />
+    @if (body) {
+      <div [innerHTML]="body"></div>
+    }
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel click')"
+      >
+      Cancel
+    </button>
+    <button type="button" class="btn btn-danger" (click)="onSend()">Send</button>
+  </div>

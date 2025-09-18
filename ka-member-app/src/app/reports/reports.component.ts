@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Location, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
   NgbAccordionModule,
@@ -10,7 +10,7 @@ import { User } from '@app/_models';
 
 @Component({
     templateUrl: './reports.component.html',
-    imports: [NgbAccordionModule, NgbTooltipModule, NgIf, RouterLink]
+    imports: [NgbAccordionModule, NgbTooltipModule, RouterLink]
 })
 export class ReportsComponent implements OnInit {
   user: User;

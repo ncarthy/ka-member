@@ -1,13 +1,14 @@
 ﻿<div class="row">
   <div class="col-sm-6"><h1>Users</h1></div>
   <div class="col-sm-2">
-    <button
-      routerLink="add"
-      class="btn btn-sm btn-success m-1 mt-1"
-      *ngIf="user.isAdmin"
-    >
-      Add New User
-    </button>
+    @if (user.isAdmin) {
+      <button
+        routerLink="add"
+        class="btn btn-sm btn-success m-1 mt-1"
+        >
+        Add New User
+      </button>
+    }
   </div>
 </div>
 <table class="table table-striped table-responsive">
@@ -21,17 +22,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let myUser of users"
-      user-row
-      [user]="myUser"
-      (onUserDeleted)="userWasDeleted($event)"
-      routerLink="edit/{{ myUser.id }}"
-    ></tr>
-    <tr *ngIf="!users">
-      <td colspan="5" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
+    @for (myUser of users; track myUser) {
+      <tr
+        user-row
+        [user]="myUser"
+        (onUserDeleted)="userWasDeleted($event)"
+        routerLink="edit/{{ myUser.id }}"
+      ></tr>
+    }
+    @if (!users) {
+      <tr>
+        <td colspan="5" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { NgIf } from '@angular/common';
+
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   NgbDropdownModule,
@@ -16,16 +16,15 @@ import { ToastContainerComponent } from './shared/toast-container/toast-containe
     selector: 'app',
     templateUrl: 'app.component.html',
     imports: [
-        AlertComponent,
-        NgbCollapseModule,
-        NgbDropdownModule,
-        NgIf,
-        NgbNavModule,
-        RouterLink,
-        RouterLinkActive,
-        RouterOutlet,
-        ToastContainerComponent,
-    ]
+    AlertComponent,
+    NgbCollapseModule,
+    NgbDropdownModule,
+    NgbNavModule,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    ToastContainerComponent
+]
 })
 export class AppComponent {
   user?: User;

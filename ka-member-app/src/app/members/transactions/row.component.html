@@ -7,13 +7,13 @@
       placement="bottom"
       [(ngModel)]="transaction.date"
       (ngModelChange)="onTransactionChange()"
-    />
+      />
     <div class="input-group-append">
       <button
         class="btn btn-outline-secondary"
         (click)="d1.toggle()"
         type="button"
-      >
+        >
         <i class="far fa-calendar-alt"></i>
       </button>
     </div>
@@ -33,11 +33,13 @@
     [(ngModel)]="transaction.paymenttypeID"
     (change)="onTransactionChange()"
     (click)="onClickEvent($event)"
-  >
+    >
     <option disabled selected [ngValue]="null">---- select ----</option>
-    <option *ngFor="let pType of paymentTypes" [ngValue]="pType.id">
-      {{ pType.name }}
-    </option>
+    @for (pType of paymentTypes; track pType) {
+      <option [ngValue]="pType.id">
+        {{ pType.name }}
+      </option>
+    }
   </select>
 </td>
 <td class="d-none d-sm-table-cell">
@@ -48,11 +50,13 @@
     [(ngModel)]="transaction.bankID"
     (change)="onTransactionChange()"
     (click)="onClickEvent($event)"
-  >
+    >
     <option disabled selected [ngValue]="null">-- select --</option>
-    <option *ngFor="let bank of banks" [ngValue]="bank.id">
-      {{ bank.name }}
-    </option>
+    @for (bank of banks; track bank) {
+      <option [ngValue]="bank.id">
+        {{ bank.name }}
+      </option>
+    }
   </select>
 </td>
 <td class="d-none d-sm-table-cell">
@@ -61,7 +65,7 @@
     class="form-control text-right"
     [ngModel]="transaction.amount | number: '1.2-2'"
     (ngModelChange)="onTransactionAmountChange($event)"
-  />
+    />
 </td>
 <td class="d-none d-sm-table-cell">
   <textarea
@@ -70,56 +74,72 @@
     [(ngModel)]="transaction.note"
     (ngModelChange)="onTransactionNoteChange()"
     (click)="onClickEvent($event)"
-  >
+    >
   </textarea>
 </td>
 <td style="width: 15%">
-  <button
-    (click)="onTransactionChange()"
-    class="btn btn-sm btn-info mr-1 mb-1"
-    [disabled]="transaction.isUpdating"
-    *ngIf="user.isAdmin && showSaveButton"
-  >
-    <span
-      *ngIf="transaction.isUpdating"
-      class="spinner-border spinner-border-sm"
-    ></span>
-    <span *ngIf="!transaction.isUpdating">Save</span>
-  </button>
-  <button
-    (click)="onTransactionUpdated.emit(this.transaction)"
-    class="btn btn-sm btn-info mr-1 mb-1"
-    [disabled]="transaction.isUpdating"
-    *ngIf="user.isAdmin && showSaveButton"
-  >
-    <span
-      *ngIf="transaction.isUpdating"
-      class="spinner-border spinner-border-sm"
-    ></span>
-    <span *ngIf="!transaction.isUpdating">Undo</span>
-  </button>
-  <button
-    (click)="editTransaction($event)"
-    class="btn btn-sm btn-primary mr-1 mb-1"
-    [disabled]="transaction.isUpdating"
-    *ngIf="user.isAdmin"
-  >
-    <span
-      *ngIf="transaction.isUpdating"
-      class="spinner-border spinner-border-sm"
-    ></span>
-    <span *ngIf="!transaction.isUpdating">Edit</span>
-  </button>
-  <button
-    (click)="onTransactionDelete()"
-    class="btn btn-sm btn-danger btn-delete-transaction mb-1"
-    [disabled]="transaction.isDeleting"
-    *ngIf="user.isAdmin"
-  >
-    <span
-      *ngIf="transaction.isDeleting"
-      class="spinner-border spinner-border-sm"
-    ></span>
-    <span *ngIf="!transaction.isDeleting">Delete</span>
-  </button>
+  @if (user.isAdmin && showSaveButton) {
+    <button
+      (click)="onTransactionChange()"
+      class="btn btn-sm btn-info mr-1 mb-1"
+      [disabled]="transaction.isUpdating"
+      >
+      @if (transaction.isUpdating) {
+        <span
+          class="spinner-border spinner-border-sm"
+        ></span>
+      }
+      @if (!transaction.isUpdating) {
+        <span>Save</span>
+      }
+    </button>
+  }
+  @if (user.isAdmin && showSaveButton) {
+    <button
+      (click)="onTransactionUpdated.emit(this.transaction)"
+      class="btn btn-sm btn-info mr-1 mb-1"
+      [disabled]="transaction.isUpdating"
+      >
+      @if (transaction.isUpdating) {
+        <span
+          class="spinner-border spinner-border-sm"
+        ></span>
+      }
+      @if (!transaction.isUpdating) {
+        <span>Undo</span>
+      }
+    </button>
+  }
+  @if (user.isAdmin) {
+    <button
+      (click)="editTransaction($event)"
+      class="btn btn-sm btn-primary mr-1 mb-1"
+      [disabled]="transaction.isUpdating"
+      >
+      @if (transaction.isUpdating) {
+        <span
+          class="spinner-border spinner-border-sm"
+        ></span>
+      }
+      @if (!transaction.isUpdating) {
+        <span>Edit</span>
+      }
+    </button>
+  }
+  @if (user.isAdmin) {
+    <button
+      (click)="onTransactionDelete()"
+      class="btn btn-sm btn-danger btn-delete-transaction mb-1"
+      [disabled]="transaction.isDeleting"
+      >
+      @if (transaction.isDeleting) {
+        <span
+          class="spinner-border spinner-border-sm"
+        ></span>
+      }
+      @if (!transaction.isDeleting) {
+        <span>Delete</span>
+      }
+    </button>
+  }
 </td>

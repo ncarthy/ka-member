@@ -1,126 +1,168 @@
 <div class="m-2">
-  <h5 *ngIf="formMode === FormMode.Add">Add New Transaction</h5>
-  <h5 *ngIf="formMode === FormMode.Edit">Edit Transaction</h5>
-  <div *ngIf="loading">
-    <span class="spinner-border spinner-border-lg align-center"></span>
-  </div>
-  <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-    <div class="input-group col p-0 mb-1">
-      <span class="input-group-text col-4" id="date-label">Date</span>
-      <input
-        formControlName="date"
-        class="form-control"
-        ngbDatepicker
-        #d1="ngbDatepicker"
-        placement="bottom"
-        [ngClass]="{ 'is-invalid': submitted && f.date.errors }"
-        id="transactionDate"
-      />
-      <div class="input-group-append">
-        <button
-          class="btn btn-outline-secondary"
-          (click)="d1.toggle()"
-          type="button"
-        >
-          <i class="far fa-calendar-alt"></i>
-        </button>
-      </div>
-      <div *ngIf="submitted && f.date.errors" class="invalid-feedback">
-        <div *ngIf="f.date.errors.required">Date is required</div>
-      </div>
+  @if (formMode === FormMode.Add) {
+    <h5>Add New Transaction</h5>
+  }
+  @if (formMode === FormMode.Edit) {
+    <h5>Edit Transaction</h5>
+  }
+  @if (loading) {
+    <div>
+      <span class="spinner-border spinner-border-lg align-center"></span>
     </div>
-    <div class="input-group mb-1">
-      <span class="input-group-text col-4" id="paymenttypes-label"
-        >Pmt Type</span
-      >
-      <select
-        id="paymentTypeSelect"
-        name="paymentTypeSelect"
-        class="form-control"
-        formControlName="paymenttypeID"
-        [ngClass]="{ 'is-invalid': submitted && f.paymenttypeID.errors }"
-      >
-        <option disabled selected [ngValue]="null">---- select ----</option>
-        <option *ngFor="let pType of paymentTypes" [ngValue]="pType.id">
-          {{ pType.name }}
-        </option>
-      </select>
-      <div *ngIf="submitted && f.paymenttypeID.errors" class="invalid-feedback">
-        <div *ngIf="f.paymenttypeID.errors.required">
-          Payment type is required
+  }
+  @if (!loading) {
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+      <div class="input-group col p-0 mb-1">
+        <span class="input-group-text col-4" id="date-label">Date</span>
+        <input
+          formControlName="date"
+          class="form-control"
+          ngbDatepicker
+          #d1="ngbDatepicker"
+          placement="bottom"
+          [ngClass]="{ 'is-invalid': submitted && f.date.errors }"
+          id="transactionDate"
+          />
+        <div class="input-group-append">
+          <button
+            class="btn btn-outline-secondary"
+            (click)="d1.toggle()"
+            type="button"
+            >
+            <i class="far fa-calendar-alt"></i>
+          </button>
         </div>
+        @if (submitted && f.date.errors) {
+          <div class="invalid-feedback">
+            @if (f.date.errors.required) {
+              <div>Date is required</div>
+            }
+          </div>
+        }
       </div>
-    </div>
-    <div class="input-group mb-1">
-      <span class="input-group-text col-4" id="bankaccounts-label"
-        >Bank a/c</span
-      >
-      <select
-        id="bankSelect"
-        name="bankSelect"
-        class="form-control"
-        formControlName="bankID"
-        [ngClass]="{ 'is-invalid': submitted && f.bankID.errors }"
-      >
-        <option disabled selected [ngValue]="null">-- select --</option>
-        <option *ngFor="let bank of banks" [ngValue]="bank.id">
-          {{ bank.name }}
-        </option>
-      </select>
-      <div *ngIf="submitted && f.bankID.errors" class="invalid-feedback">
-        <div *ngIf="f.bankID.errors.required">Bank is required</div>
-      </div>
-    </div>
-    <div class="input-group col p-0 mb-1">
-      <span class="input-group-text col-4" id="amount-label">Amount</span>
-      <input
-        type="number"
-        class="form-control text-left"
-        formControlName="amount"
-        [ngClass]="{ 'is-invalid': submitted && f.amount.errors }"
-      />
-      <div *ngIf="submitted && f.amount.errors" class="invalid-feedback">
-        <div *ngIf="f.amount.errors.required">Amount is required</div>
-      </div>
-    </div>
-    <div class="input-group mb-1">
-      <span class="input-group-text col-4" id="note-addon1">Note</span>
-      <textarea class="form-control" formControlName="note"></textarea>
-    </div>
-    <div class="form-group" *ngIf="user.isAdmin">
-      <button
-        type="submit"
-        [disabled]="loading"
-        class="btn btn-primary"
-        *ngIf="user.isAdmin"
-      >
-        <span
-          *ngIf="saving"
-          class="spinner-border spinner-border-sm mr-1"
-        ></span>
-        <div *ngIf="!saving">
-          <span *ngIf="formMode === FormMode.Add">Add New Transaction</span
-          ><span *ngIf="formMode === FormMode.Edit">Save</span>
+      <div class="input-group mb-1">
+        <span class="input-group-text col-4" id="paymenttypes-label"
+          >Pmt Type</span
+          >
+          <select
+            id="paymentTypeSelect"
+            name="paymentTypeSelect"
+            class="form-control"
+            formControlName="paymenttypeID"
+            [ngClass]="{ 'is-invalid': submitted && f.paymenttypeID.errors }"
+            >
+            <option disabled selected [ngValue]="null">---- select ----</option>
+            @for (pType of paymentTypes; track pType) {
+              <option [ngValue]="pType.id">
+                {{ pType.name }}
+              </option>
+            }
+          </select>
+          @if (submitted && f.paymenttypeID.errors) {
+            <div class="invalid-feedback">
+              @if (f.paymenttypeID.errors.required) {
+                <div>
+                  Payment type is required
+                </div>
+              }
+            </div>
+          }
         </div>
-      </button>
-      <a
-        class="btn btn-link"
-        *ngIf="formMode === FormMode.Add"
-        (click)="onReset()"
-        >Reset</a
-      >
-      <a
-        class="btn btn-link"
-        *ngIf="formMode === FormMode.Edit"
-        (click)="onReset()"
-        >Clear</a
-      >
-    </div>
-    <div *ngIf="false">
-      <!--Debug Information for Testing -->
-      <hr />
-      <p>Form Value: {{ transactionForm.value | json }}</p>
-      <p>Form Status: {{ transactionForm.status | json }}</p>
-    </div>
-  </form>
-</div>
+        <div class="input-group mb-1">
+          <span class="input-group-text col-4" id="bankaccounts-label"
+            >Bank a/c</span
+            >
+            <select
+              id="bankSelect"
+              name="bankSelect"
+              class="form-control"
+              formControlName="bankID"
+              [ngClass]="{ 'is-invalid': submitted && f.bankID.errors }"
+              >
+              <option disabled selected [ngValue]="null">-- select --</option>
+              @for (bank of banks; track bank) {
+                <option [ngValue]="bank.id">
+                  {{ bank.name }}
+                </option>
+              }
+            </select>
+            @if (submitted && f.bankID.errors) {
+              <div class="invalid-feedback">
+                @if (f.bankID.errors.required) {
+                  <div>Bank is required</div>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-group col p-0 mb-1">
+            <span class="input-group-text col-4" id="amount-label">Amount</span>
+            <input
+              type="number"
+              class="form-control text-left"
+              formControlName="amount"
+              [ngClass]="{ 'is-invalid': submitted && f.amount.errors }"
+              />
+            @if (submitted && f.amount.errors) {
+              <div class="invalid-feedback">
+                @if (f.amount.errors.required) {
+                  <div>Amount is required</div>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="note-addon1">Note</span>
+            <textarea class="form-control" formControlName="note"></textarea>
+          </div>
+          @if (user.isAdmin) {
+            <div class="form-group">
+              @if (user.isAdmin) {
+                <button
+                  type="submit"
+                  [disabled]="loading"
+                  class="btn btn-primary"
+                  >
+                  @if (saving) {
+                    <span
+                      class="spinner-border spinner-border-sm mr-1"
+                    ></span>
+                  }
+                  @if (!saving) {
+                    <div>
+                      @if (formMode === FormMode.Add) {
+                        <span>Add New Transaction</span
+                          >
+                          }@if (formMode === FormMode.Edit) {
+                          <span>Save</span>
+                        }
+                      </div>
+                    }
+                  </button>
+                }
+                @if (formMode === FormMode.Add) {
+                  <a
+                    class="btn btn-link"
+                    (click)="onReset()"
+                    >Reset</a
+                    >
+                  }
+                  @if (formMode === FormMode.Edit) {
+                    <a
+                      class="btn btn-link"
+                      (click)="onReset()"
+                      >Clear</a
+                      >
+                    }
+                  </div>
+                }
+                @if (false) {
+                  <div>
+                    <!--Debug Information for Testing -->
+                    <hr />
+                    <p>Form Value: {{ transactionForm.value | json }}</p>
+                    <p>Form Status: {{ transactionForm.status | json }}</p>
+                  </div>
+                }
+              </form>
+            }
+          </div>

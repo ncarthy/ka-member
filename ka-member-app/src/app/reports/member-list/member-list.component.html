@@ -4,20 +4,22 @@
     <p>{{ subtitle }}</p>
   </div>
   <div class="col-sm-3 mb-2">
-    <button
-      (click)="setAllToFormer()"
-      class="btn btn-danger me-2"
-      *ngIf="user.isAdmin && title == 'Lapsed Contributing Ex-Members'"
-    >
-      Set All To Former
-    </button>
-    <button
-      (click)="anonymizeAll()"
-      class="btn btn-danger me-2"
-      *ngIf="user.isAdmin && title == 'Former Members Not Anonymized'"
-    >
-      Anonymize All
-    </button>
+    @if (user.isAdmin && title == 'Lapsed Contributing Ex-Members') {
+      <button
+        (click)="setAllToFormer()"
+        class="btn btn-danger me-2"
+        >
+        Set All To Former
+      </button>
+    }
+    @if (user.isAdmin && title == 'Former Members Not Anonymized') {
+      <button
+        (click)="anonymizeAll()"
+        class="btn btn-danger me-2"
+        >
+        Anonymize All
+      </button>
+    }
     <button routerLink="/reports" class="btn btn-outline-dark">
       Close &times;
     </button>
@@ -27,7 +29,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-      members && members.length
+    members && members.length
     }}
     members found
   </caption>
@@ -40,160 +42,192 @@
       <th scope="col" class="d-none d-sm-table-cell">Address</th>
       <th scope="col" class="d-none d-sm-table-cell">Note</th>
       <th scope="col" class="d-none d-sm-table-cell">Payments</th>
-      <th
-        scope="col"
-        class="d-none d-sm-table-cell text-center"
-        *ngIf="!showDeleteDate"
-      >
-        Reminder Sent
-      </th>
-      <th
-        scope="col"
-        class="d-none d-sm-table-cell text-center"
-        *ngIf="showDeleteDate"
-      >
-        Delete Date
-      </th>
+      @if (!showDeleteDate) {
+        <th
+          scope="col"
+          class="d-none d-sm-table-cell text-center"
+          >
+          Reminder Sent
+        </th>
+      }
+      @if (showDeleteDate) {
+        <th
+          scope="col"
+          class="d-none d-sm-table-cell text-center"
+          >
+          Delete Date
+        </th>
+      }
       <th scope="col" class="w-25">Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let member of members" class="m-0">
-      <th scope="row" class="d-none d-sm-table-cell">
-        {{ member.name }}<br /><span *ngIf="member.businessname"
-          >({{ member.businessname }})</span
-        >
-      </th>
-      <th scope="row" class="d-sm-none">
-        {{ member.name }}<br /><span *ngIf="member.businessname"
-          >({{ member.businessname }})<br /></span
-        ><br />{{ member.count ? member.count : "No" }} payment<span
-          *ngIf="member.count && member.count > 1"
-          >s</span
-        >
-        <br />
-        <span *ngIf="member.lasttransactiondate"
-          >Last paid: {{ member.lasttransactiondate }}</span
-        >
-      </th>
-      <td class="d-none d-sm-table-cell">
-        <small>{{ member.membershiptype }}</small>
-      </td>
-      <td class="d-none d-sm-table-cell">
-        <small
-          >{{ member.addressfirstline }}<br />
-          {{ member.addresssecondline }}<br *ngIf="member.addresssecondline" />
-          {{ member.postcode }}</small
-        >
-      </td>
-      <td class="d-none d-sm-table-cell">
-        <small>{{ member.note }}</small>
-      </td>
-      <td class="d-none d-sm-table-cell">
-        <small
-          ><span *ngIf="member.lasttransactiondate"
-            >{{ member.lasttransactiondate }} <br
-          /></span>
-          {{ member.count ? member.count : "No" }} payment<span
-            *ngIf="member.count && member.count > 1"
-            >s</span
-          ><br />{{ member.amount ? "£" + member.amount : "" }}</small
-        >
-      </td>
-      <td class="d-none d-sm-table-cell">
-        <small
-          ><span *ngIf="!showDeleteDate">{{ member.reminderdate }}</span
-          ><span *ngIf="showDeleteDate">{{ member.deletedate }}</span></small
-        >
-      </td>
-      <td>
-        <button
-          routerLink="/members/edit/{{ member.id }}"
-          class="btn btn-sm btn-primary mr-1 mb-1"
-          [disabled]="member.isUpdating"
-        >
-          Member Details
-        </button>
-        <button
-          routerLink="/members/manage/{{ member.id }}"
-          class="btn btn-sm btn-info mr-1 mb-1"
-          [disabled]="member.isUpdating"
-        >
-          <span>Subscription</span>
-        </button>
-        <button
-          routerLink="/members/transactions/{{ member.id }}"
-          class="btn btn-sm btn-secondary mr-1 mb-1"
-          [disabled]="member.isUpdating"
-        >
-          <span>Payments</span>
-        </button>
-        <button
-          (click)="setToFormer(member)"
-          class="btn btn-sm btn-warning mr-1 mb-1"
-          [disabled]="member.isUpdating"
-          *ngIf="showButton(ButtonName.SETTOFORMER, member)"
-        >
+    @for (member of members; track member) {
+      <tr class="m-0">
+        <th scope="row" class="d-none d-sm-table-cell">
+          {{ member.name }}<br />@if (member.businessname) {
           <span
-            *ngIf="member.isUpdating"
-            class="spinner-border spinner-border-sm"
-          ></span>
-          Set to Former
-        </button>
-        <button
-          (click)="anonymize(member)"
-          class="btn btn-sm btn-warning mr-1 mb-1"
-          [disabled]="member.isUpdating"
-          *ngIf="showButton(ButtonName.ANONYMIZE, member)"
-        >
+            >({{ member.businessname }})</span
+            >
+          }
+        </th>
+        <th scope="row" class="d-sm-none">
+          {{ member.name }}<br />@if (member.businessname) {
           <span
-            *ngIf="member.isUpdating"
-            class="spinner-border spinner-border-sm"
-          ></span>
-          Anonymize
-        </button>
-        <button
-          (click)="sendReminder(member)"
-          class="btn btn-sm btn-success mr-1 mb-1"
-          [disabled]="member.isUpdating"
-          *ngIf="showButton(ButtonName.REMINDER, member)"
-        >
-          <span
-            *ngIf="member.isUpdating"
-            class="spinner-border spinner-border-sm"
-          ></span>
-          Send Reminder
-        </button>
-        <button
-          (click)="sendGoCardlessRequest(member)"
-          class="btn btn-sm purple-button text-white mr-1 mb-1"
-          [disabled]="member.isUpdating"
-          *ngIf="showButton(ButtonName.GOCARDLESS, member)"
-        >
-          <span
-            *ngIf="member.isUpdating"
-            class="spinner-border spinner-border-sm"
-          ></span>
-          GoCardless
-        </button>
-        <button
-          (click)="deleteMember(member)"
-          class="btn btn-sm btn-danger mr-1 mb-1"
-          [disabled]="member.isDeleting"
-          *ngIf="showButton(ButtonName.DELETE, member)"
-        >
-          <span
-            *ngIf="member.isDeleting"
-            class="spinner-border spinner-border-sm"
-          ></span>
-          Delete
-        </button>
-      </td>
-    </tr>
-    <tr *ngIf="!members || loading">
-      <td colspan="1" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
-  </tbody>
-</table>
+            >({{ member.businessname }})<br /></span
+            >
+            }<br />{{ member.count ? member.count : "No" }} payment@if (member.count && member.count > 1) {
+            <span
+              >s</span
+              >
+            }
+            <br />
+            @if (member.lasttransactiondate) {
+              <span
+                >Last paid: {{ member.lasttransactiondate }}</span
+                >
+              }
+            </th>
+            <td class="d-none d-sm-table-cell">
+              <small>{{ member.membershiptype }}</small>
+            </td>
+            <td class="d-none d-sm-table-cell">
+              <small
+                >{{ member.addressfirstline }}<br />
+                {{ member.addresssecondline }}@if (member.addresssecondline) {
+                <br />
+              }
+              {{ member.postcode }}</small
+              >
+            </td>
+            <td class="d-none d-sm-table-cell">
+              <small>{{ member.note }}</small>
+            </td>
+            <td class="d-none d-sm-table-cell">
+              <small
+                >@if (member.lasttransactiondate) {
+                <span
+                  >{{ member.lasttransactiondate }} <br
+                /></span>
+              }
+              {{ member.count ? member.count : "No" }} payment@if (member.count && member.count > 1) {
+              <span
+                >s</span
+                >
+                }<br />{{ member.amount ? "£" + member.amount : "" }}</small
+                >
+              </td>
+              <td class="d-none d-sm-table-cell">
+                <small
+                  >@if (!showDeleteDate) {
+                  <span>{{ member.reminderdate }}</span
+                    >
+                    }@if (showDeleteDate) {
+                    <span>{{ member.deletedate }}</span>
+                    }</small
+                    >
+                  </td>
+                  <td>
+                    <button
+                      routerLink="/members/edit/{{ member.id }}"
+                      class="btn btn-sm btn-primary mr-1 mb-1"
+                      [disabled]="member.isUpdating"
+                      >
+                      Member Details
+                    </button>
+                    <button
+                      routerLink="/members/manage/{{ member.id }}"
+                      class="btn btn-sm btn-info mr-1 mb-1"
+                      [disabled]="member.isUpdating"
+                      >
+                      <span>Subscription</span>
+                    </button>
+                    <button
+                      routerLink="/members/transactions/{{ member.id }}"
+                      class="btn btn-sm btn-secondary mr-1 mb-1"
+                      [disabled]="member.isUpdating"
+                      >
+                      <span>Payments</span>
+                    </button>
+                    @if (showButton(ButtonName.SETTOFORMER, member)) {
+                      <button
+                        (click)="setToFormer(member)"
+                        class="btn btn-sm btn-warning mr-1 mb-1"
+                        [disabled]="member.isUpdating"
+                        >
+                        @if (member.isUpdating) {
+                          <span
+                            class="spinner-border spinner-border-sm"
+                          ></span>
+                        }
+                        Set to Former
+                      </button>
+                    }
+                    @if (showButton(ButtonName.ANONYMIZE, member)) {
+                      <button
+                        (click)="anonymize(member)"
+                        class="btn btn-sm btn-warning mr-1 mb-1"
+                        [disabled]="member.isUpdating"
+                        >
+                        @if (member.isUpdating) {
+                          <span
+                            class="spinner-border spinner-border-sm"
+                          ></span>
+                        }
+                        Anonymize
+                      </button>
+                    }
+                    @if (showButton(ButtonName.REMINDER, member)) {
+                      <button
+                        (click)="sendReminder(member)"
+                        class="btn btn-sm btn-success mr-1 mb-1"
+                        [disabled]="member.isUpdating"
+                        >
+                        @if (member.isUpdating) {
+                          <span
+                            class="spinner-border spinner-border-sm"
+                          ></span>
+                        }
+                        Send Reminder
+                      </button>
+                    }
+                    @if (showButton(ButtonName.GOCARDLESS, member)) {
+                      <button
+                        (click)="sendGoCardlessRequest(member)"
+                        class="btn btn-sm purple-button text-white mr-1 mb-1"
+                        [disabled]="member.isUpdating"
+                        >
+                        @if (member.isUpdating) {
+                          <span
+                            class="spinner-border spinner-border-sm"
+                          ></span>
+                        }
+                        GoCardless
+                      </button>
+                    }
+                    @if (showButton(ButtonName.DELETE, member)) {
+                      <button
+                        (click)="deleteMember(member)"
+                        class="btn btn-sm btn-danger mr-1 mb-1"
+                        [disabled]="member.isDeleting"
+                        >
+                        @if (member.isDeleting) {
+                          <span
+                            class="spinner-border spinner-border-sm"
+                          ></span>
+                        }
+                        Delete
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+              @if (!members || loading) {
+                <tr>
+                  <td colspan="1" class="text-center">
+                    <span class="spinner-border spinner-border-lg align-center"></span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>

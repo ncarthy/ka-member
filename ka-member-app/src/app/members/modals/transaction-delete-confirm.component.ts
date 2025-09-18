@@ -36,7 +36,7 @@ import { Transaction } from '@app/_models';
         Ok
       </button>
     </div>`,
-    standalone: false
+    standalone: true
 })
 export class TransactionDeleteConfirmModalComponent {
   @Input() transaction?: Transaction;

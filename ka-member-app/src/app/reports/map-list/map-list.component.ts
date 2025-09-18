@@ -5,7 +5,7 @@ import {
   ElementRef,
   OnInit,
 } from '@angular/core';
-import { NgIf } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MembersService } from '@app/_services';
@@ -21,7 +21,7 @@ import { ListType } from './list-type.enum';
 @Component({
     templateUrl: './map-list.component.html',
     styleUrls: ['./map-list.component.css'],
-    imports: [NgIf, ReactiveFormsModule, RouterLink]
+    imports: [ReactiveFormsModule, RouterLink]
 })
 export class MapListComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) gmap!: ElementRef;

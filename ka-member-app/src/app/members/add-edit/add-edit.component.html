@@ -1,590 +1,641 @@
 ﻿<div class="row justify-content-between align-items-start">
   <div class="col">
-    <h1 *ngIf="isMemberAdd">Add Member</h1>
-    <h1 *ngIf="isMemberEdit">Edit Member</h1>
+    @if (isMemberAdd) {
+      <h1>Add Member</h1>
+    }
+    @if (isMemberEdit) {
+      <h1>Edit Member</h1>
+    }
   </div>
   <div class="col-auto">
-    <button
-      type="button"
-      routerLink="/members/manage/{{ id }}"
-      class="btn btn-info mr-1"
-      *ngIf="isMemberEdit"
-    >
-      Subscription
-    </button>
-    <button
-      type="button"
-      routerLink="/members/transactions/{{ id }}"
-      class="btn btn-secondary mr-1"
-      *ngIf="isMemberEdit"
-    >
-      Payments
-    </button>
+    @if (isMemberEdit) {
+      <button
+        type="button"
+        routerLink="/members/manage/{{ id }}"
+        class="btn btn-info mr-1"
+        >
+        Subscription
+      </button>
+    }
+    @if (isMemberEdit) {
+      <button
+        type="button"
+        routerLink="/members/transactions/{{ id }}"
+        class="btn btn-secondary mr-1"
+        >
+        Payments
+      </button>
+    }
     <button (click)="goBack()" class="btn btn-outline-dark">
       Close &times;
     </button>
   </div>
 </div>
-<div *ngIf="loading">
-  <span class="spinner-border spinner-border-lg align-center"></span>
-</div>
+@if (loading) {
+  <div>
+    <span class="spinner-border spinner-border-lg align-center"></span>
+  </div>
+}
 
 <!--'[formGroup]' is a Reactive forms property-->
 <!--The *ngIf is in place to stop errors of 'Expression has changed after it was checked.'-->
-<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
-  <!-- Buttons -->
-  <div class="row d-flex justify-content-between">
-    <div class="col-sm mb-1">
-      <button
-        type="submit"
-        [disabled]="loading"
-        class="btn btn-primary"
-        *ngIf="user.isAdmin"
-      >
-        <span
-          *ngIf="loading"
-          class="spinner-border spinner-border-sm mr-1"
-        ></span>
-        Save
-      </button>
-      <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()">Reset</a>
-    </div>
-    <div class="col-sm d-flex justify-content-end" *ngIf="isMemberEdit">
-      <button
-        type="button"
-        *ngIf="user.isAdmin && f['statusID'].value !== 9"
-        class="btn btn-warning mr-1"
-        (click)="onSetToFormer()"
-      >
-        Set to 'Former'
-      </button>
-      <button
-        *ngIf="showAnonymizeButton()"
-        type="button"
-        [disabled]="loading"
-        class="btn btn-warning mr-1"
-        (click)="onAnonymize()"
-      >
-        <span
-          *ngIf="loading"
-          class="spinner-border spinner-border-sm mr-1"
-        ></span>
-        Anonymize
-      </button>
-      <button
-        *ngIf="user.isAdmin && f['statusID'] && f['statusID'].value === 9"
-        type="button"
-        [disabled]="loading"
-        class="btn btn-danger"
-        (click)="onDelete()"
-      >
-        <span
-          *ngIf="loading"
-          class="spinner-border spinner-border-sm mr-1"
-        ></span>
-        Delete
-      </button>
-    </div>
-  </div>
-  <!-- End of Buttons -->
-
-  <small *ngIf="f.username.value"
-    >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
-  >
-
-  <!-- Names -->
-  <div
-    *ngFor="let name of namesFormGroups; let i = index"
-    class="list-group list-group-flush mb-1"
-  >
-    <div class="list-group-item">
-      <div [formGroup]="name" class="form-row">
-        <div class="col-sm-auto">
-          <h5>Name {{ i + 1 }}</h5>
+@if (!loading) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Buttons -->
+    <div class="row d-flex justify-content-between">
+      <div class="col-sm mb-1">
+        @if (user.isAdmin) {
+          <button
+            type="submit"
+            [disabled]="loading"
+            class="btn btn-primary"
+            >
+            @if (loading) {
+              <span
+                class="spinner-border spinner-border-sm mr-1"
+              ></span>
+            }
+            Save
+          </button>
+        }
+        @if (isMemberAdd) {
+          <a class="btn btn-link" (click)="onReset()">Reset</a>
+        }
+      </div>
+      @if (isMemberEdit) {
+        <div class="col-sm d-flex justify-content-end">
+          @if (user.isAdmin && f['statusID'].value !== 9) {
+            <button
+              type="button"
+              class="btn btn-warning mr-1"
+              (click)="onSetToFormer()"
+              >
+              Set to 'Former'
+            </button>
+          }
+          @if (showAnonymizeButton()) {
+            <button
+              type="button"
+              [disabled]="loading"
+              class="btn btn-warning mr-1"
+              (click)="onAnonymize()"
+              >
+              @if (loading) {
+                <span
+                  class="spinner-border spinner-border-sm mr-1"
+                ></span>
+              }
+              Anonymize
+            </button>
+          }
+          @if (user.isAdmin && f['statusID'] && f['statusID'].value === 9) {
+            <button
+              type="button"
+              [disabled]="loading"
+              class="btn btn-danger"
+              (click)="onDelete()"
+              >
+              @if (loading) {
+                <span
+                  class="spinner-border spinner-border-sm mr-1"
+                ></span>
+              }
+              Delete
+            </button>
+          }
         </div>
-        <div class="row m-0">
-          <div class="form-group col-6 col-sm-3">
-            <div class="row m-0">
-              <label class="col-sm-auto">Honorific</label>
-              <input
-                type="text"
-                formControlName="honorific"
-                class="col-sm form-control text-right"
-              />
-            </div>
-          </div>
-          <div class="form-group col col-sm">
-            <div class="row m-0">
-              <label class="col-sm-auto">First Name</label>
-              <input
-                type="text"
-                formControlName="firstname"
-                class="col-sm form-control text-right"
-              />
-            </div>
-          </div>
-          <div class="form-group col col-sm">
-            <div class="row m-0">
-              <label class="col-sm-auto">Surname</label>
-              <input
-                type="text"
-                formControlName="surname"
-                class="col-sm form-control text-right"
+      }
+    </div>
+    <!-- End of Buttons -->
+    @if (f.username.value) {
+      <small
+        >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
+        >
+      }
+      <!-- Names -->
+      @for (name of namesFormGroups; track name; let i = $index) {
+        <div
+          class="list-group list-group-flush mb-1"
+          >
+          <div class="list-group-item">
+            <div [formGroup]="name" class="form-row">
+              <div class="col-sm-auto">
+                <h5>Name {{ i + 1 }}</h5>
+              </div>
+              <div class="row m-0">
+                <div class="form-group col-6 col-sm-3">
+                  <div class="row m-0">
+                    <label class="col-sm-auto">Honorific</label>
+                    <input
+                      type="text"
+                      formControlName="honorific"
+                      class="col-sm form-control text-right"
+                      />
+                  </div>
+                </div>
+                <div class="form-group col col-sm">
+                  <div class="row m-0">
+                    <label class="col-sm-auto">First Name</label>
+                    <input
+                      type="text"
+                      formControlName="firstname"
+                      class="col-sm form-control text-right"
+                      />
+                  </div>
+                </div>
+                <div class="form-group col col-sm">
+                  <div class="row m-0">
+                    <label class="col-sm-auto">Surname</label>
+                    <input
+                      type="text"
+                      formControlName="surname"
+                      class="col-sm form-control text-right"
                 [ngClass]="{
                   'is-invalid': submitted && name.controls.surname.errors
                 }"
+                      />
+                    @if (submitted && name.controls.surname.errors) {
+                      <div
+                        class="invalid-feedback"
+                        >
+                        @if (name.controls.surname.errors.required) {
+                          <div>
+                            Surname is required, First Name and Honorific are optional
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <button
+                  type="button"
+                  [disabled]="loading"
+                  class="mr-3"
+                  (click)="onAddName()"
+                  placement="bottom"
+                  ngbTooltip="Add new name"
+                  >
+                  @if (loading) {
+                    <span
+                      class="spinner-border spinner-border-sm mr-1"
+                    ></span>
+                  }
+                  +
+                </button>
+                @if (i !== 0) {
+                  <button
+                    type="button"
+                    class="close"
+                    (click)="onRemoveName(i)"
+                    placement="bottom"
+                    ngbTooltip="Remove name"
+                    >
+                    <span>&times;</span>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      <!-- End of Names -->
+      <div class="row mb-1">
+        <!-- Status/Type (aka Membership type), Note & Bank Ref -->
+        <div class="col-sm-6 mb-1">
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="dates-label">Type</span>
+            <div class="card p-2 col-8">
+              <select
+                formControlName="statusID"
+                id="statusSelect"
+                name="statusSelect"
+                class="form-control"
+                >
+                @for (status of statuses; track status) {
+                  <option [ngValue]="status.id">
+                    {{ status.name }}
+                  </option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="note-addon1">Note</span>
+            <textarea
+              class="form-control"
+              formControlName="note"
+              aria-label="Note"
+              aria-describedby="note-addon1"
+              placement="bottom"
+              ngbTooltip="1000 character limit."
+            ></textarea>
+          </div>
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="bankpayerref-addon1"
+              >Bank Ref
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="bankpayerref"
+              aria-label="BankPayerRef"
+              aria-describedby="bankpayerref-addon1"
+              placement="bottom"
+              ngbTooltip="The payment reference found on a bank statement. May be left blank."
               />
-              <div
-                *ngIf="submitted && name.controls.surname.errors"
-                class="invalid-feedback"
+          </div>
+        </div>
+        <!--End of Status, Note & Bank Refo-->
+        <!-- Business info-->
+        <div class="col-sm-6 mb-1">
+          <div class="input-group">
+            <span class="input-group-text col-4" id="business-label">Business</span>
+            <div class="card col-8">
+              <div class="m-2">
+                <label for="inputBusinessName">Business Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputBusinessName"
+                  formControlName="businessname"
+                  />
+              </div>
+              <div class="m-2">
+                <label for="inputJobTitle">Job Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputJobTitle"
+                  formControlName="title"
+                  />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of Business info-->
+        <!-- GDPR -->
+        <div class="col-sm-6 mb-1">
+          <div class="input-group">
+            <span class="input-group-text col-4" id="GDPR-label">GDPR</span>
+            <div class="card p-3 col-8">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  formControlName="gdpr_email"
+                  class="form-check-input"
+                  />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Email
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  formControlName="gdpr_tel"
+                  class="form-check-input"
+                  />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Telephone
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  formControlName="gdpr_address"
+                  class="form-check-input"
+                  />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Address
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  formControlName="gdpr_sm"
+                  class="form-check-input"
+                  />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Social Media
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--End of GDPR-->
+        <!-- Emails & Phones-->
+        <div class="col-sm-6 mb-1">
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="email1-label">Email 1</span>
+            <input
+              type="email"
+              formControlName="email1"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
+              />
+            @if (submitted && f.email1.errors) {
+              <div class="invalid-feedback">
+                @if (f.email1.errors.email) {
+                  <div>Enter a valid email address</div>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="email2-label">Email 2</span>
+            <input
+              type="email"
+              formControlName="email2"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
+              />
+            @if (submitted && f.email2.errors) {
+              <div class="invalid-feedback">
+                @if (f.email2.errors.email) {
+                  <div>Enter a valid email address</div>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="phone1-label">Phone 1</span>
+            <input
+              type="text"
+              formControlName="phone1"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
+              />
+            @if (submitted && f.phone1.errors) {
+              <div class="invalid-feedback">
+                @if (f.phone1.errors.pattern) {
+                  <div>
+                    Only 0-9 and +/- or () allowed
+                  </div>
+                }
+              </div>
+            }
+          </div>
+          <div class="input-group mb-1">
+            <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
+            <input
+              type="text"
+              formControlName="phone2"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
+              />
+            @if (submitted && f.phone2.errors) {
+              <div class="invalid-feedback">
+                @if (f.phone2.errors.pattern) {
+                  <div>
+                    Only 0-9 and +/- or () allowed
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+        <!-- End of Emails & Phones-->
+        <!-- Dates (expiry, join & delete)-->
+        <div class="col-sm mb-1">
+          <div class="input-group">
+            <span class="input-group-text col-4 col-sm-2" id="dates-label"
+              >Dates</span
               >
-                <div *ngIf="name.controls.surname.errors.required">
-                  Surname is required, First Name and Honorific are optional
+              <div class="card p-3 col-8 col-sm-10">
+                <div class="row">
+                  <div class="col-sm">
+                    <label for="inputJoinDate" class="form-label"> Join Date </label>
+                    <div class="input-group mb-1">
+                      <input
+                        class="form-control"
+                        placeholder="*not-set*"
+                        name="dp"
+                        ngbDatepicker
+                        #d1="ngbDatepicker"
+                        formControlName="joindate"
+                        id="inputJoinDate"
+                        />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-secondary"
+                          (click)="d1.toggle()"
+                          type="button"
+                          >
+                          <i class="far fa-calendar-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm">
+                    <label for="inputExpiryDate" class="form-label">
+                      Expiry Date
+                    </label>
+                    <div class="input-group mb-1">
+                      <input
+                        class="form-control"
+                        placeholder="*not-set*"
+                        name="dp"
+                        ngbDatepicker
+                        #d="ngbDatepicker"
+                        formControlName="expirydate"
+                        id="inputExpiryDate"
+                        />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-secondary"
+                          (click)="d.toggle()"
+                          type="button"
+                          >
+                          <i class="far fa-calendar-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm">
+                    <label for="inputDeleteDate" class="form-label">
+                      Delete Date
+                    </label>
+                    <div class="input-group mb-1">
+                      <input
+                        class="form-control"
+                        placeholder=""
+                        name="dp"
+                        ngbDatepicker
+                        #d2="ngbDatepicker"
+                        formControlName="deletedate"
+                        id="inputDeleteDate"
+                        />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-secondary"
+                          (click)="d2.toggle()"
+                          type="button"
+                          disabled
+                          >
+                          <i class="far fa-calendar-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-sm-1">
-          <button
-            type="button"
-            [disabled]="loading"
-            class="mr-3"
-            (click)="onAddName()"
-            placement="bottom"
-            ngbTooltip="Add new name"
-          >
-            <span
-              *ngIf="loading"
-              class="spinner-border spinner-border-sm mr-1"
-            ></span>
-            +
-          </button>
-          <button
-            *ngIf="i !== 0"
-            type="button"
-            class="close"
-            (click)="onRemoveName(i)"
-            placement="bottom"
-            ngbTooltip="Remove name"
-          >
-            <span>&times;</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End of Names -->
-
-  <div class="row mb-1">
-    <!-- Status/Type (aka Membership type), Note & Bank Ref -->
-    <div class="col-sm-6 mb-1">
-      <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="dates-label">Type</span>
-        <div class="card p-2 col-8">
-          <select
-            formControlName="statusID"
-            id="statusSelect"
-            name="statusSelect"
-            class="form-control"
-          >
-            <option *ngFor="let status of statuses" [ngValue]="status.id">
-              {{ status.name }}
-            </option>
-          </select>
-        </div>
-      </div>
-      <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="note-addon1">Note</span>
-        <textarea
-          class="form-control"
-          formControlName="note"
-          aria-label="Note"
-          aria-describedby="note-addon1"
-          placement="bottom"
-          ngbTooltip="1000 character limit."
-        ></textarea>
-      </div>
-      <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="bankpayerref-addon1"
-          >Bank Ref
-        </span>
-        <input
-          type="text"
-          class="form-control"
-          formControlName="bankpayerref"
-          aria-label="BankPayerRef"
-          aria-describedby="bankpayerref-addon1"
-          placement="bottom"
-          ngbTooltip="The payment reference found on a bank statement. May be left blank."
-        />
-      </div>
-    </div>
-    <!--End of Status, Note & Bank Refo-->
-
-    <!-- Business info-->
-    <div class="col-sm-6 mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4" id="business-label">Business</span>
-        <div class="card col-8">
-          <div class="m-2">
-          <label for="inputBusinessName">Business Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputBusinessName"
-            formControlName="businessname"
-          />
-        </div>
-        <div class="m-2">
-          <label for="inputJobTitle">Job Title</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputJobTitle"
-            formControlName="title"
-          />
-        </div>
-        </div>
-      </div>
-    </div>
-    <!-- End of Business info-->
-
-    <!-- GDPR -->
-    <div class="col-sm-6 mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4" id="GDPR-label">GDPR</span>
-        <div class="card p-3 col-8">
-          <div class="form-check">
-            <input
-              type="checkbox"
-              formControlName="gdpr_email"
-              class="form-check-input"
-            />
-            <label class="form-check-label" for="flexCheckChecked">
-              Email
-            </label>
+          <!-- End of Dates-->
+          <div class="w-100"></div>
+          <!-- Show Primary Address-->
+          <div class="col-sm-6 mb-1">
+            <div class="input-group">
+              <span class="input-group-text col-4" id="pAddress-label">Primary</span>
+              <div class="card p-3 col-8">
+                <address-form
+                  formControlName="primaryAddress"
+                  [touched]="f.primaryAddress.touched"
+                  [address]="primaryAddress"
+                ></address-form>
+              </div>
+            </div>
           </div>
-          <div class="form-check">
-            <input
-              type="checkbox"
-              formControlName="gdpr_tel"
-              class="form-check-input"
-            />
-            <label class="form-check-label" for="flexCheckChecked">
-              Telephone
-            </label>
-          </div>
-          <div class="form-check">
-            <input
-              type="checkbox"
-              formControlName="gdpr_address"
-              class="form-check-input"
-            />
-            <label class="form-check-label" for="flexCheckChecked">
-              Address
-            </label>
-          </div>
-          <div class="form-check">
-            <input
-              type="checkbox"
-              formControlName="gdpr_sm"
-              class="form-check-input"
-            />
-            <label class="form-check-label" for="flexCheckChecked">
-              Social Media
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--End of GDPR-->
-
-    <!-- Emails & Phones-->
-    <div class="col-sm-6 mb-1">
-      <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="email1-label">Email 1</span>
-        <input
-          type="email"
-          formControlName="email1"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
-        />
-        <div *ngIf="submitted && f.email1.errors" class="invalid-feedback">
-          <div *ngIf="f.email1.errors.email">Enter a valid email address</div>
-        </div>
-      </div>
-      <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="email2-label">Email 2</span>
-        <input
-          type="email"
-          formControlName="email2"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
-        />
-        <div *ngIf="submitted && f.email2.errors" class="invalid-feedback">
-          <div *ngIf="f.email2.errors.email">Enter a valid email address</div>
-        </div>
-      </div>
-      <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="phone1-label">Phone 1</span>
-        <input
-          type="text"
-          formControlName="phone1"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
-        />
-        <div *ngIf="submitted && f.phone1.errors" class="invalid-feedback">
-          <div *ngIf="f.phone1.errors.pattern">
-            Only 0-9 and +/- or () allowed
-          </div>
-        </div>
-      </div>
-      <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="phone2-label">Phone 2</span>
-        <input
-          type="text"
-          formControlName="phone2"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
-        />
-        <div *ngIf="submitted && f.phone2.errors" class="invalid-feedback">
-          <div *ngIf="f.phone2.errors.pattern">
-            Only 0-9 and +/- or () allowed
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End of Emails & Phones-->
-
-    <!-- Dates (expiry, join & delete)-->
-    <div class="col-sm mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4 col-sm-2" id="dates-label"
-          >Dates</span
-        >
-        <div class="card p-3 col-8 col-sm-10">
-          <div class="row">
-            <div class="col-sm">
-              <label for="inputJoinDate" class="form-label"> Join Date </label>
-              <div class="input-group mb-1">
+          <div class="col-sm-6 mb-1">
+            <div class="row ml-2">
+              <div class="form-check col">
                 <input
-                  class="form-control"
-                  placeholder="*not-set*"
-                  name="dp"
-                  ngbDatepicker
-                  #d1="ngbDatepicker"
-                  formControlName="joindate"
-                  id="inputJoinDate"
-                />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-outline-secondary"
-                    (click)="d1.toggle()"
-                    type="button"
-                  >
-                    <i class="far fa-calendar-alt"></i>
-                  </button>
-                </div>
+                  type="checkbox"
+                  formControlName="postonhold"
+                  class="form-check-input"
+                  id="postonholdInput"
+                  />
+                <label class="form-check-label" for="postonholdInput">
+                  Post On Hold?
+                </label>
+              </div>
+              <div class="form-check col">
+                <input
+                  type="checkbox"
+                  formControlName="showSecondaryAdress"
+                  class="form-check-input"
+                  id="showsecondaryaddressInput"
+                  />
+                <label class="form-check-label" for="showsecondaryaddressInput">
+                  Show Secondary Address
+                </label>
               </div>
             </div>
-            <div class="col-sm">
-              <label for="inputExpiryDate" class="form-label">
-                Expiry Date
-              </label>
-              <div class="input-group mb-1">
-                <input
-                  class="form-control"
-                  placeholder="*not-set*"
-                  name="dp"
-                  ngbDatepicker
-                  #d="ngbDatepicker"
-                  formControlName="expirydate"
-                  id="inputExpiryDate"
-                />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-outline-secondary"
-                    (click)="d.toggle()"
-                    type="button"
+            @if (f.showSecondaryAdress.value) {
+              <div class="input-group">
+                <span class="input-group-text col-4" id="sAddress-label"
+                  >Secondary</span
                   >
-                    <i class="far fa-calendar-alt"></i>
-                  </button>
+                  <div class="card p-3 col-8">
+                    <address-form
+                      formControlName="secondaryAddress"
+                      [touched]="f.secondaryAddress.touched"
+                      [address]="secondaryAddress"
+                    ></address-form>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <label for="inputDeleteDate" class="form-label">
-                Delete Date
-              </label>
-              <div class="input-group mb-1">
-                <input
-                  class="form-control"
-                  placeholder=""
-                  name="dp"
-                  ngbDatepicker
-                  #d2="ngbDatepicker"
-                  formControlName="deletedate"
-                  id="inputDeleteDate"
-                />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-outline-secondary"
-                    (click)="d2.toggle()"
-                    type="button"
-                    disabled
-                  >
-                    <i class="far fa-calendar-alt"></i>
-                  </button>
-                </div>
-              </div>
+              }
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <!-- End of Dates-->
-
-    <div class="w-100"></div>
-
-    <!-- Show Primary Address-->
-    <div class="col-sm-6 mb-1">
-      <div class="input-group">
-        <span class="input-group-text col-4" id="pAddress-label">Primary</span>
-        <div class="card p-3 col-8">
-          <address-form
-            formControlName="primaryAddress"
-            [touched]="f.primaryAddress.touched"
-            [address]="primaryAddress"
-          ></address-form>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6 mb-1">
-      <div class="row ml-2">
-        <div class="form-check col">
-          <input
-            type="checkbox"
-            formControlName="postonhold"
-            class="form-check-input"
-            id="postonholdInput"
-          />
-          <label class="form-check-label" for="postonholdInput">
-            Post On Hold?
-          </label>
-        </div>
-        <div class="form-check col">
-          <input
-            type="checkbox"
-            formControlName="showSecondaryAdress"
-            class="form-check-input"
-            id="showsecondaryaddressInput"
-          />
-          <label class="form-check-label" for="showsecondaryaddressInput">
-            Show Secondary Address
-          </label>
-        </div>
-      </div>
-
-      <div class="input-group" *ngIf="f.showSecondaryAdress.value">
-        <span class="input-group-text col-4" id="sAddress-label"
-          >Secondary</span
-        >
-        <div class="card p-3 col-8">
-          <address-form
-            formControlName="secondaryAddress"
-            [touched]="f.secondaryAddress.touched"
-            [address]="secondaryAddress"
-          ></address-form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End of Row-->
-
-  <div *ngIf="false">
-    <!--Debug Information for Testing -->
-    <hr />
-    <p>Form Value: {{ form.value | json }}</p>
-    <p>Form Status: {{ form.status | json }}</p>
-  </div>
-
-  <!-- Second set of buttons for mobile devices-->
-  <!-- Hidden on larger than 'sm' devices -->
-  <div class="d-sm-none">
-    <div class="row d-flex justify-content-between">
-      <div class="col-sm mb-1">
-        <button
-          type="submit"
-          [disabled]="loading"
-          class="btn btn-primary"
-          *ngIf="user.isAdmin"
-        >
-          <span
-            *ngIf="loading"
-            class="spinner-border spinner-border-sm mr-1"
-          ></span>
-          Save
-        </button>
-        <a class="btn btn-link" *ngIf="isMemberAdd" (click)="onReset()"
-          >Reset</a
-        >
-      </div>
-      <div class="col-sm d-flex justify-content-end" *ngIf="isMemberEdit">
-        <button
-          type="button"
-          routerLink="/members/manage/{{ id }}"
-          class="btn btn-info mr-1"
-        >
-          Subscription
-        </button>
-        <button
-          type="button"
-          routerLink="/members/transactions/{{ id }}"
-          class="btn btn-secondary mr-1"
-        >
-          Payments
-        </button>
-        <button
-          type="button"
-          *ngIf="user.isAdmin && f['statusID'].value !== 9"
-          class="btn btn-warning mr-1"
-          (click)="onSetToFormer()"
-        >
-          Set to 'Former'
-        </button>
-        <button
-          *ngIf="showAnonymizeButton()"
-          type="button"
-          [disabled]="loading"
-          class="btn btn-warning mr-1"
-          (click)="onAnonymize()"
-        >
-          <span
-            *ngIf="loading"
-            class="spinner-border spinner-border-sm mr-1"
-          ></span>
-          Anonymize
-        </button>
-        <button
-          *ngIf="user.isAdmin && f['statusID'].value === 9"
-          type="button"
-          [disabled]="loading"
-          class="btn btn-danger"
-          (click)="onDelete()"
-        >
-          <span
-            *ngIf="loading"
-            class="spinner-border spinner-border-sm mr-1"
-          ></span>
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="false">
-    <p>Form Value: {{ form.value | json }}</p>
-    <p>Form Status: {{ form.status }}</p>
-  </div>
-</form>
+          <!-- End of Row-->
+          @if (false) {
+            <div>
+              <!--Debug Information for Testing -->
+              <hr />
+              <p>Form Value: {{ form.value | json }}</p>
+              <p>Form Status: {{ form.status | json }}</p>
+            </div>
+          }
+          <!-- Second set of buttons for mobile devices-->
+          <!-- Hidden on larger than 'sm' devices -->
+          <div class="d-sm-none">
+            <div class="row d-flex justify-content-between">
+              <div class="col-sm mb-1">
+                @if (user.isAdmin) {
+                  <button
+                    type="submit"
+                    [disabled]="loading"
+                    class="btn btn-primary"
+                    >
+                    @if (loading) {
+                      <span
+                        class="spinner-border spinner-border-sm mr-1"
+                      ></span>
+                    }
+                    Save
+                  </button>
+                }
+                @if (isMemberAdd) {
+                  <a class="btn btn-link" (click)="onReset()"
+                    >Reset</a
+                    >
+                  }
+                </div>
+                @if (isMemberEdit) {
+                  <div class="col-sm d-flex justify-content-end">
+                    <button
+                      type="button"
+                      routerLink="/members/manage/{{ id }}"
+                      class="btn btn-info mr-1"
+                      >
+                      Subscription
+                    </button>
+                    <button
+                      type="button"
+                      routerLink="/members/transactions/{{ id }}"
+                      class="btn btn-secondary mr-1"
+                      >
+                      Payments
+                    </button>
+                    @if (user.isAdmin && f['statusID'].value !== 9) {
+                      <button
+                        type="button"
+                        class="btn btn-warning mr-1"
+                        (click)="onSetToFormer()"
+                        >
+                        Set to 'Former'
+                      </button>
+                    }
+                    @if (showAnonymizeButton()) {
+                      <button
+                        type="button"
+                        [disabled]="loading"
+                        class="btn btn-warning mr-1"
+                        (click)="onAnonymize()"
+                        >
+                        @if (loading) {
+                          <span
+                            class="spinner-border spinner-border-sm mr-1"
+                          ></span>
+                        }
+                        Anonymize
+                      </button>
+                    }
+                    @if (user.isAdmin && f['statusID'].value === 9) {
+                      <button
+                        type="button"
+                        [disabled]="loading"
+                        class="btn btn-danger"
+                        (click)="onDelete()"
+                        >
+                        @if (loading) {
+                          <span
+                            class="spinner-border spinner-border-sm mr-1"
+                          ></span>
+                        }
+                        Delete
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+            @if (false) {
+              <div>
+                <p>Form Value: {{ form.value | json }}</p>
+                <p>Form Status: {{ form.status }}</p>
+              </div>
+            }
+          </form>
+        }

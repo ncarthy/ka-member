@@ -27,7 +27,7 @@ import { from } from 'rxjs';
 @Component({
     selector: 'tr[member-row]',
     templateUrl: './row.component.html',
-    standalone: false
+    standalone: true
 })
 export class MemberRowComponent {
   @Input() member!: MemberSearchResult;

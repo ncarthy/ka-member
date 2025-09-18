@@ -8,14 +8,14 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { ExportToCsvService, MembersService } from '@app/_services';
 
 @Component({
     selector: 'mailing-list',
     templateUrl: './mailing-list.component.html',
-    imports: [NgFor, NgIf, RouterLink]
+    imports: [RouterLink]
 })
 export class MailingListComponent implements OnInit, OnChanges {
   @Input() ids: number[] = new Array();

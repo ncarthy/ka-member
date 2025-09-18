@@ -37,7 +37,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </button>
     </div>
   `,
-    standalone: false
+    standalone: true
 })
 export class MemberDeleteConfirmModalComponent {
   constructor(public modal: NgbActiveModal) {}

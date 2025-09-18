@@ -29,7 +29,7 @@ import { switchMap } from 'rxjs/operators';
 @Component({
     templateUrl: './manage.component.html',
     styleUrls: ['./manage.component.css'],
-    standalone: false
+    standalone: true
 })
 export class MemberManageComponent implements OnInit {
   form!: FormGroup;

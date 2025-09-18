@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { User, Role } from '../_models';
@@ -10,7 +10,7 @@ import { UserService, AlertService } from '@app/_services';
 @Component({
     selector: 'tr[user-row]',
     templateUrl: './row.component.html',
-    imports: [FormsModule, NgFor, NgIf, RouterLink],
+    imports: [FormsModule, RouterLink],
     styleUrls: ['./row.component.css']
 })
 export class UserRowComponent {

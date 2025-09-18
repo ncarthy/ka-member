@@ -7,7 +7,7 @@ import { MemberFilter, MemberSearchResult, User } from '@app/_models';
 
 @Component({
     templateUrl: 'list.component.html',
-    standalone: false
+    standalone: true
 })
 export class MemberListComponent {
   members!: MemberSearchResult[];

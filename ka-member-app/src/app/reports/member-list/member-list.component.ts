@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { NgFor, NgIf, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { from } from 'rxjs';
@@ -20,7 +20,7 @@ import { EmailClientComponent } from '@app/email/email-client.component';
 @Component({
     templateUrl: './member-list.component.html',
     styleUrls: ['member-list.component.css'],
-    imports: [NgFor, NgIf, RouterLink]
+    imports: [RouterLink]
 })
 export class MemberListComponent implements OnInit {
   @Input() title!: string;

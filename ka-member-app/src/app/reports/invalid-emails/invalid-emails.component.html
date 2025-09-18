@@ -14,7 +14,7 @@
 <table class="table table-sm table-striped table-hover table-responsive">
   <caption>
     {{
-      members && members.length
+    members && members.length
     }}
     invalid email addresses found
   </caption>
@@ -28,27 +28,33 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let member of members" class="m-0">
-      <th scope="row">
-        {{ member.name }}<br /><span *ngIf="member.businessname"
-          >({{ member.businessname }})</span
-        >
-      </th>
-      <td>{{ member.email1 }}</td>
-      <td>{{ member.email2 }}</td>
-      <td>
-        <button
-          routerLink="/members/edit/{{ member.id }}"
-          class="btn btn-sm btn-primary mr-1 mb-1"
-        >
-          Member Details
-        </button>
-      </td>
-    </tr>
-    <tr *ngIf="!members || loading">
-      <td colspan="1" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
+    @for (member of members; track member) {
+      <tr class="m-0">
+        <th scope="row">
+          {{ member.name }}<br />@if (member.businessname) {
+          <span
+            >({{ member.businessname }})</span
+            >
+          }
+        </th>
+        <td>{{ member.email1 }}</td>
+        <td>{{ member.email2 }}</td>
+        <td>
+          <button
+            routerLink="/members/edit/{{ member.id }}"
+            class="btn btn-sm btn-primary mr-1 mb-1"
+            >
+            Member Details
+          </button>
+        </td>
+      </tr>
+    }
+    @if (!members || loading) {
+      <tr>
+        <td colspan="1" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>

@@ -5,12 +5,15 @@
       placement="bottom"
       ngbTooltip="Reload Transactions"
       (click)="onReloadClick()"
-    >
-      <i *ngIf="!loading" class="fas fa-redo"></i>
-      <span
-        *ngIf="loading"
-        class="spinner-border spinner-border-lg align-center"
-      ></span>
+      >
+      @if (!loading) {
+        <i class="fas fa-redo"></i>
+      }
+      @if (loading) {
+        <span
+          class="spinner-border spinner-border-lg align-center"
+        ></span>
+      }
     </button>
   </div>
   <div class="col p-0">
@@ -31,21 +34,24 @@
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let transaction of transactions"
-      transaction-row
-      [transaction]="transaction"
-      [banks]="bankAccounts"
-      [paymentTypes]="paymentTypes"
-      (onTransactionDeleted)="transactionDeleted($event)"
-      (onTransactionUpdated)="transactionUpdated($event)"
-      (editRequested)="transactionEditRequested($event)"
-      class="m-0"
-    ></tr>
-    <tr *ngIf="loading">
-      <td colspan="4" class="text-center">
-        <span class="spinner-border spinner-border-lg align-center"></span>
-      </td>
-    </tr>
+    @for (transaction of transactions; track transaction) {
+      <tr
+        transaction-row
+        [transaction]="transaction"
+        [banks]="bankAccounts"
+        [paymentTypes]="paymentTypes"
+        (onTransactionDeleted)="transactionDeleted($event)"
+        (onTransactionUpdated)="transactionUpdated($event)"
+        (editRequested)="transactionEditRequested($event)"
+        class="m-0"
+      ></tr>
+    }
+    @if (loading) {
+      <tr>
+        <td colspan="4" class="text-center">
+          <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+      </tr>
+    }
   </tbody>
 </table>

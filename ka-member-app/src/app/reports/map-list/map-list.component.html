@@ -28,7 +28,7 @@
               formControlName="radius"
               class="form-control"
               (change)="onRadiusChange($event.target.value)"
-            >
+              >
               <option value="50">50m</option>
               <option value="100">100m</option>
               <option value="200">200m</option>
@@ -41,18 +41,22 @@
       </div>
     </div>
   </div>
-  <div *ngIf="false">
-    <p>Form Value: {{ form.value | json }}</p>
-  </div>
+  @if (false) {
+    <div>
+      <p>Form Value: {{ form.value | json }}</p>
+    </div>
+  }
 </form>
 
-<mailing-list
-  *ngIf="f.isEmailList.value == false"
-  [ids]="ids"
-  (idSelected)="onIdSelected($event)"
-></mailing-list>
-<email-list
-  *ngIf="f.isEmailList.value == true"
-  [ids]="ids"
-  (idSelected)="onIdSelected($event)"
-></email-list>
+@if (f.isEmailList.value == false) {
+  <mailing-list
+    [ids]="ids"
+    (idSelected)="onIdSelected($event)"
+  ></mailing-list>
+}
+@if (f.isEmailList.value == true) {
+  <email-list
+    [ids]="ids"
+    (idSelected)="onIdSelected($event)"
+  ></email-list>
+}

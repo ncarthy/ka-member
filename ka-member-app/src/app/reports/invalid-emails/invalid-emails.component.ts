@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { MemberInvalidEmail } from '@app/_models';
 import { MembersService } from '@app/_services';
@@ -7,7 +7,7 @@ import { MembersService } from '@app/_services';
 @Component({
     selector: 'invalid-emails-component',
     templateUrl: './invalid-emails.component.html',
-    imports: [NgFor, NgIf, RouterLink]
+    imports: [RouterLink]
 })
 export class InvalidEmailsComponent implements OnInit {
   members!: MemberInvalidEmail[];

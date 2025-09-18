@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule, KeyValue, NgIf, NgFor } from '@angular/common';
+import { CommonModule, KeyValue } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -17,14 +17,12 @@ import { TransactionsDetailComponent } from './transactions-detail/transactions-
 @Component({
     templateUrl: './transactions-summary.component.html',
     imports: [
-        CommonModule,
-        NgbDatepickerModule,
-        NgFor,
-        NgIf,
-        ReactiveFormsModule,
-        RouterLink,
-        TransactionsDetailComponent,
-    ]
+    CommonModule,
+    NgbDatepickerModule,
+    ReactiveFormsModule,
+    RouterLink,
+    TransactionsDetailComponent
+]
 })
 export class TransactionsSummaryComponent implements OnInit {
   summary?: TransactionSummary[];

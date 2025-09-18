@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { User, MemberCount } from '@app/_models';
 import {
@@ -9,13 +9,12 @@ import {
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
+  standalone: true,
     templateUrl: 'home.component.html',
     imports: [
-        RouterLink,
-        NgFor,
-        NgIf,
-        NgbTooltipModule,
-    ]
+    RouterLink,
+    NgbTooltipModule
+]
 })
 export class HomeComponent implements OnInit {
   loading = false;

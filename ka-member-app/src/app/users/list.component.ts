@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService, UserService } from '@app/_services';
 import { User } from '@app/_models';
@@ -7,7 +7,7 @@ import { UserRowComponent } from './row.component';
 
 @Component({
     templateUrl: 'list.component.html',
-    imports: [RouterLink, NgFor, NgIf, UserRowComponent]
+    imports: [RouterLink, UserRowComponent]
 })
 export class UserListComponent implements OnInit {
   users!: User[];
