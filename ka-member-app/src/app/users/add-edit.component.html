@@ -15,7 +15,7 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-row">
     <div class="form-group col">
-      <label>Username</label>
+      <label for="usernameInput">Username</label>
       <!-- Autocomplete from https://developer.apple.com/documentation/security/password_autofill/enabling_password_autofill_on_an_html_input_element -->
       <!-- Also see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete -->
       <input
@@ -35,7 +35,7 @@
       }
     </div>
     <div class="form-group col">
-      <label>Role</label>
+      <label for="roleSelect">Role</label>
       <select
         formControlName="role"
         class="form-control"
@@ -59,7 +59,7 @@
   </div>
   <div class="form-row">
     <div class="form-group col">
-      <label>Full Name</label>
+      <label for="fullnameInput">Full Name</label>
       <input
         type="text"
         formControlName="fullname"
@@ -77,7 +77,7 @@
     </div>
     <div class="form-group col">
       <div class="row justify-content-center">
-        <label id="user-suspended-label">Suspended</label>
+        <label id="user-suspended-label" for="checkboxSuspended">Suspended</label>
       </div>
       <input
         class="form-check-input mt-0"
@@ -92,7 +92,7 @@
   </div>
   <div class="form-row">
     <div class="form-group col">
-      <label ngbTooltip="Used in 'Reply-To' field">Email</label>
+      <label ngbTooltip="Used in 'Reply-To' field" for="emailInput">Email</label>
       <input
         type="text"
         formControlName="email"
@@ -109,7 +109,7 @@
       }
     </div>
     <div class="form-group col">
-      <label ngbTooltip="Used in email signature">Title</label>
+      <label ngbTooltip="Used in email signature" for="titleInput">Title</label>
       <input
         type="text"
         formControlName="title"
@@ -126,7 +126,7 @@
   }
   <div class="form-row">
     <div class="form-group col">
-      <label>Password</label>
+      <label for="passwordInput">Password</label>
       <input
         type="password"
         formControlName="password"
@@ -151,7 +151,7 @@
       }
     </div>
     <div class="form-group col">
-      <label>Confirm Password</label>
+      <label for="confirmPasswordInput">Confirm Password</label>
       <input
         type="password"
         formControlName="confirmPassword"

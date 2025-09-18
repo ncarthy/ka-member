@@ -13,6 +13,7 @@
               class="form-control"
               placeholder="Surname or Business Name"
               formControlName="businessorsurname"
+              id="businessOrSurnameInput"
             />
           </div>
         </div>
@@ -39,6 +40,7 @@
               placement="bottom"
               ngbTooltip="Show/Hide Filter Options"
               container="body"
+              id="toggleFilterButton"
             >
               @if (filter.collapsed) {
                 <i class="fas fa-chevron-down"></i>
@@ -327,7 +329,7 @@
                   <div class="row">
                     <div class="col-sm-auto">
                       <div class="input-group col p-0 mb-1">
-                        <select formControlName="dateType" class="form-control">
+                        <select formControlName="dateType" class="form-control" id="dateTypeSelect-{{i}}">
                           <option value="Date Type"></option>
                           <option value="joindate">Joining</option>
                           <option value="expirydate">Expiring</option>
@@ -345,6 +347,7 @@
                         class="form-control"
                         #selectList
                         (change)="onDateRangeChanged(i, selectList.value)"
+                        id="dateRangeSelect-{{i}}"
                       >
                         <option disabled selected [ngValue]="null">
                           -- select --

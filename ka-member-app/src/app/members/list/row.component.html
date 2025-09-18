@@ -23,12 +23,12 @@
   <div>
     @if (member.email) {
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" checked disabled />
+        <input class="form-check-input" type="checkbox" checked disabled id="emailChecked-{{member.id}}"/>
       </div>
     }
     @if (!member.email) {
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" disabled />
+        <input class="form-check-input" type="checkbox" disabled id="emailChecked-{{member.id}}"/>
       </div>
     }
   </div>
@@ -37,12 +37,12 @@
   <div>
     @if (member.postonhold) {
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" checked disabled />
+        <input class="form-check-input" type="checkbox" checked disabled id="postOnHoldChecked-{{member.id}}"/>
       </div>
     }
     @if (!member.postonhold) {
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" disabled />
+        <input class="form-check-input" type="checkbox" disabled id="postOnHoldChecked-{{member.id}}"/>
       </div>
     }
   </div>

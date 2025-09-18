@@ -25,6 +25,7 @@
         [user]="myUser"
         (onUserDeleted)="userWasDeleted($event)"
         routerLink="edit/{{ myUser.id }}"
+        id="user-row-{{ myUser.id }}"
       ></tr>
     }
     @if (!users) {
