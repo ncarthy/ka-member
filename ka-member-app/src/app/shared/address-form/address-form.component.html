@@ -18,6 +18,8 @@
     </div>
   }
   @if (addresses) {
+
+    <!-- NSC    Missing a NgModel call here!-->
     <select
       class="col mb-2"
       (ngModelChange)="onAddressChange($event)"

@@ -10,13 +10,13 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'none';
         frame-src 'self';
-        script-src 'self' https://kit.fontawesome.com/48e9d411ea.js;
+        script-src 'self' https://kit.fontawesome.com/48e9d411ea.js https://maps.googleapis.com;
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
         font-src 'self' https://ka-f.fontawesome.com https://fonts.gstatic.com;
         img-src 'self' data:;
         object-src 'none';
         base-uri 'none';
-        connect-src 'self' https://ka-f.fontawesome.com https://export.highcharts.com/ http://localhost:*;"
+        connect-src 'self' https://ka-f.fontawesome.com https://export.highcharts.com/  https://maps.googleapis.com http://localhost:*;"
     />
 
     <!-- Script to use Font Awesome icons - the linked script below is v7.0.1        
@@ -40,10 +40,10 @@
         Using "callback=Function.prototype" as a noop callback to quickly get rid of the error:
               'Loading the Google Maps JavaScript API without a callback is not supported'
     -->
-    <!--
-      <script src="https://maps.googleapis.com/maps/api/js?v=beta&key=AIzaSyChBdIZT3aHa8zKHrJdkFdpK4SYV_bMFD4&libraries=drawing,marker&callback=Function.prototype"></script>
-    -->
     
+      <script src="https://maps.googleapis.com/maps/api/js?v=beta&key=AIzaSyChBdIZT3aHa8zKHrJdkFdpK4SYV_bMFD4&libraries=drawing,marker&callback=Function.prototype"></script>
+    
+    <!--
       <script>
         (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
           key: "AIzaSyDT-jjmXkRhBsrcUUjBw2JPA9FjI1WmroM",
@@ -53,7 +53,7 @@
           // Add other bootstrap parameters as needed, using camel case.
         });
       </script>
-    
+    -->
     <app>Loading...</app>
   </body>
 </html>

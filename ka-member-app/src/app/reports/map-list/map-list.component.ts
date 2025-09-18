@@ -36,10 +36,10 @@ export class MapListComponent implements OnInit {
   map!: google.maps.Map;
   lat = 51.499063;
   lng = -0.165382;
-  mapCentreMarker!: google.maps.Marker;
+  mapCentreMarker!: google.maps.marker.AdvancedMarkerElement;
   loading: boolean = false;
   addresses$!: Observable<Address>;
-  markers: [number, google.maps.Marker][] = new Array();
+  markers: [number, google.maps.marker.AdvancedMarkerElement][] = new Array();
   circle!: google.maps.Circle;
   ruler: CheapRuler = new CheapRuler(51, 'meters'); //51 degrees latitude
   geocoder!: google.maps.Geocoder;
@@ -68,11 +68,11 @@ export class MapListComponent implements OnInit {
     );
   }
 
-  private createMarker(address: Address): google.maps.Marker {
+  private createMarker(address: Address): google.maps.marker.AdvancedMarkerElement {
     const infoWindow = new google.maps.InfoWindow({
       content: `<p>${address.toString()}</p>`,
     });
-    let m: google.maps.Marker = new google.maps.Marker({
+    let m: google.maps.marker.AdvancedMarkerElement = new google.maps.marker.AdvancedMarkerElement({
       position: new google.maps.LatLng(address.lat, address.lng),
       map: this.map,
     });
@@ -96,37 +96,50 @@ export class MapListComponent implements OnInit {
 
   mapInitializer() {
     this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
-    this.mapCentreMarker = new google.maps.Marker({
+    this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
       position: new google.maps.LatLng(this.lat, this.lng),
       map: this.map,
-      draggable: true,
+      gmpDraggable: true,
     });
     google.maps.event.addListener(
       this.mapCentreMarker,
       'dragend',
       (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event),
     );
-    this.mapCentreMarker.setMap(this.map);
+    // NSC
+    this.mapCentreMarker.map = this.map;
 
     this.addCircleToMap(this.lat, this.lng, parseInt(this.f['radius'].value));
 
     let radius = parseInt(this.f['radius'].value);
-    let iconIN = {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: 'blue',
+    const iconIN = new google.maps.marker.PinElement({
+      //google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+      glyph: 'X',
+      glyphColor: 'blue',
       scale: 3,
-    };
-    let iconOUT = {
-      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      strokeColor: 'grey',
+    });
+    /*
+      const svgMarker = {
+    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+    fillColor: "grey",
+    fillOpacity: 1,
+    strokeWeight: 0,
+    rotation: 0,
+    scale: 3,
+    anchor: new google.maps.Point(0, 20),
+  };*/
+    const iconOUT = new google.maps.marker.PinElement({
+      glyph: 'X',
+      glyphColor: 'grey',
       scale: 3,
-    };
+    });
+
     let ids: number[] = new Array();
     this.addresses$
       .pipe(
         map((address: Address) => {
-          let m: google.maps.Marker = this.createMarker(address);
-          const pos = m.getPosition();
+          let m: google.maps.marker.AdvancedMarkerElement = this.createMarker(address);
+          const pos = m.position as google.maps.LatLng;
           if (!pos) return;
           let d = this.ruler.distance(
             [pos.lng(), pos.lat()],
@@ -134,11 +147,11 @@ export class MapListComponent implements OnInit {
           );
           if (d <= radius) {
             ids.push(address.idmember);
-            m.setIcon(iconIN);
+            m.content = iconIN.element;
           } else {
-            m.setIcon(iconOUT);
+            m.content = iconOUT.element;
           }
-          m.setMap(this.map);
+          m.map = this.map;
           this.markers.push([address.idmember, m]);
         }),
       )
@@ -184,7 +197,7 @@ export class MapListComponent implements OnInit {
 
     this.addCircleToMap(lat, lng, radius);
     this.ids = new Array();
-
+/*
     this.markers.forEach((element) => {
       const pos = element[1].getPosition();
 
@@ -211,7 +224,7 @@ export class MapListComponent implements OnInit {
           scale: 3,
         });
       }
-    });
+    });*/
   }
 
   onRadiusChange(e: Event) {
