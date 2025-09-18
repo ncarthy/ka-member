@@ -273,7 +273,14 @@ class MembersCtl{
 
         switch (strtolower($data->method)) {
             case 'anonymize':
-                MembersCtl::anonymize();
+                //MembersCtl::anonymize();
+                http_response_code(422);  
+                echo json_encode(
+                  array(
+                    "message" => "anonymize is not currently implemented",
+                    "method" => $data->method
+                  )
+                );
                 break;
             default:
             http_response_code(422);  

@@ -56,11 +56,11 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     this.authenticationService
-      .login(this.f.username.value, this.f.password.value)
+      .login(this.f['username'].value, this.f['password'].value)
       .subscribe({
         next: () => {
           // get return url from query parameters or default to home page
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
           this.router.navigate([this.returnUrl]);
         },
         error: (error) => {
