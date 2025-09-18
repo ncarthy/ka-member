@@ -21,10 +21,9 @@ import {
 } from '@app/_models';
 
 @Component({
-  selector: 'transactions-detail',
-  templateUrl: './transactions-detail.component.html',
-  standalone: true,
-  imports: [CommonModule, NgFor],
+    selector: 'transactions-detail',
+    templateUrl: './transactions-detail.component.html',
+    imports: [CommonModule, NgFor]
 })
 export class TransactionsDetailComponent implements OnInit, OnChanges {
   @Input() bankAccounts?: BankAccount[];

@@ -15,11 +15,10 @@ import {
 } from '@app/_services';
 
 @Component({
-  selector: 'email-client',
-  templateUrl: './email-client.component.html',
-  styleUrls: ['./email-client.component.css'],
-  standalone: true,
-  imports: [ NgClass, NgIf, ReactiveFormsModule ],
+    selector: 'email-client',
+    templateUrl: './email-client.component.html',
+    styleUrls: ['./email-client.component.css'],
+    imports: [NgClass, NgIf, ReactiveFormsModule]
 })
 export class EmailClientComponent implements OnInit {
   @Input() member?: MemberSearchResult;

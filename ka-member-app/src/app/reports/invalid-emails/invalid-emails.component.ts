@@ -5,10 +5,9 @@ import { MemberInvalidEmail } from '@app/_models';
 import { MembersService } from '@app/_services';
 
 @Component({
-  selector: 'invalid-emails-component',
-  templateUrl: './invalid-emails.component.html',
-  standalone: true,
-  imports: [NgFor, NgIf, RouterLink],
+    selector: 'invalid-emails-component',
+    templateUrl: './invalid-emails.component.html',
+    imports: [NgFor, NgIf, RouterLink]
 })
 export class InvalidEmailsComponent implements OnInit {
   members!: MemberInvalidEmail[];

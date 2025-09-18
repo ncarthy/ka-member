@@ -5,10 +5,9 @@ import { AuthenticationService, UserService } from '@app/_services';
 import { User } from '@app/_models';
 import { UserRowComponent } from './row.component';
 
-@Component({ 
-  templateUrl: 'list.component.html',
-  standalone: true,
-  imports: [RouterLink, NgFor, NgIf, UserRowComponent],
+@Component({
+    templateUrl: 'list.component.html',
+    imports: [RouterLink, NgFor, NgIf, UserRowComponent]
 })
 export class UserListComponent implements OnInit {
   users!: User[];

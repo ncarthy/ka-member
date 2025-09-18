@@ -18,8 +18,9 @@ import { TransactionDeleteConfirmModalComponent } from '../modals';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-  selector: 'tr[transaction-row]',
-  templateUrl: './row.component.html',
+    selector: 'tr[transaction-row]',
+    templateUrl: './row.component.html',
+    standalone: false
 })
 export class TransactionRowComponent implements OnInit {
   @Input() transaction!: Transaction;

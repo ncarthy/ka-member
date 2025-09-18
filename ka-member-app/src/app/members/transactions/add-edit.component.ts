@@ -38,15 +38,16 @@ import {
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'transaction-add-edit',
-  templateUrl: './add-edit.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TransactionAddEditComponent),
-      multi: true,
-    },
-  ],
+    selector: 'transaction-add-edit',
+    templateUrl: './add-edit.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => TransactionAddEditComponent),
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class TransactionAddEditComponent
   implements ControlValueAccessor, OnInit, OnDestroy, OnChanges

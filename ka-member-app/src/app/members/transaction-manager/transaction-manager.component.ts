@@ -12,8 +12,9 @@ import {
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'transaction-manager',
-  templateUrl: './transaction-manager.component.html',
+    selector: 'transaction-manager',
+    templateUrl: './transaction-manager.component.html',
+    standalone: false
 })
 export class TransactionManagerComponent implements OnInit {
   loading: boolean = false;

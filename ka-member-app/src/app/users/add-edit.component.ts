@@ -18,16 +18,15 @@ import {
 import { MustMatch } from '@app/_helpers';
 import { User, UserFormMode } from '@app/_models';
 
-@Component({ 
-  templateUrl: 'add-edit.component.html',
-  standalone: true,
-  imports: [
-    CommonModule,
-    NgClass,
-    NgIf,
-    ReactiveFormsModule,
-    RouterLink,
-  ],
+@Component({
+    templateUrl: 'add-edit.component.html',
+    imports: [
+        CommonModule,
+        NgClass,
+        NgIf,
+        ReactiveFormsModule,
+        RouterLink,
+    ]
 })
 export class UserAddEditComponent implements OnInit {
   form!: FormGroup;

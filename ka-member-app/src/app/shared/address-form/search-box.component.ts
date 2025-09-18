@@ -18,8 +18,8 @@ import { AddressSearchService } from '@app/_services';
 import { GetAddressIOAddress } from '@app/_models';
 
 @Component({
-  selector: 'address-search-box',
-  template: `
+    selector: 'address-search-box',
+    template: `
     <div class="input-group">
       
         <span class="input-group-text" id="basic-addon1"
@@ -33,6 +33,7 @@ import { GetAddressIOAddress } from '@app/_models';
       />
     </div>
   `,
+    standalone: false
 })
 export class SearchBoxComponent implements OnInit {
   @Output() loading: EventEmitter<boolean> = new EventEmitter<boolean>();

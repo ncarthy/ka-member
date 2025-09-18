@@ -15,17 +15,16 @@ import { DateRangeAdapter } from '@app/_helpers';
 import { TransactionsDetailComponent } from './transactions-detail/transactions-detail.component';
 
 @Component({
-  templateUrl: './transactions-summary.component.html',
-  standalone: true,
-  imports: [
-    CommonModule,
-    NgbDatepickerModule,
-    NgFor,
-    NgIf,
-    ReactiveFormsModule,
-    RouterLink,
-    TransactionsDetailComponent,
-  ],
+    templateUrl: './transactions-summary.component.html',
+    imports: [
+        CommonModule,
+        NgbDatepickerModule,
+        NgFor,
+        NgIf,
+        ReactiveFormsModule,
+        RouterLink,
+        TransactionsDetailComponent,
+    ]
 })
 export class TransactionsSummaryComponent implements OnInit {
   summary?: TransactionSummary[];

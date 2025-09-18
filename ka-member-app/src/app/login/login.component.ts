@@ -7,10 +7,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from '@app/_services';
 
 @Component({
-  templateUrl: 'login.component.html',
-  styles: ['img { max-width:340px; max-height:240px;}'],
-  standalone: true,
-  imports: [FormsModule, NgIf, NgClass, ReactiveFormsModule],
+    templateUrl: 'login.component.html',
+    styles: ['img { max-width:340px; max-height:240px;}'],
+    imports: [FormsModule, NgIf, NgClass, ReactiveFormsModule]
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;

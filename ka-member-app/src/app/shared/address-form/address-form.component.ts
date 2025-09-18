@@ -21,15 +21,16 @@ import { CountryService, GeocodeService } from '@app/_services';
 import { Address, Country, GetAddressIOAddress } from '@app/_models';
 
 @Component({
-  selector: 'address-form',
-  templateUrl: './address-form.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => AddressFormComponent),
-      multi: true,
-    },
-  ],
+    selector: 'address-form',
+    templateUrl: './address-form.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => AddressFormComponent),
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class AddressFormComponent
   implements ControlValueAccessor, OnInit, OnDestroy, OnChanges

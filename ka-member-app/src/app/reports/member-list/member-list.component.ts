@@ -18,10 +18,9 @@ import {
 import { EmailClientComponent } from '@app/email/email-client.component';
 
 @Component({
-  templateUrl: './member-list.component.html',
-  styleUrls: ['member-list.component.css'],
-  standalone: true,
-  imports: [NgFor, NgIf, RouterLink],
+    templateUrl: './member-list.component.html',
+    styleUrls: ['member-list.component.css'],
+    imports: [NgFor, NgIf, RouterLink]
 })
 export class MemberListComponent implements OnInit {
   @Input() title!: string;

@@ -49,21 +49,20 @@ import {
 import { DateRangeAdapter } from '@app/_helpers';
 
 @Component({
-  selector: 'member-filter',
-  templateUrl: './filter.component.html',
-  styleUrls: ['./filter.component.css'],
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    KeyValuePipe,
-    NgbAccordionModule,
-    NgbDatepickerModule,
-    NgbDropdownModule,
-    NgbTooltipModule,
-    NgFor,
-    NgIf,
-    ReactiveFormsModule,
-  ],
+    selector: 'member-filter',
+    templateUrl: './filter.component.html',
+    styleUrls: ['./filter.component.css'],
+    imports: [
+        AsyncPipe,
+        KeyValuePipe,
+        NgbAccordionModule,
+        NgbDatepickerModule,
+        NgbDropdownModule,
+        NgbTooltipModule,
+        NgFor,
+        NgIf,
+        ReactiveFormsModule,
+    ]
 })
 export class MemberFilterComponent implements OnInit {
   @Output()

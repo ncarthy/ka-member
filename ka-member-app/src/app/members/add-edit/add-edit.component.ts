@@ -41,10 +41,9 @@ import {
 import { SharedModule } from '@app/shared/shared.module'
 
 @Component({
-  templateUrl: 'add-edit.component.html',
-  styleUrls: ['add-edit.component.css'],
-  standalone: true,
-  imports: [ SharedModule, NgbDatepickerModule, NgbTooltipModule, NgClass, NgFor, NgIf, ReactiveFormsModule, RouterLink ],
+    templateUrl: 'add-edit.component.html',
+    styleUrls: ['add-edit.component.css'],
+    imports: [SharedModule, NgbDatepickerModule, NgbTooltipModule, NgClass, NgFor, NgIf, ReactiveFormsModule, RouterLink]
 })
 export class MemberAddEditComponent implements OnInit {
   form!: FormGroup;

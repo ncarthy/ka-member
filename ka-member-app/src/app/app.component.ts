@@ -13,20 +13,19 @@ import { AlertComponent } from './shared/alert-component'
 import { ToastContainerComponent } from './shared/toast-container/toast-container.component';
 
 @Component({
-  selector: 'app',
-  templateUrl: 'app.component.html',
-  standalone: true,
-  imports: [
-    AlertComponent,
-    NgbCollapseModule,
-    NgbDropdownModule,
-    NgIf,
-    NgbNavModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    ToastContainerComponent,
-  ],
+    selector: 'app',
+    templateUrl: 'app.component.html',
+    imports: [
+        AlertComponent,
+        NgbCollapseModule,
+        NgbDropdownModule,
+        NgIf,
+        NgbNavModule,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+        ToastContainerComponent,
+    ]
 })
 export class AppComponent {
   user?: User;

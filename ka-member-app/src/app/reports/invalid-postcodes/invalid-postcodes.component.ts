@@ -5,9 +5,8 @@ import { MemberInvalidPostcode } from '@app/_models';
 import { MembersService } from '@app/_services';
 
 @Component({
-  templateUrl: './invalid-postcodes.component.html',
-  standalone: true,
-  imports: [NgFor, NgIf, RouterLink],
+    templateUrl: './invalid-postcodes.component.html',
+    imports: [NgFor, NgIf, RouterLink]
 })
 export class InvalidPostcodesComponent implements OnInit {
   members!: MemberInvalidPostcode[];

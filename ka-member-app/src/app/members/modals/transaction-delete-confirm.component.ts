@@ -3,7 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Transaction } from '@app/_models';
 
 @Component({
-  template: ` <div class="modal-header">
+    template: ` <div class="modal-header">
       <h4 class="modal-title" id="modal-title">Delete Transaction</h4>
       <button
         type="button"
@@ -36,6 +36,7 @@ import { Transaction } from '@app/_models';
         Ok
       </button>
     </div>`,
+    standalone: false
 })
 export class TransactionDeleteConfirmModalComponent {
   @Input() transaction?: Transaction;

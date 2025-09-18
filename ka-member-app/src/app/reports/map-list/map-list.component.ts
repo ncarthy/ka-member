@@ -19,10 +19,9 @@ import CheapRuler from 'cheap-ruler'; // Ruler 'points' are lng,lat. Opposite to
 import { ListType } from './list-type.enum';
 
 @Component({
-  templateUrl: './map-list.component.html',
-  styleUrls: ['./map-list.component.css'],
-  standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink],
+    templateUrl: './map-list.component.html',
+    styleUrls: ['./map-list.component.css'],
+    imports: [NgIf, ReactiveFormsModule, RouterLink]
 })
 export class MapListComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) gmap!: ElementRef;

@@ -8,11 +8,10 @@ import { UserService, AlertService } from '@app/_services';
  * @UserRow: A component for the view of single User
  */
 @Component({
-  selector: 'tr[user-row]',
-  standalone: true,
-  templateUrl: './row.component.html',
-  imports: [FormsModule, NgFor, NgIf, RouterLink],
-  styleUrls: ['./row.component.css'],
+    selector: 'tr[user-row]',
+    templateUrl: './row.component.html',
+    imports: [FormsModule, NgFor, NgIf, RouterLink],
+    styleUrls: ['./row.component.css']
 })
 export class UserRowComponent {
   roles = Object.keys(Role).map((key: string) => Role[key as Role]);

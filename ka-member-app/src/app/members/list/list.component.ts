@@ -5,7 +5,10 @@ import { Router } from '@angular/router';
 import { AuthenticationService, ExportToCsvService } from '@app/_services';
 import { MemberFilter, MemberSearchResult, User } from '@app/_models';
 
-@Component({ templateUrl: 'list.component.html' })
+@Component({
+    templateUrl: 'list.component.html',
+    standalone: false
+})
 export class MemberListComponent {
   members!: MemberSearchResult[];
   user!: User;

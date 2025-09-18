@@ -6,8 +6,9 @@ import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'transaction-edit-modal',
-  templateUrl: './transaction-add.component.html',
+    selector: 'transaction-edit-modal',
+    templateUrl: './transaction-add.component.html',
+    standalone: false
 })
 export class TransactionAddModalComponent implements OnInit {
   @Input() member!: MemberSearchResult;

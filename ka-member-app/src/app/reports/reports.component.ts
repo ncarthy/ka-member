@@ -9,9 +9,8 @@ import { AuthenticationService } from '@app/_services';
 import { User } from '@app/_models';
 
 @Component({
-  templateUrl: './reports.component.html',
-  standalone: true,
-  imports: [NgbAccordionModule, NgbTooltipModule, NgIf, RouterLink],
+    templateUrl: './reports.component.html',
+    imports: [NgbAccordionModule, NgbTooltipModule, NgIf, RouterLink]
 })
 export class ReportsComponent implements OnInit {
   user: User;

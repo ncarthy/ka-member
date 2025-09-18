@@ -8,15 +8,14 @@ import {
 } from '@app/_services';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
-@Component({ 
-  templateUrl: 'home.component.html',
-  standalone: true,
-  imports: [
-    RouterLink,
-    NgFor,
-    NgIf,
-    NgbTooltipModule,
-  ],
+@Component({
+    templateUrl: 'home.component.html',
+    imports: [
+        RouterLink,
+        NgFor,
+        NgIf,
+        NgbTooltipModule,
+    ]
 })
 export class HomeComponent implements OnInit {
   loading = false;

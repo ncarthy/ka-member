@@ -25,8 +25,9 @@ import { from } from 'rxjs';
  * @UserRow: A component for the view of single Member
  */
 @Component({
-  selector: 'tr[member-row]',
-  templateUrl: './row.component.html',
+    selector: 'tr[member-row]',
+    templateUrl: './row.component.html',
+    standalone: false
 })
 export class MemberRowComponent {
   @Input() member!: MemberSearchResult;
