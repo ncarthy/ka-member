@@ -4,10 +4,13 @@ import { Router } from '@angular/router';
 
 import { AuthenticationService, ExportToCsvService } from '@app/_services';
 import { MemberFilter, MemberSearchResult, User } from '@app/_models';
+import { MemberFilterComponent } from '../filter/filter.component';
+import { MemberRowComponent } from './row.component';
 
 @Component({
     templateUrl: 'list.component.html',
-    standalone: true
+    standalone: true,
+    imports: [MemberFilterComponent, MemberRowComponent],
 })
 export class MemberListComponent {
   members!: MemberSearchResult[];
@@ -44,7 +47,7 @@ export class MemberListComponent {
     this.members = members;
   }
 
-  membersFilterUpdated(filter: MemberFilter[]) {
+  membersFilterUpdated(filter: MemberFilter) {
     this.filter = filter;
   }
 

@@ -20,7 +20,6 @@
     @if (addresses) {
       <select
         class="col mb-2"
-        [(ngModel)]="selectedAddress"
         (ngModelChange)="onAddressChange($event)"
         name="selectedAddress"
         >
@@ -31,6 +30,20 @@
           </option>
         }
       </select>
+      <!-- NSC 16/9/25 trying to get it to compile
+      <select
+        class="col mb-2"
+        [(ngModel)]="selectedAddress"
+        (ngModelChange)="onAddressChange($event)"
+        name="selectedAddress"
+        >
+        <option disabled selected [ngValue]="null">-- select an option --</option>
+        @for (address of addresses; track address) {
+          <option [ngValue]="address">
+            {{ address.line1 }}
+          </option>
+        }
+      </select>-->
     }
   </div>
   <form [formGroup]="addressForm">
@@ -43,13 +56,13 @@
             formControlName="addressfirstline"
             class="form-control"
             id="inputAddressLine1"
-            [ngClass]="{ 'is-invalid': submitted && f.addressfirstline.errors }"
+            [ngClass]="{ 'is-invalid': submitted && f['addressfirstline'].errors }"
             />
-            @if (submitted && f.addressfirstline.errors) {
+            @if (submitted && f['addressfirstline'].errors) {
               <div
                 class="invalid-feedback"
                 >
-                @if (f.addressfirstline.errors.required) {
+                @if (f['addressfirstline'].errors['required']) {
                   <div>Line 1 is required</div>
                 }
               </div>
@@ -69,11 +82,11 @@
                 type="text"
                 formControlName="city"
                 class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.city.errors }"
+                [ngClass]="{ 'is-invalid': submitted && f['city'].errors }"
                 />
-                @if (submitted && f.city.errors) {
+                @if (submitted && f['city'].errors) {
                   <div class="invalid-feedback">
-                    @if (f.city.errors.required) {
+                    @if (f['city'].errors['required']) {
                       <div>City is required</div>
                     }
                   </div>
@@ -89,11 +102,11 @@
                   type="text"
                   formControlName="postcode"
                   class="form-control"
-                  [ngClass]="{ 'is-invalid': submitted && f.postcode.errors }"
+                  [ngClass]="{ 'is-invalid': submitted && f['postcode'].errors }"
                   />
-                  @if (submitted && f.postcode.errors) {
+                  @if (submitted && f['postcode'].errors) {
                     <div class="invalid-feedback">
-                      @if (f.postcode.errors.required) {
+                      @if (f['postcode'].errors['required']) {
                         <div>Postcode is required</div>
                       }
                     </div>

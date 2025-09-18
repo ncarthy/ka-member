@@ -18,10 +18,10 @@
         </th>
         <td>{{ item.name }}<br />{{ item.businessname }}</td>
         <td class="text-center">
-          {{ bankAccounts[item.bankID - 1].name }}
+          {{ bankAccountName(item.bankID) }}
         </td>
         <td class="text-center d-none d-sm-table-cell">
-          {{ paymentTypes[item.paymenttypeID - 1].name }}
+          {{ paymentTypeName(item.paymenttypeID) }}
         </td>
         <td class="text-center d-none d-sm-table-cell">{{ item.note }}</td>
         <td class="text-center">{{ item.amount | number: "1.2-2" }}</td>

@@ -5,13 +5,15 @@ import {
   ElementRef,
   OnInit,
 } from '@angular/core';
-
+import { JsonPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MembersService } from '@app/_services';
 import { map, switchMap } from 'rxjs/operators';
 import { Address } from '@app/_models';
 import { Observable, merge, of } from 'rxjs';
+import { MailingListComponent } from '../mailing-list/mailing-list.component';
+import { EmailListComponent } from '../email-list/email-list.component';
 
 // From https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016
 // Github: https://github.com/mapbox/cheap-ruler
@@ -21,7 +23,7 @@ import { ListType } from './list-type.enum';
 @Component({
     templateUrl: './map-list.component.html',
     styleUrls: ['./map-list.component.css'],
-    imports: [ReactiveFormsModule, RouterLink]
+    imports: [ReactiveFormsModule, RouterLink, JsonPipe, MailingListComponent, EmailListComponent]
 })
 export class MapListComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) gmap!: ElementRef;
@@ -100,9 +102,9 @@ export class MapListComponent implements OnInit {
     );
     this.mapCentreMarker.setMap(this.map);
 
-    this.addCircleToMap(this.lat, this.lng, parseInt(this.f.radius.value));
+    this.addCircleToMap(this.lat, this.lng, parseInt(this.f['radius'].value));
 
-    let radius = parseInt(this.f.radius.value);
+    let radius = parseInt(this.f['radius'].value);
     let iconIN = {
       path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
       strokeColor: 'blue',
@@ -161,7 +163,7 @@ export class MapListComponent implements OnInit {
     if (event.latLng) {
       const lat = event.latLng.lat();
       const lng = event.latLng.lng();
-      const radius = parseInt(this.f.radius.value);
+      const radius = parseInt(this.f['radius'].value);
 
       this.replaceCircle(lat, lng, radius);
 
@@ -206,7 +208,8 @@ export class MapListComponent implements OnInit {
     });
   }
 
-  onRadiusChange(radius: number | string) {
+  onRadiusChange(e : Event) {
+    let radius: number | string = (e.target as HTMLInputElement).value;
     let centre: google.maps.LatLng = this.circle.getCenter()!;
     if (centre) {
       this.replaceCircle(

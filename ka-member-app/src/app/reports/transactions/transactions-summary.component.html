@@ -111,7 +111,7 @@
                       <span class="text-dark">{{ item.index }}</span>
                     </th>
                     <td class="text-center">
-                      {{ bankAccounts[item?.bankID - 1]?.name }}
+                      {{ bankAccountName(item.bankID) }}
                     </td>
                     <td class="text-center d-none d-sm-table-cell">
                       {{ item.count }}

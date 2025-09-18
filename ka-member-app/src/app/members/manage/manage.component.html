@@ -104,7 +104,7 @@
                   id="statusSelect"
                   name="statusSelect"
                   class="form-control"
-                  (change)="onStatusChange($event.target?.value)"
+                  (change)="onStatusChange($event)"
                   >
                   @for (status of statuses; track status) {
                     <option [ngValue]="status.id">

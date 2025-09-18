@@ -107,9 +107,9 @@
       }
     </div>
     <!-- End of Buttons -->
-    @if (f.username.value) {
+    @if (f['username'].value) {
       <small
-        >Last edited by: {{ f.username.value }} at {{ f.updatedate.value }}</small
+        >Last edited by: {{ f['username'].value }} at {{ f['updatedate'].value }}</small
         >
       }
       <!-- Names -->
@@ -151,14 +151,14 @@
                       formControlName="surname"
                       class="col-sm form-control text-right"
                 [ngClass]="{
-                  'is-invalid': submitted && name.controls.surname.errors
+                  'is-invalid': submitted && name.controls['surname'].errors
                 }"
                       />
-                    @if (submitted && name.controls.surname.errors) {
+                    @if (submitted && name.controls['surname'].errors) {
                       <div
                         class="invalid-feedback"
                         >
-                        @if (name.controls.surname.errors.required) {
+                        @if (name.controls['surname'].errors['required']) {
                           <div>
                             Surname is required, First Name and Honorific are optional
                           </div>
@@ -332,11 +332,11 @@
               type="email"
               formControlName="email1"
               class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f.email1.errors }"
+              [ngClass]="{ 'is-invalid': submitted && f['email1'].errors }"
               />
-            @if (submitted && f.email1.errors) {
+            @if (submitted && f['email1'].errors) {
               <div class="invalid-feedback">
-                @if (f.email1.errors.email) {
+                @if (f['email1'].errors['email']) {
                   <div>Enter a valid email address</div>
                 }
               </div>
@@ -348,11 +348,11 @@
               type="email"
               formControlName="email2"
               class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f.email2.errors }"
+              [ngClass]="{ 'is-invalid': submitted && f['email2'].errors }"
               />
-            @if (submitted && f.email2.errors) {
+            @if (submitted && f['email2'].errors) {
               <div class="invalid-feedback">
-                @if (f.email2.errors.email) {
+                @if (f['email2'].errors['email']) {
                   <div>Enter a valid email address</div>
                 }
               </div>
@@ -364,11 +364,11 @@
               type="text"
               formControlName="phone1"
               class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f.phone1.errors }"
+              [ngClass]="{ 'is-invalid': submitted && f['phone1'].errors }"
               />
-            @if (submitted && f.phone1.errors) {
+            @if (submitted && f['phone1'].errors) {
               <div class="invalid-feedback">
-                @if (f.phone1.errors.pattern) {
+                @if (f['phone1'].errors['pattern']) {
                   <div>
                     Only 0-9 and +/- or () allowed
                   </div>
@@ -382,11 +382,11 @@
               type="text"
               formControlName="phone2"
               class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f.phone2.errors }"
+              [ngClass]="{ 'is-invalid': submitted && f['phone2'].errors }"
               />
-            @if (submitted && f.phone2.errors) {
+            @if (submitted && f['phone2'].errors) {
               <div class="invalid-feedback">
-                @if (f.phone2.errors.pattern) {
+                @if (f['phone2'].errors['pattern']) {
                   <div>
                     Only 0-9 and +/- or () allowed
                   </div>
@@ -491,7 +491,7 @@
               <div class="card p-3 col-8">
                 <address-form
                   formControlName="primaryAddress"
-                  [touched]="f.primaryAddress.touched"
+                  [touched]="f['primaryAddress'].touched"
                   [address]="primaryAddress"
                 ></address-form>
               </div>
@@ -513,7 +513,7 @@
               <div class="form-check col">
                 <input
                   type="checkbox"
-                  formControlName="showSecondaryAdress"
+                  formControlName="showSecondaryAddress"
                   class="form-check-input"
                   id="showsecondaryaddressInput"
                   />
@@ -522,7 +522,7 @@
                 </label>
               </div>
             </div>
-            @if (f.showSecondaryAdress.value) {
+            @if (f['showSecondaryAddress'].value) {
               <div class="input-group">
                 <span class="input-group-text col-4" id="sAddress-label"
                   >Secondary</span
@@ -530,7 +530,7 @@
                   <div class="card p-3 col-8">
                     <address-form
                       formControlName="secondaryAddress"
-                      [touched]="f.secondaryAddress.touched"
+                      [touched]="f['secondaryAddress'].touched"
                       [address]="secondaryAddress"
                     ></address-form>
                   </div>

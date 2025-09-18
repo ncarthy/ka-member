@@ -9,13 +9,22 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { JsonPipe, NgClass } from '@angular/common';
 import {
   ControlValueAccessor,
   FormGroup,
   UntypedFormBuilder,
   NG_VALUE_ACCESSOR, // Example: https://github.com/xiongemi/angular-form-ngxs/
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
+import {   
+  NgbDateAdapter,
+  NgbDateParserFormatter,
+  NgbDatepickerModule,
+} from '@ng-bootstrap/ng-bootstrap';
+import { CustomDateParserFormatter, NgbUTCStringAdapter } from '@app/_helpers';
 
 import { switchMap } from 'rxjs/operators';
 
@@ -26,6 +35,7 @@ import {
   BankAccount,
   User,
   Member,
+  MemberSearchResult,
 } from '@app/_models';
 
 import {
@@ -46,8 +56,11 @@ import { Subscription } from 'rxjs';
             useExisting: forwardRef(() => TransactionAddEditComponent),
             multi: true,
         },
+        { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
+        { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
     ],
-    standalone: false
+    standalone: true,
+    imports: [FormsModule, JsonPipe, NgbDatepickerModule, NgClass, ReactiveFormsModule]  
 })
 export class TransactionAddEditComponent
   implements ControlValueAccessor, OnInit, OnDestroy, OnChanges
@@ -55,7 +68,7 @@ export class TransactionAddEditComponent
   @Input() touched: boolean = false;
   @Input() transaction?: Transaction;
   @Input() mostRecentTransaction?: Transaction;
-  @Input() member?: Member;
+  @Input() member?: Member | MemberSearchResult;
   @Output() reloadRequested: EventEmitter<Transaction>;
 
   formMode!: FormMode;
@@ -128,7 +141,7 @@ export class TransactionAddEditComponent
     if (simpleChanges['touched'] && simpleChanges['touched'].currentValue) {
       this.transactionForm.markAllAsTouched();
     }
-    if (simpleChanges.transaction && this.transaction && this.transaction.id) {
+    if (simpleChanges['transaction'] && this.transaction && this.transaction.id) {
       this.formMode = FormMode.Edit;
       this.transactionForm.patchValue(this.transaction);
       this.onSetFocus();
@@ -137,7 +150,7 @@ export class TransactionAddEditComponent
     }
     if (
       this.formMode === FormMode.Add &&
-      simpleChanges.mostRecentTransaction &&
+      simpleChanges['mostRecentTransaction'] &&
       this.mostRecentTransaction &&
       this.mostRecentTransaction.id
     ) {

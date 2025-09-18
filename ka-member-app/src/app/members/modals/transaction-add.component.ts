@@ -4,11 +4,13 @@ import { TransactionService } from '@app/_services';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { TransactionAddEditComponent } from '../transactions/add-edit.component';
 
 @Component({
     selector: 'transaction-edit-modal',
     templateUrl: './transaction-add.component.html',
-    standalone: true
+    standalone: true,
+    imports: [TransactionAddEditComponent],
 })
 export class TransactionAddModalComponent implements OnInit {
   @Input() member!: MemberSearchResult;

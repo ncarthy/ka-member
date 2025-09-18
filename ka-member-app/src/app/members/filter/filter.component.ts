@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { AsyncPipe, KeyValue, KeyValuePipe } from '@angular/common';
+import { AsyncPipe, KeyValue, KeyValuePipe, JsonPipe } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -49,6 +49,7 @@ import { DateRangeAdapter } from '@app/_helpers';
     styleUrls: ['./filter.component.css'],
     imports: [
     AsyncPipe,
+    JsonPipe,
     KeyValuePipe,
     NgbAccordionModule,
     NgbDatepickerModule,
@@ -76,16 +77,16 @@ export class MemberFilterComponent implements OnInit {
   working: boolean = false;
   panelOpen: boolean = false;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private countryService: CountryService,
-    private MemberFilterService: MemberFilterService,
-    private membershipStatusService: MembershipStatusService,
-    private paymentTypeService: PaymentTypeService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dateRangeAdapter: DateRangeAdapter,
-  ) {
+  private formBuilder = inject(FormBuilder);
+  private countryService = inject(CountryService);
+  private MemberFilterService = inject(MemberFilterService);
+  private membershipStatusService = inject(MembershipStatusService);
+  private paymentTypeService = inject(PaymentTypeService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dateRangeAdapter = inject(DateRangeAdapter);
+
+  constructor( ) {
     this.membershipStatuses$ = this.membershipStatusService.getAll();
     this.countries$ = this.countryService.getAll();
     this.paymentTypes$ = this.paymentTypeService.getAll();
@@ -96,7 +97,7 @@ export class MemberFilterComponent implements OnInit {
     return this.form.controls;
   }
   get dr() {
-    return this.f.dateranges as FormArray;
+    return this.f['dateranges'] as FormArray;
   }
   get dateRangesFormGroups() {
     return this.dr.controls as FormGroup[];
@@ -235,8 +236,8 @@ export class MemberFilterComponent implements OnInit {
   /* Used to stop the keyvalues pipe re-arranging the order of the Enum */
   /* From https://stackoverflow.com/a/52794221/6941165 */
   originalOrder = (
-    a: KeyValue<number, string>,
-    b: KeyValue<number, string>,
+    a: KeyValue<string, DateRangeEnum>,
+    b: KeyValue<string, DateRangeEnum>,
   ): number => {
     return 0;
   };

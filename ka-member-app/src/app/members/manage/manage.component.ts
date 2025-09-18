@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { JsonPipe, Location } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -25,11 +25,22 @@ import {
   TransactionService,
 } from '@app/_services';
 import { switchMap } from 'rxjs/operators';
+import { 
+  NgbDateAdapter,
+  NgbDateParserFormatter,
+  NgbDatepickerModule,
+} from '@ng-bootstrap/ng-bootstrap';
+import { CustomDateParserFormatter, NgbUTCStringAdapter } from '@app/_helpers';
 
 @Component({
     templateUrl: './manage.component.html',
     styleUrls: ['./manage.component.css'],
-    standalone: true
+    standalone: true,
+    imports: [ JsonPipe, NgbDatepickerModule, ReactiveFormsModule, RouterLink],
+        providers: [
+        { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
+        { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
+    ],
 })
 export class MemberManageComponent implements OnInit {
   form!: FormGroup;
@@ -170,8 +181,9 @@ export class MemberManageComponent implements OnInit {
   /** When the user changes the membership status then update the
    *  multiplier and membership fee
    */
-  onStatusChange(e: string) {
-    const idx = parseInt(e.substring(e.length - 2));
+  onStatusChange(e : Event) {
+    let status: string = (e.target as HTMLInputElement).value;
+    const idx = parseInt(status.substring(status.length - 2));
     this.setMembershipDefaults(idx);
     // If change to former member then set delete date
     if (idx === 9) {

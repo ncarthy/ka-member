@@ -66,4 +66,22 @@ export class TransactionsDetailComponent implements OnInit, OnChanges {
         });
     }
   }
+
+  bankAccountName(bankID: number | null): string {  
+    if (bankID==null || this.bankAccounts==undefined) { 
+      return '';
+    } else {
+      const ba = this.bankAccounts.find(b => b.id==bankID);
+      return ba ? ba.name : '';
+    }
+  }
+    paymentTypeName(paymenttypeID: number | null): string {  
+    if (paymenttypeID==null || this.paymentTypes==undefined) { 
+      return '';
+    } else {
+      const ba = this.paymentTypes.find(b => b.id==paymenttypeID);
+      return ba ? ba.name : '';
+    }
+  }
+  
 }

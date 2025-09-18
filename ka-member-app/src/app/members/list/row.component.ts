@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ButtonName,
@@ -27,7 +28,8 @@ import { from } from 'rxjs';
 @Component({
     selector: 'tr[member-row]',
     templateUrl: './row.component.html',
-    standalone: true
+    standalone: true,
+    imports: [RouterLink],
 })
 export class MemberRowComponent {
   @Input() member!: MemberSearchResult;

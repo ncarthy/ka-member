@@ -10,6 +10,7 @@ import { User } from '@app/_models';
 
 @Component({
     templateUrl: './reports.component.html',
+    standalone: true,
     imports: [NgbAccordionModule, NgbTooltipModule, RouterLink]
 })
 export class ReportsComponent implements OnInit {

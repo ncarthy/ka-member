@@ -8,8 +8,8 @@ import { Role } from './_models';
 
 const usersRoutes = () =>
   import('./users/users.routes').then((x) => x.USERS_ROUTES);
-const membersModule = () =>
-  import('./members/members.module').then((x) => x.MembersModule);
+const membersRoutes= () =>
+  import('./members/members.routes').then((x) => x.MEMBERS_ROUTES);
 const reportsRoutes = () =>
   import('./reports/reports.routes').then((x) => x.REPORTS_ROUTES);
 
@@ -37,7 +37,7 @@ export const APP_ROUTES: Routes = [
 
   {
     path: 'members',
-    loadChildren: membersModule,
+    loadChildren: membersRoutes,
     canActivate: [authGuard],
   },
 

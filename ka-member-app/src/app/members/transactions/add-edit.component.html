@@ -20,7 +20,7 @@
           ngbDatepicker
           #d1="ngbDatepicker"
           placement="bottom"
-          [ngClass]="{ 'is-invalid': submitted && f.date.errors }"
+          [ngClass]="{ 'is-invalid': submitted && f['date'].errors }"
           id="transactionDate"
           />
         <div class="input-group-append">
@@ -32,9 +32,9 @@
             <i class="far fa-calendar-alt"></i>
           </button>
         </div>
-        @if (submitted && f.date.errors) {
+        @if (submitted && f['date'].errors) {
           <div class="invalid-feedback">
-            @if (f.date.errors.required) {
+            @if (f['date'].errors['required']) {
               <div>Date is required</div>
             }
           </div>
@@ -49,7 +49,7 @@
             name="paymentTypeSelect"
             class="form-control"
             formControlName="paymenttypeID"
-            [ngClass]="{ 'is-invalid': submitted && f.paymenttypeID.errors }"
+            [ngClass]="{ 'is-invalid': submitted && f['paymenttypeID'].errors }"
             >
             <option disabled selected [ngValue]="null">---- select ----</option>
             @for (pType of paymentTypes; track pType) {
@@ -58,9 +58,9 @@
               </option>
             }
           </select>
-          @if (submitted && f.paymenttypeID.errors) {
+          @if (submitted && f['paymenttypeID'].errors) {
             <div class="invalid-feedback">
-              @if (f.paymenttypeID.errors.required) {
+              @if (f['paymenttypeID'].errors['required']) {
                 <div>
                   Payment type is required
                 </div>
@@ -77,7 +77,7 @@
               name="bankSelect"
               class="form-control"
               formControlName="bankID"
-              [ngClass]="{ 'is-invalid': submitted && f.bankID.errors }"
+              [ngClass]="{ 'is-invalid': submitted && f['bankID'].errors }"
               >
               <option disabled selected [ngValue]="null">-- select --</option>
               @for (bank of banks; track bank) {
@@ -86,9 +86,9 @@
                 </option>
               }
             </select>
-            @if (submitted && f.bankID.errors) {
+            @if (submitted && f['bankID'].errors) {
               <div class="invalid-feedback">
-                @if (f.bankID.errors.required) {
+                @if (f['bankID'].errors['required']) {
                   <div>Bank is required</div>
                 }
               </div>
@@ -100,11 +100,11 @@
               type="number"
               class="form-control text-left"
               formControlName="amount"
-              [ngClass]="{ 'is-invalid': submitted && f.amount.errors }"
+              [ngClass]="{ 'is-invalid': submitted && f['amount'].errors }"
               />
-            @if (submitted && f.amount.errors) {
+            @if (submitted && f['amount'].errors) {
               <div class="invalid-feedback">
-                @if (f.amount.errors.required) {
+                @if (f['amount'].errors['required']) {
                   <div>Amount is required</div>
                 }
               </div>

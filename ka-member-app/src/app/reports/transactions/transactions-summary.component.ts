@@ -70,14 +70,14 @@ export class TransactionsSummaryComponent implements OnInit {
   /* Used to stop the keyvalues pipe re-arranging the order of the Enum */
   /* From https://stackoverflow.com/a/52794221/6941165 */
   originalOrder = (
-    a: KeyValue<number, string>,
-    b: KeyValue<number, string>,
+    a: KeyValue<string, DateRangeEnum>,
+    b: KeyValue<string, DateRangeEnum>,
   ): number => {
     return 0;
   };
 
   /* Set the date range control values according to the select value */
-  onDateRangeChanged(value: DateRangeEnum | null) {
+  onDateRangeChanged(value: string | null) {
     let dtRng: DateRange;
     if (value == null || value.toString() == 'null') {
       dtRng = this.dateRangeAdapter.enumToDateRange(DateRangeEnum.NEXT_YEAR);
@@ -94,7 +94,7 @@ export class TransactionsSummaryComponent implements OnInit {
     } else {
       this.f['startDate'].enable();
       this.f['endDate'].enable();
-      dtRng = this.dateRangeAdapter.enumToDateRange(value!);
+      dtRng = this.dateRangeAdapter.enumToDateRange(value! as DateRangeEnum);
       this.f['startDate'].setValue(dtRng.startDate);
       this.f['endDate'].setValue(dtRng.endDate);
     }
@@ -124,5 +124,14 @@ export class TransactionsSummaryComponent implements OnInit {
   summaryRowSelected(summaryRow: TransactionSummary) {
     this.selectedRow = summaryRow;
     this.detail = true;
+  }
+
+  bankAccountName(bankID: number | null): string {  
+    if (bankID==null || this.bankAccounts==undefined) { 
+      return '';
+    } else {
+      const ba = this.bankAccounts.find(b => b.id==bankID);
+      return ba ? ba.name : '';
+    }
   }
 }

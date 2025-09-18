@@ -23,10 +23,12 @@ import {
   Transaction,
   User,
 } from '@app/_models';
+import { TransactionRowComponent } from './row.component';
 
 @Component({
     selector: 'transaction-list', templateUrl: 'list.component.html',
-    standalone: false
+    standalone: true,
+    imports: [TransactionRowComponent],
 })
 export class TransactionListComponent implements OnInit, OnChanges {
   @Output() reloadRequested: EventEmitter<any>;

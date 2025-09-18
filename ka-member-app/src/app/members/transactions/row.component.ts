@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   BankAccount,
   ButtonName,
@@ -12,7 +14,13 @@ import {
   AuthenticationService,
   TransactionService,
 } from '@app/_services';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { 
+  NgbModal, 
+  NgbDateAdapter,
+  NgbDateParserFormatter,
+  NgbDatepickerModule,
+} from '@ng-bootstrap/ng-bootstrap';
+import { CustomDateParserFormatter, NgbUTCStringAdapter } from '@app/_helpers';
 import { from, Subject } from 'rxjs';
 import { TransactionDeleteConfirmModalComponent } from '../modals';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -20,12 +28,17 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
     selector: 'tr[transaction-row]',
     templateUrl: './row.component.html',
-    standalone: false
+    standalone: true,
+    imports: [DecimalPipe, FormsModule, NgbDatepickerModule, ReactiveFormsModule],
+    providers: [
+        { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
+        { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
+    ],
 })
 export class TransactionRowComponent implements OnInit {
   @Input() transaction!: Transaction;
-  @Input() banks!: BankAccount[];
-  @Input() paymentTypes!: PaymentType[];
+  @Input() banks: BankAccount[] | undefined = [];
+  @Input() paymentTypes: PaymentType[] | undefined = [];
   @Output() onTransactionDeleted: EventEmitter<Transaction>;
   @Output() onTransactionUpdated: EventEmitter<Transaction>;
   @Output() editRequested: EventEmitter<Transaction>;

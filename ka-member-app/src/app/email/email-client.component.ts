@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { JsonPipe, NgClass } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import {
     selector: 'email-client',
     templateUrl: './email-client.component.html',
     styleUrls: ['./email-client.component.css'],
-    imports: [NgClass, ReactiveFormsModule]
+    imports: [JsonPipe, NgClass, ReactiveFormsModule]
 })
 export class EmailClientComponent implements OnInit {
   @Input() member?: MemberSearchResult;

@@ -96,7 +96,7 @@ export class MemberAddEditComponent implements OnInit {
       gdpr_sm: [false],
       postonhold: [false],
       emailonhold: [false],
-      showSecondaryAdress: [false],
+      showSecondaryAddress: [false],
 
       // Individual / Corporate/ Lifetime etc.
       statusID: [null, Validators.required],
@@ -181,7 +181,7 @@ export class MemberAddEditComponent implements OnInit {
           this.secondaryAddress = x.secondaryAddress;
 
           if (this.secondaryAddress && this.secondaryAddress.addressfirstline) {
-            this.form.controls['showSecondaryAdress'].setValue(true);
+            this.form.controls['showSecondaryAddress'].setValue(true);
           }
 
           if (x.expirydate && x.expirydate.toString() == '0000-00-00') {
@@ -197,7 +197,7 @@ export class MemberAddEditComponent implements OnInit {
     return this.form.controls;
   }
   get n() {
-    return this.f.names as FormArray;
+    return this.f['names'] as FormArray;
   }
   get namesFormGroups() {
     return this.n.controls as FormGroup[];
@@ -254,7 +254,7 @@ export class MemberAddEditComponent implements OnInit {
     this.form.reset({
       primaryAddress: {},
       secondaryAddress: {},
-      showSecondaryAdress: false,
+      showSecondaryAddress: false,
     });
   }
 

@@ -27,7 +27,7 @@
             <select
               formControlName="radius"
               class="form-control"
-              (change)="onRadiusChange($event.target.value)"
+              (change)="onRadiusChange($event)"
               >
               <option value="50">50m</option>
               <option value="100">100m</option>
@@ -48,13 +48,13 @@
   }
 </form>
 
-@if (f.isEmailList.value == false) {
+@if (f['isEmailList'].value == false) {
   <mailing-list
     [ids]="ids"
     (idSelected)="onIdSelected($event)"
   ></mailing-list>
 }
-@if (f.isEmailList.value == true) {
+@if (f['isEmailList'].value == true) {
   <email-list
     [ids]="ids"
     (idSelected)="onIdSelected($event)"

@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
   AbstractControlOptions,
@@ -23,8 +23,7 @@ import { User, UserFormMode } from '@app/_models';
     imports: [
     CommonModule,
     NgClass,
-    ReactiveFormsModule,
-    RouterLink
+    ReactiveFormsModule
 ]
 })
 export class UserAddEditComponent implements OnInit {

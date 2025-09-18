@@ -22,12 +22,12 @@
         type="text"
         formControlName="username"
         class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+        [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
         autocomplete="username"
         />
-      @if (submitted && f.username.errors) {
+      @if (submitted && f['username'].errors) {
         <div class="invalid-feedback">
-          @if (f.username.errors.required) {
+          @if (f['username'].errors['required']) {
             <div>Username is required</div>
           }
         </div>
@@ -38,7 +38,7 @@
       <select
         formControlName="role"
         class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.role.errors }"
+        [ngClass]="{ 'is-invalid': submitted && f['role'].errors }"
         >
         <option value=""></option>
         <option value="User">User</option>
@@ -46,9 +46,9 @@
           <option value="Admin">Admin</option>
         }
       </select>
-      @if (submitted && f.role.errors) {
+      @if (submitted && f['role'].errors) {
         <div class="invalid-feedback">
-          @if (f.role.errors.required) {
+          @if (f['role'].errors['required']) {
             <div>Role is required</div>
           }
         </div>
@@ -62,11 +62,11 @@
         type="text"
         formControlName="fullname"
         class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }"
+        [ngClass]="{ 'is-invalid': submitted && f['fullname'].errors }"
         />
-      @if (submitted && f.fullname.errors) {
+      @if (submitted && f['fullname'].errors) {
         <div class="invalid-feedback">
-          @if (f.fullname.errors.required) {
+          @if (f['fullname'].errors['required']) {
             <div>Full Name is required</div>
           }
         </div>
@@ -74,14 +74,14 @@
     </div>
     <div class="form-group col">
       <div class="row justify-content-center"><label>Suspended</label></div>
-      @if (f.suspended.value) {
+      @if (f['suspended'].value) {
         <input
           type="checkbox"
           checked
           class="form-control"
           />
       }
-      @if (!f.suspended.value) {
+      @if (!f['suspended'].value) {
         <input type="checkbox" class="form-control" />
       }
     </div>
@@ -93,11 +93,11 @@
         type="text"
         formControlName="email"
         class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
         />
-      @if (submitted && f.email.errors) {
+      @if (submitted && f['email'].errors) {
         <div class="invalid-feedback">
-          @if (f.email.errors.email) {
+          @if (f['email'].errors['email']) {
             <div>Enter a valid email address</div>
           }
         </div>
@@ -121,19 +121,19 @@
         type="password"
         formControlName="password"
         class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
         autocomplete="new-password"
         />
       <div id="passwordHelpBlock" class="form-text">
         Your password must be 8-20 characters long, contain letters and numbers,
         and must not contain spaces or emoji.
       </div>
-      @if (submitted && f.password.errors) {
+      @if (submitted && f['password'].errors) {
         <div class="invalid-feedback">
-          @if (f.password.errors.required) {
+          @if (f['password'].errors['required']) {
             <div>Password is required</div>
           }
-          @if (f.password.errors.minlength) {
+          @if (f['password'].errors['minlength']) {
             <div>
               Password must be at least 8 characters
             </div>
@@ -147,19 +147,19 @@
         type="password"
         formControlName="confirmPassword"
         class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+        [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }"
         autocomplete="new-password"
         />
-      @if (submitted && f.confirmPassword.errors) {
+      @if (submitted && f['confirmPassword'].errors) {
         <div
           class="invalid-feedback"
           >
-          @if (f.confirmPassword.errors.required) {
+          @if (f['confirmPassword'].errors['required']) {
             <div>
               Confirm Password is required
             </div>
           }
-          @if (f.confirmPassword.errors.mustMatch) {
+          @if (f['confirmPassword'].errors['mustMatch']) {
             <div>
               Passwords must match
             </div>

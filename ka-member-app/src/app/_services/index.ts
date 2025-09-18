@@ -3,6 +3,7 @@ export * from './alert.service';
 export * from './bank-account.service';
 export * from './authentication.service';
 export * from './country.service';
+export * from './date-formatter.service';
 export * from './email.service';
 export * from './export-to-csv.service';
 export * from './geocode.service';

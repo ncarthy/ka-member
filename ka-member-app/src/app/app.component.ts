@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import {
   NgbDropdownModule,
   NgbNavModule,
@@ -21,7 +21,6 @@ import { ToastContainerComponent } from './shared/toast-container/toast-containe
     NgbDropdownModule,
     NgbNavModule,
     RouterLink,
-    RouterLinkActive,
     RouterOutlet,
     ToastContainerComponent
 ]

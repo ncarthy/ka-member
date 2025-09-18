@@ -132,7 +132,7 @@ export class AddressFormComponent
     this.addresses = results;
   }
 
-  onAddressChange(address: GetAddressIOAddress): void {
+  onAddressChange(address: any): void {
     this.showFormFields = true;
     this.addressForm.controls['addressfirstline'].setValue(address.line1);
     this.addressForm.controls['addresssecondline'].setValue(address.line2);

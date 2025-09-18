@@ -17,13 +17,13 @@
           type="text"
           formControlName="username"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+          [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
           autocomplete="username"
           id="loginUsername"
           />
-        @if (submitted && f.username.errors) {
+        @if (submitted && f['username'].errors) {
           <div class="invalid-feedback">
-            @if (f.username.errors.required) {
+            @if (f['username'].errors['required']) {
               <div>Username is required</div>
             }
           </div>
@@ -35,13 +35,13 @@
           type="password"
           formControlName="password"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+          [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
           autocomplete="current-password"
           id="loginPassword"
           />
-        @if (submitted && f.password.errors) {
+        @if (submitted && f['password'].errors) {
           <div class="invalid-feedback">
-            @if (f.password.errors.required) {
+            @if (f['password'].errors['required']) {
               <div>Password is required</div>
             }
           </div>
