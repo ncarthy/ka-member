@@ -68,14 +68,17 @@ export class MapListComponent implements OnInit {
     );
   }
 
-  private createMarker(address: Address): google.maps.marker.AdvancedMarkerElement {
+  private createMarker(
+    address: Address,
+  ): google.maps.marker.AdvancedMarkerElement {
     const infoWindow = new google.maps.InfoWindow({
       content: `<p>${address.toString()}</p>`,
     });
-    let m: google.maps.marker.AdvancedMarkerElement = new google.maps.marker.AdvancedMarkerElement({
-      position: new google.maps.LatLng(address.lat, address.lng),
-      map: this.map,
-    });
+    let m: google.maps.marker.AdvancedMarkerElement =
+      new google.maps.marker.AdvancedMarkerElement({
+        position: new google.maps.LatLng(address.lat, address.lng),
+        map: this.map,
+      });
     m.addListener('click', () => {
       infoWindow.open(this.map, m);
       setTimeout(() => infoWindow.close(), 3000);
@@ -138,7 +141,8 @@ export class MapListComponent implements OnInit {
     this.addresses$
       .pipe(
         map((address: Address) => {
-          let m: google.maps.marker.AdvancedMarkerElement = this.createMarker(address);
+          let m: google.maps.marker.AdvancedMarkerElement =
+            this.createMarker(address);
           const pos = m.position as google.maps.LatLng;
           if (!pos) return;
           let d = this.ruler.distance(
@@ -197,7 +201,7 @@ export class MapListComponent implements OnInit {
 
     this.addCircleToMap(lat, lng, radius);
     this.ids = new Array();
-/*
+    /*
     this.markers.forEach((element) => {
       const pos = element[1].getPosition();
 
