@@ -1,6 +1,6 @@
 ﻿import { Component, inject } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { AuthenticationService, ExportToCsvService } from '@app/_services';
 import { MemberFilter, MemberSearchResult, User } from '@app/_models';
@@ -10,7 +10,7 @@ import { MemberRowComponent } from './row.component';
 @Component({
   templateUrl: 'list.component.html',
   standalone: true,
-  imports: [MemberFilterComponent, MemberRowComponent],
+  imports: [MemberFilterComponent, MemberRowComponent, RouterLink],
 })
 export class MemberListComponent {
   members!: MemberSearchResult[];

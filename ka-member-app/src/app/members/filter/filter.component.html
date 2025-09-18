@@ -329,7 +329,11 @@
                   <div class="row">
                     <div class="col-sm-auto">
                       <div class="input-group col p-0 mb-1">
-                        <select formControlName="dateType" class="form-control" id="dateTypeSelect-{{i}}">
+                        <select
+                          formControlName="dateType"
+                          class="form-control"
+                          id="dateTypeSelect-{{ i }}"
+                        >
                           <option value="Date Type"></option>
                           <option value="joindate">Joining</option>
                           <option value="expirydate">Expiring</option>
@@ -347,7 +351,7 @@
                         class="form-control"
                         #selectList
                         (change)="onDateRangeChanged(i, selectList.value)"
-                        id="dateRangeSelect-{{i}}"
+                        id="dateRangeSelect-{{ i }}"
                       >
                         <option disabled selected [ngValue]="null">
                           -- select --
