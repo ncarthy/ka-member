@@ -114,27 +114,29 @@
             <div class="row m-0">
               <div class="form-group col-6 col-sm-3">
                 <div class="row m-0">
-                  <label class="col-sm-auto">Honorific</label>
+                  <label class="col-sm-auto" for="inputHonorific-{{ i }}" >Honorific</label>
                   <input
                     type="text"
                     formControlName="honorific"
                     class="col-sm form-control text-right"
+                    id="inputHonorific-{{ i }}"
                   />
                 </div>
               </div>
               <div class="form-group col col-sm">
                 <div class="row m-0">
-                  <label class="col-sm-auto">First Name</label>
+                  <label class="col-sm-auto" for="inputFirstName-{{ i }}">First Name</label>
                   <input
                     type="text"
                     formControlName="firstname"
                     class="col-sm form-control text-right"
+                    id="inputFirstName-{{ i }}"
                   />
                 </div>
               </div>
               <div class="form-group col col-sm">
                 <div class="row m-0">
-                  <label class="col-sm-auto">Surname</label>
+                  <label class="col-sm-auto" for="inputSurName-{{ i }}">Surname</label>
                   <input
                     type="text"
                     formControlName="surname"
@@ -143,6 +145,7 @@
                       'is-invalid':
                         submitted && name.controls['surname'].errors,
                     }"
+                    id="inputSurName-{{ i }}"
                   />
                   @if (submitted && name.controls["surname"].errors) {
                     <div class="invalid-feedback">
@@ -217,6 +220,7 @@
             aria-describedby="note-addon1"
             placement="bottom"
             ngbTooltip="1000 character limit."
+            id="noteTextArea"
           ></textarea>
         </div>
         <div class="input-group mb-1">
@@ -231,6 +235,7 @@
             aria-describedby="bankpayerref-addon1"
             placement="bottom"
             ngbTooltip="The payment reference found on a bank statement. May be left blank."
+            id="inputBankRef"
           />
         </div>
       </div>
@@ -274,8 +279,9 @@
                 type="checkbox"
                 formControlName="gdpr_email"
                 class="form-check-input"
+                id="gdprEmailInput"
               />
-              <label class="form-check-label" for="flexCheckChecked">
+              <label class="form-check-label" for="gdprEmailInput">
                 Email
               </label>
             </div>
@@ -284,8 +290,9 @@
                 type="checkbox"
                 formControlName="gdpr_tel"
                 class="form-check-input"
+                id="gdprTelInput"
               />
-              <label class="form-check-label" for="flexCheckChecked">
+              <label class="form-check-label" for="gdprTelInput">
                 Telephone
               </label>
             </div>
@@ -294,8 +301,9 @@
                 type="checkbox"
                 formControlName="gdpr_address"
                 class="form-check-input"
+                id="gdprAddressInput"
               />
-              <label class="form-check-label" for="flexCheckChecked">
+              <label class="form-check-label" for="gdprAddressInput">
                 Address
               </label>
             </div>
@@ -304,8 +312,9 @@
                 type="checkbox"
                 formControlName="gdpr_sm"
                 class="form-check-input"
+                id="gdprSocialMediaInput"
               />
-              <label class="form-check-label" for="flexCheckChecked">
+              <label class="form-check-label" for="gdprSocialMediaInput">
                 Social Media
               </label>
             </div>
@@ -322,6 +331,7 @@
             formControlName="email1"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f['email1'].errors }"
+            id="inputEmail1"
           />
           @if (submitted && f["email1"].errors) {
             <div class="invalid-feedback">
@@ -338,6 +348,7 @@
             formControlName="email2"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f['email2'].errors }"
+            id="inputEmail2"
           />
           @if (submitted && f["email2"].errors) {
             <div class="invalid-feedback">
@@ -354,6 +365,7 @@
             formControlName="phone1"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f['phone1'].errors }"
+            id="inputPhone1"
           />
           @if (submitted && f["phone1"].errors) {
             <div class="invalid-feedback">
@@ -370,6 +382,7 @@
             formControlName="phone2"
             class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f['phone2'].errors }"
+            id="inputPhone2"
           />
           @if (submitted && f["phone2"].errors) {
             <div class="invalid-feedback">

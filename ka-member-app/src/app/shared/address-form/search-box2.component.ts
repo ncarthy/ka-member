@@ -22,7 +22,7 @@ import { GetAddressIOAddress } from '@app/_models';
         type="text"
         class="form-control"
         placeholder="Start typing..."
-        id="autocompleteSearchBox"
+        id="postcodeInput"
       />
     </div>
   `,

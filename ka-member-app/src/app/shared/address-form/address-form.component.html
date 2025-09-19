@@ -8,11 +8,12 @@
   }
   @if (!address || !address.postcode) {
     <div class="mb-3">
-      <label class="form-label">Find address by postcode:</label>
+      <label class="form-label" for="postcodeInput">Find address by postcode:</label>
       <address-search-box
         (loading)="loading = $event"
         (results)="updateAddresses($event)"
         [disable]="false"
+        id="addressSearchBox"
       >
       </address-search-box>
     </div>

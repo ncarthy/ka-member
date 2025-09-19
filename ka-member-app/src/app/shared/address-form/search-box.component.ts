@@ -33,6 +33,7 @@ import { GetAddressIOAddress } from '@app/_models';
         type="text"
         class="form-control"
         placeholder="Search By Postcode"
+        id="postcodeInput"
       />
     </div>
   `,
