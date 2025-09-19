@@ -52,6 +52,8 @@ export class AddressFormComponent
   submitted: boolean = false;
   showFormFields: boolean = false;
 
+  selectedAddress: GetAddressIOAddress | null = null;
+
   addressForm!: FormGroup<any>;
 
   private subscription = new Subscription();

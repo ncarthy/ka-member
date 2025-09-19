@@ -22,13 +22,14 @@
     <!-- NSC    Missing a NgModel call here!-->
     <select
       class="col mb-2"
+      [(ngModel)]="selectedAddress"
       (ngModelChange)="onAddressChange($event)"
       name="selectedAddress"
     >
       <option disabled selected [ngValue]="null">-- select an option --</option>
       @for (address of addresses; track address) {
         <option [ngValue]="address">
-          {{ address.line1 }}
+          {{ address.line1+', '+address.line2  }}
         </option>
       }
     </select>
@@ -52,12 +53,12 @@
   @if (showFormFields) {
     <div>
       <div class="mb-2">
-        <label for="inputAddressLine1" class="form-label">Line 1 *</label>
+        <label for="inputManualAddressFirstLine" class="form-label">Line 1 *</label>
         <input
           type="text"
           formControlName="addressfirstline"
           class="form-control"
-          id="inputAddressLine1"
+          id="inputManualAddressFirstLine"
           [ngClass]="{
             'is-invalid': submitted && f['addressfirstline'].errors,
           }"
@@ -71,20 +72,22 @@
         }
       </div>
       <div class="mb-2">
-        <label>Line 2</label>
+        <label for="inputManualAddressSecondLine">Line 2</label>
         <input
           type="text"
           formControlName="addresssecondline"
           class="form-control"
+          id="inputManualAddressSecondLine"
         />
       </div>
       <div class="mb-2">
-        <label>City *</label>
+        <label for="inputManualCity">City *</label>
         <input
           type="text"
           formControlName="city"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f['city'].errors }"
+          id="inputManualCity"
         />
         @if (submitted && f["city"].errors) {
           <div class="invalid-feedback">
@@ -95,16 +98,17 @@
         }
       </div>
       <div class="mb-2">
-        <label>County</label>
-        <input type="text" formControlName="county" class="form-control" />
+        <label for="inputManualCounty">County</label>
+        <input type="text" formControlName="county" class="form-control" id="inputManualCounty"/>
       </div>
       <div class="mb-2">
-        <label>Postcode *</label>
+        <label for="postcodeManualInput">Postcode *</label>
         <input
           type="text"
           formControlName="postcode"
           class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f['postcode'].errors }"
+          id="postcodeManualInput"
         />
         @if (submitted && f["postcode"].errors) {
           <div class="invalid-feedback">
@@ -114,7 +118,7 @@
           </div>
         }
       </div>
-      <label>Country *</label>
+      <label for="countrySelect">Country *</label>
       <select
         formControlName="country"
         id="countrySelect"
