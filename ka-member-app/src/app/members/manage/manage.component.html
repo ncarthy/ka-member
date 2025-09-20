@@ -66,23 +66,25 @@
                 formControlName="address"
                 rows="3"
               ></textarea>
-              <div class="form-check ml-2">
-                <input
-                  type="checkbox"
-                  formControlName="postonhold"
-                  class="form-check-input"
-                />
-                <label class="form-check-label" for="flexCheckChecked">
+              <div class="form-check ms-3 mt-1">
+                <label class="form-check-label">
+                  <input
+                    type="checkbox"
+                    formControlName="postonhold"
+                    class="form-check-input checkbox-outline"
+                    id="checkBoxPostOnHold"
+                  />
                   Put post on hold?
                 </label>
               </div>
-              <div class="form-check ml-2">
+              <div class="form-check ms-3 mt-1">
                 <input
                   type="checkbox"
                   formControlName="emailonhold"
-                  class="form-check-input"
+                  class="form-check-input checkbox-outline"
+                  id="checkBoxEmailOnHold"
                 />
-                <label class="form-check-label" for="flexCheckChecked">
+                <label class="form-check-label" for="checkBoxEmailOnHold">
                   Put email on hold?
                 </label>
               </div>

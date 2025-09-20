@@ -7,7 +7,7 @@
       placement="bottom"
       [(ngModel)]="transaction.date"
       (ngModelChange)="onTransactionChange()"
-      id="transactionDate-{{transaction.id}}"
+      id="transactionDate-{{ transaction.id }}"
     />
     <div class="input-group-append">
       <button
@@ -28,7 +28,7 @@
 </td>
 <td class="d-none d-sm-table-cell">
   <select
-    id="paymentTypeSelect-{{transaction.id}}"
+    id="paymentTypeSelect-{{ transaction.id }}"
     name="paymentTypeSelect"
     class="form-control"
     [(ngModel)]="transaction.paymenttypeID"
@@ -45,7 +45,7 @@
 </td>
 <td class="d-none d-sm-table-cell">
   <select
-    id="bankSelectid-{{transaction.id}}"
+    id="bankSelectid-{{ transaction.id }}"
     name="bankSelect"
     class="form-control"
     [(ngModel)]="transaction.bankID"
@@ -66,7 +66,7 @@
     class="form-control text-right"
     [ngModel]="transaction.amount | number: '1.2-2'"
     (ngModelChange)="onTransactionAmountChange($event)"
-    id="transactionAmount-{{transaction.id}}"
+    id="transactionAmount-{{ transaction.id }}"
   />
 </td>
 <td class="d-none d-sm-table-cell">
@@ -76,7 +76,7 @@
     [(ngModel)]="transaction.note"
     (ngModelChange)="onTransactionNoteChange()"
     (click)="onClickEvent($event)"
-    id="textAreaNote-{{transaction.id}}"
+    id="textAreaNote-{{ transaction.id }}"
   >
   </textarea>
 </td>

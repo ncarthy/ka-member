@@ -59,7 +59,7 @@ import { AddressFormComponent } from '@app/shared/address-form/address-form.comp
     ReactiveFormsModule,
     RouterLink,
   ],
-    providers: [
+  providers: [
     { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
   ],
@@ -411,5 +411,4 @@ export class MemberAddEditComponent implements OnInit {
       this.namesFormGroups[0].value.surname !== 'Anonymized'
     );
   }
-
 }
