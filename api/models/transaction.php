@@ -42,7 +42,7 @@ class Transaction{
         $this->date=htmlspecialchars(strip_tags($this->date));
         $this->amount=filter_var($this->amount, FILTER_SANITIZE_NUMBER_FLOAT,
                                                             FILTER_FLAG_ALLOW_FRACTION);        
-        $this->note=htmlspecialchars(strip_tags($this->note));
+        $this->note=htmlspecialchars(strip_tags($this->note??''));
         $this->idmember=filter_var($this->idmember, FILTER_SANITIZE_NUMBER_INT);
         $this->bankID=filter_var($this->bankID, FILTER_SANITIZE_NUMBER_INT);
         $this->paymenttypeID=filter_var($this->paymenttypeID, FILTER_SANITIZE_NUMBER_INT);

@@ -144,7 +144,7 @@ class Member{
                 }    
             }
         }
-        catch(PDOException $exception){
+        catch(\PDOException $exception){
             echo "Error retrieving members: " . $exception->getMessage();
         }
         
@@ -684,10 +684,10 @@ class Member{
         $this->email2=htmlspecialchars(strip_tags($this->email2));
         $this->phone2=htmlspecialchars(strip_tags($this->phone2));
         $this->statusID=htmlspecialchars(strip_tags($this->statusID));
-        $this->expirydate=htmlspecialchars(strip_tags($this->expirydate));
-        $this->joindate=htmlspecialchars(strip_tags($this->joindate));
-        $this->reminderdate=htmlspecialchars(strip_tags($this->reminderdate));
-        $this->deletedate=htmlspecialchars(strip_tags($this->deletedate));
+        $this->expirydate=htmlspecialchars(strip_tags($this->expirydate??''));
+        $this->joindate=htmlspecialchars(strip_tags($this->joindate??''));
+        $this->reminderdate=htmlspecialchars(strip_tags($this->reminderdate??''));
+        $this->deletedate=htmlspecialchars(strip_tags($this->deletedate??''));
         $this->repeatpayment=htmlspecialchars(strip_tags($this->repeatpayment));
         $this->recurringpayment=htmlspecialchars(strip_tags($this->recurringpayment));
         $this->username=htmlspecialchars(strip_tags($this->username));

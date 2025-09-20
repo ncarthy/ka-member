@@ -44,7 +44,7 @@ class Database{
                 exit(1);
             }
                 
-        }catch(PDOException $exception){
+        }catch(\PDOException $exception){
             echo "Connection error: " . $exception->getMessage();
         }
     }
