@@ -14,7 +14,6 @@ import {
   AuthenticationService,
   BankAccountService,
   PaymentTypeService,
-  TransactionService,
 } from '@app/_services';
 import {
   BankAccount,
@@ -42,7 +41,6 @@ export class TransactionListComponent implements OnInit, OnChanges {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private transactionService: TransactionService,
     private bankAccountService: BankAccountService,
     private paymentTypeService: PaymentTypeService,
   ) {

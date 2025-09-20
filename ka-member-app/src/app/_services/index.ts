@@ -12,6 +12,7 @@ export * from './member-name.service';
 export * from './member.service';
 export * from './members.service';
 export * from './membership-status.service';
+export * from './modal.service'
 export * from './payment-type.service';
 export * from './toast.service';
 export * from './transaction.service';

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, inject, OnInit, Output } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -10,7 +10,7 @@ import {
 } from '@app/_models';
 import {
   AlertService,
-  MemberService,
+  ModalService,
   AuthenticationService,
   TransactionService,
 } from '@app/_services';
@@ -47,11 +47,13 @@ export class TransactionRowComponent implements OnInit {
   showSaveButton: boolean = false;
   amount$: Subject<string> = new Subject<string>();
 
+    /** A wrapper for NgbModal to avoid aria-hidden warnings */
+  public modalService = inject(ModalService);
+  private authenticationService = inject(AuthenticationService);
+  private transactionService = inject(TransactionService);
+  private alertService = inject(AlertService);
+
   constructor(
-    private authenticationService: AuthenticationService,
-    private transactionService: TransactionService,
-    private alertService: AlertService,
-    private modalService: NgbModal,
   ) {
     this.onTransactionDeleted = new EventEmitter();
     this.onTransactionUpdated = new EventEmitter();
