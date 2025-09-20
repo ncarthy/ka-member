@@ -1,3 +1,7 @@
 .list-group-item {
   background-color: #e9ecef;
 }
+
+.checkbox-outline {
+  outline: 1px solid #000000;
+}

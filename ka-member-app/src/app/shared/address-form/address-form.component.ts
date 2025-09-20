@@ -19,6 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 import { CountryService, GeocodeService } from '@app/_services';
 import { Address, Country, GetAddressIOAddress } from '@app/_models';
@@ -42,6 +43,7 @@ export class AddressFormComponent
 {
   @Input() touched: boolean = false;
   @Input() address?: Address;
+  @Input() primary: boolean = false;
 
   addresses!: GetAddressIOAddress[]; // from the api
   countries!: Country[];
@@ -56,13 +58,18 @@ export class AddressFormComponent
 
   addressForm!: FormGroup<any>;
 
+  uuid: string;
+
+  /** This will be used to track changes in the form values */
   private subscription = new Subscription();
 
   constructor(
     private fb: UntypedFormBuilder,
     private countryService: CountryService,
     private geocodeService: GeocodeService,
-  ) {}
+  ) { 
+    this.uuid = uuidv4();
+  }
 
   // convenience getter for easy access to form fields
   get f() {
@@ -82,10 +89,15 @@ export class AddressFormComponent
     });
 
     this.countryService.getAll().subscribe((countryArray) => {
+      // Assign the countries to the module-level variable
       this.countries = countryArray;
+
+      // Assign the UK country to  module-level variable
       this.uk = countryArray.filter(
         (c: Country) => c.name === 'United Kingdom',
       )[0];
+
+      // Fill in the form if an address was passed in
       if (this.address && this.address.addressfirstline) {
         this.addressForm.controls['addressfirstline'].setValue(
           this.address.addressfirstline,

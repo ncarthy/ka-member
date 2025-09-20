@@ -11,6 +11,8 @@ import {
 
 import {
   NgbModal,
+  NgbDateAdapter,
+  NgbDateParserFormatter,
   NgbDatepickerModule,
   NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
@@ -28,7 +30,7 @@ import {
   MemberNameService,
   MembershipStatusService,
 } from '@app/_services';
-
+import { CustomDateParserFormatter, NgbUTCStringAdapter } from '@app/_helpers';
 import {
   Address,
   Country,
@@ -56,6 +58,10 @@ import { AddressFormComponent } from '@app/shared/address-form/address-form.comp
     NgClass,
     ReactiveFormsModule,
     RouterLink,
+  ],
+    providers: [
+    { provide: NgbDateAdapter, useClass: NgbUTCStringAdapter },
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
   ],
 })
 export class MemberAddEditComponent implements OnInit {
@@ -405,4 +411,5 @@ export class MemberAddEditComponent implements OnInit {
       this.namesFormGroups[0].value.surname !== 'Anonymized'
     );
   }
+
 }
