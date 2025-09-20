@@ -21,6 +21,7 @@ import { User, UserFormMode } from '@app/_models';
 @Component({
   templateUrl: 'add-edit.component.html',
   imports: [CommonModule, NgClass, ReactiveFormsModule],
+  styleUrls: ['./users.css'],
 })
 export class UserAddEditComponent implements OnInit {
   form!: FormGroup;

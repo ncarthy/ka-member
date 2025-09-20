@@ -11,7 +11,7 @@ import { UserService, AlertService } from '@app/_services';
   selector: 'tr[user-row]',
   templateUrl: './row.component.html',
   imports: [FormsModule, RouterLink],
-  styleUrls: ['./row.component.css'],
+  styleUrls: ['./users.css'],
 })
 export class UserRowComponent {
   roles = Object.keys(Role).map((key: string) => Role[key as Role]);

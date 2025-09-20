@@ -14,35 +14,25 @@
   </select>
 </td>
 <td class="text-center">
-  <div>
     @if (user.suspended) {
-      <div
-        (change)="onSuspendedChange()"
-        (click)="onClickEvent($event)"
-        class="form-check"
-      >
         <input
-          class="form-check-input"
+          class="form-check-input checkbox-outline"
           type="checkbox"
           id="flexCheckCheckedDisabled-{{ user.id }}"
           checked
+          (change)="onSuspendedChange()"
+          (click)="onClickEvent($event)"
         />
-      </div>
     }
     @if (!user.suspended) {
-      <div
-        (change)="onSuspendedChange()"
-        (click)="onClickEvent($event)"
-        class="form-check"
-      >
         <input
-          class="form-check-input"
+          class="form-check-input checkbox-outline"
           type="checkbox"
           id="flexCheckDisabled-{{ user.id }}"
+          (change)="onSuspendedChange()"
+          (click)="onClickEvent($event)"
         />
-      </div>
     }
-  </div>
 </td>
 <td style="white-space: nowrap">
   <button
