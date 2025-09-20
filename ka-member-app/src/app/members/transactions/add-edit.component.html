@@ -93,12 +93,13 @@
         }
       </div>
       <div class="input-group col p-0 mb-1">
-        <span class="input-group-text col-4" id="amount-label">Amount</span>
+        <span class="input-group-text col-4" id="amount-label" for="inputAmount">Amount</span>
         <input
           type="number"
           class="form-control text-left"
           formControlName="amount"
           [ngClass]="{ 'is-invalid': submitted && f['amount'].errors }"
+          id="inputAmount"
         />
         @if (submitted && f["amount"].errors) {
           <div class="invalid-feedback">
@@ -109,8 +110,8 @@
         }
       </div>
       <div class="input-group mb-1">
-        <span class="input-group-text col-4" id="note-addon1">Note</span>
-        <textarea class="form-control" formControlName="note"></textarea>
+        <span class="input-group-text col-4" id="note-addon1" for="textAreaNote">Note</span>
+        <textarea class="form-control" formControlName="note" id="textAreaNote"></textarea>
       </div>
       @if (user.isAdmin) {
         <div class="form-group">
