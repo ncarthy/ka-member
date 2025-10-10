@@ -14,6 +14,7 @@ import { Address } from '@app/_models';
 import { Observable, merge, of } from 'rxjs';
 import { MailingListComponent } from '../mailing-list/mailing-list.component';
 import { EmailListComponent } from '../email-list/email-list.component';
+import { fromArrayToElement } from '@app/_helpers';
 
 // From https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016
 // Github: https://github.com/mapbox/cheap-ruler
@@ -49,6 +50,7 @@ export class MapListComponent implements OnInit {
   mapOptions: google.maps.MapOptions = {
     center: new google.maps.LatLng(this.lat, this.lng),
     zoom: 16,
+    mapId: '879f7bdf49a5142f6e525637',
   };
 
   private membersService = inject(MembersService);
@@ -58,32 +60,45 @@ export class MapListComponent implements OnInit {
     this.geocoder = new google.maps.Geocoder();
 
     // Create an Observable of Address
-    this.addresses$ = this.membersService.getMapList().pipe(
-      switchMap((memberAddresses: Address[]) => {
-        const obs = memberAddresses.map((x) => {
-          return of(x);
-        });
-        return merge(...obs); // '...' is JS spread syntax
-      }),
+    this.addresses$ = this.membersService.getMapList().pipe(      
+      fromArrayToElement(), // Convert Observable<Address[]> to Observable<Address>
     );
   }
 
+  /**
+   * Create a marker for the given address and add to the map
+   * @param address 
+   * @returns The marker
+   */
   private createMarker(
     address: Address,
   ): google.maps.marker.AdvancedMarkerElement {
+    
     const infoWindow = new google.maps.InfoWindow({
       content: `<p>${address.toString()}</p>`,
     });
-    let m: google.maps.marker.AdvancedMarkerElement =
-      new google.maps.marker.AdvancedMarkerElement({
-        position: new google.maps.LatLng(address.lat, address.lng),
-        map: this.map,
+
+    if (!address.lat || !address.lng) {
+      return null as any;
+    }
+    
+    try {
+      const x : google.maps.LatLngLiteral = {lat: address.lat, lng: address.lng};
+      let m: google.maps.marker.AdvancedMarkerElement =
+        new google.maps.marker.AdvancedMarkerElement({
+          position: x,
+          //position: new google.maps.LatLng(address.lat, address.lng),
+          map: this.map,
+        });
+      m.addListener('click', () => {
+        infoWindow.open(this.map, m);
+        setTimeout(() => infoWindow.close(), 3000);
       });
-    m.addListener('click', () => {
-      infoWindow.open(this.map, m);
-      setTimeout(() => infoWindow.close(), 3000);
-    });
-    return m;
+      return m;
+    } catch (e) {
+      console.error('Error creating marker for address: ' + address.toString());
+      return null as any;
+    }
   }
 
   ngOnInit(): void {
@@ -99,69 +114,65 @@ export class MapListComponent implements OnInit {
 
   mapInitializer() {
     this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
-    this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
-      position: new google.maps.LatLng(this.lat, this.lng),
-      map: this.map,
-      gmpDraggable: true,
-    });
-    google.maps.event.addListener(
-      this.mapCentreMarker,
-      'dragend',
-      (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event),
-    );
-    // NSC
-    this.mapCentreMarker.map = this.map;
 
     this.addCircleToMap(this.lat, this.lng, parseInt(this.f['radius'].value));
 
     let radius = parseInt(this.f['radius'].value);
-    const iconIN = new google.maps.marker.PinElement({
-      //google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-      glyph: 'X',
-      glyphColor: 'blue',
-      scale: 3,
-    });
-    /*
-      const svgMarker = {
-    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-    fillColor: "grey",
-    fillOpacity: 1,
-    strokeWeight: 0,
-    rotation: 0,
-    scale: 3,
-    anchor: new google.maps.Point(0, 20),
-  };*/
-    const iconOUT = new google.maps.marker.PinElement({
-      glyph: 'X',
-      glyphColor: 'grey',
-      scale: 3,
-    });
-
+    
     let ids: number[] = new Array();
     this.addresses$
       .pipe(
         map((address: Address) => {
-          let m: google.maps.marker.AdvancedMarkerElement =
+          let marker: google.maps.marker.AdvancedMarkerElement =
             this.createMarker(address);
-          const pos = m.position as google.maps.LatLng;
-          if (!pos) return;
-          let d = this.ruler.distance(
-            [pos.lng(), pos.lat()],
+          
+          if (!marker) return;
+
+          let distance = this.ruler.distance(
+            [address.lng, address.lat],
             [this.lng, this.lat],
           );
-          if (d <= radius) {
-            ids.push(address.idmember);
-            m.content = iconIN.element;
+
+          if (distance <= radius) {
+            ids.push(address.idmember);          
+            const icon = document.createElement('div');
+            icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+            marker.content = new google.maps.marker.PinElement({
+              glyph: icon,
+              glyphColor: 'black',
+              background: 'limegreen',
+              borderColor: 'green',
+            }).element;
           } else {
-            m.content = iconOUT.element;
+            marker.content = new google.maps.marker.PinElement({
+              glyph: 'X',
+              glyphColor: 'grey',
+              background: 'lightgrey',
+              borderColor: 'grey',
+            }).element;
           }
-          m.map = this.map;
-          this.markers.push([address.idmember, m]);
+          marker.map = this.map;
+          this.markers.push([address.idmember, marker]);
         }),
       )
       .subscribe()
       .add(() => {
         this.ids = ids;
+
+        const pinScaled = new google.maps.marker.PinElement({
+          scale: 2,
+        });
+        this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: new google.maps.LatLng(this.lat, this.lng),
+          map: this.map,
+          gmpDraggable: true,
+          content: pinScaled.element,
+        });
+        this.mapCentreMarker.addListener(
+          'dragend',
+          (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event),
+        );    
+        this.mapCentreMarker.map = this.map;
       });
   }
 
@@ -201,34 +212,37 @@ export class MapListComponent implements OnInit {
 
     this.addCircleToMap(lat, lng, radius);
     this.ids = new Array();
-    /*
+    
     this.markers.forEach((element) => {
-      const pos = element[1].getPosition();
+      let marker = element[1];
+      const pos = marker.position as google.maps.LatLngLiteral;
 
       if (!pos) return;
 
-      const distance = this.ruler.distance([pos.lng(), pos.lat()], [lng, lat]);
+      const distance = this.ruler.distance([pos.lng, pos.lat], [lng, lat]);
 
       if (distance <= radius) {
         let idmember = element[0];
         if (idmember) {
           this.ids.push(idmember);
-          element[1].setIcon({
-            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-            strokeColor: 'blue',
-            scale: 3,
-          });
+          const icon = document.createElement('div');
+          icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+          marker.content = new google.maps.marker.PinElement({
+              glyph: icon,
+              glyphColor: 'black',
+              background: 'limegreen',
+              borderColor: 'green',
+          }).element;          
         }
-      } else if (
-        (element[1].getIcon() as google.maps.Symbol).strokeColor != 'grey'
-      ) {
-        element[1].setIcon({
-          path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-          strokeColor: 'grey',
-          scale: 3,
-        });
+      } else {
+          marker.content = new google.maps.marker.PinElement({
+              glyph: 'X',
+              glyphColor: 'grey',
+              background: 'lightgrey',
+              borderColor: 'lightgrey',
+          }).element;  
       }
-    });*/
+    });
   }
 
   onRadiusChange(e: Event) {
