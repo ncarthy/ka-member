@@ -157,8 +157,8 @@ export class MapListComponent implements OnInit {
         });
         this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
           position: new google.maps.LatLng(
-            MapListComponent.LNG,
             MapListComponent.LAT,
+            MapListComponent.LNG,
           ),
           map: this.map,
           gmpDraggable: true,
