@@ -16,14 +16,23 @@
         <div class="row ml-4">
           <label>Mailing Addresses</label>
           <label class="switch">
-            <input type="checkbox" formControlName="isEmailList" id="IsEmailListSlider"/>
-            <span class="slider round"></span> 
+            <input
+              type="checkbox"
+              formControlName="isEmailList"
+              id="IsEmailListSlider"
+            />
+            <span class="slider round"></span>
           </label>
           <label for="IsEmailListSlider">Emails</label>
         </div>
         <div class="col-sm-4">
           <div class="input-group">
-            <span class="input-group-text col-4" id="status-label" for="radiusSelect">Radius</span>
+            <span
+              class="input-group-text col-4"
+              id="status-label"
+              for="radiusSelect"
+              >Radius</span
+            >
             <select
               formControlName="radius"
               class="form-control"
@@ -50,8 +59,14 @@
 </form>
 
 @if (f["isEmailList"].value == false) {
-  <mailing-list [ids]="ids_of_members_inside_circle" (idSelected)="onIdSelected($event)"></mailing-list>
+  <mailing-list
+    [ids]="ids_of_members_inside_circle"
+    (idSelected)="onIdSelected($event)"
+  ></mailing-list>
 }
 @if (f["isEmailList"].value == true) {
-  <email-list [ids]="ids_of_members_inside_circle" (idSelected)="onIdSelected($event)"></email-list>
+  <email-list
+    [ids]="ids_of_members_inside_circle"
+    (idSelected)="onIdSelected($event)"
+  ></email-list>
 }

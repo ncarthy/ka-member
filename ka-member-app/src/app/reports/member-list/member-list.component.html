@@ -93,10 +93,9 @@
             @if (member.lasttransactiondate) {
               <span>{{ member.lasttransactiondate }} <br /></span>
             }
-            {{ member.count ? member.count : "No" }} payment
-            @if (member.count && member.count > 1) {
-              <span>s</span>
-            }
+            {{ member.count ? member.count : "No" }} payment{{
+              member.count && member.count > 1 ? "s" : ""
+            }}
             <br />{{ member.amount ? "£" + member.amount : "" }}</small
           >
         </td>

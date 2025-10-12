@@ -60,20 +60,19 @@ export class MapListComponent implements OnInit {
     this.geocoder = new google.maps.Geocoder();
 
     // Create an Observable of Address
-    this.addresses$ = this.membersService.getMapList().pipe(      
+    this.addresses$ = this.membersService.getMapList().pipe(
       fromArrayToElement(), // Convert Observable<Address[]> to Observable<Address>
     );
   }
 
   /**
    * Create a marker for the given address and add to the map
-   * @param address 
+   * @param address
    * @returns The marker
    */
   private createMarker(
     address: Address,
   ): google.maps.marker.AdvancedMarkerElement {
-    
     const infoWindow = new google.maps.InfoWindow({
       content: `<p>${address.toString()}</p>`,
     });
@@ -81,9 +80,12 @@ export class MapListComponent implements OnInit {
     if (!address.lat || !address.lng) {
       return null as any;
     }
-    
+
     try {
-      const latlng : google.maps.LatLngLiteral = {lat: address.lat, lng: address.lng};
+      const latlng: google.maps.LatLngLiteral = {
+        lat: address.lat,
+        lng: address.lng,
+      };
       let m: google.maps.marker.AdvancedMarkerElement =
         new google.maps.marker.AdvancedMarkerElement({
           position: latlng,
@@ -117,14 +119,14 @@ export class MapListComponent implements OnInit {
     this.addCircleToMap(this.lat, this.lng, parseInt(this.f['radius'].value));
 
     let radius = parseInt(this.f['radius'].value);
-    
+
     let ids: number[] = new Array();
     this.addresses$
       .pipe(
         map((address: Address) => {
           let marker: google.maps.marker.AdvancedMarkerElement =
             this.createMarker(address);
-          
+
           if (!marker) return;
 
           let distance = this.ruler.distance(
@@ -133,8 +135,8 @@ export class MapListComponent implements OnInit {
           );
 
           if (distance <= radius) {
-            ids.push(address.idmember);          
-            marker.content = this.contentOfInsideMarker(); 
+            ids.push(address.idmember);
+            marker.content = this.contentOfInsideMarker();
           } else {
             marker.content = this.contentOfOutsideMarker();
           }
@@ -158,7 +160,7 @@ export class MapListComponent implements OnInit {
         this.mapCentreMarker.addListener(
           'dragend',
           (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event),
-        );    
+        );
         this.mapCentreMarker.map = this.map;
       });
   }
@@ -201,7 +203,7 @@ export class MapListComponent implements OnInit {
 
     // initialize the array again, clearing previous contents
     this.ids_of_members_inside_circle = new Array();
-    
+
     this.markers.forEach((element) => {
       let marker = element[1];
       const pos = marker.position as google.maps.LatLngLiteral;
@@ -214,10 +216,10 @@ export class MapListComponent implements OnInit {
         let idmember = element[0];
         if (idmember) {
           this.ids_of_members_inside_circle.push(idmember);
-          marker.content = this.contentOfInsideMarker();          
+          marker.content = this.contentOfInsideMarker();
         }
       } else {
-          marker.content = this.contentOfOutsideMarker() 
+        marker.content = this.contentOfOutsideMarker();
       }
     });
   }
@@ -230,12 +232,12 @@ export class MapListComponent implements OnInit {
     const icon = document.createElement('div');
     icon.innerHTML = '<i class="fa-solid fa-check"></i>';
     return new google.maps.marker.PinElement({
-        glyph: icon,
-        glyphColor: 'black',
-        background: 'lightgreen',
-        borderColor: 'green',
-        scale: 0.7,
-    }).element; 
+      glyph: icon,
+      glyphColor: 'black',
+      background: 'lightgreen',
+      borderColor: 'green',
+      scale: 0.7,
+    }).element;
   }
 
   /**
@@ -244,12 +246,12 @@ export class MapListComponent implements OnInit {
    */
   contentOfOutsideMarker() {
     return new google.maps.marker.PinElement({
-              glyph: 'X',
-              glyphColor: 'grey',
-              background: 'lightgrey',
-              borderColor: 'grey',
-              scale: 0.7,
-          }).element;
+      glyph: 'X',
+      glyphColor: 'grey',
+      background: 'lightgrey',
+      borderColor: 'grey',
+      scale: 0.7,
+    }).element;
   }
 
   onRadiusChange(e: Event) {
