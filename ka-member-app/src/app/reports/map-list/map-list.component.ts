@@ -179,7 +179,6 @@ export class MapListComponent implements OnInit {
    * @param radius Radius of new circle
    */
   addCircleToMap(lat: number, lng: number, radius: number) {
-    
     this.circle = new google.maps.Circle({
       strokeColor: 'red',
       strokeOpacity: 0.8,
@@ -198,7 +197,7 @@ export class MapListComponent implements OnInit {
   /**
    * Called when the user drags the centre marker to a new position.
    * It draws a new circle at the new position and updates the list of members inside the circle
-   * @param event 
+   * @param event
    */
   drawCircleOnDragend(event: google.maps.MapMouseEvent) {
     if (event.latLng) {

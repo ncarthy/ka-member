@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import { Observable, from } from 'rxjs';
-import { map, mergeAll } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { GetAddressIOAddress } from '@app/_models';
 
 export const ADDRESS_API_KEY = 'SdcqMcX0jkOi4rMBEMNx3Q30597';
