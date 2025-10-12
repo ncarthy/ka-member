@@ -44,7 +44,7 @@ export class MapListComponent implements OnInit {
   circle!: google.maps.Circle;
   ruler: CheapRuler = new CheapRuler(51, 'meters'); //51 degrees latitude
   geocoder!: google.maps.Geocoder;
-  ids: number[] = new Array();
+  ids_of_members_inside_circle: number[] = new Array();
   form!: FormGroup;
 
   mapOptions: google.maps.MapOptions = {
@@ -83,11 +83,10 @@ export class MapListComponent implements OnInit {
     }
     
     try {
-      const x : google.maps.LatLngLiteral = {lat: address.lat, lng: address.lng};
+      const latlng : google.maps.LatLngLiteral = {lat: address.lat, lng: address.lng};
       let m: google.maps.marker.AdvancedMarkerElement =
         new google.maps.marker.AdvancedMarkerElement({
-          position: x,
-          //position: new google.maps.LatLng(address.lat, address.lng),
+          position: latlng,
           map: this.map,
         });
       m.addListener('click', () => {
@@ -135,21 +134,9 @@ export class MapListComponent implements OnInit {
 
           if (distance <= radius) {
             ids.push(address.idmember);          
-            const icon = document.createElement('div');
-            icon.innerHTML = '<i class="fa-solid fa-check"></i>';
-            marker.content = new google.maps.marker.PinElement({
-              glyph: icon,
-              glyphColor: 'black',
-              background: 'limegreen',
-              borderColor: 'green',
-            }).element;
+            marker.content = this.contentOfInsideMarker(); 
           } else {
-            marker.content = new google.maps.marker.PinElement({
-              glyph: 'X',
-              glyphColor: 'grey',
-              background: 'lightgrey',
-              borderColor: 'grey',
-            }).element;
+            marker.content = this.contentOfOutsideMarker();
           }
           marker.map = this.map;
           this.markers.push([address.idmember, marker]);
@@ -157,10 +144,10 @@ export class MapListComponent implements OnInit {
       )
       .subscribe()
       .add(() => {
-        this.ids = ids;
+        this.ids_of_members_inside_circle = ids;
 
         const pinScaled = new google.maps.marker.PinElement({
-          scale: 2,
+          scale: 1.5,
         });
         this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
           position: new google.maps.LatLng(this.lat, this.lng),
@@ -211,7 +198,9 @@ export class MapListComponent implements OnInit {
     }
 
     this.addCircleToMap(lat, lng, radius);
-    this.ids = new Array();
+
+    // initialize the array again, clearing previous contents
+    this.ids_of_members_inside_circle = new Array();
     
     this.markers.forEach((element) => {
       let marker = element[1];
@@ -224,25 +213,43 @@ export class MapListComponent implements OnInit {
       if (distance <= radius) {
         let idmember = element[0];
         if (idmember) {
-          this.ids.push(idmember);
-          const icon = document.createElement('div');
-          icon.innerHTML = '<i class="fa-solid fa-check"></i>';
-          marker.content = new google.maps.marker.PinElement({
-              glyph: icon,
-              glyphColor: 'black',
-              background: 'limegreen',
-              borderColor: 'green',
-          }).element;          
+          this.ids_of_members_inside_circle.push(idmember);
+          marker.content = this.contentOfInsideMarker();          
         }
       } else {
-          marker.content = new google.maps.marker.PinElement({
+          marker.content = this.contentOfOutsideMarker() 
+      }
+    });
+  }
+
+  /**
+   * The content for a marker who's address falls inside the circle
+   * @returns HTMLElement
+   */
+  contentOfInsideMarker() {
+    const icon = document.createElement('div');
+    icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+    return new google.maps.marker.PinElement({
+        glyph: icon,
+        glyphColor: 'black',
+        background: 'lightgreen',
+        borderColor: 'green',
+        scale: 0.7,
+    }).element; 
+  }
+
+  /**
+   * The content for a marker who's address falls outside the circle
+   * @returns HTMLElement
+   */
+  contentOfOutsideMarker() {
+    return new google.maps.marker.PinElement({
               glyph: 'X',
               glyphColor: 'grey',
               background: 'lightgrey',
-              borderColor: 'lightgrey',
-          }).element;  
-      }
-    });
+              borderColor: 'grey',
+              scale: 0.7,
+          }).element;
   }
 
   onRadiusChange(e: Event) {
