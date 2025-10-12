@@ -10,7 +10,7 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'none';
         frame-src 'self' *.google.com;
-        script-src 'self' https://kit.fontawesome.com/48e9d411ea.js https://*.googleapis.com https://*.gstatic.com *.google.com https://*.ggpht.com *.googleusercontent.com https://api.getaddress.io;
+        script-src 'self' https://kit.fontawesome.com/48e9d411ea.js https://*.googleapis.com https://*.gstatic.com *.google.com https://*.ggpht.com *.googleusercontent.com https://api.getaddress.io ;
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
         font-src 'self' https://ka-f.fontawesome.com https://fonts.gstatic.com;
         img-src 'self' https://*.googleapis.com https://*.gstatic.com *.google.com  *.googleusercontent.com data:;
@@ -39,14 +39,18 @@
         "v=beta" added to allow methods to return promises 
         Using "callback=Function.prototype" as a noop callback to quickly get rid of the error:
               'Loading the Google Maps JavaScript API without a callback is not supported'
+        
+        NOTE: The api key is restricted
     -->
     
       <script src="https://maps.googleapis.com/maps/api/js?v=beta&key=AIzaSyChBdIZT3aHa8zKHrJdkFdpK4SYV_bMFD4&libraries=drawing,marker&callback=Function.prototype"></script>
     
+    <!-- The javascript code below does not work because I can't use the await command to load the maps -->
+     <!-- If using the below code then must add a hash to script-src like 'sha256-tlZdmSPBdB595KApjX+1z2yxSRpFStDLovvX9qFWG3c=' -->
     <!--
       <script>
         (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-          key: "AIzaSyDT-jjmXkRhBsrcUUjBw2JPA9FjI1WmroM",
+          key: "AIzaSyChBdIZT3aHa8zKHrJdkFdpK4SYV_bMFD4",
           v: "beta",
           libraries: "drawing, marker",
           // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
@@ -54,6 +58,7 @@
         });
       </script>
     -->
+    
     <app>Loading...</app>
   </body>
 </html>

@@ -34,31 +34,31 @@ import { ListType } from './list-type.enum';
 })
 export class MapListComponent implements OnInit {
   @ViewChild('mapContainer', { static: false }) gmap!: ElementRef;
+
   map!: google.maps.Map;
-  lat = 51.499063;
-  lng = -0.165382;
+
+  static readonly LAT = 51.499063;
+  static readonly LNG = -0.165382;
+  static readonly MAPID = '879f7bdf49a5142f6e525637'; // from Google Cloud Console
+
   mapCentreMarker!: google.maps.marker.AdvancedMarkerElement;
-  loading: boolean = false;
   addresses$!: Observable<Address>;
   markers: [number, google.maps.marker.AdvancedMarkerElement][] = new Array();
   circle!: google.maps.Circle;
   ruler: CheapRuler = new CheapRuler(51, 'meters'); //51 degrees latitude
-  geocoder!: google.maps.Geocoder;
   ids_of_members_inside_circle: number[] = new Array();
   form!: FormGroup;
 
   mapOptions: google.maps.MapOptions = {
-    center: new google.maps.LatLng(this.lat, this.lng),
+    center: { lat: MapListComponent.LAT, lng: MapListComponent.LNG },
     zoom: 16,
-    mapId: '879f7bdf49a5142f6e525637',
+    mapId: MapListComponent.MAPID,
   };
 
   private membersService = inject(MembersService);
   private formBuilder = inject(FormBuilder);
 
   constructor() {
-    this.geocoder = new google.maps.Geocoder();
-
     // Create an Observable of Address
     this.addresses$ = this.membersService.getMapList().pipe(
       fromArrayToElement(), // Convert Observable<Address[]> to Observable<Address>
@@ -97,15 +97,15 @@ export class MapListComponent implements OnInit {
       });
       return m;
     } catch (e) {
-      console.error('Error creating marker for address: ' + address.toString());
+      //console.error('Error creating marker for address: ' + address.toString());
       return null as any;
     }
   }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      isEmailList: [false],
-      radius: ['200'],
+      isEmailList: [false], // default to mailing list, not email list
+      radius: ['200'], // default radius in metres
     });
   }
 
@@ -116,7 +116,11 @@ export class MapListComponent implements OnInit {
   mapInitializer() {
     this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
 
-    this.addCircleToMap(this.lat, this.lng, parseInt(this.f['radius'].value));
+    this.addCircleToMap(
+      MapListComponent.LAT,
+      MapListComponent.LNG,
+      parseInt(this.f['radius'].value),
+    );
 
     let radius = parseInt(this.f['radius'].value);
 
@@ -131,7 +135,7 @@ export class MapListComponent implements OnInit {
 
           let distance = this.ruler.distance(
             [address.lng, address.lat],
-            [this.lng, this.lat],
+            [MapListComponent.LNG, MapListComponent.LAT],
           );
 
           if (distance <= radius) {
@@ -152,7 +156,10 @@ export class MapListComponent implements OnInit {
           scale: 1.5,
         });
         this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: new google.maps.LatLng(this.lat, this.lng),
+          position: new google.maps.LatLng(
+            MapListComponent.LNG,
+            MapListComponent.LAT,
+          ),
           map: this.map,
           gmpDraggable: true,
           content: pinScaled.element,
@@ -165,13 +172,19 @@ export class MapListComponent implements OnInit {
       });
   }
 
-  private addCircleToMap(lat: number, lng: number, radius: number) {
-    // add new circle
+  /**
+   * Add a circle to the map
+   * @param lat Latitude of centre of new circle
+   * @param lng Longitude of centre of new circle
+   * @param radius Radius of new circle
+   */
+  addCircleToMap(lat: number, lng: number, radius: number) {
+    
     this.circle = new google.maps.Circle({
-      strokeColor: '#FF0000',
+      strokeColor: 'red',
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: '#FF0000',
+      fillColor: 'red',
       fillOpacity: 0.35,
       map: this.map,
       center: {
@@ -182,6 +195,11 @@ export class MapListComponent implements OnInit {
     });
   }
 
+  /**
+   * Called when the user drags the centre marker to a new position.
+   * It draws a new circle at the new position and updates the list of members inside the circle
+   * @param event 
+   */
   drawCircleOnDragend(event: google.maps.MapMouseEvent) {
     if (event.latLng) {
       const lat = event.latLng.lat();
@@ -194,6 +212,13 @@ export class MapListComponent implements OnInit {
     }
   }
 
+  /**
+   * Draw a new circle on the map, removing any previous circle. Also add all address markers and
+   * record those members that are inside the circle.
+   * @param lat Latitude of centre of new circle
+   * @param lng Longitude of centre of new circle
+   * @param radius Radius of new circle
+   */
   replaceCircle(lat: number, lng: number, radius: number) {
     if (this.circle) {
       this.circle.setMap(null); // remove from map
@@ -204,6 +229,7 @@ export class MapListComponent implements OnInit {
     // initialize the array again, clearing previous contents
     this.ids_of_members_inside_circle = new Array();
 
+    // Draw the markers again, changing their content depending on whether they are inside or outside the circle
     this.markers.forEach((element) => {
       let marker = element[1];
       const pos = marker.position as google.maps.LatLngLiteral;
@@ -254,6 +280,10 @@ export class MapListComponent implements OnInit {
     }).element;
   }
 
+  /**
+   * Called when th euser changes the radius of the circle
+   * @param e
+   */
   onRadiusChange(e: Event) {
     let radius: number | string = (e.target as HTMLInputElement).value;
     let centre: google.maps.LatLng = this.circle.getCenter()!;
@@ -266,6 +296,7 @@ export class MapListComponent implements OnInit {
     }
   }
 
+  /** Called if the user selected a row in the address list */
   onIdSelected(idmember: number) {
     this.markers.forEach((element) => {
       let id = element[0];
@@ -275,12 +306,14 @@ export class MapListComponent implements OnInit {
     });
   }
 
-  // Required so that the template can access the EnumS
-  // From https://stackoverflow.com/a/59289208
+  /**
+   * Required so that the template can access the Enum ListType
+   * From {@link https://stackoverflow.com/a/59289208}
+   */
   public get ListType() {
     return ListType;
   }
-  // convenience getters for easy access to form fields
+  /** Convenience getter for easy access to form fields */
   get f() {
     return this.form.controls;
   }
