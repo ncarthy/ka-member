@@ -1,15 +1,18 @@
     # Run first
     DROP TEMPORARY TABLE IF EXISTS `_Members`;    
     #Run second
+    # Must convert updatedate to a string otherwise it updates every time the table is updated
     CREATE TEMPORARY TABLE IF NOT EXISTS `_Members` AS ( 
                         SELECT `idmember`, deletedate, joindate, expirydate,
-                        reminderdate, updatedate, membership_idmembership as idmembership,
+                        reminderdate, DATE_FORMAT(`updatedate`, '%Y-%m-%d %H:%i:%s')  as updatedate, 
+                        membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
-                        0 as paymenttypeID, 0 as bankaccountID, m.postonhold
+                        0 as paymenttypeID, 0 as bankaccountID, m.postonhold, updatedate as up2
                         FROM member m
                         LEFT JOIN `transaction` t ON m.idmember = t.member_idmember
                         GROUP BY m.idmember
     );    
+    
     #Run third
 	UPDATE _Members M, transaction T
                         SET M.lasttransactionid = T.idtransaction,
@@ -26,12 +29,18 @@
 	WHERE MN.member_idmember IS NULL OR MN.surname NOT LIKE 'pa%';*/
     
 	#Filter 2
-    DELETE 
+    /*DELETE 
 		FROM _Members
 		WHERE paymenttypeID IS NULL OR 
 			paymenttypeID = 0 OR 
-			paymenttypeID != 4; #'Cash'
+			paymenttypeID != 4; #'Cash' */
     
+    # Filter 3
+     DELETE
+                    FROM _Members
+                    WHERE `updatedate` < '2021-01-01' OR 
+                    `updatedate` > '2021-01-31' OR 
+                    `updatedate` IS NULL;
 
 
     # Test results

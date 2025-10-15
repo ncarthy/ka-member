@@ -484,12 +484,16 @@ class MemberFilter{
 
     This list of all memberIDs is then whittled down by application of filters until only
     the required members are left. Then a new join is done with this reduced list and the 
-    results resturned to the app. */
+    results resturned to the app. 
+    
+    Note: Must convert updatedate to a string otherwise it updates every time the table is updated
+    */
     private function createTemporaryMemberTable(){
 
         $query = "CREATE TEMPORARY TABLE IF NOT EXISTS `" . $this->tablename . "` ENGINE=MEMORY AS ( 
                         SELECT `idmember`, deletedate, joindate, expirydate,
-                        reminderdate, updatedate, membership_idmembership as idmembership,
+                        reminderdate, DATE_FORMAT(`updatedate`, '%Y-%m-%d %H:%i:%s') as updatedate, 
+                        membership_idmembership as idmembership,
                         MAX(`date`) as lasttransactiondate, 0 as lasttransactionid,
                         0 as paymenttypeID, 0 as bankaccountID, m.postonhold, m.emailonhold
                         FROM member m
@@ -499,6 +503,7 @@ class MemberFilter{
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
+        // Now update the temporary table with the ID of the latest transaction, its payment type and bank account
         $query = "UPDATE `" . $this->tablename . "` M, transaction T
                         SET M.lasttransactionid = T.idtransaction,
                             M.paymenttypeID = T.paymenttypeID,
