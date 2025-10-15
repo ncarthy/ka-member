@@ -662,27 +662,27 @@ class Member{
     }
 
     private function sanitize_inputs(){
-        $this->title=htmlspecialchars(strip_tags($this->title));
-        $this->businessname=htmlspecialchars(strip_tags($this->businessname));
-        $this->bankpayerref=htmlspecialchars(strip_tags($this->bankpayerref));
-        $this->note=htmlspecialchars(strip_tags($this->note));
-        $this->addressfirstline=htmlspecialchars(strip_tags($this->addressfirstline));
-        $this->addresssecondline=htmlspecialchars(strip_tags($this->addresssecondline));
-        $this->city=htmlspecialchars(strip_tags($this->city));
-        $this->county=htmlspecialchars(strip_tags($this->county));
-        $this->postcode=htmlspecialchars(strip_tags($this->postcode));
+        $this->title=htmlspecialchars(strip_tags($this->title??''));
+        $this->businessname=htmlspecialchars(strip_tags($this->businessname??''));
+        $this->bankpayerref=htmlspecialchars(strip_tags($this->bankpayerref??''));
+        $this->note=htmlspecialchars(strip_tags($this->note??''));
+        $this->addressfirstline=htmlspecialchars(strip_tags($this->addressfirstline??''));
+        $this->addresssecondline=htmlspecialchars(strip_tags($this->addresssecondline??''));
+        $this->city=htmlspecialchars(strip_tags($this->city??''));
+        $this->county=htmlspecialchars(strip_tags($this->county??''));
+        $this->postcode=htmlspecialchars(strip_tags($this->postcode??''));
         $this->countryID=filter_var($this->countryID, FILTER_SANITIZE_NUMBER_INT);
-        $this->area=htmlspecialchars(strip_tags($this->area));
-        $this->email1=htmlspecialchars(strip_tags($this->email1));
-        $this->phone1=htmlspecialchars(strip_tags($this->phone1));
-        $this->addressfirstline2=htmlspecialchars(strip_tags($this->addressfirstline2));
-        $this->addresssecondline2=htmlspecialchars(strip_tags($this->addresssecondline2));
-        $this->city2=htmlspecialchars(strip_tags($this->city2));
-        $this->county2=htmlspecialchars(strip_tags($this->county2));
-        $this->postcode2=htmlspecialchars(strip_tags($this->postcode2));
+        $this->area=htmlspecialchars(strip_tags($this->area??''));
+        $this->email1=htmlspecialchars(strip_tags($this->email1??''));
+        $this->phone1=htmlspecialchars(strip_tags($this->phone1??''));
+        $this->addressfirstline2=htmlspecialchars(strip_tags($this->addressfirstline2??''));
+        $this->addresssecondline2=htmlspecialchars(strip_tags($this->addresssecondline2??''));
+        $this->city2=htmlspecialchars(strip_tags($this->city2??''));
+        $this->county2=htmlspecialchars(strip_tags($this->county2??''));
+        $this->postcode2=htmlspecialchars(strip_tags($this->postcode2??''));
         $this->country2ID=filter_var($this->country2ID, FILTER_SANITIZE_NUMBER_INT);
-        $this->email2=htmlspecialchars(strip_tags($this->email2));
-        $this->phone2=htmlspecialchars(strip_tags($this->phone2));
+        $this->email2=htmlspecialchars(strip_tags($this->email2??''));
+        $this->phone2=htmlspecialchars(strip_tags($this->phone2??''));
         $this->statusID=htmlspecialchars(strip_tags($this->statusID));
         $this->expirydate=htmlspecialchars(strip_tags($this->expirydate??''));
         $this->joindate=htmlspecialchars(strip_tags($this->joindate??''));
