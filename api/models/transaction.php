@@ -139,7 +139,7 @@ class Transaction{
                     "paymenttypeID" => $paymenttypeID,
                     "idmember" => $idmember,
                     "bankID" => $bankID,
-                    "note" => html_entity_decode($note)
+                    "note" => html_entity_decode($note??'')
                 );
     
                 array_push($items_arr, $item_item);
@@ -189,7 +189,7 @@ class Transaction{
         $item = array(
             "id" => $this->id,
             "date" => $this->date,
-            "note" => html_entity_decode($this->note),
+            "note" => html_entity_decode($this->note??''),
             "amount" => $this->amount,
             "idmember" => $this->idmember,
             "bankID" => $this->bankID,

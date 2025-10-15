@@ -50,7 +50,7 @@ class UserCtl{
     $user = array(
         "id" => $model->id,
         "username" => $model->username,
-        "fullname" => html_entity_decode($model->fullname),
+        "fullname" => html_entity_decode($model->fullname??''),
         "role" => $model->role,
         "suspended" => $model->suspended,
         "email" => $model->email,

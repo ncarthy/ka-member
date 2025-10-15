@@ -60,7 +60,7 @@ class User{
                     $user_item=array(
                         "id" => $id,
                         "username" => $username,
-                        "fullname" => html_entity_decode($name),
+                        "fullname" => html_entity_decode($name??''),
                         "role" => $isAdmin?'Admin':'User',
                         "suspended" => $suspended?true:false,
                         "email" => html_entity_decode($email??''),

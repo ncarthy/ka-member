@@ -186,9 +186,9 @@ class MemberName{
             
                     $item=array(
                         "id" => $id,
-                        "honorific" => html_entity_decode($honorific),
-                        "firstname" => html_entity_decode($firstname),
-                        "surname" => html_entity_decode($surname),
+                        "honorific" => html_entity_decode($honorific??''),
+                        "firstname" => html_entity_decode($firstname??''),
+                        "surname" => html_entity_decode($surname??''),
                         "idmember" => $idmember
                     );
 
