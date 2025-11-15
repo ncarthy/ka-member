@@ -254,15 +254,15 @@ export class MapListComponent implements OnInit {
    * @returns HTMLElement
    */
   contentOfInsideMarker() {
-    const icon = document.createElement('div');
-    icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+    // Use of 'as any' to avoid TypeScript error about invalid property in PinElementOptions
     return new google.maps.marker.PinElement({
-      glyph: icon,
+      glyphText: '✓',
       glyphColor: 'black',
       background: 'lightgreen',
       borderColor: 'green',
       scale: 0.7,
-    }).element;
+    } as any).element;
   }
 
   /**
@@ -270,13 +270,14 @@ export class MapListComponent implements OnInit {
    * @returns HTMLElement
    */
   contentOfOutsideMarker() {
+    // Use of 'as any' to avoid TypeScript error about invalid property in PinElementOptions
     return new google.maps.marker.PinElement({
-      glyph: 'X',
+      glyphText: 'X',
       glyphColor: 'grey',
       background: 'lightgrey',
       borderColor: 'grey',
       scale: 0.7,
-    }).element;
+    } as any).element;
   }
 
   /**
