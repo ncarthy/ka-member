@@ -33,7 +33,7 @@ Config::write('server', 'http://localhost:4200');
 Config::write('api.path', '/api/');
 
 // db
-Config::write('db.host', '192.168.1.214');
+Config::write('db.host', 'themis');
 Config::write('db.port', '3306');
 Config::write('db.name', 'knightsb_membership');
 Config::write('db.user', 'knightsb_member');

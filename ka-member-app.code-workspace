@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "ka-member-app"
+		},
+		{
+			"path": "api"
 		}
 	],
 	"settings": {}

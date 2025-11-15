@@ -1,12 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GetAddressIOAddress } from '@app/_models';
-
-export const ADDRESS_API_KEY = 'SdcqMcX0jkOi4rMBEMNx3Q30597';
-export const ADDRESS_API_URL = 'https://api.getAddress.io/find/';
 
 /**
  * AddressSearchService connects to the GetAddress API
@@ -18,8 +15,8 @@ export const ADDRESS_API_URL = 'https://api.getAddress.io/find/';
 export class AddressSearchService {
   constructor(
     private http: HttpClient,
-    @Inject(ADDRESS_API_KEY) private apiKey: string,
-    @Inject(ADDRESS_API_URL) private apiUrl: string,
+    @Inject(environment.getaddressio_apikey) private apiKey: string,
+    @Inject(environment.getaddressio_apiurl) private apiUrl: string,
   ) {}
 
   search(postcode: string): Observable<GetAddressIOAddress[]> {

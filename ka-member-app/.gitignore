@@ -46,3 +46,6 @@ testem.log
 Thumbs.db
 
 .angular/*
+
+# Environment variable files
+/src/environments/environment.ts
