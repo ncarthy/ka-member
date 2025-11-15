@@ -1,3 +1,7 @@
+// The api key is a domain-specific token provided by GetAddress.io
+// Make sure you restrict its usage to the domain set via their dashboard
+// It is also throttled to 10 requests per 2 minutes 
+
 export const environment = {
   production: true,
   apiUrl: 'https://admin.knightsbridgeassociation.co.uk/api',
