@@ -49,3 +49,4 @@ Thumbs.db
 
 # Environment variable files
 /src/environments/environment.ts
+/src/index.html
