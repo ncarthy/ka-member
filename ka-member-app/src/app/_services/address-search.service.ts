@@ -13,10 +13,12 @@ import { GetAddressIOAddress } from '@app/_models';
  */
 @Injectable({ providedIn: 'root' })
 export class AddressSearchService {
+
+  private apiKey: string = environment.getaddressio_apikey;
+  private apiUrl: string = environment.getaddressio_apiurl;
+
   constructor(
     private http: HttpClient,
-    @Inject(environment.getaddressio_apikey) private apiKey: string,
-    @Inject(environment.getaddressio_apiurl) private apiUrl: string,
   ) {}
 
   search(postcode: string): Observable<GetAddressIOAddress[]> {
