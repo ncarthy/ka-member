@@ -16,8 +16,8 @@
 		"server" => "uk1.cp.netnerd.com",
 		"port" => 465,
 		"secure" => true,
-		"username" => "neil.carthy+knightsbridgeassociation.com",
-		"password" => ";?r26=7h9CUo"
+		"username" => "<< REMOVED >>",
+		"password" => "<< REMOVED >>" # The password that was here has been revoked
 	);
 
 	$pop3options = array(

@@ -31,7 +31,7 @@ class Config
 // Note
 // Environment key values (such as 'KA_DB_PASSWORD') are stored in:
 // Development: C:\Apache24\conf\httpd.conf
-// Production: ~/admin.knightsbridgeassociation.co.uk/.htaccess (!! not ./api/.htaccess)
+// Production: ~/admin.knightsbridgeassociation.co.uk/api/.htaccess
 
 // server location (for Access-Origin)
 Config::write('server', 'http://localhost:4200'); // Must change when deploying to production
@@ -53,7 +53,7 @@ Config::write('token.accessExpiry', '+15 minute');
 Config::write('token.refreshExpiry', '+7 day');
 Config::write('token.iss', 'https://knightsbridgeassociation.com');
 Config::write('token.aud', 'https://member.knightsbridgeassociation.com');
-Config::write('token.envkeyname', 'KA_MEMBER_KEY'); // Make sure this is a 32 character length string
+Config::write('token.envkeyname', 'KA_MEMBER_KEY'); // Make sure the EnvVar is a 32 character length string
 Config::write('token.cookiename', 'refreshToken');
 Config::write('token.cookiepath', Config::read('api.path') . 'auth');
 Config::write('token.cookiesecure', false);
