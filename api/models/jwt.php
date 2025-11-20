@@ -77,7 +77,7 @@ class JWTWrapper{
         $this->config = Configuration::forSymmetricSigner(
             // You may use any HMAC variations (256, 384, and 512)
             new Sha256(),
-            // Provide a secret key that is used to validate tokens
+            // Provide a secret key that is used to validate tokens. It must be 32 characters long
             InMemory::plainText( getenv(\Core\Config::read('token.envkeyname')) )            
         );
         $this->config = $this->config->withValidationConstraints(

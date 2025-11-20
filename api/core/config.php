@@ -28,18 +28,24 @@ class Config
 
 }
 
+// Note
+// Environment key values (such as 'KA_DB_PASSWORD') are stored in:
+// Development: C:\Apache24\conf\httpd.conf
+// Production: ~/admin.knightsbridgeassociation.co.uk/.htaccess (!! not ./api/.htaccess)
+
 // server location (for Access-Origin)
-Config::write('server', 'http://localhost:4200');
+Config::write('server', 'http://localhost:4200'); // Must change when deploying to production
 Config::write('api.path', '/api/');
 
 // db
-Config::write('db.host', 'themis');
-Config::write('db.port', '3306');
-Config::write('db.name', 'knightsb_membership');
-Config::write('db.user', 'knightsb_member');
-Config::write('db.password', 'SsP4qIm4omu4M');
+Config::write('db.host', 'themis');             // Database IP or hostname. Usually 'localhost' on produciton
+Config::write('db.port', '3306');               // standard MySql / MariaDB port
+Config::write('db.name', 'knightsb_membership'); // Database name
+Config::write('db.user', 'knightsb_member');      // Database user. All database actions are performed by this single user.
+Config::write('db.password', 'KA_DB_PASSWORD');    // Database user's password is stored as enviornment variable
 
-// number of allowed password attempts
+
+// number of allowed password attempts. User is suspended if fails to login 6 times in a row
 Config::write('password_attempts', 5);
 
 // token settings
