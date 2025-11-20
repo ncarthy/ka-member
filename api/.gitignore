@@ -1,4 +1,5 @@
 /vendor/
+/.postman/
 
 # Add these to the repo
 !/vendor/ultimate-email/
