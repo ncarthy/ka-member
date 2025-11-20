@@ -41,7 +41,7 @@ Config::write('api.path', '/api/');
 Config::write('db.host', 'themis');             // Database IP or hostname. Usually 'localhost' on produciton
 Config::write('db.port', '3306');               // standard MySql / MariaDB port
 Config::write('db.name', 'knightsb_membership'); // Database name
-Config::write('db.user', 'knightsb_member');      // Database user. All database actions are performed by this single user.
+Config::write('db.user', 'KA_DB_USER');      // Database user. All database actions are performed by this single user.
 Config::write('db.password', 'KA_DB_PASSWORD');    // Database user's password is stored as enviornment variable
 
 
