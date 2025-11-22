@@ -27,3 +27,6 @@ The system is hosted on a secure web server and can be accessed through the KA p
 ## Contact
 For support or more information, contact the KA developer at:
 📧 webmaster@knightsbridgeassociation.com
+
+## Credits
+Project structure and authorization methodology from [Jason Watmore](https://jasonwatmore.com/angular-15-auth-boilerplate-sign-up-with-verification-login-and-forgot-password).
