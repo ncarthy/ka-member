@@ -1,0 +1,15 @@
+<google-map height="600px" width="100%" [options]="mapOptions">
+  <map-advanced-marker
+    [position]="circle_center"
+    [options]="center_of_circle_marker_options"
+    (mapDragend)="onDragEnd($event)"
+  />
+  <map-circle
+    [center]="circle_center"
+    [radius]="circle_radius"
+    [options]="CIRCLE_OPTIONS"
+  />
+  <!--@for (position of advancedMarkerPositions; track position) {
+      <map-advanced-marker [position]="position" [options]="advancedMarkerOptions" />
+    }-->
+</google-map>

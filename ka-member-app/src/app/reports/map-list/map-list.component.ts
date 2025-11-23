@@ -8,13 +8,14 @@ import {
 import { JsonPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { map, mergeMap, Observable } from 'rxjs';
+
 import { MembersService } from '@app/_services';
-import { map, switchMap } from 'rxjs/operators';
 import { Address } from '@app/_models';
-import { Observable, merge, of } from 'rxjs';
 import { MailingListComponent } from '../mailing-list/mailing-list.component';
 import { EmailListComponent } from '../email-list/email-list.component';
-import { fromArrayToElement } from '@app/_helpers';
+
+import { KAGoogleMapComponent } from './ka-google-map.component';
 
 // From https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016
 // Github: https://github.com/mapbox/cheap-ruler
@@ -25,6 +26,7 @@ import { ListType } from './list-type.enum';
   templateUrl: './map-list.component.html',
   styleUrls: ['./map-list.component.css'],
   imports: [
+    KAGoogleMapComponent,
     ReactiveFormsModule,
     RouterLink,
     JsonPipe,
@@ -48,8 +50,14 @@ export class MapListComponent implements OnInit {
   ruler: CheapRuler = new CheapRuler(51, 'meters'); //51 degrees latitude
   ids_of_members_inside_circle: number[] = new Array();
   form!: FormGroup;
+  inside_marker_positions: google.maps.LatLngLiteral[] = [];
+  outside_marker_positions: google.maps.LatLngLiteral[] = [];
 
-  mapOptions: google.maps.MapOptions = {
+  marker_positions: google.maps.LatLngLiteral[] = [];
+
+  radius: number = 200;
+
+  mapOptions = {
     center: { lat: MapListComponent.LAT, lng: MapListComponent.LNG },
     zoom: 16,
     mapId: MapListComponent.MAPID,
@@ -61,7 +69,8 @@ export class MapListComponent implements OnInit {
   constructor() {
     // Create an Observable of Address
     this.addresses$ = this.membersService.getMapList().pipe(
-      fromArrayToElement(), // Convert Observable<Address[]> to Observable<Address>
+      // Convert Observable<Address[]> to Observable<Address>
+      mergeMap((addresses: Address[]) => addresses),
     );
   }
 
@@ -125,6 +134,10 @@ export class MapListComponent implements OnInit {
     let radius = parseInt(this.f['radius'].value);
 
     let ids: number[] = new Array();
+
+    this.inside_marker_positions = [];
+    this.outside_marker_positions = [];
+
     this.addresses$
       .pipe(
         map((address: Address) => {
@@ -141,8 +154,10 @@ export class MapListComponent implements OnInit {
           if (distance <= radius) {
             ids.push(address.idmember);
             marker.content = this.contentOfInsideMarker();
+            this.inside_marker_positions.push({lat: address.lng, lng: address.lat});
           } else {
             marker.content = this.contentOfOutsideMarker();
+            this.outside_marker_positions.push({lat: address.lng, lng: address.lat});
           }
           marker.map = this.map;
           this.markers.push([address.idmember, marker]);
@@ -211,6 +226,17 @@ export class MapListComponent implements OnInit {
     }
   }
 
+  onCircleCenterChanged(center: google.maps.LatLngLiteral) {
+    if (center) {
+      const lat = center.lat;
+      const lng = center.lng;
+      const radius = parseInt(this.f['radius'].value);
+
+      this.replaceCircle(lat, lng, radius);
+
+    }
+  }
+
   /**
    * Draw a new circle on the map, removing any previous circle. Also add all address markers and
    * record those members that are inside the circle.
@@ -219,11 +245,6 @@ export class MapListComponent implements OnInit {
    * @param radius Radius of new circle
    */
   replaceCircle(lat: number, lng: number, radius: number) {
-    if (this.circle) {
-      this.circle.setMap(null); // remove from map
-    }
-
-    this.addCircleToMap(lat, lng, radius);
 
     // initialize the array again, clearing previous contents
     this.ids_of_members_inside_circle = new Array();
@@ -254,7 +275,6 @@ export class MapListComponent implements OnInit {
    * @returns HTMLElement
    */
   contentOfInsideMarker() {
-
     // Use of 'as any' to avoid TypeScript error about invalid property in PinElementOptions
     return new google.maps.marker.PinElement({
       glyphText: '✓',
@@ -286,14 +306,15 @@ export class MapListComponent implements OnInit {
    */
   onRadiusChange(e: Event) {
     let radius: number | string = (e.target as HTMLInputElement).value;
-    let centre: google.maps.LatLng = this.circle.getCenter()!;
-    if (centre) {
-      this.replaceCircle(
-        centre.lat(),
-        centre.lng(),
-        parseInt(radius.toString()),
-      );
-    }
+    this.radius = parseInt(radius.toString());
+    // let centre: google.maps.LatLng = this.circle.getCenter()!;
+    // if (centre) {
+    //   this.replaceCircle(
+    //     centre.lat(),
+    //     centre.lng(),
+    //     this.radius,
+    //   );
+    // }
   }
 
   /** Called if the user selected a row in the address list */
