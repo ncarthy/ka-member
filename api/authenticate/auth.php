@@ -30,6 +30,15 @@ if (isset($data)) {
 // query database for a user with that username
 $user->username = strtolower($usernm);
 $stmt = $user->readOneByUsername();
+
+if (!$stmt) {
+    http_response_code(500);
+    echo json_encode(
+        array("message" => "Internal Error")
+     );
+    exit(1);
+}
+
 $num = $stmt->rowCount();
 
 // check if more than 0 records found

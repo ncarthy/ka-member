@@ -356,6 +356,10 @@ class User{
                 break;            
         }             
 
+        if (!$this->conn) {
+            return;
+        }
+        
         $stmt = $this->conn->prepare( $query );
 
         switch ($whereQuery) {
@@ -380,6 +384,9 @@ class User{
      * @return void
      */
     private function transferPropertiestoModel($stmt) {
+
+        if (!$stmt) return;
+
         // get retrieved row
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         

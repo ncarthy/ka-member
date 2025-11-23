@@ -47,7 +47,10 @@ class Database{
             }
                 
         }catch(\PDOException $exception){
+            http_response_code(500);
             echo "Connection error: " . $exception->getMessage();
+            echo " Check configuration: database name, username and password";
+            exit(1);
         }
     }
 
