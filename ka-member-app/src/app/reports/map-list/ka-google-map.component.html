@@ -3,6 +3,7 @@
     [position]="circle_center"
     [options]="center_of_circle_marker_options"
     (mapDragend)="onDragEnd($event)"
+    (markerInitialized)="onMarkerInitialized($event)"
   />
   <map-circle
     [center]="circle_center"

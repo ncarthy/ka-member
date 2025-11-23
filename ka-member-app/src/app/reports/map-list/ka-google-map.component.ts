@@ -65,19 +65,22 @@ export class KAGoogleMapComponent implements AfterViewInit {
     };
 
   ngAfterViewInit() {
-    const pinScaled = new google.maps.marker.PinElement({
-      scale: 1.5,
-    });
 
     this.center_of_circle_marker_options = {
       gmpDraggable: true,
-      content: pinScaled.element,
     };
   }
 
   onDragEnd(event: google.maps.MapMouseEvent) {
     this.circle_center = event.latLng!.toJSON();
     this.circle_center_point.emit(this.circle_center);
+  }
+
+  // this is called when the marker is initialized
+  onMarkerInitialized(marker: google.maps.marker.AdvancedMarkerElement) {
+    marker.content =  new google.maps.marker.PinElement({
+      scale: 1.5,
+    });
   }
 
   /**
