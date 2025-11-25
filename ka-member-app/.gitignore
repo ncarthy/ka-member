@@ -46,7 +46,8 @@ testem.log
 Thumbs.db
 
 .angular/*
+.buildcache/*
 
-# Environment variable files
+# these files are not saved in git because they contain secrets
 /src/environments/environment.ts
 /src/index.html
