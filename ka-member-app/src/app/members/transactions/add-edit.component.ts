@@ -144,6 +144,7 @@ export class TransactionAddEditComponent
   }
 
   ngOnChanges(simpleChanges: SimpleChanges) {
+
     if (simpleChanges['touched'] && simpleChanges['touched'].currentValue) {
       this.transactionForm.markAllAsTouched();
     }
@@ -220,7 +221,7 @@ export class TransactionAddEditComponent
     if (this.transactionForm) {
       this.transactionForm.reset();
     }
-    if (this.member) {
+    if (this.member && this.transactionForm && this.transactionForm.controls['idmember']) {
       this.f['idmember'].setValue(this.member.id);
     }
   }
