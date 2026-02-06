@@ -2,11 +2,14 @@
 
 namespace Controllers;
 
+use \GoCardlessPro\Core\Exception\InvalidSignatureException;
+
 class WebhookCtl {
 
     /**
      * Process GoCardless webhook
      * Handles signature validation, idempotency, and event processing
+     * Uses GoCardless PHP library for parsing and validation
      *
      * @param string $payload Raw JSON payload
      * @param string $signature Webhook-Signature header value
@@ -28,27 +31,24 @@ class WebhookCtl {
         // Initialize webhook model
         $webhook = new \Models\GoCardlessWebhook();
 
-        // Validate signature
-        if (!$webhook->validateSignature($payload, $signature)) {
+        // Parse and validate webhook using GoCardless library
+        try {
+            $events = $webhook->parseWebhook($payload, $signature);
+        } catch (InvalidSignatureException $e) {
             http_response_code(401);
             echo json_encode(array("message" => "Invalid signature"));
-            error_log("GoCardless webhook signature validation failed");
+            error_log("GoCardless webhook signature validation failed: " . $e->getMessage());
             return;
-        }
-
-        // Parse JSON payload
-        $webhook_data = json_decode($payload, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        } catch (\Exception $e) {
             http_response_code(400);
-            echo json_encode(array("message" => "Invalid JSON"));
-            error_log("GoCardless webhook JSON parse error: " . json_last_error_msg());
+            echo json_encode(array("message" => "Invalid webhook data"));
+            error_log("GoCardless webhook parsing error: " . $e->getMessage());
             return;
         }
 
         // Process events
         try {
-            $results = $webhook->processEvents($webhook_data);
+            $results = $webhook->processEvents($events);
 
             // Return success response
             http_response_code(200);
@@ -57,7 +57,7 @@ class WebhookCtl {
                 "results" => $results
             ));
         } catch (\Exception $e) {
-            // Log error but return 200 to prevent retries for unrecoverable errors
+            // Log error but return 500 for processing errors
             error_log("GoCardless webhook processing error: " . $e->getMessage());
             http_response_code(500);
             echo json_encode(array(

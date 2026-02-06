@@ -1,6 +1,8 @@
 <?php
 namespace Models;
 use \PDO;
+use \GoCardlessPro\Webhook;
+use \GoCardlessPro\Core\Exception\InvalidSignatureException;
 
 class GoCardlessWebhook {
     private $conn;
@@ -20,38 +22,35 @@ class GoCardlessWebhook {
     }
 
     /**
-     * Validate webhook signature using HMAC-SHA256
+     * Parse and validate webhook using GoCardless library
      * @param string $payload Raw JSON payload
      * @param string $signature Signature from Webhook-Signature header
-     * @return bool
+     * @return array Parsed events
+     * @throws InvalidSignatureException if signature is invalid
      */
-    public function validateSignature($payload, $signature) {
+    public function parseWebhook($payload, $signature) {
         if (empty($this->webhook_secret)) {
-            error_log('Cannot validate signature: webhook secret not configured');
-            return false;
+            throw new \Exception('Webhook secret not configured');
         }
 
-        $expected_signature = $signature;
-        $computed_signature = hash_hmac('sha256', $payload, $this->webhook_secret);
-
-        // Use timing-safe comparison to prevent timing attacks
-        return hash_equals($computed_signature, $expected_signature);
+        // Use GoCardless library to parse and validate webhook
+        return Webhook::parse($payload, $signature, $this->webhook_secret);
     }
 
     /**
      * Process webhook events
-     * @param array $webhook_data Decoded JSON webhook payload
+     * @param array $events Array of event objects from GoCardless library
      * @return array Results of processing each event
      */
-    public function processEvents($webhook_data) {
+    public function processEvents($events) {
         $results = [];
 
-        if (!isset($webhook_data['events']) || !is_array($webhook_data['events'])) {
-            error_log('Invalid webhook data: no events array');
-            return ['error' => 'Invalid webhook data'];
+        if (!is_array($events)) {
+            error_log('Invalid events data: not an array');
+            return ['error' => 'Invalid events data'];
         }
 
-        foreach ($webhook_data['events'] as $event) {
+        foreach ($events as $event) {
             $result = $this->processEvent($event);
             $results[] = $result;
         }
@@ -61,13 +60,14 @@ class GoCardlessWebhook {
 
     /**
      * Process a single event
-     * @param array $event Event data
+     * @param object $event Event object from GoCardless library
      * @return array Result of processing
      */
     private function processEvent($event) {
-        $event_id = $event['id'] ?? 'unknown';
-        $resource_type = $event['resource_type'] ?? '';
-        $action = $event['action'] ?? '';
+        // Access properties from GoCardless event object
+        $event_id = $event->id ?? 'unknown';
+        $resource_type = $event->resource_type ?? '';
+        $action = $event->action ?? '';
 
         error_log("Processing event: $event_id - $resource_type.$action");
 
@@ -77,7 +77,7 @@ class GoCardlessWebhook {
         $webhook_log->event_id = $event_id;
         $webhook_log->resource_type = $resource_type;
         $webhook_log->action = $action;
-        $webhook_log->resource_id = $event['links'][$resource_type] ?? null;
+        $webhook_log->resource_id = $event->links->{$resource_type} ?? null;
         $webhook_log->payload = json_encode($event);
 
         // Check idempotency
@@ -114,30 +114,30 @@ class GoCardlessWebhook {
 
     /**
      * Handle mandates.created event - creates new member record
-     * @param array $event Event data
+     * @param object $event Event object from GoCardless library
      * @param WebhookLog $webhook_log
      * @return array
      */
     private function handleMandateCreated($event, $webhook_log) {
-        $mandate_id = $event['links']['mandate'] ?? null;
-        $metadata = $event['metadata'] ?? [];
+        $mandate_id = $event->links->mandate ?? null;
+        $metadata = $event->metadata ?? new \stdClass();
 
         if (empty($mandate_id)) {
             throw new \Exception('Missing mandate ID in event');
         }
 
         // Extract member details from metadata
-        $member_name = $metadata['member_name'] ?? null;
-        $business_name = $metadata['business_name'] ?? null;
-        $email = $metadata['email'] ?? null;
-        $mandate_type = $metadata['mandate_type'] ?? 'individual';
+        $member_name = $metadata->member_name ?? null;
+        $business_name = $metadata->business_name ?? null;
+        $email = $metadata->email ?? null;
+        $mandate_type = $metadata->mandate_type ?? 'individual';
 
         // Extract address details from metadata
-        $address_line1 = $metadata['address_line1'] ?? null;
-        $address_line2 = $metadata['address_line2'] ?? null;
-        $city = $metadata['city'] ?? null;
-        $county = $metadata['county'] ?? null;
-        $postcode = $metadata['postcode'] ?? null;
+        $address_line1 = $metadata->address_line1 ?? null;
+        $address_line2 = $metadata->address_line2 ?? null;
+        $city = $metadata->city ?? null;
+        $county = $metadata->county ?? null;
+        $postcode = $metadata->postcode ?? null;
 
         // Determine display name (business name takes precedence)
         $display_name = $business_name ?? $member_name;
@@ -202,7 +202,7 @@ class GoCardlessWebhook {
             $webhook_log->markProcessed($member_id);
 
             return [
-                'event_id' => $event['id'],
+                'event_id' => $event->id,
                 'status' => 'success',
                 'member_id' => $member_id,
                 'mandate_id' => $mandate_id
@@ -214,15 +214,15 @@ class GoCardlessWebhook {
 
     /**
      * Handle payments.confirmed event - creates transaction record
-     * @param array $event Event data
+     * @param object $event Event object from GoCardless library
      * @param WebhookLog $webhook_log
      * @return array
      */
     private function handlePaymentConfirmed($event, $webhook_log) {
-        $payment_id = $event['links']['payment'] ?? null;
-        $mandate_id = $event['links']['mandate'] ?? null;
-        $amount_pence = $event['details']['amount'] ?? null;
-        $currency = $event['details']['currency'] ?? 'GBP';
+        $payment_id = $event->links->payment ?? null;
+        $mandate_id = $event->links->mandate ?? null;
+        $amount_pence = $event->details->amount ?? null;
+        $currency = $event->details->currency ?? 'GBP';
 
         if (empty($payment_id) || empty($mandate_id) || $amount_pence === null) {
             throw new \Exception('Missing required payment data');
@@ -263,7 +263,7 @@ class GoCardlessWebhook {
             error_log("Transaction for payment $payment_id already exists - skipping");
             $webhook_log->markProcessed($member_id);
             return [
-                'event_id' => $event['id'],
+                'event_id' => $event->id,
                 'status' => 'duplicate_transaction',
                 'payment_id' => $payment_id
             ];
@@ -302,7 +302,7 @@ class GoCardlessWebhook {
             $webhook_log->markProcessed($member_id);
 
             return [
-                'event_id' => $event['id'],
+                'event_id' => $event->id,
                 'status' => 'success',
                 'transaction_id' => $transaction_id,
                 'payment_id' => $payment_id,
