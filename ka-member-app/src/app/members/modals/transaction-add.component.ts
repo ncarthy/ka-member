@@ -9,6 +9,7 @@ import { TransactionAddEditComponent } from '../transactions/add-edit.component'
 @Component({
   selector: 'transaction-edit-modal',
   templateUrl: './transaction-add.component.html',
+    styleUrls: ['./transaction-add.component.css'],
   standalone: true,
   imports: [TransactionAddEditComponent],
 })
