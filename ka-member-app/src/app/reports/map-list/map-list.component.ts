@@ -123,68 +123,78 @@ export class MapListComponent implements OnInit {
   }
 
   mapInitializer() {
-    this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
+    // this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
 
-    this.addCircleToMap(
-      MapListComponent.LAT,
-      MapListComponent.LNG,
-      parseInt(this.f['radius'].value),
-    );
+    if (this.f['radius'] && this.f['radius'].value) {
+      // this.addCircleToMap(
+      //   MapListComponent.LAT,
+      //   MapListComponent.LNG,
+      //   parseInt(this.f['radius'].value),
+      // );
 
-    let radius = parseInt(this.f['radius'].value);
+      let radius = parseInt(this.f['radius'].value);
 
-    let ids: number[] = new Array();
+      let ids: number[] = new Array();
 
-    this.inside_marker_positions = [];
-    this.outside_marker_positions = [];
+      this.inside_marker_positions = [];
+      this.outside_marker_positions = [];
 
-    this.addresses$
-      .pipe(
-        map((address: Address) => {
-          let marker: google.maps.marker.AdvancedMarkerElement =
-            this.createMarker(address);
+      this.addresses$
+        .pipe(
+          map((address: Address) => {
+            let marker: google.maps.marker.AdvancedMarkerElement =
+              this.createMarker(address);
 
-          if (!marker) return;
+            if (!marker) return;
+            if (!address.lng || !address.lat) return;
 
-          let distance = this.ruler.distance(
-            [address.lng, address.lat],
-            [MapListComponent.LNG, MapListComponent.LAT],
-          );
+            let distance = this.ruler.distance(
+              [address.lng, address.lat],
+              [MapListComponent.LNG, MapListComponent.LAT],
+            );
 
-          if (distance <= radius) {
-            ids.push(address.idmember);
-            marker.content = this.contentOfInsideMarker();
-            this.inside_marker_positions.push({lat: address.lng, lng: address.lat});
-          } else {
-            marker.content = this.contentOfOutsideMarker();
-            this.outside_marker_positions.push({lat: address.lng, lng: address.lat});
-          }
-          marker.map = this.map;
-          this.markers.push([address.idmember, marker]);
-        }),
-      )
-      .subscribe()
-      .add(() => {
-        this.ids_of_members_inside_circle = ids;
+            if (distance <= radius) {
+              ids.push(address.idmember);
+              marker.content = this.contentOfInsideMarker();
+              this.inside_marker_positions.push({
+                lat: address.lng,
+                lng: address.lat,
+              });
+            } else {
+              marker.content = this.contentOfOutsideMarker();
+              this.outside_marker_positions.push({
+                lat: address.lng,
+                lng: address.lat,
+              });
+            }
+            // marker.map = this.map;
+            this.markers.push([address.idmember, marker]);
+          }),
+        )
+        .subscribe()
+        .add(() => {
+          this.ids_of_members_inside_circle = ids;
 
-        const pinScaled = new google.maps.marker.PinElement({
-          scale: 1.5,
+          // const pinScaled = new google.maps.marker.PinElement({
+          //   scale: 1.5,
+          // });
+          // this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
+          //   position: new google.maps.LatLng(
+          //     MapListComponent.LAT,
+          //     MapListComponent.LNG,
+          //   ),
+          //   map: this.map,
+          //   gmpDraggable: true,
+          //   content: pinScaled.element,
+          // });
+          // this.mapCentreMarker.addListener(
+          //   'dragend',
+          //   (event: google.maps.MapMouseEvent) =>
+          //     this.drawCircleOnDragend(event),
+          // );
+          // this.mapCentreMarker.map = this.map;
         });
-        this.mapCentreMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: new google.maps.LatLng(
-            MapListComponent.LAT,
-            MapListComponent.LNG,
-          ),
-          map: this.map,
-          gmpDraggable: true,
-          content: pinScaled.element,
-        });
-        this.mapCentreMarker.addListener(
-          'dragend',
-          (event: google.maps.MapMouseEvent) => this.drawCircleOnDragend(event),
-        );
-        this.mapCentreMarker.map = this.map;
-      });
+    }
   }
 
   /**
@@ -218,7 +228,7 @@ export class MapListComponent implements OnInit {
     if (event.latLng) {
       const lat = event.latLng.lat();
       const lng = event.latLng.lng();
-      const radius = parseInt(this.f['radius'].value);
+      const radius = parseInt(this.f['radius']!.value);
 
       this.replaceCircle(lat, lng, radius);
 
@@ -230,10 +240,9 @@ export class MapListComponent implements OnInit {
     if (center) {
       const lat = center.lat;
       const lng = center.lng;
-      const radius = parseInt(this.f['radius'].value);
+      const radius = parseInt(this.f['radius']!.value);
 
       this.replaceCircle(lat, lng, radius);
-
     }
   }
 
@@ -245,7 +254,6 @@ export class MapListComponent implements OnInit {
    * @param radius Radius of new circle
    */
   replaceCircle(lat: number, lng: number, radius: number) {
-
     // initialize the array again, clearing previous contents
     this.ids_of_members_inside_circle = new Array();
 

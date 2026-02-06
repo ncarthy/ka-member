@@ -8,12 +8,12 @@
     </button>
   </div>
 </div>
-<div #mapContainer style="width: 100%; height: 10px" class="mb-3"></div>
+<!--<div #mapContainer style="width: 100%; height: 10px" class="mb-3"></div>-->
 <ka-google-map
   [circle_radius]="radius"
   [inside_marker_positions]="inside_marker_positions"
   [outside_marker_positions]="outside_marker_positions"
-  (circle_center_point) = "onCircleCenterChanged($event)"
+  (circle_center_point)="onCircleCenterChanged($event)"
 ></ka-google-map>
 
 <form [formGroup]="form">
@@ -70,13 +70,13 @@
   }
 </form>
 
-@if (f["isEmailList"].value == false) {
+@if (f["isEmailList"] && f["isEmailList"].value == false) {
   <mailing-list
     [ids]="ids_of_members_inside_circle"
     (idSelected)="onIdSelected($event)"
   ></mailing-list>
 }
-@if (f["isEmailList"].value == true) {
+@if (f["isEmailList"] && f["isEmailList"].value == true) {
   <email-list
     [ids]="ids_of_members_inside_circle"
     (idSelected)="onIdSelected($event)"
