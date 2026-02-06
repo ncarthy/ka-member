@@ -22,7 +22,7 @@ import { Subscription } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CountryService, GeocodeService } from '@app/_services';
-import { Address, Country, GetAddressIOAddress } from '@app/_models';
+import { Address, Country } from '@app/_models';
 import { SearchBoxComponent } from './search-box.component';
 
 @Component({
@@ -45,7 +45,7 @@ export class AddressFormComponent
   @Input() address?: Address;
   @Input() primary: boolean = false;
 
-  addresses!: GetAddressIOAddress[]; // from the api
+  addresses!: Address[]; // from the api
   countries!: Country[];
   uk!: Country;
   loading: boolean = false; // set by 'address-search-box' component
@@ -54,7 +54,7 @@ export class AddressFormComponent
   submitted: boolean = false;
   showFormFields: boolean = false;
 
-  selectedAddress: GetAddressIOAddress | null = null;
+  selectedAddress: Address | null = null;
 
   addressForm!: FormGroup<any>;
 
@@ -66,7 +66,7 @@ export class AddressFormComponent
   constructor(
     private fb: UntypedFormBuilder,
     private countryService: CountryService,
-    private geocodeService: GeocodeService,
+    //private geocodeService: GeocodeService,
   ) { 
     this.uuid = uuidv4();
   }
@@ -147,25 +147,19 @@ export class AddressFormComponent
     this.onTouch = fn;
   }
 
-  updateAddresses(results: GetAddressIOAddress[]): void {
+  updateAddresses(results: Address[]): void {
     this.addresses = results;
   }
 
-  onAddressChange(address: any): void {
+  onAddressChange(address: Address): void {
     this.showFormFields = true;
-    this.addressForm.controls['addressfirstline'].setValue(address.line1);
-    this.addressForm.controls['addresssecondline'].setValue(address.line2);
-    this.addressForm.controls['city'].setValue(address.town);
+    this.addressForm.controls['addressfirstline'].setValue(address.addressfirstline);
+    this.addressForm.controls['addresssecondline'].setValue(address.addresssecondline);
+    this.addressForm.controls['city'].setValue(address.city);
     this.addressForm.controls['county'].setValue(address.county);
-    this.addressForm.controls['country'].setValue(address.country.id);
+    this.addressForm.controls['country'].setValue(address.country);
     this.addressForm.controls['postcode'].setValue(address.postcode);
-
-    let a = new Address(this.addressForm.value);
-    this.geocodeService.geocode(a).subscribe((new_address: Address) => {
-      if (new_address.lng && new_address.lat) {
-        this.addressForm.controls['lat'].setValue(new_address.lat);
-        this.addressForm.controls['lng'].setValue(new_address.lng);
-      }
-    });
+    this.addressForm.controls['lat'].setValue(address.lat);
+    this.addressForm.controls['lng'].setValue(address.lng);
   }
 }

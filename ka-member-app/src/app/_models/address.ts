@@ -1,13 +1,13 @@
 export class Address {
   idmember: number;
-  addressfirstline: string;
-  addresssecondline: string;
-  city: string;
-  county: string;
-  country: number;
-  postcode: string;
-  lat: number;
-  lng: number;
+  addressfirstline: string | null;
+  addresssecondline: string | null;
+  city: string | null;
+  county: string | null;
+  country: number | null;
+  postcode: string | null;
+  lat: number | null;
+  lng: number | null;
 
   constructor(obj?: any) {
     this.addressfirstline = (obj && obj.addressfirstline) || null;
@@ -36,7 +36,7 @@ export class Address {
 }
 
 export function AddresstoHTML(address: Address): string {
-  let s = address.addressfirstline;
+  let s = address.addressfirstline ?? '';
   if (address.addresssecondline) {
     s = s.concat(', ', address.addresssecondline);
   }

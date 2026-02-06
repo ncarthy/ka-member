@@ -1,10 +1,9 @@
-// The api key is a domain-specific token provided by GetAddress.io
-// Make sure you restrict its usage to the domain set via their dashboard
-// It is also throttled to 10 requests per 2 minutes 
+// This api key is url-limited to our domain, so it's safe to include in the frontend code
+// it also has daily usage limits, so we won't be charged if it's abused
 
 export const environment = {
   production: true,
   apiUrl: 'https://admin.knightsbridgeassociation.co.uk/api',
-  getaddressio_apikey: 'dtoken_hEDzcyiWMr27-K5l2o-iVPAl771sw2iT3cKER-Ul-27FezeacQ58aI1eyhADhPZyoHfyuboeWzqOTrTD2Akw7bXOWARuWvzErKaJMDHdGBLNCSYfa2XB5V8_KfBR8gFI_Hbo9V5IXemQu5VzK_pJsGS8t7DRQf3t-wKOtI4lPsWOCbEDajv-LyKNPIUzboUhsPq1YH0-Q6Qt9-VTu94It-tReb-Kpcif',
-  getaddressio_apiurl: 'https://api.getAddress.io/find/',
+  getaddressio_apikey: 'ak_mlaschr3keOcv8Bh3lojtHmnP0BUR',
+  getaddressio_apiurl: 'https://api.ideal-postcodes.co.uk/v1/postcodes/',
 };

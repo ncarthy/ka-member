@@ -28,7 +28,7 @@
       <option disabled selected [ngValue]="null">-- select an option --</option>
       @for (address of addresses; track address) {
         <option [ngValue]="address">
-          {{ address.line1+', '+address.line2  }}
+          {{ address.addressfirstline + ' ' +  (address.addresssecondline ?? '')  }}
         </option>
       }
     </select>

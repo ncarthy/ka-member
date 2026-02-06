@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GetAddressIOAddress } from '@app/_models';
+import { Address } from '@app/_models';
 
 /**
  * AddressSearchService connects to the GetAddress API
@@ -21,35 +21,30 @@ export class AddressSearchService {
     private http: HttpClient,
   ) {}
 
-  search(postcode: string): Observable<GetAddressIOAddress[]> {
-    var trimmed_postcode = postcode.replace(/\s/g, '');
+  search(postcode: string): Observable<Address[]> {
+    //var trimmed_postcode = postcode.replace(/\s/g, '');
 
-    const params: string = [
-      `api-key=${this.apiKey}`,
-      `expand=false`,
-      `format=true`,
-    ].join('&');
+    const params: string = `api_key=${this.apiKey}`;
 
-    const queryUrl = `${this.apiUrl}${trimmed_postcode}?${params}`;
+    const queryUrl = `${this.apiUrl}${postcode}?${params}`;
 
-    const addresses$: Observable<GetAddressIOAddress[]> = this.http
+    const addresses$: Observable<any[]> = this.http
       .get(queryUrl)
       .pipe(
         map((response: any) => {
-          return <GetAddressIOAddress[]>response['addresses'].map(
-            (item: string[]) => {
-              //console.log("raw item", item); // uncomment if you want to debug
-
+          return <any[]>response['result'].map(
+            (address:any) => {
               // Uses Partial<> to initialize object
               // See https://stackoverflow.com/a/37682352/6941165
-              return new GetAddressIOAddress({
-                line1: item[0],
-                line2: item[1],
-                line3: item[2],
-                town: item[3],
-                county: item[4],
-                postcode: this.restoreSpace(postcode.toUpperCase()),
-                country: { id: 186, name: 'United Kingdom' },
+              return new Address({
+                addressfirstline: address.line_1 ?? '',
+                addresssecondline: address.line_2 ?? '',                
+                city: address.post_town ?? '',
+                county: address.county ?? '',
+                postcode: address.postcode,
+                country: 186, // hardcoded to UK for now
+                lat: address.latitude,
+                lng: address.longitude,
               });
             },
           );
