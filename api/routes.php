@@ -213,4 +213,13 @@ $router->mount('/email', function () use ($router) {
     $router->post('/prepare_switchrequest', 'EmailCtl@prepare_switchrequest');
     $router->post('/send_switchrequest', 'EmailCtl@send_switchrequest');
 });
+/*****************/
+/* Webhook Routes */
+/*****************/
+$router->mount('/webhook', function () use ($router) {
+    // GoCardless webhook endpoint
+    $router->post('/gocardless', function () {
+        include 'webhooks/gocardless.php';
+    });
+});
 

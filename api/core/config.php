@@ -65,3 +65,6 @@ Config::write('em.user', 'member_admin+knightsbridgeassociation.com');
 Config::write('em.replyto', 'membership@knightsbridgeassociation.com');
 Config::write('em.password_envkeyname', 'EMAIL_PASSWORD');
 Config::write('em.secure', true);
+
+// gocardless
+Config::write('gocardless.webhook_secret', 'GOCARDLESS_WEBHOOK_SECRET');

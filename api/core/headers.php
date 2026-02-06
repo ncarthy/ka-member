@@ -42,6 +42,15 @@ class Headers
         return preg_match('/^user/', $path);
     }
 
+    public static function path_is_webhook($path = '')
+    {
+        if (empty($path)) {
+            $path = Headers::stripped_path();
+        }
+
+        return preg_match('/^webhook/', $path);
+    }
+
     public static function path_is_user_update($path)
     {
         return false;

@@ -29,6 +29,8 @@ include_once 'models/transaction.php';
 include_once 'models/transactions.php';
 include_once 'models/user.php';
 include_once 'models/usertoken.php';
+include_once 'models/webhook_log.php';
+include_once 'models/gocardless_webhook.php';
 include_once 'controllers/bank_account.controller.php';
 include_once 'controllers/country.controller.php';
 include_once 'controllers/email.controller.php';
@@ -41,6 +43,7 @@ include_once 'controllers/summary.controller.php';
 include_once 'controllers/transaction.controller.php';
 include_once 'controllers/transactions.controller.php';
 include_once 'controllers/user.controller.php';
+include_once 'controllers/webhook.controller.php';
 
 // Define routes
 require 'pre_routes.php'; // Comment this out remove auth on API

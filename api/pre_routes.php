@@ -30,13 +30,14 @@ $router->before('GET|POST|PUT|DELETE|PATCH', '/.*', function() {
     
     $path = Headers::stripped_path();
     $isAuthPath = Headers::path_is_auth($path);
+    $isWebhookPath = Headers::path_is_webhook($path);
     $isUserPath = Headers::path_is_user($path);
 
     // Add Headers to the reply
     Headers::getHeaders($isAuthPath);
 
-    // Don't do the logged-in check when it's an 'auth' path    
-    if ( !$isAuthPath ) {        
+    // Don't do the logged-in check when it's an 'auth' or 'webhook' path
+    if ( !$isAuthPath && !$isWebhookPath ) {        
         $jwt = new \Models\JWTWrapper();
 
         if(!$jwt->loggedIn){      
@@ -68,10 +69,11 @@ $router->before('POST|PUT|DELETE|PATCH', '/.*', function() {
 
     $path = Headers::stripped_path();
     $isAuthPath = Headers::path_is_auth($path);
-    $isUserUpdate = Headers::path_is_user($path);
+    $isWebhookPath = Headers::path_is_webhook($path);
+    //$isUserUpdate = Headers::path_is_user($path);
 
-    // Don't do the is-admin check when it's an 'auth' path    
-    if ( !$isAuthPath ) {
+    // Don't do the is-admin check when it's an 'auth' or 'webhook' path
+    if ( !$isAuthPath && !$isWebhookPath ) {
         $jwt = new \Models\JWTWrapper();
 
         // Allow user to maintain own data
