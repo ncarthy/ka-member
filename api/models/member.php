@@ -228,6 +228,82 @@ class Member{
             }
         }
 
+    /**
+     * Find member by mandate ID
+     * @param string $gc_mandate_id
+     * @return bool
+     */
+    public function findByMandateId($gc_mandate_id) {
+            $query = "SELECT
+                        idmember as `id`, title, businessname, bankpayerref, note, addressfirstline,
+                        addresssecondline, city, county, postcode, countryID, area, addressfirstline2,
+                        addresssecondline2, city2, county2, postcode2, country2ID, email1, email2,
+                        phone1, phone2, membership_idmembership as `statusID`, expirydate, joindate, 
+                        updatedate, deletedate, repeatpayment, recurringpayment, username, gdpr_email, 
+                        gdpr_tel, gdpr_address, gdpr_sm, reminderdate, postonhold, multiplier, membership_fee,
+                        gpslat1,gpslng1,gpslat2,gpslng2,emailonhold
+                        FROM
+                        " . $this->table_name . " 
+                  WHERE bankpayerref = :gc_mandate_id
+                  LIMIT 1";
+
+        $stmt = $this->conn->prepare($query);
+        $gc_mandate_id = htmlspecialchars(strip_tags($gc_mandate_id));
+        $stmt->bindParam(":gc_mandate_id", $gc_mandate_id);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            // set values to object properties
+            $this->id = $row['id'];
+            $this->title = $row['title'];
+            $this->businessname = $row['businessname'];
+            $this->bankpayerref = $row['bankpayerref'];
+            $this->note = $row['note'];
+            $this->addressfirstline = $row['addressfirstline'];
+            $this->addresssecondline = $row['addresssecondline'];
+            $this->city = $row['city'];
+            $this->county = $row['county'];
+            $this->postcode = $row['postcode'];
+            $this->countryID = $row['countryID'];
+            $this->area = $row['area'];
+            $this->email1 = $row['email1'];
+            $this->phone1 = $row['phone1'];
+            $this->addressfirstline2 = $row['addressfirstline2'];
+            $this->addresssecondline2 = $row['addresssecondline2'];
+            $this->city2 = $row['city2'];
+            $this->county2 = $row['county2'];
+            $this->postcode2 = $row['postcode2'];
+            $this->country2ID = $row['country2ID'];
+            $this->email2 = $row['email2'];
+            $this->phone2 = $row['phone2'];
+            $this->statusID = $row['statusID'];
+            $this->expirydate = $row['expirydate'];
+            $this->joindate = $row['joindate'];
+            $this->reminderdate = $row['reminderdate'];
+            $this->updatedate = $row['updatedate'];
+            $this->deletedate = $row['deletedate'];
+            $this->repeatpayment = $row['repeatpayment'];
+            $this->recurringpayment = $row['recurringpayment'];
+            $this->username = $row['username'];
+            $this->gdpr_email = $row['gdpr_email']?true:false;
+            $this->gdpr_tel = $row['gdpr_tel']?true:false;
+            $this->gdpr_address = $row['gdpr_address']?true:false;
+            $this->gdpr_sm = $row['gdpr_sm']?true:false;            
+            $this->postonhold = $row['postonhold']?true:false;
+            $this->emailonhold = $row['emailonhold']?true:false;
+            $this->multiplier = $row['multiplier'];
+            $this->membershipfee = $row['membership_fee'];
+            $this->gpslat1 = $row['gpslat1'];
+            $this->gpslat2 = $row['gpslat2'];
+            $this->gpslng1 = $row['gpslng1'];
+            $this->gpslng2 = $row['gpslng2'];
+            return true;
+        }
+
+        return false;
+    }        
+
     function create(){
         $query = "INSERT INTO
                     " . $this->table_name . "
