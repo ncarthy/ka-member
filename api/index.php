@@ -31,6 +31,7 @@ include_once 'models/user.php';
 include_once 'models/usertoken.php';
 include_once 'models/webhook_log.php';
 include_once 'models/gocardless_webhook.php';
+include_once 'models/subscription.php';
 include_once 'controllers/bank_account.controller.php';
 include_once 'controllers/country.controller.php';
 include_once 'controllers/email.controller.php';

@@ -221,5 +221,10 @@ $router->mount('/webhook', function () use ($router) {
     $router->post('/gocardless', function () {
         include 'webhooks/gocardless.php';
     });
+
+    // GoCardless webhook endpoint
+    $router->post('/gocardless', function () {
+        include 'webhooks/gocardless.php';
+    });
 });
 
