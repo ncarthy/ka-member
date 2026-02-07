@@ -46,9 +46,9 @@ class WebhookCtl {
             return;
         }
 
-        // Process events
+        // Process events (pass raw payload for logging)
         try {
-            $results = $webhook->processEvents($events);
+            $results = $webhook->processEvents($events, $payload);
 
             // Return success response
             http_response_code(200);

@@ -68,3 +68,4 @@ Config::write('em.secure', true);
 
 // gocardless
 Config::write('gocardless.webhook_secret', 'GOCARDLESS_WEBHOOK_SECRET');
+Config::write('gocardless.access_token', 'GOCARDLESS_ACCESS_TOKEN');
