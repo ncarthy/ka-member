@@ -71,6 +71,14 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
         $county = $customer->region ?? ''; // GoCardless uses 'region' for county/state
         $postcode = $customer->postal_code ?? '';
 
+        // Look up GPS coordinates from osdata table
+        $gps_coords = $this->lookupGPSCoordinates($postcode);
+        if ($gps_coords) {
+            error_log("Found GPS coordinates for postcode $postcode: lat={$gps_coords['lat']}, lng={$gps_coords['lng']}");
+        } else {
+            error_log("No GPS coordinates found for postcode: $postcode");
+        }
+
         // Create new member record using Member model
         $member = new Member();
 
@@ -114,9 +122,9 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
         $member->emailonhold = false;
         $member->multiplier = 1;
         $member->membershipfee = 0;
-        $member->gpslat1 = null;
+        $member->gpslat1 = $gps_coords['lat'] ?? null;
+        $member->gpslng1 = $gps_coords['lng'] ?? null;
         $member->gpslat2 = null;
-        $member->gpslng1 = null;
         $member->gpslng2 = null;
 
         if ($member->create()) {
@@ -150,6 +158,54 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
             ];
         } else {
             throw new \Exception('Failed to create member record using Member model');
+        }
+    }
+
+    /**
+     * Look up GPS coordinates from osdata table by postcode
+     * @param string $postcode Postcode with spaces (e.g., "SW1A 1AA")
+     * @return array|null ['lat' => float, 'lng' => float] or null if not found
+     */
+    protected function lookupGPSCoordinates($postcode) {
+        if (empty($postcode)) {
+            return null;
+        }
+
+        // Trim whitespace but preserve internal spaces
+        $postcode = trim($postcode);
+
+        try {
+            $query = "SELECT gpslat, gpslng
+                      FROM osdata
+                      WHERE postcode = :postcode
+                      LIMIT 1";
+
+            $stmt = $this->conn->prepare($query);
+
+            if (!$stmt) {
+                error_log("Failed to prepare osdata query: " . print_r($this->conn->errorInfo(), true));
+                return null;
+            }
+
+            $stmt->bindParam(':postcode', $postcode);
+
+            if (!$stmt->execute()) {
+                error_log("Failed to execute osdata query: " . print_r($stmt->errorInfo(), true));
+                return null;
+            }
+
+            if ($stmt->rowCount() > 0) {
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                return [
+                    'lat' => $row['gpslat'],
+                    'lng' => $row['gpslng']
+                ];
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            error_log("Error looking up GPS coordinates for postcode $postcode: " . $e->getMessage());
+            return null;
         }
     }
 }
