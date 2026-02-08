@@ -41,6 +41,31 @@ abstract class AbstractWebhookHandler {
     }
 
     /**
+     * Helper method to get default membership multiplier from subscription type.
+     * Different membership classes have different contributions to the membership total. Each 
+     * household member counts as 2 individual members, a corporate member counts as 4, a 
+     * individual member counts as 1. 
+     * @param string $subscription_type
+     * @return int Default to 1 if unknown type
+     */
+    protected function getDefaultMultiplierFromSubscriptionType($subscription_type) {
+        $mapping = [
+            'ka individual membership' => 1,   // Individual Member
+            'ka household membership' => 2,    // Household Member
+            'ka corporate membership' => 4,    // Corporate Member
+        ];
+
+        $lower_case_type = strtolower($subscription_type);
+
+        if (!isset($mapping[$lower_case_type])) {
+            error_log("Unknown subscription type: $subscription_type");
+            return 1; // Default to 1 if unknown type
+        }
+
+        return $mapping[$lower_case_type];
+    }
+
+    /**
      * Helper method to get Mandate details from GoCardless API
      * @param mixed $mandate_id 
      * @return mixed 

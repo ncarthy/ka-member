@@ -31,6 +31,7 @@ class SubscriptionCreatedHandler extends AbstractWebhookHandler {
         $mandate_id = $subscription->links->mandate ?? '';
         $subscription_type = $subscription->name ?? 'Unknown';
         $membershiptype_id = $this->getMembershipStatusFromSubscriptionType($subscription_type);
+        $multiplier = $this->getDefaultMultiplierFromSubscriptionType($subscription_type);
 
         // Step 2: Fetch mandate details from GoCardless API, to get customer ID
         $mandate = $this->getMandateDetails($mandate_id);
@@ -74,11 +75,12 @@ class SubscriptionCreatedHandler extends AbstractWebhookHandler {
             throw new \Exception('Missing member ID in subscription model');
         }
 
-        // Step 5: Update membership type based on subscription type
+        // Step 5: Update membership type and multiplier based on subscription type
         try {
             $member->statusID = $membershiptype_id;
+            $member->multiplier = $multiplier;
             $member->update();
-            error_log("Updated member $member_id membership status to $membershiptype_id");
+            error_log("Updated member $member_id membership status, multiplier");
         } catch (\Exception $e) {
             throw new \Exception("Failed to update member status: " . $e->getMessage());
         }

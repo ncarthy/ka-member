@@ -1,6 +1,7 @@
 <?php
 namespace WebhookHandlers;
 
+use \Models\Country;
 use \Models\Member;
 use \Models\MemberName;
 
@@ -42,16 +43,21 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
         $family_name = $customer->family_name ?? '';
         $company_name = $customer->company_name ?? '';
         $email = $customer->email ?? '';
+        $country_code = $customer->country_code ?? '';
 
-        // Determine display name (company name takes precedence, then full name)
-        if (!empty($company_name)) {
-            $display_name = $company_name;
-        } else {
-            $display_name = trim("$given_name $family_name");
+        try {
+            $country = Country::getInstance()->setCode($country_code)->readOne();
+            $country_id = $country['id'] ?? 0;
+            if ($country_id === 0) {
+                throw new \Exception("No matching country found for code: $country_code");
+            }
+            error_log("Fetched country $country_code from database for customer $customer_id");
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to fetch country from database: " . $e->getMessage());
         }
 
-        if (empty($company_name) && empty($display_name)) {
-            throw new \Exception('Missing customer name and/or Business Name in GoCardless data');
+        if (empty($company_name) && empty($given_name) && empty($family_name)) {
+            throw new \Exception('Missing customer name and Given and Family Name in GoCardless data');
         }
 
         if (empty($email)) {
@@ -69,7 +75,7 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
         $member = new Member();
 
         // Set required fields
-        $member->businessname = $display_name;
+        $member->businessname = $company_name;
         $member->bankpayerref = $mandate_id;
         $member->email1 = $email;
         $member->addressfirstline = $address_line1;
@@ -77,6 +83,7 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
         $member->city = $city;
         $member->county = $county;
         $member->postcode = $postcode;
+        $member->countryID = $country_id;
         $member->joindate = date('Y-m-d'); // CURDATE() equivalent
         $member->username = 'gocardless_webhook';
         $member->statusID = self::PENDING_MEMBERSHIP_STATUS_ID;
@@ -84,7 +91,6 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
         // Set default values for other fields
         $member->title = '';
         $member->note = '';
-        $member->countryID = 0;
         $member->area = '';
         $member->phone1 = '';
         $member->addressfirstline2 = '';
