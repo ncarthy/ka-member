@@ -221,10 +221,15 @@ $router->mount('/webhook', function () use ($router) {
     $router->post('/gocardless', function () {
         include 'webhooks/gocardless.php';
     });
+});
 
-    // GoCardless webhook endpoint
-    $router->post('/gocardless', function () {
-        include 'webhooks/gocardless.php';
-    });
+/****************************/
+/* Webhook Processor Routes */
+/* (Authenticated)          */
+/****************************/
+$router->mount('/queue', function () use ($router) {
+    $router->post('/process', 'WebhookProcessorCtl@process');
+    $router->get('/stats', 'WebhookProcessorCtl@stats');
+    $router->post('/reset-stuck', 'WebhookProcessorCtl@resetStuck');
 });
 

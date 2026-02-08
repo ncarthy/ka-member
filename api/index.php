@@ -52,6 +52,7 @@ include_once 'controllers/transaction.controller.php';
 include_once 'controllers/transactions.controller.php';
 include_once 'controllers/user.controller.php';
 include_once 'controllers/webhook.controller.php';
+include_once 'controllers/webhook_processor.controller.php';
 
 // Define routes
 require 'pre_routes.php'; // Comment this out remove auth on API

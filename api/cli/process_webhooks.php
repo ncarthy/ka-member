@@ -27,6 +27,9 @@ if (php_sapi_name() !== 'cli') {
     die("Error: This script must be run from the command line.\n");
 }
 
+// Load environment variables for CLI (not available from .htaccess)
+require_once __DIR__ . '/env_loader.php';
+
 // Include necessary files
 require_once dirname(__DIR__) . '/core/database.php';
 require_once dirname(__DIR__) . '/core/config.php';

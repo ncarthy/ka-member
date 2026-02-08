@@ -1,6 +1,7 @@
 /vendor/
 /.postman/
 test.php
+.env
 
 # Add these to the repo
 !/vendor/ultimate-email/
