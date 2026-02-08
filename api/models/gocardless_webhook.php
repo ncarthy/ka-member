@@ -21,15 +21,18 @@ class GoCardlessWebhook {
     public function __construct(){
         $this->conn = \Core\Database::getInstance()->conn;
         $this->webhook_secret = getenv(\Core\Config::read('gocardless.webhook_secret'));
-        $access_token = getenv(\Core\Config::read('gocardless.access_token'));
-        $this->client = new \GoCardlessPro\Client([
-            'access_token' => $access_token,
-            'environment'  => \GoCardlessPro\Environment::SANDBOX
-        ]);
-
         if (empty($this->webhook_secret)) {
             error_log('GoCardless webhook secret not configured');
         }
+
+        // Initialize GoCardless client
+        $access_token = getenv(\Core\Config::read('gocardless.access_token'));
+        $environment = \Core\Config::read('gocardless.environment') ?? 'sandbox';
+        $this->client = new \GoCardlessPro\Client([
+            'access_token' => $access_token,
+            'environment'  => $environment === 'live' ? \GoCardlessPro\Environment::LIVE : \GoCardlessPro\Environment::SANDBOX
+        ]);
+
     }
 
     /**
