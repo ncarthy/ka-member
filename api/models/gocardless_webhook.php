@@ -141,10 +141,10 @@ class GoCardlessWebhook {
     public function getHandlerForEvent($resource_type, $action) {
         if ($resource_type === 'mandates' && $action === 'created') {
             return new MandateCreatedHandler($this->conn, $this->client);
-        } elseif ($resource_type === 'payments' && $action === 'confirmed') {
-            return new PaymentCreatedHandler($this->conn, $this->client);
         } elseif ($resource_type === 'subscriptions' && $action === 'created') {
             return new SubscriptionCreatedHandler($this->conn, $this->client);
+        } elseif ($resource_type === 'payments' && $action === 'created') {
+            return new PaymentCreatedHandler($this->conn, $this->client);
         } elseif ($resource_type === 'subscriptions' && in_array($action, ['cancelled', 'failed', 'expired'])) {
             return new SubscriptionTerminatedHandler($this->conn, $this->client);
         }

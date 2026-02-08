@@ -96,4 +96,36 @@ abstract class AbstractWebhookHandler {
             throw new \Exception("Failed to fetch customer from GoCardless API: " . $e->getMessage());
         }
     }
+
+        /**
+     * Helper method to get Payment details from GoCardless API
+     * @param mixed $payment_id 
+     * @return mixed 
+     * @throws mixed 
+     */
+    protected function getPaymentDetails($payment_id) {
+        try {
+            $payment = $this->client->payments()->get($payment_id);
+            error_log("Fetched payment $payment_id from GoCardless API");
+            return $payment;
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to fetch payment from GoCardless API: " . $e->getMessage());
+        }
+    }
+
+        /**
+     * Helper method to get Subscription details from GoCardless API
+     * @param mixed $subscription_id 
+     * @return mixed 
+     * @throws mixed 
+     */
+    protected function getSubscriptionDetails($subscription_id) {
+        try {
+            $subscription = $this->client->subscriptions()->get($subscription_id);
+            error_log("Fetched subscription $subscription_id from GoCardless API");
+            return $subscription;
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to fetch subscription from GoCardless API: " . $e->getMessage());
+        }
+    }    
 }

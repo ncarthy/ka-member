@@ -16,17 +16,25 @@ class PaymentCreatedHandler extends AbstractWebhookHandler {
      */
     public function handle($event, $webhook_log) {
         $payment_id = $event->links->payment ?? null;
-        $mandate_id = $event->links->mandate ?? null;
-        $amount_pence = $event->details->amount ?? null;
+        $subscription_id = $event->links->subscription ?? null;
 
-        if (empty($payment_id) || empty($mandate_id) || $amount_pence === null) {
+        if (empty($payment_id) || empty($subscription_id)) {
             throw new \Exception('Missing required payment data');
         }
 
-        // Find member by mandate ID (bankpayerref)
-        $member_query = "SELECT idmember
-                         FROM member
-                         WHERE bankpayerref = :mandate_id
+        $payment = $this->getPaymentDetails($payment_id);
+        $amount_pence = $payment->amount ?? null;
+        $charge_date = $payment->charge_date ?? date('Y-m-d');
+        $mandate_id = $payment->links->mandate ?? null;
+
+        if (empty($mandate_id)) {
+            throw new \Exception('Missing required mandate ID in payment data');
+        }
+
+        // Find member by mandate ID
+        $member_query = "SELECT member_idmember
+                         FROM subscription
+                         WHERE 	gc_mandate_id  = :mandate_id
                          LIMIT 1";
 
         $stmt = $this->conn->prepare($member_query);
@@ -49,7 +57,10 @@ class PaymentCreatedHandler extends AbstractWebhookHandler {
         }
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $member_id = $row['idmember'];
+        $member_id = $row['member_idmember'];
+        if (empty($member_id)) {
+            throw new \Exception("No member found with mandate ID: $mandate_id");
+        }
 
         // Check for duplicate transaction
         $dup_check_query = "SELECT idtransaction
@@ -85,14 +96,14 @@ class PaymentCreatedHandler extends AbstractWebhookHandler {
         }
 
         // Convert amount from pence to pounds
-        $amount_pounds = $amount_pence / 100;
+        $amount_pounds = round($amount_pence / 100 , 2);
 
         // Create transaction note
         $note = "GoCardless payment $payment_id";
 
         // Insert transaction
         $trans_query = "INSERT INTO transaction
-                        SET date = CURDATE(),
+                        SET date = :charge_date,
                             amount = :amount,
                             note = :note,
                             member_idmember = :member_id,
@@ -107,6 +118,8 @@ class PaymentCreatedHandler extends AbstractWebhookHandler {
         }
 
         $note_clean = htmlspecialchars(strip_tags($note));
+        $date_clean = htmlspecialchars(strip_tags($charge_date));
+        $stmt->bindParam(":charge_date", $date_clean);
         $stmt->bindParam(":amount", $amount_pounds);
         $stmt->bindParam(":note", $note_clean);
         $stmt->bindParam(":member_id", $member_id);
