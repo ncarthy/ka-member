@@ -34,11 +34,12 @@ class PaymentCreatedHandler extends AbstractWebhookHandler {
         }
 
         $note_clean = htmlspecialchars(strip_tags("GoCardless payment $payment_id"));
+        if (empty($note_clean)) {
+            throw new \Exception('Note is empty after sanitization');
+        }
         $stmt->bindParam(":note", $note_clean);
 
         if (!$stmt->execute()) {
-
-
             return [
                 'event_id' => $event->id,
                 'status' => 'success',
