@@ -138,7 +138,7 @@ class GoCardlessWebhook {
      * @param string $action
      * @return \WebhookHandlers\AbstractWebhookHandler|null
      */
-    private function getHandlerForEvent($resource_type, $action) {
+    public function getHandlerForEvent($resource_type, $action) {
         if ($resource_type === 'mandates' && $action === 'created') {
             return new MandateCreatedHandler($this->conn, $this->client);
         } elseif ($resource_type === 'payments' && $action === 'confirmed') {
