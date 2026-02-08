@@ -28,6 +28,8 @@ abstract class AbstractWebhookHandler {
             'ka individual membership' => 2,   // Individual Member
             'ka household membership' => 3,    // Household Member
             'ka corporate membership' => 4,    // Corporate Member
+            'ka lifetime membership' => 5,     // Lifetime Member
+            'ka honorary membership' => 6,     // Honorary Member
         ];
 
         $lower_case_type = strtolower($subscription_type);
@@ -43,7 +45,7 @@ abstract class AbstractWebhookHandler {
     /**
      * Helper method to get default membership multiplier from subscription type.
      * Different membership classes have different contributions to the membership total. Each 
-     * household member counts as 2 individual members, a corporate member counts as 4, a 
+     * household member counts as 2 individual members, a corporate member counts as 4, an 
      * individual member counts as 1. 
      * @param string $subscription_type
      * @return int Default to 1 if unknown type
@@ -53,6 +55,8 @@ abstract class AbstractWebhookHandler {
             'ka individual membership' => 1,   // Individual Member
             'ka household membership' => 2,    // Household Member
             'ka corporate membership' => 4,    // Corporate Member
+            'ka lifetime membership' => 1,     // Lifetime Member
+            'ka honorary membership' => 1,     // Honorary Member
         ];
 
         $lower_case_type = strtolower($subscription_type);
