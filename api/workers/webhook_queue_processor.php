@@ -91,7 +91,25 @@ class WebhookQueueProcessor {
                 );
 
                 if (!$handler) {
-                    throw new \Exception("No handler found for {$queued_event['resource_type']}.{$queued_event['action']}");
+                    // No handler for this event type - mark as completed (not failed)
+                    $error_message = "No handler found for {$queued_event['resource_type']}.{$queued_event['action']}";
+                    echo "$error_message\n";
+                    error_log($error_message);
+
+                    // Update webhook_queue with error message but mark as completed
+                    $update_query = "UPDATE webhook_queue
+                                    SET status = 'completed',
+                                        completed_at = NOW(),
+                                        error_message = :error_message
+                                    WHERE idwebhook_queue = :id";
+                    $stmt = $this->conn->prepare($update_query);
+                    $stmt->bindParam(':id', $queue_id, \PDO::PARAM_INT);
+                    $stmt->bindParam(':error_message', $error_message);
+                    $stmt->execute();
+
+                    echo "Event $event_id marked as completed (no handler available).\n";
+                    $stats['processed']++;
+                    continue; // Skip to next event
                 }
 
                 // Process the event
