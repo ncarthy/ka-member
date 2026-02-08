@@ -12,22 +12,11 @@ use \Models\GoCardlessWebhook;
 class WebhookQueueProcessor {
 
     private $conn;
-    private $client;
     private $webhook_queue;
     private $gocardless_webhook;
 
     public function __construct() {
         $this->conn = \Core\Database::getInstance()->conn;
-
-        // Initialize GoCardless client
-        $access_token = \Core\Config::read('gocardless.access_token');
-        $environment = \Core\Config::read('gocardless.environment') ?? 'sandbox';
-
-        $this->client = new \GoCardlessPro\Client([
-            'access_token' => $access_token,
-            'environment' => $environment === 'live' ? \GoCardlessPro\Environment::LIVE : \GoCardlessPro\Environment::SANDBOX
-        ]);
-
         $this->webhook_queue = new WebhookQueue();
         $this->gocardless_webhook = new GoCardlessWebhook();
     }
@@ -189,9 +178,9 @@ class WebhookQueueProcessor {
      * @return int Number of events reset
      */
     public function resetStuckEvents($timeout_minutes = 30) {
-        echo "Resetting stuck events (timeout: $timeout_minutes minutes)...\n";
+        error_log( "Resetting stuck events (timeout: $timeout_minutes minutes)...");
         $count = $this->webhook_queue->resetStuckEvents($timeout_minutes);
-        echo "Reset $count stuck events.\n";
+        error_log( "Reset $count stuck events.");
         return $count;
     }
 
