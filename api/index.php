@@ -35,6 +35,7 @@ include_once 'models/gocardless_webhook.php';
 include_once 'models/subscription.php';
 include_once 'webhook_handlers/abstract_webhook_handler.php';
 include_once 'webhook_handlers/mandate_created_handler.php';
+include_once 'webhook_handlers/payment_cancelled_handler.php';
 include_once 'webhook_handlers/payment_created_handler.php';
 include_once 'webhook_handlers/subscription_created_handler.php';
 include_once 'webhook_handlers/subscription_terminated_handler.php';
