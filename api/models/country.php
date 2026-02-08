@@ -9,19 +9,83 @@ class Country{
     private $table_id = "id";
 
     // object properties
-    public $id;
-    public $name;
+    protected int $id;
+    protected string $name;
+    protected string $code;
 
-    public function __construct(){
+    /**
+     * Id setter
+     */
+    public function setId(string $id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * ID getter.
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }    
+
+    /**
+     * Name setter
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Name getter.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }  
+
+    /**
+     * ISO Code setter
+     */
+    public function setCode(string $code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * ISO Code getter.
+     */
+    public function getCode(): string
+    {
+        return $this->code;
+    }  
+
+    /**
+     * Constructor
+     */
+    protected function __construct()
+    {
         $this->conn = \Core\Database::getInstance()->conn;
     }
+
+    /**
+     * Static constructor / factory
+     */
+    public static function getInstance()
+    {
+        return new self();
+    }    
 
     // used by select drop-down list
     public function read(){
 
         //select all data
         $query = "SELECT
-                    " . $this->table_id ." as `id`, `name`
+                    " . $this->table_id ." as `id`, `name`, `ISO3166`
                 FROM
                     " . $this->table_name . "
                 ORDER BY ". $this->table_id;
@@ -47,7 +111,8 @@ class Country{
             
                     $item=array(
                         "id" => $id,
-                        "name" => $name
+                        "name" => $name,
+                        "code" => $ISO3166
                     );
 
                     $item_arr[] = $item;
@@ -61,15 +126,18 @@ class Country{
 
             //select data for one item using PK of table
             $query = "SELECT
-                        " . $this->table_id ." as `id`, `name`
+                        " . $this->table_id ." as `id`, `name`, `ISO3166`
                     FROM
                         " . $this->table_name . "
                         WHERE "; 
 
             // WHERE clause depends on parameters
-            if($this->name) {
+            if(isset($this->name) && !empty($this->name)) {
                 $query .= "LOWER(name) LIKE :name ";
-            }            
+            }
+            else if (isset($this->code) && !empty($this->code)) {
+                $query .= "ISO3166 = :code ";
+            }        
             else {
                 $query .= $this->table_id ." = :id ";
             }
@@ -78,9 +146,13 @@ class Country{
             // prepare query statement
             $stmt = $this->conn->prepare($query);      
 
-            if($this->name) {
+            if(isset($this->name) && !empty($this->name)) {
                 $name = htmlspecialchars(strip_tags($this->name)).'%';
                 $stmt->bindParam (":name", $name, PDO::PARAM_STR);
+            }
+            else if (isset($this->code) && !empty($this->code)) {
+                $id = htmlspecialchars(strip_tags($this->code));
+                $stmt->bindParam (":code", $id, PDO::PARAM_STR);
             }
             else {
                 $id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
@@ -95,10 +167,12 @@ class Country{
             // set values to object properties
             $this->id = $row['id'];
             $this->name = $row['name'];
+            $this->code = $row['ISO3166'];
             // create array
             $item = array(
                 "id" => $this->id,
-                "name" => $this->name    
+                "name" => $this->name,
+                "code" => $this->code  
             );
 
             return $item;
