@@ -14,11 +14,13 @@ class WebhookQueueProcessor {
     private $conn;
     private $webhook_queue;
     private $gocardless_webhook;
+    private $quiet;
 
-    public function __construct() {
+    public function __construct($quiet = false) {
         $this->conn = \Core\Database::getInstance()->conn;
         $this->webhook_queue = new WebhookQueue();
         $this->gocardless_webhook = new GoCardlessWebhook();
+        $this->quiet = $quiet;
     }
 
     /**
@@ -33,21 +35,29 @@ class WebhookQueueProcessor {
             'skipped' => 0
         ];
 
-        echo "Fetching up to $batch_size pending events...\n";
+        if (!$this->quiet) {
+            echo "Fetching up to $batch_size pending events...\n";
+        }
         $events = $this->webhook_queue->fetchPendingEvents($batch_size);
 
         if (empty($events)) {
-            echo "No pending events found.\n";
+            if (!$this->quiet) {
+                echo "No pending events found.\n";
+            }
             return $stats;
         }
 
-        echo "Found " . count($events) . " pending events.\n";
+        if (!$this->quiet) {
+            echo "Found " . count($events) . " pending events.\n";
+        }
 
         foreach ($events as $queued_event) {
             $event_id = $queued_event['event_id'];
             $queue_id = $queued_event['id'];
 
-            echo "\nProcessing event $event_id (queue ID: $queue_id)...\n";
+            if (!$this->quiet) {
+                echo "\nProcessing event $event_id (queue ID: $queue_id)...\n";
+            }
 
             // Mark as processing
             if (!$this->webhook_queue->markAsProcessing($queue_id)) {
@@ -96,18 +106,24 @@ class WebhookQueueProcessor {
                     $stmt->bindParam(':error_message', $error_message);
                     $stmt->execute();
 
-                    echo "Event $event_id marked as completed (no handler available).\n";
+                    if (!$this->quiet) {
+                        echo "Event $event_id marked as completed (no handler available).\n";
+                    }
                     $stats['processed']++;
                     continue; // Skip to next event
                 }
 
                 // Process the event
-                echo "Executing handler for {$queued_event['resource_type']}.{$queued_event['action']}...\n";
+                if (!$this->quiet) {
+                    echo "Executing handler for {$queued_event['resource_type']}.{$queued_event['action']}...\n";
+                }
                 $result = $handler->handle($event, $webhook_log);
 
                 // Mark as completed
                 if ($this->webhook_queue->markAsCompleted($queue_id)) {
-                    echo "Event $event_id processed successfully.\n";
+                    if (!$this->quiet) {
+                        echo "Event $event_id processed successfully.\n";
+                    }
                     $stats['processed']++;
                 } else {
                     echo "Warning: Event processed but failed to mark as completed.\n";
@@ -207,46 +223,59 @@ class WebhookQueueProcessor {
     public function run($batch_size = 10, $sleep_seconds = 10, $max_iterations = 0) {
         $iteration = 0;
 
-        echo "Starting webhook queue processor...\n";
-        echo "Batch size: $batch_size, Sleep: {$sleep_seconds}s\n";
-        if ($max_iterations > 0) {
-            echo "Max iterations: $max_iterations\n";
-        } else {
-            echo "Running continuously (Ctrl+C to stop)\n";
+        if (!$this->quiet) {
+            echo "Starting webhook queue processor...\n";
+            echo "Batch size: $batch_size, Sleep: {$sleep_seconds}s\n";
+            if ($max_iterations > 0) {
+                echo "Max iterations: $max_iterations\n";
+            } else {
+                echo "Running continuously (Ctrl+C to stop)\n";
+            }
+            echo "\n";
         }
-        echo "\n";
 
         while (true) {
             $iteration++;
 
-            echo "\n--- Iteration $iteration ---\n";
+            if (!$this->quiet) {
+                echo "\n--- Iteration $iteration ---\n";
+            }
 
             // Reset stuck events every 10 iterations
             if ($iteration % 10 === 0) {
                 $this->resetStuckEvents();
             }
 
-            // Display stats every 5 iterations
-            if ($iteration % 5 === 0) {
+            // Display stats every 5 iterations (skip in quiet mode)
+            if (!$this->quiet && $iteration % 5 === 0) {
                 $this->displayStats();
             }
 
             // Process pending events
             $stats = $this->processPendingEvents($batch_size);
 
-            echo "\nBatch results: {$stats['processed']} processed, {$stats['failed']} failed, {$stats['skipped']} skipped\n";
+            // In quiet mode, only show batch results if there were failures or skipped events
+            if (!$this->quiet || $stats['failed'] > 0 || $stats['skipped'] > 0) {
+                echo "\nBatch results: {$stats['processed']} processed, {$stats['failed']} failed, {$stats['skipped']} skipped\n";
+            }
 
             // Check if we've reached max iterations
             if ($max_iterations > 0 && $iteration >= $max_iterations) {
-                echo "\nReached max iterations ($max_iterations), stopping.\n";
+                if (!$this->quiet) {
+                    echo "\nReached max iterations ($max_iterations), stopping.\n";
+                }
                 break;
             }
 
             // Sleep before next batch
-            echo "Sleeping for {$sleep_seconds}s...\n";
+            if (!$this->quiet) {
+                echo "Sleeping for {$sleep_seconds}s...\n";
+            }
             sleep($sleep_seconds);
         }
 
-        echo "\nWebhook queue processor stopped.\n";
+        if (!$this->quiet) {
+            echo "\nWebhook queue processor stopped.\n";
+        }
     }
 }

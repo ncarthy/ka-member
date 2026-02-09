@@ -10,6 +10,7 @@
  *   --sleep=N           Seconds to sleep between batches (default: 10)
  *   --iterations=N      Maximum iterations (default: 0 = infinite)
  *   --once              Process one batch and exit (same as --iterations=1)
+ *   --quiet             Only output errors and failures (suppress normal output)
  *   --reset-stuck       Reset stuck events and exit
  *   --stats             Show queue statistics and exit
  *   --help              Show this help message
@@ -18,6 +19,7 @@
  *   php process_webhooks.php                    # Run continuously
  *   php process_webhooks.php --once             # Process one batch
  *   php process_webhooks.php --iterations=5     # Run 5 iterations
+ *   php process_webhooks.php --quiet            # Run quietly (errors only)
  *   php process_webhooks.php --reset-stuck      # Reset stuck events
  *   php process_webhooks.php --stats            # Show statistics
  */
@@ -60,6 +62,7 @@ $options = getopt('', [
     'sleep:',
     'iterations:',
     'once',
+    'quiet',
     'reset-stuck',
     'stats',
     'help'
@@ -72,7 +75,9 @@ if (isset($options['help'])) {
 }
 
 try {
-    $processor = new \Workers\WebhookQueueProcessor();
+    // Check for quiet mode
+    $quiet = isset($options['quiet']);
+    $processor = new \Workers\WebhookQueueProcessor($quiet);
 
     // Handle special commands
     if (isset($options['stats'])) {
@@ -132,6 +137,7 @@ Options:
   --sleep=N           Seconds to sleep between batches (default: 10)
   --iterations=N      Maximum iterations (default: 0 = infinite)
   --once              Process one batch and exit (same as --iterations=1)
+  --quiet             Only output errors and failures (suppress normal output)
   --reset-stuck       Reset stuck events and exit
   --stats             Show queue statistics and exit
   --help              Show this help message
@@ -150,6 +156,9 @@ Examples:
   # Process with faster polling
   php process_webhooks.php --sleep=5
 
+  # Run quietly (only show errors and failures)
+  php process_webhooks.php --quiet
+
   # Reset stuck events (been processing for >30 minutes)
   php process_webhooks.php --reset-stuck
 
@@ -162,8 +171,8 @@ Setup:
   2. Configure GoCardless credentials in environment
   3. Run this script via cron or supervisord for production
 
-Cron Example (run every minute):
-  * * * * * cd /path/to/api && php cli/process_webhooks.php --once
+Cron Example (run every minute, quietly):
+  * * * * * cd /path/to/api && php cli/process_webhooks.php --once --quiet
 
 Supervisord Example:
   [program:webhook_processor]
