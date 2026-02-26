@@ -2,11 +2,11 @@
 namespace Models;
 use \PDO;
 
-class Subscription {
+class Mandate {
     // database conn
     private $conn;
     // table name
-    private $table_name = "subscription";
+    private $table_name = "gocardless_mandate";
 
     // object properties
     public $id;
@@ -22,7 +22,7 @@ class Subscription {
     }
 
     /**
-     * Create a new subscription record
+     * Create a new mandate record
      * @return bool
      */
     public function create() {
@@ -64,12 +64,12 @@ class Subscription {
     }
 
     /**
-     * Find subscription by GoCardless subscription ID
+     * Find mandate by GoCardless subscription ID
      * @param string $gc_subscriptionid
      * @return bool
      */
     public function findByGCSubscriptionId($gc_subscriptionid) {
-        $query = "SELECT idsubscription, member_idmember, gc_mandate_id,
+        $query = "SELECT idmandate, member_idmember, gc_mandate_id,
                          gc_customer_id, gc_subscriptionid, created_at, updated_at
                   FROM " . $this->table_name . "
                   WHERE gc_subscriptionid = :gc_subscriptionid
@@ -82,7 +82,7 @@ class Subscription {
 
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->id = $row['idsubscription'];
+            $this->id = $row['idmandate'];
             $this->idmember = $row['member_idmember'];
             $this->gc_mandate_id = $row['gc_mandate_id'];
             $this->gc_customer_id = $row['gc_customer_id'];
@@ -96,12 +96,12 @@ class Subscription {
     }
 
     /**
-     * Find subscription by member ID
+     * Find mandate by member ID, return 'false' if no mandate exists for that member
      * @param int $member_id
-     * @return array|false Array of subscriptions or false
+     * @return array|false Array of mandates or false
      */
     public function findByMemberId($member_id) {
-        $query = "SELECT idsubscription, member_idmember, gc_mandate_id,
+        $query = "SELECT idmandate, member_idmember, gc_mandate_id,
                          gc_customer_id, gc_subscriptionid, created_at, updated_at
                   FROM " . $this->table_name . "
                   WHERE member_idmember = :member_id";
@@ -115,7 +115,7 @@ class Subscription {
             $subscriptions = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $subscriptions[] = [
-                    'id' => $row['idsubscription'],
+                    'id' => $row['idmandate'],
                     'idmember' => $row['member_idmember'],
                     'gc_mandate_id' => $row['gc_mandate_id'],
                     'gc_customer_id' => $row['gc_customer_id'],
@@ -131,12 +131,12 @@ class Subscription {
     }
 
     /**
-     * Find subscription by mandate ID
+     * Find mandate by mandate ID, return 'false' if no mandate exists for that member
      * @param string $gc_mandate_id
      * @return bool
      */
     public function findByMandateId($gc_mandate_id) {
-        $query = "SELECT idsubscription, member_idmember, gc_mandate_id,
+        $query = "SELECT idmandate, member_idmember, gc_mandate_id,
                          gc_customer_id, gc_subscriptionid, created_at, updated_at
                   FROM " . $this->table_name . "
                   WHERE gc_mandate_id = :gc_mandate_id
@@ -149,7 +149,7 @@ class Subscription {
 
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->id = $row['idsubscription'];
+            $this->id = $row['idmandate'];
             $this->idmember = $row['member_idmember'];
             $this->gc_mandate_id = $row['gc_mandate_id'];
             $this->gc_customer_id = $row['gc_customer_id'];
@@ -163,7 +163,7 @@ class Subscription {
     }
 
     /**
-     * Update subscription record
+     * Update mandate record
      * @return bool
      */
     public function update() {
@@ -172,7 +172,7 @@ class Subscription {
                       gc_mandate_id = :gc_mandate_id,
                       gc_customer_id = :gc_customer_id,
                       gc_subscriptionid = :gc_subscriptionid
-                  WHERE idsubscription = :id";
+                  WHERE idmandate = :id";
 
         $stmt = $this->conn->prepare($query);
 
@@ -199,7 +199,7 @@ class Subscription {
      */
     public function delete() {
         $query = "DELETE FROM " . $this->table_name . "
-                  WHERE idsubscription = :id";
+                  WHERE idmandate = :id";
 
         $stmt = $this->conn->prepare($query);
         $this->id = filter_var($this->id, FILTER_SANITIZE_NUMBER_INT);
@@ -209,21 +209,27 @@ class Subscription {
     }
 
     /**
-     * Check if a subscription exists by GoCardless subscription ID
-     * @param string $gc_subscriptionid
+     * Check if a mandate exists by GoCardless mandate ID
+     * @param string $gc_mandate_id
      * @return bool
      */
-    public function exists($gc_subscriptionid) {
-        $query = "SELECT idsubscription
+    public function exists($gc_mandate_id) {
+        $query = "SELECT idmandate
                   FROM " . $this->table_name . "
-                  WHERE gc_subscriptionid = :gc_subscriptionid
+                  WHERE gc_mandate_id = :gc_mandate_id
                   LIMIT 1";
 
         $stmt = $this->conn->prepare($query);
-        $gc_subscriptionid = htmlspecialchars(strip_tags($gc_subscriptionid));
-        $stmt->bindParam(":gc_subscriptionid", $gc_subscriptionid);
+        $gc_mandate_id = htmlspecialchars(strip_tags($gc_mandate_id));
+        $stmt->bindParam(":gc_mandate_id", $gc_mandate_id);
         $stmt->execute();
 
-        return $stmt->rowCount() > 0;
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->id = $row['idmandate'];
+            return true;
+        }
+
+        return false;
     }
 }

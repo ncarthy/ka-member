@@ -16,12 +16,12 @@ class PaymentCreatedHandler extends AbstractWebhookHandler {
      */
     public function handle($event, $webhook_log) {
         $payment_id = $event->links->payment ?? null;
-        $subscription_id = $event->links->subscription ?? null;
 
-        if (empty($payment_id) || empty($subscription_id)) {
+        if (empty($payment_id)) {
             throw new \Exception('Missing required payment data');
         }
 
+        // Payment details from GoCardless api
         $payment = $this->getPaymentDetails($payment_id);
         $amount_pence = $payment->amount ?? null;
         $charge_date = $payment->charge_date ?? date('Y-m-d');
@@ -33,7 +33,7 @@ class PaymentCreatedHandler extends AbstractWebhookHandler {
 
         // Find member by mandate ID
         $member_query = "SELECT member_idmember
-                         FROM subscription
+                         FROM gocardless
                          WHERE 	gc_mandate_id  = :mandate_id
                          LIMIT 1";
 

@@ -1,15 +1,10 @@
 <?php
 namespace WebhookHandlers;
 
-use \PDO;
-
-class PaymentCreatedHandler extends AbstractWebhookHandler {
-
-    const BANK_ID = 5; // Lloyds bank account (receives GoCardless payments)
-    const PAYMENT_TYPE_ID = 6; // Direct Debit payment type
+class PaymentCancelledHandler extends AbstractWebhookHandler {
 
     /**
-     * Handle payments.confirmed event - creates transaction record
+     * Handle payments.cancelled event - deletes transaction record
      * @param object $event Event object from GoCardless library
      * @param \Models\WebhookLog $webhook_log
      * @return array

@@ -4,6 +4,7 @@ namespace WebhookHandlers;
 use \Models\Country;
 use \Models\Member;
 use \Models\MemberName;
+use Models\Mandate;
 
 class MandateCreatedHandler extends AbstractWebhookHandler {
 
@@ -147,6 +148,22 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
                 }
             }
 
+            // Create new GoCardless Mandate record
+            $mandate = new Mandate();
+
+            // Set required fields
+            $mandate->gc_mandate_id = $mandate_id;
+            $mandate->gc_customer_id = $customer_id;
+            $mandate->gc_subscriptionid = ''; // No subscription ID at mandate creation stage
+            $mandate->idmember = $member_id;
+
+            if ($mandate->create()) {
+                error_log("Created GoCardless mandate record for member ID $member_id");
+            } else {
+                error_log("Failed to create GoCardless mandate record for member ID $member_id");
+                throw new \Exception('Failed to create GoCardless mandate record');
+            }
+
             // Mark webhook as processed with member ID
             $webhook_log->markProcessed($member_id);
 
@@ -157,7 +174,7 @@ class MandateCreatedHandler extends AbstractWebhookHandler {
                 'mandate_id' => $mandate_id
             ];
         } else {
-            throw new \Exception('Failed to create member record using Member model');
+            throw new \Exception('Failed to create GoCardless member record using Subscription model');
         }
     }
 

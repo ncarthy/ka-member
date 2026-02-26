@@ -32,7 +32,7 @@ class SubscriptionTerminatedHandler extends AbstractWebhookHandler {
 
         // Find member by mandate ID (bankpayerref)
         $member_query = "SELECT member_idmember
-                         FROM subscription
+                         FROM gocardless
                          WHERE 	gc_mandate_id  = :mandate_id
                          LIMIT 1";
 
