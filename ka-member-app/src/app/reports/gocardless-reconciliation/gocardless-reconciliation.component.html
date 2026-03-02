@@ -11,11 +11,11 @@
   </div>
   <div class="card-body">
     @if (form) {
-      <app-date-range-selector
+      <date-range-selector
         [form]="form"
         (dateRangeChanged)="onDateRangeChanged($event)"
         (refreshClicked)="onRefresh()"
-      ></app-date-range-selector>
+      ></date-range-selector>
     }
 
     @if (loading) {
@@ -96,21 +96,151 @@
               @for (row of report.comparison; track row.event_type) {
                 <tr>
                   <td>{{ row.event_type }}</td>
-                  <td>{{ row.event_count }}</td>
-                  <td>{{ row.matched_count }}</td>
                   <td>
-                    {{ row.missing_count }}
-                    @if (row.missing_ids?.length) {
+                    <button
+                      type="button"
+                      class="btn btn-link btn-sm p-0 align-baseline"
+                      (click)="toggleComparisonBucket(row.event_type, 'events')"
+                    >
+                      {{ row.event_count }}
+                    </button>
+                    @if (isComparisonBucketOpen(row.event_type, "events")) {
                       <div class="small mt-1">
-                        @for (missingId of row.missing_ids; track missingId) {
+                        @for (itemId of getComparisonIds(row, "events"); track itemId) {
                           <button
                             type="button"
                             class="btn btn-link btn-sm p-0 me-2 align-baseline"
-                            (click)="toggleMissingPaymentDetails(row.event_type, missingId)"
+                            (click)="toggleMissingPaymentDetails(row.event_type + ':events', itemId)"
+                          >
+                            {{ itemId }}
+                          </button>
+                          @if (isMissingPaymentDetailsOpen(row.event_type + ':events', itemId)) {
+                            @if (getMissingDetails(row, itemId); as detail) {
+                              <div class="border rounded p-2 mb-2 text-muted">
+                                @if (detail.kind === "payment") {
+                                  <div><strong>Amount:</strong> {{ detail.amount_display || "Unknown" }}</div>
+                                  <div><strong>Date:</strong> {{ detail.charge_date || "Unknown" }}</div>
+                                  <div><strong>Mandate ID:</strong> {{ detail.mandate_id || "Unknown" }}</div>
+                                  <div>
+                                    <strong>Mandate type:</strong>
+                                    {{ detail.mandate_type || detail.mandate_scheme || "Unknown" }}
+                                  </div>
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                }
+                                @if (detail.kind === "mandate") {
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                  <div><strong>Created:</strong> {{ detail.created_at || "Unknown" }}</div>
+                                  <div><strong>Confirmed:</strong> {{ detail.confirmed_at || "Unknown" }}</div>
+                                  <div><strong>Status:</strong> {{ detail.status || "Unknown" }}</div>
+                                }
+                                @if (detail.kind === "subscription") {
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                  <div>
+                                    <strong>Subscription type:</strong>
+                                    {{ detail.subscription_type || "Unknown" }}
+                                  </div>
+                                  <div><strong>Created:</strong> {{ detail.created_at || "Unknown" }}</div>
+                                  <div><strong>Start date:</strong> {{ detail.start_date || "Unknown" }}</div>
+                                  <div><strong>End date:</strong> {{ detail.end_date || "Unknown" }}</div>
+                                  <div><strong>Status:</strong> {{ detail.status || "Unknown" }}</div>
+                                }
+                                @if (detail.error) {
+                                  <div class="text-danger">
+                                    <strong>Lookup error:</strong> {{ detail.error }}
+                                  </div>
+                                }
+                              </div>
+                            }
+                          }
+                        }
+                        @if (!getComparisonIds(row, "events")?.length) {
+                          <div class="text-muted">No IDs available.</div>
+                        }
+                      </div>
+                    }
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-link btn-sm p-0 align-baseline"
+                      (click)="toggleComparisonBucket(row.event_type, 'matched')"
+                    >
+                      {{ row.matched_count }}
+                    </button>
+                    @if (isComparisonBucketOpen(row.event_type, "matched")) {
+                      <div class="small mt-1">
+                        @for (itemId of getComparisonIds(row, "matched"); track itemId) {
+                          <button
+                            type="button"
+                            class="btn btn-link btn-sm p-0 me-2 align-baseline"
+                            (click)="toggleMissingPaymentDetails(row.event_type + ':matched', itemId)"
+                          >
+                            {{ itemId }}
+                          </button>
+                          @if (isMissingPaymentDetailsOpen(row.event_type + ':matched', itemId)) {
+                            @if (getMissingDetails(row, itemId); as detail) {
+                              <div class="border rounded p-2 mb-2 text-muted">
+                                @if (detail.kind === "payment") {
+                                  <div><strong>Amount:</strong> {{ detail.amount_display || "Unknown" }}</div>
+                                  <div><strong>Date:</strong> {{ detail.charge_date || "Unknown" }}</div>
+                                  <div><strong>Mandate ID:</strong> {{ detail.mandate_id || "Unknown" }}</div>
+                                  <div>
+                                    <strong>Mandate type:</strong>
+                                    {{ detail.mandate_type || detail.mandate_scheme || "Unknown" }}
+                                  </div>
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                }
+                                @if (detail.kind === "mandate") {
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                  <div><strong>Created:</strong> {{ detail.created_at || "Unknown" }}</div>
+                                  <div><strong>Confirmed:</strong> {{ detail.confirmed_at || "Unknown" }}</div>
+                                  <div><strong>Status:</strong> {{ detail.status || "Unknown" }}</div>
+                                }
+                                @if (detail.kind === "subscription") {
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                  <div>
+                                    <strong>Subscription type:</strong>
+                                    {{ detail.subscription_type || "Unknown" }}
+                                  </div>
+                                  <div><strong>Created:</strong> {{ detail.created_at || "Unknown" }}</div>
+                                  <div><strong>Start date:</strong> {{ detail.start_date || "Unknown" }}</div>
+                                  <div><strong>End date:</strong> {{ detail.end_date || "Unknown" }}</div>
+                                  <div><strong>Status:</strong> {{ detail.status || "Unknown" }}</div>
+                                }
+                                @if (detail.error) {
+                                  <div class="text-danger">
+                                    <strong>Lookup error:</strong> {{ detail.error }}
+                                  </div>
+                                }
+                              </div>
+                            }
+                          }
+                        }
+                        @if (!getComparisonIds(row, "matched")?.length) {
+                          <div class="text-muted">No IDs available.</div>
+                        }
+                      </div>
+                    }
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-link btn-sm p-0 align-baseline"
+                      (click)="toggleComparisonBucket(row.event_type, 'missing')"
+                    >
+                      {{ row.missing_count }}
+                    </button>
+                    @if (isComparisonBucketOpen(row.event_type, "missing")) {
+                      <div class="small mt-1">
+                        @for (missingId of getComparisonIds(row, "missing"); track missingId) {
+                          <button
+                            type="button"
+                            class="btn btn-link btn-sm p-0 me-2 align-baseline"
+                            (click)="toggleMissingPaymentDetails(row.event_type + ':missing', missingId)"
                           >
                             {{ missingId }}
                           </button>
-                          @if (isMissingPaymentDetailsOpen(row.event_type, missingId)) {
+                          @if (isMissingPaymentDetailsOpen(row.event_type + ':missing', missingId)) {
                             @if (getMissingDetails(row, missingId); as detail) {
                               <div class="border rounded p-2 mb-2 text-muted">
                                 @if (detail.kind === "payment") {
@@ -152,6 +282,9 @@
                               </div>
                             }
                           }
+                        }
+                        @if (!getComparisonIds(row, "missing")?.length) {
+                          <div class="text-muted">No IDs available.</div>
                         }
                       </div>
                     }

@@ -240,6 +240,8 @@ class GoCardlessReconciliation {
             $mandate_ids
         );
         $missing = array_values(array_diff($mandate_ids, $found));
+        $event_details = $this->buildMissingMandateDetails($mandate_ids);
+        $matched_details = $this->buildMissingMandateDetails($found);
         $missing_details = $this->buildMissingMandateDetails($missing);
 
         return [
@@ -247,7 +249,11 @@ class GoCardlessReconciliation {
             'event_count' => count($mandate_ids),
             'matched_count' => count($found),
             'missing_count' => count($missing),
+            'event_ids' => array_slice($mandate_ids, 0, 50),
+            'matched_ids' => array_slice($found, 0, 50),
             'missing_ids' => array_slice($missing, 0, 50),
+            'event_details' => $event_details,
+            'matched_details' => $matched_details,
             'missing_details' => $missing_details
         ];
     }
@@ -259,7 +265,11 @@ class GoCardlessReconciliation {
                 'event_count' => 0,
                 'matched_count' => 0,
                 'missing_count' => 0,
+                'event_ids' => [],
+                'matched_ids' => [],
                 'missing_ids' => [],
+                'event_details' => [],
+                'matched_details' => [],
                 'missing_details' => []
             ];
         }
@@ -291,6 +301,8 @@ class GoCardlessReconciliation {
 
         $found = array_values(array_unique($found));
         $missing = array_values(array_diff($payment_ids, $found));
+        $event_details = $this->buildMissingPaymentDetails($payment_ids);
+        $matched_details = $this->buildMissingPaymentDetails($found);
         $missing_details = $this->buildMissingPaymentDetails($missing);
 
         return [
@@ -298,7 +310,11 @@ class GoCardlessReconciliation {
             'event_count' => count($payment_ids),
             'matched_count' => count($found),
             'missing_count' => count($missing),
+            'event_ids' => array_slice($payment_ids, 0, 50),
+            'matched_ids' => array_slice($found, 0, 50),
             'missing_ids' => array_slice($missing, 0, 50),
+            'event_details' => $event_details,
+            'matched_details' => $matched_details,
             'missing_details' => $missing_details
         ];
     }
@@ -556,6 +572,8 @@ class GoCardlessReconciliation {
             $subscription_ids
         );
         $missing = array_values(array_diff($subscription_ids, $found));
+        $event_details = $this->buildMissingSubscriptionDetails($subscription_ids);
+        $matched_details = $this->buildMissingSubscriptionDetails($found);
         $missing_details = $this->buildMissingSubscriptionDetails($missing);
 
         return [
@@ -563,7 +581,11 @@ class GoCardlessReconciliation {
             'event_count' => count($subscription_ids),
             'matched_count' => count($found),
             'missing_count' => count($missing),
+            'event_ids' => array_slice($subscription_ids, 0, 50),
+            'matched_ids' => array_slice($found, 0, 50),
             'missing_ids' => array_slice($missing, 0, 50),
+            'event_details' => $event_details,
+            'matched_details' => $matched_details,
             'missing_details' => $missing_details
         ];
     }
@@ -575,7 +597,12 @@ class GoCardlessReconciliation {
                 'event_count' => 0,
                 'matched_count' => 0,
                 'missing_count' => 0,
-                'missing_ids' => []
+                'event_ids' => [],
+                'matched_ids' => [],
+                'missing_ids' => [],
+                'event_details' => [],
+                'matched_details' => [],
+                'missing_details' => []
             ];
         }
 
@@ -601,6 +628,8 @@ class GoCardlessReconciliation {
 
         $former = array_values(array_unique($former));
         $missing = array_values(array_diff($subscription_ids, $former));
+        $event_details = $this->buildMissingSubscriptionDetails($subscription_ids);
+        $matched_details = $this->buildMissingSubscriptionDetails($former);
         $missing_details = $this->buildMissingSubscriptionDetails($missing);
 
         return [
@@ -608,7 +637,11 @@ class GoCardlessReconciliation {
             'event_count' => count($subscription_ids),
             'matched_count' => count($former),
             'missing_count' => count($missing),
+            'event_ids' => array_slice($subscription_ids, 0, 50),
+            'matched_ids' => array_slice($former, 0, 50),
             'missing_ids' => array_slice($missing, 0, 50),
+            'event_details' => $event_details,
+            'matched_details' => $matched_details,
             'missing_details' => $missing_details
         ];
     }

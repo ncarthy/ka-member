@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { DateRange, DateRangeEnum } from '@app/_models';
 import { DateRangeAdapter } from '@app/_helpers';
 import { GoCardlessReconciliationService } from '@app/_services';
-import { DateRangeSelectorComponent } from '../shared/date-range-selector.component';
+import { DateRangeSelectorComponent } from '@app/shared';
 
 @Component({
   templateUrl: './gocardless-reconciliation.component.html',
@@ -18,6 +18,7 @@ export class GoCardlessReconciliationComponent implements OnInit {
   form!: FormGroup;
   errorMessage = '';
   openMissingPaymentKey: string | null = null;
+  openComparisonBucketKey: string | null = null;
 
   private dateRangeAdapter = inject(DateRangeAdapter);
   private formBuilder = inject(FormBuilder);
@@ -74,6 +75,7 @@ export class GoCardlessReconciliationComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
     this.openMissingPaymentKey = null;
+    this.openComparisonBucketKey = null;
 
     this.reconciliationService
       .getSummary('week', startDate, endDate, dateRange)
@@ -99,7 +101,33 @@ export class GoCardlessReconciliationComponent implements OnInit {
   }
 
   getMissingDetails(row: any, id: string) {
-    const details = row?.missing_details || [];
-    return details.find((x: any) => x?.id === id || x?.payment_id === id || x?.mandate_id === id || x?.subscription_id === id) || null;
+    const detailGroups = [row?.missing_details, row?.matched_details, row?.event_details];
+    for (const group of detailGroups) {
+      const details = group || [];
+      const found = details.find((x: any) => x?.id === id || x?.payment_id === id || x?.mandate_id === id || x?.subscription_id === id);
+      if (found) {
+        return found;
+      }
+    }
+    return null;
+  }
+
+  toggleComparisonBucket(eventType: string, bucket: 'events' | 'matched' | 'missing') {
+    const key = `${eventType}::${bucket}`;
+    this.openComparisonBucketKey = this.openComparisonBucketKey === key ? null : key;
+  }
+
+  isComparisonBucketOpen(eventType: string, bucket: 'events' | 'matched' | 'missing') {
+    return this.openComparisonBucketKey === `${eventType}::${bucket}`;
+  }
+
+  getComparisonIds(row: any, bucket: 'events' | 'matched' | 'missing'): string[] {
+    if (bucket === 'events') {
+      return row?.event_ids || [];
+    }
+    if (bucket === 'matched') {
+      return row?.matched_ids || [];
+    }
+    return row?.missing_ids || [];
   }
 }
