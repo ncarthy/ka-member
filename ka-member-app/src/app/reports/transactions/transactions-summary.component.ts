@@ -1,26 +1,26 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule, KeyValue } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { BankAccountService, TransactionsService } from '@app/_services';
 import {
   BankAccount,
   DateRange,
-  DateRangeEnum,
   TransactionSummary,
+  DateRangeEnum,
 } from '@app/_models';
 import { DateRangeAdapter } from '@app/_helpers';
 import { TransactionsDetailComponent } from './transactions-detail/transactions-detail.component';
+import { DateRangeSelectorComponent } from '../shared/date-range-selector.component';
 
 @Component({
   templateUrl: './transactions-summary.component.html',
   imports: [
     CommonModule,
-    NgbDatepickerModule,
     ReactiveFormsModule,
     RouterLink,
+    DateRangeSelectorComponent,
     TransactionsDetailComponent,
   ],
 })
@@ -61,21 +61,6 @@ export class TransactionsSummaryComponent implements OnInit {
     return this.form.controls;
   }
 
-  // Required so that the template can access the EnumS
-  // From https://stackoverflow.com/a/59289208
-  public get DateRange() {
-    return DateRangeEnum;
-  }
-
-  /* Used to stop the keyvalues pipe re-arranging the order of the Enum */
-  /* From https://stackoverflow.com/a/52794221/6941165 */
-  originalOrder = (
-    a: KeyValue<string, DateRangeEnum>,
-    b: KeyValue<string, DateRangeEnum>,
-  ): number => {
-    return 0;
-  };
-
   /* Set the date range control values according to the select value */
   onDateRangeChanged(value: string | null) {
     let dtRng: DateRange;
@@ -108,6 +93,10 @@ export class TransactionsSummaryComponent implements OnInit {
       this.f['endDate'].value,
       value,
     );
+  }
+
+  onRefresh() {
+    this.onBankChanged(this.f['bank'].value);
   }
 
   refreshSummary(startDate: string, endDate: string, bank: string) {

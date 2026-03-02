@@ -1,16 +1,16 @@
-import { CommonModule, KeyValue } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { DateRange, DateRangeEnum } from '@app/_models';
 import { DateRangeAdapter } from '@app/_helpers';
 import { GoCardlessReconciliationService } from '@app/_services';
+import { DateRangeSelectorComponent } from '../shared/date-range-selector.component';
 
 @Component({
   templateUrl: './gocardless-reconciliation.component.html',
-  imports: [CommonModule, NgbDatepickerModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, DateRangeSelectorComponent],
 })
 export class GoCardlessReconciliationComponent implements OnInit {
   report: any = null;
@@ -36,17 +36,6 @@ export class GoCardlessReconciliationComponent implements OnInit {
   get f() {
     return this.form.controls;
   }
-
-  public get DateRange() {
-    return DateRangeEnum;
-  }
-
-  originalOrder = (
-    a: KeyValue<string, DateRangeEnum>,
-    b: KeyValue<string, DateRangeEnum>,
-  ): number => {
-    return 0;
-  };
 
   onDateRangeChanged(value: string | null) {
     let dtRng: DateRange;
