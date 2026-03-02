@@ -51,8 +51,8 @@ export class GoCardlessReconciliationComponent implements OnInit {
     return this.openMissingPaymentKey === `${eventType}::${paymentId}`;
   }
 
-  getMissingPaymentDetails(row: any, paymentId: string) {
+  getMissingDetails(row: any, id: string) {
     const details = row?.missing_details || [];
-    return details.find((x: any) => x?.payment_id === paymentId) || null;
+    return details.find((x: any) => x?.id === id || x?.payment_id === id || x?.mandate_id === id || x?.subscription_id === id) || null;
   }
 }

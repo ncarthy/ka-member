@@ -234,13 +234,15 @@ class GoCardlessReconciliation {
             $mandate_ids
         );
         $missing = array_values(array_diff($mandate_ids, $found));
+        $missing_details = $this->buildMissingMandateDetails($missing);
 
         return [
             'event_type' => 'mandates.created',
             'event_count' => count($mandate_ids),
             'matched_count' => count($found),
             'missing_count' => count($missing),
-            'missing_ids' => array_slice($missing, 0, 50)
+            'missing_ids' => array_slice($missing, 0, 50),
+            'missing_details' => $missing_details
         ];
     }
 
@@ -306,8 +308,54 @@ class GoCardlessReconciliation {
         return $details;
     }
 
+    private function buildMissingMandateDetails($mandate_ids) {
+        $details = [];
+        $mandate_ids = array_slice(array_values(array_unique($mandate_ids)), 0, 50);
+
+        foreach ($mandate_ids as $mandate_id) {
+            $details[] = $this->fetchMissingMandateDetail($mandate_id);
+        }
+
+        return $details;
+    }
+
+    private function fetchMissingMandateDetail($mandate_id) {
+        $detail = [
+            'kind' => 'mandate',
+            'id' => (string)$mandate_id,
+            'mandate_id' => (string)$mandate_id,
+            'customer_name' => null,
+            'created_at' => null,
+            'confirmed_at' => null,
+            'status' => null,
+            'error' => null
+        ];
+
+        try {
+            $mandate = $this->client->mandates()->get($mandate_id);
+            $detail['created_at'] = $this->normalizeDate($mandate->created_at ?? null);
+            $detail['confirmed_at'] = $this->normalizeDate($mandate->verified_at ?? null);
+            $detail['status'] = isset($mandate->status) ? (string)$mandate->status : null;
+
+            $customer_id = null;
+            if (isset($mandate->links) && is_object($mandate->links) && isset($mandate->links->customer)) {
+                $customer_id = (string)$mandate->links->customer;
+            }
+            if (!empty($customer_id)) {
+                $customer = $this->client->customers()->get($customer_id);
+                $detail['customer_name'] = $this->buildCustomerName($customer);
+            }
+        } catch (\Exception $e) {
+            $detail['error'] = $e->getMessage();
+        }
+
+        return $detail;
+    }
+
     private function fetchMissingPaymentDetail($payment_id) {
         $detail = [
+            'kind' => 'payment',
+            'id' => (string)$payment_id,
             'payment_id' => (string)$payment_id,
             'amount' => null,
             'amount_display' => null,
@@ -438,6 +486,63 @@ class GoCardlessReconciliation {
         return $this->mandate_has_subscription_column;
     }
 
+    private function buildMissingSubscriptionDetails($subscription_ids) {
+        $details = [];
+        $subscription_ids = array_slice(array_values(array_unique($subscription_ids)), 0, 50);
+
+        foreach ($subscription_ids as $subscription_id) {
+            $details[] = $this->fetchMissingSubscriptionDetail($subscription_id);
+        }
+
+        return $details;
+    }
+
+    private function fetchMissingSubscriptionDetail($subscription_id) {
+        $detail = [
+            'kind' => 'subscription',
+            'id' => (string)$subscription_id,
+            'subscription_id' => (string)$subscription_id,
+            'customer_name' => null,
+            'subscription_type' => null,
+            'created_at' => null,
+            'start_date' => null,
+            'end_date' => null,
+            'status' => null,
+            'error' => null
+        ];
+
+        try {
+            $subscription = $this->client->subscriptions()->get($subscription_id);
+            $detail['subscription_type'] = isset($subscription->name) ? (string)$subscription->name : null;
+            $detail['created_at'] = $this->normalizeDate($subscription->created_at ?? null);
+            $detail['start_date'] = isset($subscription->start_date) ? (string)$subscription->start_date : null;
+            $detail['end_date'] = isset($subscription->end_date) ? (string)$subscription->end_date : null;
+            $detail['status'] = isset($subscription->status) ? (string)$subscription->status : null;
+
+            $mandate_id = null;
+            if (isset($subscription->links) && is_object($subscription->links) && isset($subscription->links->mandate)) {
+                $mandate_id = (string)$subscription->links->mandate;
+            }
+
+            if (!empty($mandate_id)) {
+                $mandate = $this->client->mandates()->get($mandate_id);
+                $customer_id = null;
+                if (isset($mandate->links) && is_object($mandate->links) && isset($mandate->links->customer)) {
+                    $customer_id = (string)$mandate->links->customer;
+                }
+
+                if (!empty($customer_id)) {
+                    $customer = $this->client->customers()->get($customer_id);
+                    $detail['customer_name'] = $this->buildCustomerName($customer);
+                }
+            }
+        } catch (\Exception $e) {
+            $detail['error'] = $e->getMessage();
+        }
+
+        return $detail;
+    }
+
     private function compareSubscriptionsCreated($subscription_ids) {
         $mandate_table = $this->mandateTableName();
         $found = $this->findExistingValues(
@@ -445,13 +550,15 @@ class GoCardlessReconciliation {
             $subscription_ids
         );
         $missing = array_values(array_diff($subscription_ids, $found));
+        $missing_details = $this->buildMissingSubscriptionDetails($missing);
 
         return [
             'event_type' => 'subscriptions.created',
             'event_count' => count($subscription_ids),
             'matched_count' => count($found),
             'missing_count' => count($missing),
-            'missing_ids' => array_slice($missing, 0, 50)
+            'missing_ids' => array_slice($missing, 0, 50),
+            'missing_details' => $missing_details
         ];
     }
 
@@ -488,13 +595,15 @@ class GoCardlessReconciliation {
 
         $former = array_values(array_unique($former));
         $missing = array_values(array_diff($subscription_ids, $former));
+        $missing_details = $this->buildMissingSubscriptionDetails($missing);
 
         return [
             'event_type' => 'subscriptions.(cancelled|failed|expired)',
             'event_count' => count($subscription_ids),
             'matched_count' => count($former),
             'missing_count' => count($missing),
-            'missing_ids' => array_slice($missing, 0, 50)
+            'missing_ids' => array_slice($missing, 0, 50),
+            'missing_details' => $missing_details
         ];
     }
 

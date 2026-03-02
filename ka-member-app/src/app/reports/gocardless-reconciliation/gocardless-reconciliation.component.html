@@ -122,16 +122,35 @@
                             {{ missingId }}
                           </button>
                           @if (isMissingPaymentDetailsOpen(row.event_type, missingId)) {
-                            @if (getMissingPaymentDetails(row, missingId); as detail) {
+                            @if (getMissingDetails(row, missingId); as detail) {
                               <div class="border rounded p-2 mb-2 text-muted">
-                                <div><strong>Amount:</strong> {{ detail.amount_display || "Unknown" }}</div>
-                                <div><strong>Date:</strong> {{ detail.charge_date || "Unknown" }}</div>
-                                <div><strong>Mandate ID:</strong> {{ detail.mandate_id || "Unknown" }}</div>
-                                <div>
-                                  <strong>Mandate type:</strong>
-                                  {{ detail.mandate_type || detail.mandate_scheme || "Unknown" }}
-                                </div>
-                                <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                @if (detail.kind === "payment") {
+                                  <div><strong>Amount:</strong> {{ detail.amount_display || "Unknown" }}</div>
+                                  <div><strong>Date:</strong> {{ detail.charge_date || "Unknown" }}</div>
+                                  <div><strong>Mandate ID:</strong> {{ detail.mandate_id || "Unknown" }}</div>
+                                  <div>
+                                    <strong>Mandate type:</strong>
+                                    {{ detail.mandate_type || detail.mandate_scheme || "Unknown" }}
+                                  </div>
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                }
+                                @if (detail.kind === "mandate") {
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                  <div><strong>Created:</strong> {{ detail.created_at || "Unknown" }}</div>
+                                  <div><strong>Confirmed:</strong> {{ detail.confirmed_at || "Unknown" }}</div>
+                                  <div><strong>Status:</strong> {{ detail.status || "Unknown" }}</div>
+                                }
+                                @if (detail.kind === "subscription") {
+                                  <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                  <div>
+                                    <strong>Subscription type:</strong>
+                                    {{ detail.subscription_type || "Unknown" }}
+                                  </div>
+                                  <div><strong>Created:</strong> {{ detail.created_at || "Unknown" }}</div>
+                                  <div><strong>Start date:</strong> {{ detail.start_date || "Unknown" }}</div>
+                                  <div><strong>End date:</strong> {{ detail.end_date || "Unknown" }}</div>
+                                  <div><strong>Status:</strong> {{ detail.status || "Unknown" }}</div>
+                                }
                                 @if (detail.error) {
                                   <div class="text-danger">
                                     <strong>Lookup error:</strong> {{ detail.error }}
@@ -140,7 +159,7 @@
                               </div>
                             } @else {
                               <div class="border rounded p-2 mb-2 text-muted">
-                                No additional payment details available.
+                                No additional details available.
                               </div>
                             }
                           }
