@@ -29,14 +29,20 @@ class GoCardlessReconciliation {
         ]);
     }
 
-    public function summarize($days = 7) {
-        $days = (int)$days;
-        if ($days < 1) {
-            $days = 7;
-        }
+    public function summarize($days = 7, $start_override = null, $end_override = null) {
+        if ($start_override instanceof DateTimeImmutable && $end_override instanceof DateTimeImmutable) {
+            $start = $start_override;
+            $end = $end_override;
+            $days = max(1, ((int)$start->diff($end)->format('%a')) + 1);
+        } else {
+            $days = (int)$days;
+            if ($days < 1) {
+                $days = 7;
+            }
 
-        $end = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-        $start = $end->sub(new DateInterval('P' . $days . 'D'));
+            $end = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $start = $end->sub(new DateInterval('P' . $days . 'D'));
+        }
 
         $events = [];
         $api_error = null;
