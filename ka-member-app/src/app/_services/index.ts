@@ -7,6 +7,7 @@ export * from './date-formatter.service';
 export * from './email.service';
 export * from './export-to-csv.service';
 export * from './geocode.service';
+export * from './gocardless-reconciliation.service';
 export * from './member-filter.service';
 export * from './member-name.service';
 export * from './member.service';

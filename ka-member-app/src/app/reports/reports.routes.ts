@@ -9,6 +9,7 @@ import { MemberListReportComponent } from './member-list';
 import { InvalidEmailsComponent } from './invalid-emails';
 import { InvalidPostcodesComponent } from './invalid-postcodes';
 import { TransactionsSummaryComponent } from './transactions';
+import { GoCardlessReconciliationComponent } from './gocardless-reconciliation/gocardless-reconciliation.component';
 
 export const REPORTS_ROUTES: Routes = [
   { path: '', component: ReportsComponent },
@@ -29,4 +30,5 @@ export const REPORTS_ROUTES: Routes = [
   { path: 'formermembers/:months', component: MemberListReportComponent },
   { path: 'oldformermembers/:months', component: MemberListReportComponent },
   { path: 'transactions', component: TransactionsSummaryComponent },
+  { path: 'gocardless-reconciliation', component: GoCardlessReconciliationComponent },
 ];

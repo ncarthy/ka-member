@@ -223,6 +223,13 @@ $router->mount('/webhook', function () use ($router) {
     });
 });
 
+/*********************/
+/* GoCardless Reports */
+/*********************/
+$router->mount('/gocardless', function () use ($router) {
+    $router->get('/reconciliation', 'GoCardlessReportCtl@reconciliation');
+});
+
 /****************************/
 /* Webhook Processor Routes */
 /* (Authenticated)          */

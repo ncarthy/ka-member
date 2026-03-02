@@ -1,0 +1,183 @@
+<div class="card mt-4 col-sm-11">
+  <div class="card-header row justify-content-between">
+    <div class="col-sm">
+      <h4>GoCardless Event Reconciliation</h4>
+    </div>
+    <div>
+      <button routerLink="/reports" class="btn btn-outline-dark">
+        Close &times;
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row align-items-center mb-3">
+      <div class="col-sm-3">
+        <label for="period" class="form-label mb-1">Period</label>
+        <select
+          id="period"
+          class="form-select"
+          [value]="period"
+          #periodSelect
+          (change)="onPeriodChanged(periodSelect.value)"
+        >
+          <option value="week">Last week</option>
+          <option value="month">Last month</option>
+        </select>
+      </div>
+      <div class="col-sm-auto pt-4">
+        <button class="btn btn-link p-0" (click)="refresh()">Refresh</button>
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="spinner-border spinner-border-sm"></div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert alert-danger">{{ errorMessage }}</div>
+    }
+
+    @if (report) {
+      <div class="mb-3">
+        <p class="mb-1">
+          Period (UTC): {{ report.period.start_utc }} to {{ report.period.end_utc }}
+        </p>
+      </div>
+
+      @if (report.warnings?.length) {
+        <div class="alert alert-warning">
+          @for (warning of report.warnings; track warning) {
+            <div>{{ warning }}</div>
+          }
+        </div>
+      }
+
+      <div class="row">
+        <div class="col-sm-4 mb-3">
+          <div class="card">
+            <div class="card-header">DB changes in period</div>
+            <div class="card-body">
+              <div>Members created: {{ report.database.changes.members_created }}</div>
+              <div>Mandates created: {{ report.database.changes.mandates_created }}</div>
+              <div>
+                Transactions created: {{ report.database.changes.transactions_created }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8 mb-3">
+          <div class="card">
+            <div class="card-header">GoCardless events</div>
+            <div class="card-body">
+              <div class="mb-2">Total events: {{ report.gocardless.event_count }}</div>
+              <table class="table table-sm table-striped w-auto">
+                <thead>
+                  <tr>
+                    <th>Event</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of report.gocardless.summary; track row.event_type) {
+                    <tr>
+                      <td>{{ row.event_type }}</td>
+                      <td>{{ row.count }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">Event to DB comparison</div>
+        <div class="card-body">
+          <table class="table table-sm table-striped">
+            <thead>
+              <tr>
+                <th>Event Type</th>
+                <th>Events</th>
+                <th>Matched DB rows</th>
+                <th>Missing</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of report.comparison; track row.event_type) {
+                <tr>
+                  <td>{{ row.event_type }}</td>
+                  <td>{{ row.event_count }}</td>
+                  <td>{{ row.matched_count }}</td>
+                  <td>
+                    {{ row.missing_count }}
+                    @if (row.missing_ids?.length) {
+                      <div class="small mt-1">
+                        @for (missingId of row.missing_ids; track missingId) {
+                          <button
+                            type="button"
+                            class="btn btn-link btn-sm p-0 me-2 align-baseline"
+                            (click)="toggleMissingPaymentDetails(row.event_type, missingId)"
+                          >
+                            {{ missingId }}
+                          </button>
+                          @if (isMissingPaymentDetailsOpen(row.event_type, missingId)) {
+                            @if (getMissingPaymentDetails(row, missingId); as detail) {
+                              <div class="border rounded p-2 mb-2 text-muted">
+                                <div><strong>Amount:</strong> {{ detail.amount_display || "Unknown" }}</div>
+                                <div><strong>Date:</strong> {{ detail.charge_date || "Unknown" }}</div>
+                                <div><strong>Mandate ID:</strong> {{ detail.mandate_id || "Unknown" }}</div>
+                                <div>
+                                  <strong>Mandate type:</strong>
+                                  {{ detail.mandate_type || detail.mandate_scheme || "Unknown" }}
+                                </div>
+                                <div><strong>Customer:</strong> {{ detail.customer_name || "Unknown" }}</div>
+                                @if (detail.error) {
+                                  <div class="text-danger">
+                                    <strong>Lookup error:</strong> {{ detail.error }}
+                                  </div>
+                                }
+                              </div>
+                            } @else {
+                              <div class="border rounded p-2 mb-2 text-muted">
+                                No additional payment details available.
+                              </div>
+                            }
+                          }
+                        }
+                      </div>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Webhook log entries in period</div>
+        <div class="card-body">
+          <table class="table table-sm table-striped w-auto">
+            <thead>
+              <tr>
+                <th>Event Type</th>
+                <th>Processed</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of report.database.webhook_log; track row.event_type + row.processed) {
+                <tr>
+                  <td>{{ row.event_type }}</td>
+                  <td>{{ row.processed ? "Yes" : "No" }}</td>
+                  <td>{{ row.count }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</div>
