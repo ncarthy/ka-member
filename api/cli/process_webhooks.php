@@ -40,7 +40,7 @@ require_once dirname(__DIR__) . '/models/webhook_log.php';
 require_once dirname(__DIR__) . '/models/gocardless_webhook.php';
 require_once dirname(__DIR__) . '/models/member.php';
 require_once dirname(__DIR__) . '/models/member_name.php';
-require_once dirname(__DIR__) . '/models/subscription.php';
+require_once dirname(__DIR__) . '/models/mandate.php';
 require_once dirname(__DIR__) . '/models/country.php';
 require_once dirname(__DIR__) . '/webhook_handlers/abstract_webhook_handler.php';
 require_once dirname(__DIR__) . '/webhook_handlers/mandate_created_handler.php';
