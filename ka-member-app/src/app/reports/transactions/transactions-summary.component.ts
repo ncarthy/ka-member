@@ -12,7 +12,7 @@ import {
 } from '@app/_models';
 import { DateRangeAdapter } from '@app/_helpers';
 import { TransactionsDetailComponent } from './transactions-detail/transactions-detail.component';
-import { DateRangeSelectorComponent } from '../shared/date-range-selector.component';
+import { DateRangeSelectorComponent } from '@app/shared';
 
 @Component({
   templateUrl: './transactions-summary.component.html',

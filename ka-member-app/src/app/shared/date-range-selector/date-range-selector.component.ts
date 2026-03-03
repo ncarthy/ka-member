@@ -6,7 +6,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { DateRangeEnum } from '@app/_models';
 
 @Component({
-  selector: 'app-date-range-selector',
+  selector: 'date-range-selector',
   templateUrl: './date-range-selector.component.html',
   imports: [CommonModule, NgbDatepickerModule, ReactiveFormsModule],
 })

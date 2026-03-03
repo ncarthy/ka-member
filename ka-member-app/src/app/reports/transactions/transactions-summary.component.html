@@ -14,11 +14,11 @@
       @if (!summary) {
         <div class="spinner-border spinner-border-sm"></div>
       }
-      <app-date-range-selector
+      <date-range-selector
         [form]="form"
         (dateRangeChanged)="onDateRangeChanged($event)"
         (refreshClicked)="onRefresh()"
-      ></app-date-range-selector>
+      ></date-range-selector>
       <div class="row class">
         <div class="col-sm">
           <table
