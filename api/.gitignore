@@ -2,6 +2,7 @@
 /.postman/
 test.php
 .env
+.phpunit.cache/
 
 # Add these to the repo
 !/vendor/ultimate-email/

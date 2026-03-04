@@ -34,7 +34,7 @@ require_once __DIR__ . '/env_loader.php';
 
 // Include necessary files
 require_once dirname(__DIR__) . '/core/database.php';
-require_once dirname(__DIR__) . '/core/config.php';
+require_once dirname(__DIR__) . '/core/config_loader.php';
 require_once dirname(__DIR__) . '/models/webhook_queue.php';
 require_once dirname(__DIR__) . '/models/webhook_log.php';
 require_once dirname(__DIR__) . '/models/gocardless_webhook.php';
@@ -185,3 +185,4 @@ Supervisord Example:
 
 HELP;
 }
+

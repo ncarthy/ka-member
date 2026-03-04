@@ -24,14 +24,17 @@ class Database{
         try{
             $host = Config::read('db.host');
             $port = Config::read('db.port');
+            $dbName = Config::read('db.name');
+            $dbUserEnv = Config::read('db.user');
+            $dbPassEnv = Config::read('db.password');
 
             if ($this->testConnection($host, $port)) {
 
                 $this->conn = new PDO("mysql:host=" . $host . ";port=" . 
                                             $port. ";dbname=" . 
-                                            Config::read('db.name') . ";charset=utf8"
-                                            , getenv(Config::read('db.user'))
-                                            , getenv(Config::read('db.password'))
+                                            $dbName . ";charset=utf8"
+                                            , getenv($dbUserEnv)
+                                            , getenv($dbPassEnv)
                                         );
 
                 // From https://stackoverflow.com/a/60496/6941165

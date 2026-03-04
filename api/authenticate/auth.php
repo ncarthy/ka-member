@@ -11,10 +11,8 @@
 
 header("Access-Control-Allow-Credentials: true");
 
-// instantiate database and user object
-$db = \Core\Database::getInstance()->conn;
-$user = new \Models\User($db);
-$usertoken = new \Models\UserToken($db);
+// instantiate user object
+$user = new \Models\User();
 $usernm = '';
 $pass = '';
 $numberPasswordAttempts = \Core\Config::read('password_attempts');

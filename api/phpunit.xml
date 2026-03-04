@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" cacheDirectory=".phpunit.cache" colors="true" beStrictAboutTestsThatDoNotTestAnything="false">
+  <testsuites>
+    <testsuite name="Unit">
+      <directory>tests/Unit</directory>
+    </testsuite>
+    <testsuite name="Integration">
+      <directory>tests/Integration</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <env name="KA_ENV" value="test" force="true"/>
+    <env name="KA_DB_NAME" value="ka_api_test" force="true"/>
+    <env name="KA_TEST_DB_REUSE" value="1" force="true"/>
+    <env name="KA_TEST_IGNORE_DROP_ERRORS" value="1" force="true"/>
+    <env name="KA_TOKEN_ISS" value="https://knightsbridgeassociation.com" force="true"/>
+    <env name="KA_TOKEN_AUD" value="https://member.knightsbridgeassociation.com" force="true"/>
+    <env name="KA_TOKEN_KEY_ENV" value="KA_MEMBER_KEY" force="true"/>
+    <env name="GOCARDLESS_ENVIRONMENT" value="sandbox" force="true"/>
+    <env name="GOCARDLESS_WEBHOOK_SECRET_ENV" value="GOCARDLESS_WEBHOOK_SECRET" force="true"/>
+    <env name="GOCARDLESS_ACCESS_TOKEN_ENV" value="GOCARDLESS_ACCESS_TOKEN" force="true"/>
+    <env name="KA_TOKEN_COOKIE_SECURE" value="false" force="true"/>
+  </php>
+</phpunit>

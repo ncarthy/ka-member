@@ -5,5 +5,19 @@
         "bramus/router": "~1.6",
         "pear/net_dns2": "^1.5.4",
         "gocardless/gocardless-pro": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test:preflight": "php tools/phpunit_preflight.php",
+        "test": "phpunit --testdox",
+        "test:unit": "phpunit --testsuite Unit",
+        "test:integration": "phpunit --testsuite Integration"
     }
 }

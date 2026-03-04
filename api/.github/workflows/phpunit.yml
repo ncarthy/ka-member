@@ -1,0 +1,54 @@
+name: PHPUnit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: ka_api_ci_bootstrap
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      KA_DB_HOST: 127.0.0.1
+      KA_DB_PORT: 3306
+      KA_DB_USER: root
+      KA_DB_PASSWORD: root
+      KA_MEMBER_KEY: ${{ secrets.KA_MEMBER_KEY }}
+      GOCARDLESS_WEBHOOK_SECRET: ${{ secrets.GOCARDLESS_WEBHOOK_SECRET }}
+      GOCARDLESS_ACCESS_TOKEN: ${{ secrets.GOCARDLESS_ACCESS_TOKEN }}
+      GOCARDLESS_ENVIRONMENT: sandbox
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+          extensions: curl, pdo_mysql
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run Unit tests
+        run: vendor/bin/phpunit --testsuite Unit --testdox
+
+      - name: Run Integration tests
+        run: vendor/bin/phpunit --testsuite Integration --testdox

@@ -12,8 +12,8 @@ class Headers
         if (substr($path, 0, strlen($api_prefix)) == $api_prefix) {
             $path = substr($path, strlen($api_prefix));
         } 
-
-        return $path;
+        // Normalise leading slash so path checks match both '/auth' and 'auth'.
+        return ltrim((string) $path, '/');
     }
     
     public static function getHeaders($path_is_auth = false) {

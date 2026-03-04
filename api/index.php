@@ -7,7 +7,7 @@ require __DIR__ . '/vendor/autoload.php';
 $router = new \Bramus\Router\Router();
 
 // Define core, database and headers helper class
-include_once 'core/config.php';
+include_once 'core/config_loader.php';
 include_once 'core/database.php';
 include_once 'core/GUID.php';
 include_once 'core/headers.php';
@@ -63,3 +63,4 @@ require 'routes.php';
 
 // Run it!
 $router->run();
+
