@@ -34,6 +34,58 @@ final class AuthApiTest extends IntegrationTestCase
         self::assertStringContainsString('Unable to validate', (string) ($response['json']['message'] ?? ''));
     }
 
+    public function test_invalid_bearer_token_returns_401(): void
+    {
+        $auth = $this->loginAdmin();
+        $accessToken = (string) ($auth['accessToken'] ?? '');
+        $parts = explode('.', $accessToken);
+        self::assertCount(3, $parts, 'Expected JWT access token with 3 segments.');
+
+        $signature = $parts[2];
+        $lastChar = substr($signature, -1);
+        $replacement = $lastChar === 'a' ? 'b' : 'a';
+        $tamperedSignature = substr($signature, 0, -1) . $replacement;
+        $invalidToken = $parts[0] . '.' . $parts[1] . '.' . $tamperedSignature;
+
+        $response = $this->client->request('GET', '/status', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $invalidToken,
+            ],
+        ]);
+
+        self::assertSame(401, $response['status']);
+    }
+
+    public function test_wrong_audience_claim_returns_401(): void
+    {
+        $auth = $this->loginAdmin();
+        $accessToken = (string) ($auth['accessToken'] ?? '');
+        $mutatedToken = $this->withJwtPayloadClaim($accessToken, 'aud', 'https://invalid-audience.local');
+
+        $response = $this->client->request('GET', '/status', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $mutatedToken,
+            ],
+        ]);
+
+        self::assertSame(401, $response['status']);
+    }
+
+    public function test_wrong_issuer_claim_returns_401(): void
+    {
+        $auth = $this->loginAdmin();
+        $accessToken = (string) ($auth['accessToken'] ?? '');
+        $mutatedToken = $this->withJwtPayloadClaim($accessToken, 'iss', 'https://invalid-issuer.local');
+
+        $response = $this->client->request('GET', '/status', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $mutatedToken,
+            ],
+        ]);
+
+        self::assertSame(401, $response['status']);
+    }
+
     public function test_refresh_and_revoke_flow(): void
     {
         $this->loginAdmin();
@@ -54,5 +106,51 @@ final class AuthApiTest extends IntegrationTestCase
     {
         $response = $this->client->request('GET', '/status');
         self::assertSame(401, $response['status']);
+    }
+
+    private function withJwtPayloadClaim(string $jwt, string $claim, mixed $value): string
+    {
+        $parts = explode('.', $jwt);
+        self::assertCount(3, $parts, 'Expected JWT with 3 segments.');
+
+        $headerJson = self::base64UrlDecode($parts[0]);
+        $payloadJson = self::base64UrlDecode($parts[1]);
+        self::assertNotFalse($headerJson, 'Unable to decode JWT header');
+        self::assertNotFalse($payloadJson, 'Unable to decode JWT payload');
+
+        $header = json_decode($headerJson, true);
+        $payload = json_decode($payloadJson, true);
+        self::assertIsArray($header);
+        self::assertIsArray($payload);
+
+        $payload[$claim] = $value;
+
+        $newHeader = self::base64UrlEncode((string) json_encode($header, JSON_UNESCAPED_SLASHES));
+        $newPayload = self::base64UrlEncode((string) json_encode($payload, JSON_UNESCAPED_SLASHES));
+        $signingInput = $newHeader . '.' . $newPayload;
+
+        $key = getenv('KA_MEMBER_KEY');
+        self::assertNotFalse($key, 'KA_MEMBER_KEY must be set for JWT mutation tests.');
+
+        $signature = hash_hmac('sha256', $signingInput, (string) $key, true);
+        $newSignature = self::base64UrlEncode($signature);
+
+        return $signingInput . '.' . $newSignature;
+    }
+
+    private static function base64UrlEncode(string $value): string
+    {
+        return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
+    }
+
+    private static function base64UrlDecode(string $value): string|false
+    {
+        $padded = strtr($value, '-_', '+/');
+        $remainder = strlen($padded) % 4;
+        if ($remainder !== 0) {
+            $padded .= str_repeat('=', 4 - $remainder);
+        }
+
+        return base64_decode($padded, true);
     }
 }

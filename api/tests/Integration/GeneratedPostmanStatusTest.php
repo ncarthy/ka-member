@@ -26,7 +26,6 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
     public static function postmanStatusCases(): array
     {
         return [
-            'Auth/Auth - Invalid jti key' => ['Auth/Auth - Invalid jti key', 'GET', '/status', 401],
             'Auth/Auth - Invalid password' => ['Auth/Auth - Invalid password', 'POST', '/auth', 401],
             'Auth/Auth - Invalid password2' => ['Auth/Auth - Invalid password2', 'POST', '/auth', 401],
             'Auth/Auth - Invalid password3' => ['Auth/Auth - Invalid password3', 'POST', '/auth', 401],
@@ -37,8 +36,6 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
             'Auth/Auth - Refresh Tokens' => ['Auth/Auth - Refresh Tokens', 'GET', '/auth/refresh', 200],
             'Auth/Auth - Test Expired Access Token' => ['Auth/Auth - Test Expired Access Token', 'GET', '/status', 401],
             'Auth/Auth - User ID not in db' => ['Auth/Auth - User ID not in db', 'GET', '/bank_account', 401],
-            'Auth/Auth - Wrong Audience' => ['Auth/Auth - Wrong Audience', 'GET', '/status', 401],
-            'Auth/Auth - Wrong issuer' => ['Auth/Auth - Wrong issuer', 'GET', '/status', 401],
             'Auth/Auth - logout' => ['Auth/Auth - logout', 'DELETE', '/auth/revoke', 200],
             'BankAccount/Bank Account - Read All' => ['BankAccount/Bank Account - Read All', 'GET', '/bank_account', 200],
             'BankAccount/Bank Account - Read One ID' => ['BankAccount/Bank Account - Read One ID', 'GET', '/bank_account/2', 200],

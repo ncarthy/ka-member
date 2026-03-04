@@ -167,23 +167,23 @@ class JWTWrapper{
             $this->initializeToken();
             return;
         }
-
-        // convert from string into JWT object
-        $parser = $this->config->parser();
-        $token = $parser->parse((string) $token);
-
-        $token->headers(); // Retrieves the token headers
-
-        // Had problem with claims not being exposed on public interface
-        // https://github.com/lcobucci/jwt/issues/228
-        assert($token instanceof Plain);
-        $claims = $token->claims(); // Retrieve the token claims
-
-        $constraints = $this->config->validationConstraints();      
         
-        // If its a valid token then update the class properties
-        // the '...' means to pass an array as function arguments
         try {
+            // convert from string into JWT object
+            $parser = $this->config->parser();
+            $token = $parser->parse((string) $token);
+
+            $token->headers(); // Retrieves the token headers
+
+            // Had problem with claims not being exposed on public interface
+            // https://github.com/lcobucci/jwt/issues/228
+            assert($token instanceof Plain);
+            $claims = $token->claims(); // Retrieve the token claims
+
+            $constraints = $this->config->validationConstraints();      
+        
+            // If its a valid token then update the class properties
+            // the '...' means to pass an array as function arguments
             if($this->config->validator()->validate($token, ...$constraints)){
                 $this->id = $claims->get('sub');
                 $this->user = $claims->get('user');
