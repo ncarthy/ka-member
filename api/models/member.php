@@ -712,6 +712,10 @@ class Member{
         $stmt = $this->conn->prepare($query); 
         $stmt->bindParam(":idmember", $this->id, PDO::PARAM_INT); 
         $stmt->execute();  
+        $query = "DELETE FROM `gocardless_mandate` WHERE member_idmember = :idmember ;";
+        $stmt = $this->conn->prepare($query); 
+        $stmt->bindParam(":idmember", $this->id, PDO::PARAM_INT); 
+        $stmt->execute();  
 
         /* Now delete from member table */
         $query = "DELETE FROM " . $this->table_name . " WHERE idmember = ?";
