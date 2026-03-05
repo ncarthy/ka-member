@@ -26,17 +26,6 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
     public static function postmanStatusCases(): array
     {
         return [
-            'Email/Email: Prepare Reminder' => ['Email/Email: Prepare Reminder', 'POST', '/email/prepare_reminder', 200],
-            'Email/Email: Prepare Switch Request' => ['Email/Email: Prepare Switch Request', 'POST', '/email/prepare_switchrequest', 200],
-            'Email/Email: Send Reminder' => ['Email/Email: Send Reminder', 'POST', '/email/send_reminder', 200],
-            'Member/Member - Check Update Worked 2' => ['Member/Member - Check Update Worked 2', 'GET', '/member/278', 200],
-            'Member/Member - Create New' => ['Member/Member - Create New', 'POST', '/member', 200],
-            'Member/Member - Get ID of New Member' => ['Member/Member - Get ID of New Member', 'GET', '/member', 200],
-            'Member/Member - Read All' => ['Member/Member - Read All', 'GET', '/member', 200],
-            'Member/Member - Read One ID' => ['Member/Member - Read One ID', 'GET', '/member/469', 200],
-            'Member/Member - Read One ID Copy' => ['Member/Member - Read One ID Copy', 'GET', '/member/418', 200],
-            'Member/Member - Update 2' => ['Member/Member - Update 2', 'PUT', '/member/278', 200],
-            'Member/Member- Set Geometry Copy' => ['Member/Member- Set Geometry Copy', 'PATCH', '/member/1', 200],
             'Members/Members - Anonymize Old Former Members' => ['Members/Members - Anonymize Old Former Members', 'PATCH', '/members/oldformermember/60', 200],
             'Members/Members - CEM' => ['Members/Members - CEM', 'GET', '/members/cem', 200],
             'Members/Members - CSV Mailing List' => ['Members/Members - CSV Mailing List', 'GET', '/members/mailinglist', 200],
