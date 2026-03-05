@@ -3,6 +3,7 @@
 test.php
 .env
 .phpunit.cache/
+.phpunit.cache/test-results
 
 # Add these to the repo
 !/vendor/ultimate-email/
