@@ -86,6 +86,52 @@ final class AuthApiTest extends IntegrationTestCase
         self::assertSame(401, $response['status']);
     }
 
+    public function test_prerequest_status_with_valid_bearer_returns_200(): void
+    {
+        $this->loginAdmin();
+
+        $response = $this->client->request('GET', '/status');
+        self::assertSame(200, $response['status']);
+    }
+
+    public function test_expired_access_token_returns_401(): void
+    {
+        $auth = $this->loginAdmin();
+        $accessToken = (string) ($auth['accessToken'] ?? '');
+        $expiredToken = $this->withJwtPayloadClaim($accessToken, 'exp', time() - 3600);
+
+        $response = $this->client->request('GET', '/status', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $expiredToken,
+            ],
+        ]);
+
+        self::assertSame(401, $response['status']);
+    }
+
+    public function test_invalid_jti_claim_returns_401(): void
+    {
+        $auth = $this->loginAdmin();
+        $accessToken = (string) ($auth['accessToken'] ?? '');
+        $invalidJtiToken = $this->withJwtPayloadClaim($accessToken, 'jti', 'not-a-valid-db-jti');
+
+        $response = $this->client->request('GET', '/status', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $invalidJtiToken,
+            ],
+        ]);
+
+        self::assertSame(401, $response['status']);
+    }
+
+    public function test_logout_returns_200(): void
+    {
+        $this->loginAdmin();
+        $revoke = $this->client->request('DELETE', '/auth/revoke');
+
+        self::assertSame(200, $revoke['status']);
+    }
+
     public function test_refresh_and_revoke_flow(): void
     {
         $this->loginAdmin();
