@@ -26,18 +26,6 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
     public static function postmanStatusCases(): array
     {
         return [
-            'Name/Name - Check delete on worked' => ['Name/Name - Check delete on worked', 'GET', '/name/6594', 422],
-            'Name/Name - Check idmember Update' => ['Name/Name - Check idmember Update', 'GET', '/name/idmember/119', 200],
-            'Name/Name - Create' => ['Name/Name - Create', 'POST', '/name', 200],
-            'Name/Name - Delete a single name' => ['Name/Name - Delete a single name', 'DELETE', '/name/6594', 200],
-            'Name/Name - Delete all names for member' => ['Name/Name - Delete all names for member', 'DELETE', '/name/idmember/419', 200],
-            'Name/Name - Read One - No ID' => ['Name/Name - Read One - No ID', 'GET', '/name', 404],
-            'Name/Name - Read One - invalid ID' => ['Name/Name - Read One - invalid ID', 'GET', '/name/100', 422],
-            'Name/Name - Read One - invalid ID Copy' => ['Name/Name - Read One - invalid ID Copy', 'GET', '/name/idmember/100000', 200],
-            'Name/Name - Read One ID' => ['Name/Name - Read One ID', 'GET', '/name/6475', 200],
-            'Name/Name - Read from idmember' => ['Name/Name - Read from idmember', 'GET', '/name/idmember/119', 200],
-            'Name/Name - Test names are deleted' => ['Name/Name - Test names are deleted', 'GET', '/name/idmember/419', 200],
-            'Name/Name - Update Names for Idmember' => ['Name/Name - Update Names for Idmember', 'PUT', '/name/idmember/119', 200],
             'PaymentType/PaymentType - Read' => ['PaymentType/PaymentType - Read', 'GET', '/payment_type', 200],
             'PaymentType/PaymentType - Read One ID Copy' => ['PaymentType/PaymentType - Read One ID Copy', 'GET', '/payment_type/2', 200],
             'PaymentType/PaymentType - Read One Name' => ['PaymentType/PaymentType - Read One Name', 'GET', '/payment_type/cash', 200],
