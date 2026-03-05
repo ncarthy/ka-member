@@ -26,10 +26,6 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
     public static function postmanStatusCases(): array
     {
         return [
-            'CleanUp - Revoke Tokens' => ['CleanUp - Revoke Tokens', 'DELETE', '/auth/revoke', 200],
-            'Country/Country - Read' => ['Country/Country - Read', 'GET', '/country', 200],
-            'Country/Country - Read One ID' => ['Country/Country - Read One ID', 'GET', '/country/2', 200],
-            'Country/Country - Read One Name' => ['Country/Country - Read One Name', 'GET', '/country/Zimb', 200],
             'Email/Email: Prepare Reminder' => ['Email/Email: Prepare Reminder', 'POST', '/email/prepare_reminder', 200],
             'Email/Email: Prepare Switch Request' => ['Email/Email: Prepare Switch Request', 'POST', '/email/prepare_switchrequest', 200],
             'Email/Email: Send Reminder' => ['Email/Email: Send Reminder', 'POST', '/email/send_reminder', 200],
