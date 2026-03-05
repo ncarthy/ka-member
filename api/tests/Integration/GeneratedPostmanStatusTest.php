@@ -26,12 +26,6 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
     public static function postmanStatusCases(): array
     {
         return [
-            'Auth/Auth - Invalid password' => ['Auth/Auth - Invalid password', 'POST', '/auth', 401],
-            'Auth/Auth - Invalid password2' => ['Auth/Auth - Invalid password2', 'POST', '/auth', 401],
-            'Auth/Auth - Invalid password3' => ['Auth/Auth - Invalid password3', 'POST', '/auth', 401],
-            'Auth/Auth - Invalid password4' => ['Auth/Auth - Invalid password4', 'POST', '/auth', 401],
-            'Auth/Auth - Invalid password5' => ['Auth/Auth - Invalid password5', 'POST', '/auth', 401],
-            'Auth/Auth - Invalid password6' => ['Auth/Auth - Invalid password6', 'POST', '/auth', 401],
             'Auth/Auth - Refresh Tokens' => ['Auth/Auth - Refresh Tokens', 'GET', '/auth/refresh', 200],
             'Auth/Auth - User ID not in db' => ['Auth/Auth - User ID not in db', 'GET', '/bank_account', 401],
             'BankAccount/Bank Account - Read All' => ['BankAccount/Bank Account - Read All', 'GET', '/bank_account', 200],

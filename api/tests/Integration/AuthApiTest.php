@@ -21,17 +21,25 @@ final class AuthApiTest extends IntegrationTestCase
         self::assertArrayHasKey('accessToken', $response['json']);
     }
 
-    public function test_auth_invalid_password_returns_401(): void
+    public function test_auth_invalid_password_six_attempts_return_401_and_then_suspend(): void
     {
-        $response = $this->client->request('POST', '/auth', [
-            'body' => [
-                'username' => 'ncarthy',
-                'password' => 'wrong-password',
-            ],
-        ]);
+        for ($attempt = 1; $attempt <= 6; $attempt++) {
+            $response = $this->client->request('POST', '/auth', [
+                'body' => [
+                    'username' => 'ncarthy',
+                    'password' => 'wrong-password',
+                ],
+            ]);
 
-        self::assertSame(401, $response['status']);
-        self::assertStringContainsString('Unable to validate', (string) ($response['json']['message'] ?? ''));
+            self::assertSame(401, $response['status'], 'Unexpected status on attempt #' . $attempt);
+
+            $message = strtolower((string) ($response['json']['message'] ?? ''));
+            if ($attempt < 6) {
+                self::assertStringContainsString('unable to validate', $message, 'Unexpected message on attempt #' . $attempt);
+            } else {
+                self::assertStringContainsString('suspended', $message, 'Expected suspension on attempt #6');
+            }
+        }
     }
 
     public function test_invalid_bearer_token_returns_401(): void
