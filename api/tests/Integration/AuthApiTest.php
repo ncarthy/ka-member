@@ -140,6 +140,31 @@ final class AuthApiTest extends IntegrationTestCase
         self::assertSame(200, $revoke['status']);
     }
 
+    public function test_refresh_tokens_returns_200(): void
+    {
+        $this->loginAdmin();
+
+        $refresh = $this->client->request('GET', '/auth/refresh');
+        self::assertSame(200, $refresh['status']);
+        self::assertIsArray($refresh['json']);
+        self::assertArrayHasKey('accessToken', $refresh['json']);
+    }
+
+    public function test_access_token_with_user_id_not_in_db_returns_401(): void
+    {
+        $auth = $this->loginAdmin();
+        $accessToken = (string) ($auth['accessToken'] ?? '');
+        $tokenWithMissingUser = $this->withJwtPayloadClaim($accessToken, 'sub', '999999999');
+
+        $response = $this->client->request('GET', '/bank_account', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $tokenWithMissingUser,
+            ],
+        ]);
+
+        self::assertSame(401, $response['status']);
+    }
+
     public function test_refresh_and_revoke_flow(): void
     {
         $this->loginAdmin();
