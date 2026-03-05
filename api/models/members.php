@@ -216,7 +216,7 @@ class Members{
     public function mailingList(){
 
         //select all data
-        $query = "SELECT m.`idmember`, `name`, v.`title`, v.`businessname`, v.`addressfirstline`, v.`addresssecondline`,
+        $query = "SELECT m.`idmember`, `name`, m.`title`, v.`businessname`, v.`addressfirstline`, v.`addresssecondline`,
         v.`city`, v.`postcode`, `country`,
                 CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
                     THEN `m`.`country2ID`
@@ -304,7 +304,7 @@ class Members{
     public function noemailList(){
 
         //select a list of names and UK addresses for members without email
-        $query = "SELECT m.`idmember`, `name`, v.`title`, v.`businessname`, v.`addressfirstline`, v.`addresssecondline`,
+        $query = "SELECT m.`idmember`, `name`, m.`title`, v.`businessname`, v.`addressfirstline`, v.`addresssecondline`,
         v.`city`, v.`postcode`, `country`,
                 CASE WHEN `m`.`countryID` <> 186 AND `m`.`country2ID` = 186
                     THEN `m`.`country2ID`
