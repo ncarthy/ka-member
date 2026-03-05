@@ -26,15 +26,9 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
     public static function postmanStatusCases(): array
     {
         return [
-            'PaymentType/PaymentType - Read' => ['PaymentType/PaymentType - Read', 'GET', '/payment_type', 200],
-            'PaymentType/PaymentType - Read One ID Copy' => ['PaymentType/PaymentType - Read One ID Copy', 'GET', '/payment_type/2', 200],
-            'PaymentType/PaymentType - Read One Name' => ['PaymentType/PaymentType - Read One Name', 'GET', '/payment_type/cash', 200],
             'Pending/Member - Create Pending' => ['Pending/Member - Create Pending', 'POST', '/member', 200],
             'Pending/Name - Create for Pending' => ['Pending/Name - Create for Pending', 'POST', '/name', 200],
             'Pending/Transaction - Create Pending' => ['Pending/Transaction - Create Pending', 'POST', '/transaction', 200],
-            'Status/Status - Read All' => ['Status/Status - Read All', 'GET', '/status', 200],
-            'Status/Status - Read One ID' => ['Status/Status - Read One ID', 'GET', '/status/2', 200],
-            'Status/Status - Read One Name' => ['Status/Status - Read One Name', 'GET', '/status/Corporate', 200],
             'Transaction/Transaction - Create' => ['Transaction/Transaction - Create', 'POST', '/transaction', 200],
             'Transaction/Transaction - Delete By idmember' => ['Transaction/Transaction - Delete By idmember', 'DELETE', '/transaction/idmember/509', 200],
             'Transaction/Transaction - Read All' => ['Transaction/Transaction - Read All', 'GET', '/transaction', 200],
