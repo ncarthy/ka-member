@@ -1,4 +1,5 @@
 INSERT INTO country (`id`,`name`,`ISO3166`) VALUES
+(2,'Zimbabwe','ZW'),
 (50,'France','FR'),
 (186,'United Kingdom','GB'),
 (187,'United States','US')
@@ -6,6 +7,7 @@ ON DUPLICATE KEY UPDATE name=VALUES(name), ISO3166=VALUES(ISO3166);
 
 INSERT INTO bankaccount (`bankID`,`name`) VALUES
 (1,'HSBC'),
+(2,'NatWest'),
 (3,'Paypal'),
 (5,'Lloyds')
 ON DUPLICATE KEY UPDATE name=VALUES(name);

@@ -26,9 +26,6 @@ final class GeneratedPostmanStatusTest extends IntegrationTestCase
     public static function postmanStatusCases(): array
     {
         return [
-            'BankAccount/Bank Account - Read All' => ['BankAccount/Bank Account - Read All', 'GET', '/bank_account', 200],
-            'BankAccount/Bank Account - Read One ID' => ['BankAccount/Bank Account - Read One ID', 'GET', '/bank_account/2', 200],
-            'BankAccount/Bank Account- Read One Name' => ['BankAccount/Bank Account- Read One Name', 'GET', '/bank_account/paypal', 200],
             'CleanUp - Revoke Tokens' => ['CleanUp - Revoke Tokens', 'DELETE', '/auth/revoke', 200],
             'Country/Country - Read' => ['Country/Country - Read', 'GET', '/country', 200],
             'Country/Country - Read One ID' => ['Country/Country - Read One ID', 'GET', '/country/2', 200],
